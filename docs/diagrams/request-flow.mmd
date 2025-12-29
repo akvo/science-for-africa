@@ -1,0 +1,32 @@
+flowchart TB
+    subgraph Client
+        Browser[Web Browser]
+    end
+
+    subgraph "Frontend Container"
+        NextJS[Next.js 16<br/>App Router]
+        SWR[SWR Cache]
+        SocketClient[Socket.io Client]
+    end
+
+    subgraph "Backend Container"
+        Strapi[Strapi 5 CMS]
+        REST[REST API<br/>/api/*]
+        Admin[Admin Panel<br/>/admin]
+        CommentsPlugin[Comments Plugin]
+        SocketServer[Socket.io Server]
+    end
+
+    subgraph "Database Container"
+        PostgreSQL[(PostgreSQL 16)]
+    end
+
+    Browser --> NextJS
+    NextJS --> SWR
+    SWR --> REST
+    NextJS --> SocketClient
+    SocketClient --> SocketServer
+    REST --> Strapi
+    Strapi --> CommentsPlugin
+    Strapi --> PostgreSQL
+    SocketServer --> Strapi

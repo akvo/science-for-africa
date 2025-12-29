@@ -1,0 +1,211 @@
+erDiagram
+    User ||--o| UserProfile : "has"
+    User ||--o{ ForumCategory : "moderates"
+    User ||--o{ Thread : "creates"
+    User ||--o{ Post : "writes"
+    User ||--o{ Tag : "follows"
+    User ||--o{ Report : "submits"
+    User ||--o{ Notification : "receives"
+    User ||--o{ UserGroup : "member_of"
+    User ||--o{ MentorshipRelation : "mentor_or_mentee"
+
+    ForumCategory ||--o| ForumCategory : "parent"
+    ForumCategory ||--o{ Thread : "contains"
+    ForumCategory ||--o| Community : "belongs_to"
+
+    Thread ||--o{ Post : "has_replies"
+    Thread ||--o{ Tag : "tagged_with"
+    Thread }o--|| User : "created_by"
+    Thread }o--|| ForumCategory : "in_category"
+
+    Post ||--o| Post : "reply_to"
+    Post }o--|| Thread : "belongs_to"
+    Post }o--|| User : "authored_by"
+    Post ||--o{ Report : "reported_in"
+
+    Tag ||--o{ Thread : "applied_to"
+    Tag ||--o{ Resource : "tagged_on"
+
+    Report }o--|| User : "reported_by"
+    Report }o--o| Post : "targets_post"
+    Report }o--o| Thread : "targets_thread"
+
+    Community ||--o{ ForumCategory : "has_categories"
+    Community ||--o{ Resource : "has_resources"
+    Community ||--o{ UserGroup : "has_groups"
+    Community ||--o{ Event : "hosts"
+
+    Resource ||--o{ Tag : "tagged_with"
+    Resource }o--|| User : "uploaded_by"
+    Resource ||--o{ ResourceVersion : "has_versions"
+
+    UserGroup ||--o{ User : "has_members"
+    UserGroup }o--|| Community : "within"
+
+    Event ||--o{ EventRegistration : "has_registrations"
+    Event }o--|| Community : "hosted_by"
+
+    EventRegistration }o--|| User : "registered_by"
+    EventRegistration }o--|| Event : "for_event"
+
+    User {
+        string documentId PK
+        string username UK
+        string email UK
+        string password
+        boolean confirmed
+        boolean blocked
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    UserProfile {
+        string documentId PK
+        string display_name
+        text bio
+        string expertise_areas
+        string institution
+        string country
+        string linkedin_url
+        media avatar
+        integer reputation_score
+        integer post_count
+        enum trust_level
+        json notification_preferences
+        boolean available_as_mentor
+    }
+
+    Community {
+        string documentId PK
+        string name UK
+        string slug UK
+        text description
+        enum type
+        json settings
+        enum privacy_level
+        enum status
+        media logo
+    }
+
+    ForumCategory {
+        string documentId PK
+        string name
+        string slug UK
+        text description
+        integer sort_order
+        boolean is_locked
+        enum visibility
+        media icon
+    }
+
+    Thread {
+        string documentId PK
+        string title
+        string slug UK
+        richtext content
+        enum status
+        boolean is_pinned
+        boolean is_locked
+        boolean is_answered
+        integer view_count
+        integer reply_count
+        datetime last_activity_at
+    }
+
+    Post {
+        string documentId PK
+        richtext content
+        boolean is_accepted_answer
+        boolean is_hidden
+        string moderation_reason
+        integer upvote_count
+        integer downvote_count
+        datetime edited_at
+    }
+
+    Tag {
+        string documentId PK
+        string name UK
+        string slug UK
+        text description
+        string color
+        integer usage_count
+    }
+
+    Report {
+        string documentId PK
+        enum reason
+        text description
+        enum status
+        text moderator_notes
+        datetime resolved_at
+    }
+
+    Notification {
+        string documentId PK
+        enum type
+        string title
+        text message
+        boolean is_read
+        json metadata
+    }
+
+    Resource {
+        string documentId PK
+        string title
+        string slug UK
+        richtext description
+        enum resource_type
+        media file
+        string external_url
+        enum visibility
+        integer download_count
+        date publication_date
+        json metadata
+    }
+
+    ResourceVersion {
+        string documentId PK
+        string version_number
+        text change_notes
+        media file
+    }
+
+    UserGroup {
+        string documentId PK
+        string name
+        string slug UK
+        text description
+        enum group_type
+        enum privacy
+        media banner
+    }
+
+    Event {
+        string documentId PK
+        string title
+        richtext description
+        datetime start_datetime
+        datetime end_datetime
+        enum event_type
+        string location
+        string virtual_link
+        integer max_participants
+        boolean issues_certificate
+    }
+
+    EventRegistration {
+        string documentId PK
+        enum status
+        datetime registered_at
+        boolean attended
+        boolean certificate_issued
+    }
+
+    MentorshipRelation {
+        string documentId PK
+        enum status
+        text goals
+        datetime started_at
+        datetime ended_at
+    }

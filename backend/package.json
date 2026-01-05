@@ -19,8 +19,10 @@
     "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-junit"
   },
   "dependencies": {
+    "@strapi-community/strapi-provider-upload-google-cloud-storage": "^5.0.5",
     "@strapi/plugin-cloud": "5.33.0",
     "@strapi/plugin-users-permissions": "5.33.0",
+    "@strapi/provider-email-nodemailer": "^5.33.1",
     "@strapi/strapi": "5.33.0",
     "better-sqlite3": "11.3.0",
     "pg": "^8.16.3",

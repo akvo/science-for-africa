@@ -1,7 +1,7 @@
 services:
 
   nginx:
-    image: science_of_africa-nginx
+    image: soa-prod-nginx
     build: ./nginx
     ports:
       - 80:80
@@ -10,13 +10,13 @@ services:
       - frontend
 
   frontend:
-    image: science_of_africa-frontend
+    image: soa-prod-frontend
     build: ./frontend
     environment:
       NEXT_PUBLIC_BACKEND_URL: ${BACKEND_URL:-http://localhost/cms}
 
   backend:
-    image: science_of_africa-backend
+    image: soa-prod-backend
     build: ./backend
     depends_on:
       - db
@@ -34,9 +34,8 @@ services:
       DATABASE_USERNAME: akvo
       DATABASE_PASSWORD: password
       DATABASE_SSL: false
-      EMAIL_CONFIRMATION_URL: ${PUBLIC_URL:-http://localhost/verify-email}
-      PASSWORD_RESET_URL: ${PUBLIC_URL:-http://localhost/reset-password}
-      PLUGIN_PROVIDERS: ${PLUGIN_PROVIDERS:-local}
+      EMAIL_CONFIRMATION_URL: ${EMAIL_CONFIRMATION_URL:-http://localhost/verify-email}
+      PASSWORD_RESET_URL: ${PASSWORD_RESET_URL:-http://localhost/reset-password}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-}
       SMTP_USERNAME: ${SMTP_USERNAME:-}

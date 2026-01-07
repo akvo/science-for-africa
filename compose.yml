@@ -60,12 +60,13 @@ services:
     image: postgres:16-alpine
     restart: always
     volumes:
-      - ./db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - pg-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: password
+      POSTGRES_USER: akvo
+      POSTGRES_DB: science_of_africa
 
   pgadmin:
     image: dpage/pgadmin4:8

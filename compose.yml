@@ -44,7 +44,6 @@ services:
       DATABASE_SSL: false
       EMAIL_CONFIRMATION_URL: http://localhost:3000/verify-email
       PASSWORD_RESET_URL: http://localhost:3000/reset-password
-      PLUGIN_PROVIDERS: ${PLUGIN_PROVIDERS:-local}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-}
       SMTP_USERNAME: ${SMTP_USERNAME:-}
@@ -61,12 +60,13 @@ services:
     image: postgres:16-alpine
     restart: always
     volumes:
-      - ./db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - pg-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: password
+      POSTGRES_USER: akvo
+      POSTGRES_DB: science_of_africa
 
   pgadmin:
     image: dpage/pgadmin4:8

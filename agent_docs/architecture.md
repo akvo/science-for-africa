@@ -7,11 +7,11 @@ The backend is powered by **Strapi v5**, acting as a headless CMS and community 
 
 ## 2. Data Model ERD (Entity-Relationship Diagram)
 
-This Mermaid ER maps the refined Collections and Relations outlined in the Google Docs.
+This Mermaid ER maps the unified Collections and Relations derived from Figma (Institutional focus) and Google Docs (Community depth).
 
 ```mermaid
 erDiagram
-    %% Core Users & General Taxonomy
+    %% Core Users & Institutions
     USER {
         string firstName
         string lastName
@@ -20,7 +20,19 @@ erDiagram
         string careerStage
         boolean mentorAvailability
         string orcidId
-        enum role "Platform Admin, Moderator, Contributor, Member"
+        enum role "Platform Admin, Moderator, Institution Admin, Member"
+    }
+
+    INSTITUTION {
+        string name
+        string city
+        string country
+        enum affiliationRequestStatus "Open, Invite-Only"
+    }
+
+    MENTORSHIP_CONNECTION {
+        text requestMessage
+        enum status "Pending, Accepted, Declined"
     }
 
     TAG {
@@ -92,6 +104,12 @@ erDiagram
         string registrationUrl
     }
 
+    %% Relationships - Core
+    USER }|--|| INSTITUTION : "Belongs to"
+    INSTITUTION ||--|| USER : "Managed by (Admin)"
+    USER ||--o{ MENTORSHIP_CONNECTION : "As Mentor"
+    USER ||--o{ MENTORSHIP_CONNECTION : "As Mentee"
+
     %% Relationships - Forums
     USER }|--o{ COMMUNITY : "Joined as Member"
     COMMUNITY ||--o{ FORUM_CATEGORY : "Contains"
@@ -121,6 +139,10 @@ erDiagram
 
 ## 3. Data Model Explanation
 
+### Institutions & Mentorship (Primary Engine)
+*   **INSTITUTION**: Anchors users to physical organizations. A user requests affiliation which is approved by the assigned `Institution Admin`.
+*   **MENTORSHIP_CONNECTION**: A direct join table between two `User` models (Mentor and Mentee) handling the request message and workflow status. Requires the Mentor to have `mentorAvailability` set to true.
+
 ### Community and Forum Hierarchy
 *   **COMMUNITY**: The top-level grouping (e.g., "Western Africa Genomics"). Can be public or private, dictating Guest/Member access.
 *   **FORUM_CATEGORY**: Organizes discussions within a Community (e.g., "Funding Advice", "General Chat").
@@ -131,6 +153,3 @@ A single `TAG` collection groups all taxonomy data (Expertise, Regions, Opportun
 
 ### Moderation via Reports
 Instead of users deleting others' content, users create a `REPORT`. The report holds relations to the reporter (`USER`) and the target (either a `POST` or `THREAD`). Moderators view this queue to make decisions, eventually updating the status of the Report and potentially `Hiding` the offending post.
-
-### Resources, Opportunities, Events
-These are standard Content Types subject to Strapi's Draft/Publish lifecycle. `Contributors` write drafts, and `Moderators` publish them. They are accessible publicly or restricted to Members via the `visibility` enum.

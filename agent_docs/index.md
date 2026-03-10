@@ -11,6 +11,7 @@ These documents represent the **project skeleton** (overall purpose, shared arch
 ## Chronological Records
 These documents trace the history of decisions and specific tasks over time. They are strictly append/create-only.
 - `features/`: PRD deep dives for specific features or tasks.
+  - [raw-source-findings.md](features/raw-source-findings.md) (Raw notes from Figma and Google Docs)
 - `adrs/`: Architecture Decision Records.
 - `stories/`: Developer-ready user stories.
 - `sprint-plans/`: Iteration tracking.

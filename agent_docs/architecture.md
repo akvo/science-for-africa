@@ -7,9 +7,138 @@ The backend is powered by **Strapi v5**, acting as a headless CMS and community 
 
 ## 2. Data Model ERD (Entity-Relationship Diagram)
 
-We have divided the data model into three logical sub-domains for readability, derived from Figma (Institutional focus) and Google Docs (Community depth).
+### 2.1 Top-Level Data Model ERD
+This monolithic diagram provides a bird's-eye view of all collections and relations in the Strapi backend.
 
-### 2.1 Core Identity & Access Control
+```mermaid
+erDiagram
+    %% Core Users & Institutions
+    USER {
+        string firstName
+        string lastName
+        text bio
+        string expertise
+        string careerStage
+        boolean mentorAvailability
+        string orcidId
+        enum role "Platform Admin, Moderator, Institution Admin, Member"
+    }
+
+    INSTITUTION {
+        string name
+        string city
+        string country
+        enum affiliationRequestStatus "Open, Invite-Only"
+    }
+
+    MENTORSHIP_CONNECTION {
+        text requestMessage
+        enum status "Pending, Accepted, Declined"
+    }
+
+    TAG {
+        string name
+        string slug
+        enum tagGroup "Expertise, Opportunity, Resource, Region"
+    }
+
+    %% Community & Hierarchical Forums
+    COMMUNITY {
+        string name
+        string slug
+        enum type "Programme, Thematic, Regional, Working Group"
+        enum privacy "Public, Private"
+    }
+
+    FORUM_CATEGORY {
+        string name
+        string slug
+        int sortOrder
+        boolean isLocked
+    }
+
+    THREAD {
+        string title
+        string slug
+        text content
+        enum status "Open, Closed, Archived"
+        boolean isPinned
+        boolean isLocked
+    }
+
+    POST {
+        text content
+        enum status "Published, Flagged, Hidden"
+        boolean isSolution
+        datetime createdAt
+    }
+
+    REPORT {
+        text reason
+        enum status "Pending, Resolved, Dismissed"
+        text moderatorNotes
+    }
+
+    %% Content Types
+    RESOURCE {
+        string title
+        enum resourceType "Report, Tool, Training, Policy, Case Study"
+        text description
+        media file
+        enum visibility "Public, Members Only"
+    }
+
+    OPPORTUNITY {
+        string title
+        enum oppType "Funding, Job, Scholarship, Fellowship, Event"
+        text content
+        datetime deadline
+        string applicationLink
+    }
+
+    EVENT {
+        string title
+        datetime startDate
+        datetime endDate
+        string timezone
+        string location
+        string registrationUrl
+    }
+
+    %% Relationships - Core
+    USER }|--|| INSTITUTION : "Belongs to"
+    INSTITUTION ||--|| USER : "Managed by (Admin)"
+    USER ||--o{ MENTORSHIP_CONNECTION : "As Mentor"
+    USER ||--o{ MENTORSHIP_CONNECTION : "As Mentee"
+
+    %% Relationships - Forums
+    USER }|--o{ COMMUNITY : "Joined as Member"
+    COMMUNITY ||--o{ FORUM_CATEGORY : "Contains"
+    FORUM_CATEGORY ||--o{ THREAD : "Organizes"
+    THREAD ||--o{ POST : "Has Replies"
+    POST |o--o{ POST : "Replies To (Parent)"
+
+    USER ||--o{ THREAD : "Author of"
+    USER ||--o{ POST : "Author of"
+
+    %% Relationships - Moderation
+    USER ||--o{ REPORT : "Files"
+    POST ||--o{ REPORT : "Targeted by"
+    THREAD ||--o{ REPORT : "Targeted by"
+
+    %% Relationships - Resources & Opps
+    USER ||--o{ RESOURCE : "Uploads"
+    USER ||--o{ EVENT : "Organizes"
+
+    %% Taxonomy Links
+    TAG }|--o{ USER : "Expertise of"
+    TAG }|--o{ OPPORTUNITY : "Categorizes"
+    TAG }|--o{ RESOURCE : "Categorizes"
+    TAG }|--o{ EVENT : "Categorizes"
+    TAG }|--o{ THREAD : "Tags"
+```
+
+### 2.2 Core Identity & Access Control
 This module anchors users to institutions and manages mentor-mentee connections.
 
 ```mermaid
@@ -45,7 +174,7 @@ erDiagram
     USER ||--o{ MENTORSHIP_CONNECTION : "As Mentee"
 ```
 
-### 2.2 Community & Forums
+### 2.3 Community & Forums
 This module governs the hierarchical structure of discussions and peer moderation reporting.
 
 ```mermaid
@@ -106,7 +235,7 @@ erDiagram
     THREAD ||--o{ REPORT : "Targeted by"
 ```
 
-### 2.3 Content, Opportunities & Taxonomy
+### 2.4 Content, Opportunities & Taxonomy
 This module handles draft/publish content pipelines and the unified tagging system.
 
 ```mermaid

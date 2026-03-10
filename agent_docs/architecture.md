@@ -7,7 +7,10 @@ The backend is powered by **Strapi v5**, acting as a headless CMS and community 
 
 ## 2. Data Model ERD (Entity-Relationship Diagram)
 
-This Mermaid ER maps the unified Collections and Relations derived from Figma (Institutional focus) and Google Docs (Community depth).
+We have divided the data model into three logical sub-domains for readability, derived from Figma (Institutional focus) and Google Docs (Community depth).
+
+### 2.1 Core Identity & Access Control
+This module anchors users to institutions and manages mentor-mentee connections.
 
 ```mermaid
 erDiagram
@@ -35,13 +38,18 @@ erDiagram
         enum status "Pending, Accepted, Declined"
     }
 
-    TAG {
-        string name
-        string slug
-        enum tagGroup "Expertise, Opportunity, Resource, Region"
-    }
+    %% Relationships
+    USER }|--|| INSTITUTION : "Belongs to"
+    INSTITUTION ||--|| USER : "Managed by (Admin)"
+    USER ||--o{ MENTORSHIP_CONNECTION : "As Mentor"
+    USER ||--o{ MENTORSHIP_CONNECTION : "As Mentee"
+```
 
-    %% Community & Hierarchical Forums
+### 2.2 Community & Forums
+This module governs the hierarchical structure of discussions and peer moderation reporting.
+
+```mermaid
+erDiagram
     COMMUNITY {
         string name
         string slug
@@ -78,7 +86,37 @@ erDiagram
         text moderatorNotes
     }
 
-    %% Content Types
+    %% Core Entity References
+    USER {
+        string id "Implicit Relation"
+    }
+
+    %% Relationships
+    USER }|--o{ COMMUNITY : "Joined as Member"
+    COMMUNITY ||--o{ FORUM_CATEGORY : "Contains"
+    FORUM_CATEGORY ||--o{ THREAD : "Organizes"
+    THREAD ||--o{ POST : "Has Replies"
+    POST |o--o{ POST : "Replies To (Parent)"
+
+    USER ||--o{ THREAD : "Author of"
+    USER ||--o{ POST : "Author of"
+
+    USER ||--o{ REPORT : "Files"
+    POST ||--o{ REPORT : "Targeted by"
+    THREAD ||--o{ REPORT : "Targeted by"
+```
+
+### 2.3 Content, Opportunities & Taxonomy
+This module handles draft/publish content pipelines and the unified tagging system.
+
+```mermaid
+erDiagram
+    TAG {
+        string name
+        string slug
+        enum tagGroup "Expertise, Opportunity, Resource, Region"
+    }
+
     RESOURCE {
         string title
         enum resourceType "Report, Tool, Training, Policy, Case Study"
@@ -104,32 +142,19 @@ erDiagram
         string registrationUrl
     }
 
-    %% Relationships - Core
-    USER }|--|| INSTITUTION : "Belongs to"
-    INSTITUTION ||--|| USER : "Managed by (Admin)"
-    USER ||--o{ MENTORSHIP_CONNECTION : "As Mentor"
-    USER ||--o{ MENTORSHIP_CONNECTION : "As Mentee"
+    %% Core Entity References
+    USER {
+        string id "Implicit Relation"
+    }
 
-    %% Relationships - Forums
-    USER }|--o{ COMMUNITY : "Joined as Member"
-    COMMUNITY ||--o{ FORUM_CATEGORY : "Contains"
-    FORUM_CATEGORY ||--o{ THREAD : "Organizes"
-    THREAD ||--o{ POST : "Has Replies"
-    POST |o--o{ POST : "Replies To (Parent)"
+    THREAD {
+        string id "Implicit Relation"
+    }
 
-    USER ||--o{ THREAD : "Author of"
-    USER ||--o{ POST : "Author of"
-
-    %% Relationships - Moderation
-    USER ||--o{ REPORT : "Files"
-    POST ||--o{ REPORT : "Targeted by"
-    THREAD ||--o{ REPORT : "Targeted by"
-
-    %% Relationships - Resources & Opps
+    %% Relationships
     USER ||--o{ RESOURCE : "Uploads"
     USER ||--o{ EVENT : "Organizes"
 
-    %% Taxonomy Links
     TAG }|--o{ USER : "Expertise of"
     TAG }|--o{ OPPORTUNITY : "Categorizes"
     TAG }|--o{ RESOURCE : "Categorizes"

@@ -1,57 +1,49 @@
 # Product Requirements Document (PRD)
 **Project**: Science for Africa - External Platform
-**Status**: Refined (Phase 2)
+**Status**: Refined (Google Docs Phase)
 
 ## 1. Vision & Goals
-The Science for Africa external platform aims to create a central hub for researchers, institutions, and community members. It will facilitate collaboration, knowledge sharing, and professional growth across the African scientific ecosystem.
+The Science for Africa (SfA) external platform aims to create a central Community of Practice (CoP) hub for research managers across Africa. It facilitates collaboration, knowledge sharing, and professional growth across the African scientific ecosystem.
 
 **Primary Goals:**
-- To connect individuals with relevant scientific institutions.
-- To provide a central repository for resources, tools, and impact stories.
-- To surface opportunities logically (funding, jobs, scholarships).
-- To foster community discussion and structured mentorship.
+- Connect individuals with relevant scientific institutions and peers.
+- Provide a central repository for resources, tools, and impact stories.
+- Surface opportunities (funding, jobs, scholarships) logically and accessibly.
+- Drive engagement through structured, moderated community forums and mentorship.
 
 ## 2. Target Users
-- **Individual Researchers / Community Members**: Looking for opportunities, resources, discussions, and mentorship.
-- **Institution Admins**: Managing their organization's presence, approving member affiliations, and moderating institutional content.
-- **Platform/Community Admins**: Overseeing the health of the community, moderating global content, and managing platform-wide settings.
+- **Guest**: Unauthenticated users viewing public opportunities and basic platform information.
+- **Member**: Standard authenticated researcher or research manager. Can participate in forums, view directory, save opportunities.
+- **Contributor**: Privileged user from partner institutions. Can upload resources and post opportunities for approval.
+- **Moderator (Community Admin)**: Governance role handling reported content, managing forum flow, and approving user submissions.
+- **Platform Admin**: Superadmin managing system config, tags, roles, and global communities.
 
 ## 3. Key User Journeys
-- **Registration & Onboarding**:
-  - *Acceptance*: Users must be able to sign up, specify Expertise, and optionally request affiliation with an Institution or link an ORCID ID.
-- **Content Submission & Moderation**:
-  - *Acceptance*: A user submits a new Resource or Event. It must enter a "Draft/Pending" state and remain invisible on the frontend until an Admin publishes it.
-- **Mentorship Flow**:
-  - *Acceptance*: A Mentee can request a connection with a Mentor. The Mentor must be able to Accept or Decline.
-- **Community Engagement**:
-  - *Acceptance*: Users can participate in categorized forum threads.
+- **Comprehensive Onboarding**: Users sign up defining their bio, institution, region, expertise, career stage, and ORCID ID.
+- **Content Submission & Moderation**: Contributors submit Resources/Opportunities to a "Draft/Pending" queue. Moderators approve/publish them.
+- **Community & Forum Participation**: Members join specific Communities (Thematic, Regional, etc.), browse Forum Categories, create Threads, and post Replies.
+- **Peer Moderation**: Any Member can Report a Post/Thread for violations, queuing it in a Moderator Dashboard.
 
 ## 4. Feature Requirements (MoSCoW)
 ### Must Have
-- **User Profiles**: Distinct fields for Expertise, Interests, and Roles.
-- **Institutions**: Organization profiles with member management and affiliation workflows.
-- **Resources & Events**: User-submitted content with a moderation pipeline (Draft/Pending/Approved - using Strapi Draft/Publish feature).
-- **Opportunities**: Centralized board for funding, jobs, and scholarships.
-- **Role-Based Access Control**: Granular permissions.
-  - *Acceptance*: Admin UI access must be restricted. Community Admins can moderate globally; Institution Admins can only govern their own members/content via custom RBAC conditions or a bespoke frontend view.
+- **Extended User Profiles**: Fields for Career Stage, Mentor Availability, Region, and extensive Expertise mapping.
+- **Communities & Forums Hierarchy**: Community -> Forum Category -> Thread -> Post tracking.
+- **Opportunity & Resource Boards**: Curated lists with rich categorization (Types, Deadlines, Visibility).
+- **Tagging Taxonomy**: A unified Tag entity to link Users, Opportunities, Resources, and Threads.
+- **User Reporting System**: Ability to flag posts/threads and generate a Report for moderators.
 
 ### Should Have
-- **Community Forums**: Categorized threaded discussions.
-- **Mentorship Matching**: Direct request/approval workflows between users.
-
-### Could Have
-- **Advanced Integration**: Direct ORCID API syncing.
+- **Mentorship Direct Matching**: Direct "Mentor Availability" toggle with request/approval workflows.
+- **Real-Time Notifications**: Alerts for `@mentions` and replies to owned threads.
+- **Granular Moderator Dashboard**: Interface specifically for Moderators to dismiss, resolve, or hide reported content.
 
 ### Won't Have (In Initial Sandbox)
-- **Direct in-app messaging** outside of forum threads and initial mentorship requests.
+- **Direct in-app messaging** outside of forum threads and initial mentorship connections.
 
 ## 5. Non-Functional Requirements
-- **Security**: Strict access control limiting the Admin UI visibility based on the user's role. Field-level permissions must hide moderation statuses from regular users.
-- **Scalability**: Data model should cleanly support high volumes of forum posts and relationship connections without N+1 query problems in Strapi.
+- **Security**: Strict Role-Based Access Control (RBAC). Moderators must only see specific moderation queues; Contributors only see their own drafts.
+- **Data Integrity**: Polymorphic relations or clear structural mapping for the "Report" entity (e.g., capable of linking to either a Thread or a Post).
 
 ## 6. Success Metrics
-- 100% test coverage for the MJS ERD generator tool.
-- Accurate mapping of all Figma entities to Strapi collections.
-
-## 7. Out of Scope
-- Implementation of the frontend or the Strapi backend controllers. (Scope is strictly defining the Data Model and generating the MJS ERD documentation).
+- 100% representation of the Google Docs hierarchical forum design in the Strapi Data Model ERD.
+- MJS ERD generator runs without errors.

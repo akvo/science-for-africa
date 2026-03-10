@@ -1,114 +1,136 @@
 # System Architecture & Data Model
 **Project**: Science for Africa - External Platform
-**Phase**: Architect (v1)
+**Phase**: Architect (v2 - Google Docs Update)
 
 ## 1. System Overview
-The backend is powered by **Strapi v5**, acting as a headless CMS. The architecture leverages Strapi's built-in `users-permissions` plugin heavily extended to handle custom roles and relationships, coupled with several custom Collection Types to govern platform content.
+The backend is powered by **Strapi v5**, acting as a headless CMS and community backend API. The architecture leverages Strapi's built-in `users-permissions` heavily extended to allow robust community engagement. It relies heavily on hierarchical collections (`Community` -> `Category` -> `Thread` -> `Post`) and a comprehensive reporting system for peer moderation.
 
 ## 2. Data Model ERD (Entity-Relationship Diagram)
 
-We define the data model using Mermaid ER syntax. This maps directly to how the Strapi collections and relations will be built.
+This Mermaid ER maps the refined Collections and Relations outlined in the Google Docs.
 
 ```mermaid
 erDiagram
-    %% Core Users & Organizations
+    %% Core Users & General Taxonomy
     USER {
         string firstName
         string lastName
-        string email
+        text bio
         string expertise
-        json interests
-        media profilePhoto
+        string careerStage
+        boolean mentorAvailability
         string orcidId
-        enum role "Platform Admin, Community Admin, Institution Admin, Member"
+        enum role "Platform Admin, Moderator, Contributor, Member"
     }
 
-    INSTITUTION {
+    TAG {
         string name
-        string city
-        string country
-        enum affiliationRequestStatus "Open, Invite-Only"
+        string slug
+        enum tagGroup "Expertise, Opportunity, Resource, Region"
+    }
+
+    %% Community & Hierarchical Forums
+    COMMUNITY {
+        string name
+        string slug
+        enum type "Programme, Thematic, Regional, Working Group"
+        enum privacy "Public, Private"
+    }
+
+    FORUM_CATEGORY {
+        string name
+        string slug
+        int sortOrder
+        boolean isLocked
+    }
+
+    THREAD {
+        string title
+        string slug
+        text content
+        enum status "Open, Closed, Archived"
+        boolean isPinned
+        boolean isLocked
+    }
+
+    POST {
+        text content
+        enum status "Published, Flagged, Hidden"
+        boolean isSolution
+        datetime createdAt
+    }
+
+    REPORT {
+        text reason
+        enum status "Pending, Resolved, Dismissed"
+        text moderatorNotes
     }
 
     %% Content Types
     RESOURCE {
         string title
-        enum resourceType "Publication, Training, Impact Story, Toolkit"
+        enum resourceType "Report, Tool, Training, Policy, Case Study"
         text description
         media file
-        json tags
-        enum moderationStatus "Draft, Pending, Approved"
+        enum visibility "Public, Members Only"
     }
 
     OPPORTUNITY {
         string title
-        enum oppType "Funding, Job, Scholarship"
-        text description
+        enum oppType "Funding, Job, Scholarship, Fellowship, Event"
+        text content
         datetime deadline
         string applicationLink
     }
 
     EVENT {
         string title
-        datetime date
-        text description
-        string link
-        enum eventType "Conference, Workshop, Webinar"
-        enum moderationStatus "Draft, Pending, Approved"
+        datetime startDate
+        datetime endDate
+        string timezone
+        string location
+        string registrationUrl
     }
 
-    %% Community & Interaction
-    FORUM_THREAD {
-        string category
-        string title
-        text content
-        datetime createdAt
-    }
+    %% Relationships - Forums
+    USER }|--o{ COMMUNITY : "Joined as Member"
+    COMMUNITY ||--o{ FORUM_CATEGORY : "Contains"
+    FORUM_CATEGORY ||--o{ THREAD : "Organizes"
+    THREAD ||--o{ POST : "Has Replies"
+    POST |o--o{ POST : "Replies To (Parent)"
 
-    FORUM_POST {
-        text content
-        datetime createdAt
-    }
+    USER ||--o{ THREAD : "Author of"
+    USER ||--o{ POST : "Author of"
 
-    MENTORSHIP_CONNECTION {
-        text requestMessage
-        enum status "Pending, Accepted, Declined"
-    }
+    %% Relationships - Moderation
+    USER ||--o{ REPORT : "Files"
+    POST ||--o{ REPORT : "Targeted by"
+    THREAD ||--o{ REPORT : "Targeted by"
 
-    %% Relationships
-    USER }|--|| INSTITUTION : "Belongs to"
-    INSTITUTION ||--|| USER : "Managed by (Admin)"
-
-    USER ||--o{ RESOURCE : "Authors"
-    INSTITUTION ||--o{ RESOURCE : "Owns"
-
+    %% Relationships - Resources & Opps
+    USER ||--o{ RESOURCE : "Uploads"
     USER ||--o{ EVENT : "Organizes"
-    INSTITUTION ||--o{ EVENT : "Hosts"
 
-    USER ||--o{ FORUM_THREAD : "Starts"
-    USER ||--o{ FORUM_POST : "Replies"
-    FORUM_THREAD ||--o{ FORUM_POST : "Contains"
-
-    USER ||--o{ MENTORSHIP_CONNECTION : "As Mentor"
-    USER ||--o{ MENTORSHIP_CONNECTION : "As Mentee"
+    %% Taxonomy Links
+    TAG }|--o{ USER : "Expertise of"
+    TAG }|--o{ OPPORTUNITY : "Categorizes"
+    TAG }|--o{ RESOURCE : "Categorizes"
+    TAG }|--o{ EVENT : "Categorizes"
+    TAG }|--o{ THREAD : "Tags"
 ```
 
 ## 3. Data Model Explanation
 
-### Users and Permissions Plugin Extension (`plugin::users-permissions.user`)
-The default Strapi User model must be extended via schema adjustments to include `Expertise`, `Interests`, and `ORCID`. Crucially, it must define a Many-to-One relationship to the `Institution` collection, representing a user's affiliation.
+### Community and Forum Hierarchy
+*   **COMMUNITY**: The top-level grouping (e.g., "Western Africa Genomics"). Can be public or private, dictating Guest/Member access.
+*   **FORUM_CATEGORY**: Organizes discussions within a Community (e.g., "Funding Advice", "General Chat").
+*   **THREAD & POST**: The core engagement entities. Thread owns posts. Posts can have a recursive Parent-Child relationship to support nested UI replies. Threads have specific moderation boolean flags (`isPinned`, `isLocked`).
 
-### Institutions
-Represents organizations. It requires a One-to-One ownership link to a `User` entity to designate the **Institution Admin**. This admin user manages affiliation approvals for other users claiming membership.
+### Unified Tag System
+A single `TAG` collection groups all taxonomy data (Expertise, Regions, Opportunity Types). It sits at the center of the application, linked via Many-to-Many relations to Users, Resources, Threads, and Opportunities.
 
-### User-Generated Content (Resources, Events)
-These entities utilize Strapi's native **Draft/Publish** system to implement the Moderation Pipeline.
-- A standard user submits a `Resource`, which is saved as a Draft (`Pending`).
-- Only Admin roles have the permission to transition the state to Published (`Approved`).
-- Resources maintain relations to both their Author (`User`) and the `Institution` (if the author publishes on behalf of their affiliation).
+### Moderation via Reports
+Instead of users deleting others' content, users create a `REPORT`. The report holds relations to the reporter (`USER`) and the target (either a `POST` or `THREAD`). Moderators view this queue to make decisions, eventually updating the status of the Report and potentially `Hiding` the offending post.
 
-### Administrator Access Control (Limited Admin UI)
-Strapi's Role-Based Access Control (RBAC) governs the Admin UI:
-1. **Platform Admin**: Superadmin flag equals true. Access to everything.
-2. **Community Admin**: Given CRUD permissions to `Forum_Thread`, `Opportunity`, and Publish privileges for `Resources/Events`. Cannot access User management.
-3. **Institution Admin**: Through custom Condition-based rules (if Enterprise) or Custom Controllers, they can only view and update `Users` and `Resources` where the `Institution` relation matches their own assigned institution. Field-level permissions prevent them from modifying system settings or global roles.
+### Resources, Opportunities, Events
+These are standard Content Types subject to Strapi's Draft/Publish lifecycle. `Contributors` write drafts, and `Moderators` publish them. They are accessible publicly or restricted to Members via the `visibility` enum.

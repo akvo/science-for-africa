@@ -16,12 +16,20 @@ erDiagram
     USER {
         string firstName
         string lastName
+        string email
         text bio
+        string jobTitle
         string expertise
         string careerStage
+        int yearsOfExperience
         boolean mentorAvailability
         string orcidId
-        enum role "Platform Admin, Moderator, Institution Admin, Member"
+        string linkedInUrl
+        string profilePhoto
+        enum region "Eastern, Southern, Western, Central, Northern Africa, Other"
+        string country
+        json notificationPreferences
+        enum role "Platform Admin, Moderator, Institution Admin, Contributor, Member"
     }
 
     INSTITUTION {
@@ -39,13 +47,15 @@ erDiagram
     TAG {
         string name
         string slug
-        enum tagGroup "Expertise, Opportunity, Resource, Region"
+        enum tagGroup "Expertise, Opportunity Category, Resource Topic, Region"
     }
 
     %% Community & Hierarchical Forums
     COMMUNITY {
         string name
         string slug
+        text description
+        media featuredImage
         enum type "Programme, Thematic, Regional, Working Group"
         enum privacy "Public, Private"
     }
@@ -53,8 +63,11 @@ erDiagram
     FORUM_CATEGORY {
         string name
         string slug
+        text description
+        media icon
         int sortOrder
         boolean isLocked
+        boolean isPrivate
     }
 
     THREAD {
@@ -64,11 +77,12 @@ erDiagram
         enum status "Open, Closed, Archived"
         boolean isPinned
         boolean isLocked
+        boolean isPrivate
     }
 
     POST {
         text content
-        enum status "Published, Flagged, Hidden"
+        enum status "Published, Pending, Flagged, Hidden"
         boolean isSolution
         datetime createdAt
     }
@@ -82,27 +96,43 @@ erDiagram
     %% Content Types
     RESOURCE {
         string title
+        string slug
         enum resourceType "Report, Tool, Training, Policy, Case Study"
         text description
         media file
+        datetime publicationDate
         enum visibility "Public, Members Only"
     }
 
     OPPORTUNITY {
         string title
-        enum oppType "Funding, Job, Scholarship, Fellowship, Event"
+        string slug
+        enum oppType "Funding, Job, Scholarship, Fellowship, Conference, Training, Award"
         text content
+        string providerName
+        media providerLogo
         datetime deadline
         string applicationLink
+        text eligibilityCriteria
+        string fundingAmount
+        boolean isRemote
+        int viewCount
+        int clickCount
+        int saveCount
     }
 
     EVENT {
         string title
+        string slug
+        text description
+        string cost
+        int maxParticipants
         datetime startDate
         datetime endDate
         string timezone
         string location
         string registrationUrl
+        string recordingUrl
     }
 
     %% Relationships - Core
@@ -147,12 +177,20 @@ erDiagram
     USER {
         string firstName
         string lastName
+        string email
         text bio
+        string jobTitle
         string expertise
         string careerStage
+        int yearsOfExperience
         boolean mentorAvailability
         string orcidId
-        enum role "Platform Admin, Moderator, Institution Admin, Member"
+        string linkedInUrl
+        string profilePhoto
+        enum region "Eastern, Southern, Western, Central, Northern Africa, Other"
+        string country
+        json notificationPreferences
+        enum role "Platform Admin, Moderator, Institution Admin, Contributor, Member"
     }
 
     INSTITUTION {
@@ -182,6 +220,8 @@ erDiagram
     COMMUNITY {
         string name
         string slug
+        text description
+        media featuredImage
         enum type "Programme, Thematic, Regional, Working Group"
         enum privacy "Public, Private"
     }
@@ -189,8 +229,11 @@ erDiagram
     FORUM_CATEGORY {
         string name
         string slug
+        text description
+        media icon
         int sortOrder
         boolean isLocked
+        boolean isPrivate
     }
 
     THREAD {
@@ -200,11 +243,12 @@ erDiagram
         enum status "Open, Closed, Archived"
         boolean isPinned
         boolean isLocked
+        boolean isPrivate
     }
 
     POST {
         text content
-        enum status "Published, Flagged, Hidden"
+        enum status "Published, Pending, Flagged, Hidden"
         boolean isSolution
         datetime createdAt
     }
@@ -243,32 +287,48 @@ erDiagram
     TAG {
         string name
         string slug
-        enum tagGroup "Expertise, Opportunity, Resource, Region"
+        enum tagGroup "Expertise, Opportunity Category, Resource Topic, Region"
     }
 
     RESOURCE {
         string title
+        string slug
         enum resourceType "Report, Tool, Training, Policy, Case Study"
         text description
         media file
+        datetime publicationDate
         enum visibility "Public, Members Only"
     }
 
     OPPORTUNITY {
         string title
-        enum oppType "Funding, Job, Scholarship, Fellowship, Event"
+        string slug
+        enum oppType "Funding, Job, Scholarship, Fellowship, Conference, Training, Award"
         text content
+        string providerName
+        media providerLogo
         datetime deadline
         string applicationLink
+        text eligibilityCriteria
+        string fundingAmount
+        boolean isRemote
+        int viewCount
+        int clickCount
+        int saveCount
     }
 
     EVENT {
         string title
+        string slug
+        text description
+        string cost
+        int maxParticipants
         datetime startDate
         datetime endDate
         string timezone
         string location
         string registrationUrl
+        string recordingUrl
     }
 
     %% Core Entity References
@@ -300,7 +360,7 @@ erDiagram
 ### Community and Forum Hierarchy
 *   **COMMUNITY**: The top-level grouping (e.g., "Western Africa Genomics"). Can be public or private, dictating Guest/Member access.
 *   **FORUM_CATEGORY**: Organizes discussions within a Community (e.g., "Funding Advice", "General Chat").
-*   **THREAD & POST**: The core engagement entities. Thread owns posts. Posts can have a recursive Parent-Child relationship to support nested UI replies. Threads have specific moderation boolean flags (`isPinned`, `isLocked`).
+*   **THREAD & POST**: The core engagement entities. Thread owns posts. Posts can have a recursive Parent-Child relationship to support nested UI replies. Threads have specific moderation boolean flags (`isPinned`, `isLocked`, `isPrivate`).
 
 ### Unified Tag System
 A single `TAG` collection groups all taxonomy data (Expertise, Regions, Opportunity Types). It sits at the center of the application, linked via Many-to-Many relations to Users, Resources, Threads, and Opportunities.

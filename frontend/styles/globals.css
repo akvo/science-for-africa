@@ -10,6 +10,51 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Science for Africa - Custom Token Extension */
+
+  /* Colors - Green Scale */
+  --color-sfa-green-50: #e6eeee;
+  --color-sfa-green-100: #b0cbc9;
+  --color-sfa-green-200: #8ab2af;
+  --color-sfa-green-300: #548f8a;
+  --color-sfa-green-400: #337973;
+  --color-sfa-green-500: #005850;
+  --color-sfa-green-600: #005049;
+  --color-sfa-green-700: #003e39;
+  --color-sfa-green-800: #00302c;
+  --color-sfa-green-900: #002522;
+  --color-sfa-green-1000: #001a18;
+  --color-sfa-green-1110: #000d0c;
+
+  /* Spacing - sfa-0 to sfa-10 (mapped from Figma #0-10) */
+  --spacing-sfa-0: 4px;
+  --spacing-sfa-1: 8px;
+  --spacing-sfa-2: 16px;
+  --spacing-sfa-3: 24px;
+  --spacing-sfa-4: 32px;
+  --spacing-sfa-5: 40px;
+  --spacing-sfa-6: 48px;
+  --spacing-sfa-7: 64px;
+  --spacing-sfa-8: 80px;
+  --spacing-sfa-9: 96px;
+  --spacing-sfa-10: 112px;
+
+  /* Radius - rounded-sfa-1 to rounded-sfa-full */
+  --radius-sfa-1: 8px;
+  --radius-sfa-2: 16px;
+  --radius-sfa-3: 24px;
+  --radius-sfa-4: 32px;
+  --radius-sfa-5: 40px;
+  --radius-sfa-6: 48px;
+  --radius-sfa-7: 64px;
+  --radius-sfa-full: 999px;
+
+  /* Border Width - border-sfa-0 to border-sfa-3 */
+  --border-width-sfa-0: 0px;
+  --border-width-sfa-1: 1px;
+  --border-width-sfa-2: 2px;
+  --border-width-sfa-3: 3px;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -380,6 +380,7 @@ erDiagram
 ## 3. Data Model Explanation
 
 ### Institutions & Mentorship (Primary Engine)
+*   **USER**: Anchors the platform's social identity. We use a **Unified User Model** for performance and simplicity (see the [User Model Unification ADR](research-findings/user-model-unification.md)).
 *   **INSTITUTION**: Anchors users to physical organizations. A user requests affiliation which is approved by the assigned `Institution Admin`.
 *   **MENTORSHIP_CONNECTION**: A direct join table between two `User` models (Mentor and Mentee) handling the request message and workflow status. Requires the Mentor to have `mentorAvailability` set to true.
 

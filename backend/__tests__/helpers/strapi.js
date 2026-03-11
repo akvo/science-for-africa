@@ -3,7 +3,7 @@
  * Helper functions for testing Strapi applications
  */
 
-const Strapi = require('@strapi/strapi');
+const strapi = require('@strapi/strapi');
 const fs = require('fs');
 const path = require('path');
 
@@ -15,12 +15,24 @@ let instance;
  */
 async function setupStrapi() {
   if (!instance) {
-    instance = await Strapi({
+    process.env.NODE_ENV = 'test';
+    instance = await strapi.createStrapi({
       appDir: path.resolve(__dirname, '../..'),
-      distDir: path.resolve(__dirname, '../../dist'),
     }).load();
 
     await instance.server.mount();
+
+    // Grant permissions to Authenticated role for tests
+    const authenticatedRole = await instance.query('plugin::users-permissions.role').findOne({
+      where: { type: 'authenticated' },
+    });
+
+    await instance.query('plugin::users-permissions.permission').create({
+      data: {
+        action: 'plugin::users-permissions.user.me',
+        role: authenticatedRole.id,
+      },
+    });
   }
   return instance;
 }

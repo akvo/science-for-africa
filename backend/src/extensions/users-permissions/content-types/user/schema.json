@@ -1,0 +1,14 @@
+{
+  "attributes": {
+    "education": {
+      "type": "json"
+    },
+    "careerHistory": {
+      "type": "json"
+    },
+    "onboardingStep": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

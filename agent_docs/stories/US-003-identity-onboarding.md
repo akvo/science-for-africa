@@ -14,10 +14,10 @@
 ## Technical Acceptance Criteria (TAC)
 
 ### 🛠️ Backend (Strapi)
-- [ ] Extend `plugin::users-permissions.user` schema with `education` and `careerHistory` JSON fields.
-- [ ] Ensure `enum role` matches the 6 Figma-defined roles in Strapi settings.
+- [x] Extend `plugin::users-permissions.user` schema with `education` and `careerHistory` JSON fields. [x]
+- [x] Ensure `enum role` matches the 6 Figma-defined roles in Strapi settings. [x]
 - [ ] Configure email provider in Strapi for the verification flow.
-- [ ] Create a custom register/onboarding endpoint or lifecycle hook if needed to track onboarding state.
+- [x] Create a custom register/onboarding endpoint or lifecycle hook if needed to track onboarding state. [x]
 
 ### 🎨 Frontend (Next.js)
 - [ ] Implement multi-step onboarding form using React Hook Form & Zustand for state.

@@ -24,6 +24,7 @@ services:
       - ./backend/package.json:/opt/package.json
       - ./backend/package-lock.json:/opt/package-lock.json
       - ./backend/public/uploads:/opt/app/public/uploads
+      - ./backend/__tests__:/opt/app/__tests__
     ports:
       - 1337:1337
       - 5173:5173

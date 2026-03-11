@@ -7,7 +7,7 @@
 ### 🛠️ Backend (Strapi v5)
 | ID | Title | Points | Status |
 |----|-------|--------|--------|
-| [US-003-B](stories/US-003-identity-onboarding.md) | User Schema Extension & Auth Config | 2 | [ ] Todo |
+| [US-003-B](stories/US-003-identity-onboarding.md) | User Schema Extension & Auth Config | 2 | [x] Done |
 | [US-004-B](stories/US-004-institutional-affiliation.md) | Institution Relations & Admin Hooks | 3 | [ ] Todo |
 | [US-005-B](stories/US-005-orcid-validation.md) | ORCID API Integration Service | 2 | [ ] Todo |
 | [US-006-B](stories/US-006-forum-hierarchy.md) | Forum Collections & Recursive Relations | 3 | [ ] Todo |

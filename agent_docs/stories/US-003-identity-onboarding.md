@@ -15,17 +15,17 @@
 - [ ] Onboarding flow triggers after first login/verification.
 - [ ] User can select their primary Role (Individual or Institutional).
 - [ ] User can pick Expertise and interests from the unified Tag system.
-- [ ] User can enter Education and Career history milestones.
+- [ ] User can enter their Career Stage and Expertise.
 
 ## Technical Acceptance Criteria (TAC)
 
 ### 🛠️ Backend (Strapi)
-- [x] Extend `plugin::users-permissions.user` schema with `education` and `careerHistory` JSON fields. [x]
+- [x] Extend `plugin::users-permissions.user` schema with `careerStage`, `expertise`, `orcidId`, and `mentorAvailability`. [x]
 - [x] Ensure `enum role` matches the 6 Figma-defined roles in Strapi settings. [x]
 - [ ] Configure email provider in Strapi for the verification flow.
 - [x] Create a custom register/onboarding endpoint or lifecycle hook if needed to track onboarding state. [x]
 
 ### 🎨 Frontend (Next.js)
 - [ ] Implement multi-step onboarding form using React Hook Form & Zustand for state.
-- [ ] Build UI for Role Selection, Expertise (Tag selector), and Education/Career history.
+- [ ] Build UI for Role Selection, Career Stage (Enum), and Expertise (Searchable Tag selector).
 - [ ] Implement Route Guard to redirect un-onboarded users to the `/onboarding` flow.

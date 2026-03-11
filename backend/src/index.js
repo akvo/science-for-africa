@@ -8,20 +8,28 @@ module.exports = {
    * This gives you an opportunity to extend code.
    */
   register({ strapi }) {
-    // Extend User content-type programmatically to avoid overwriting default plugin attributes
+    // Extend User content-type programmatically to match Clean Slate Architecture (v4)
     const userModel = strapi.contentType('plugin::users-permissions.user');
     if (userModel) {
       userModel.attributes = {
         ...userModel.attributes,
-        education: {
-          type: 'json',
+        careerStage: {
+          type: 'enumeration',
+          enum: ['Early-Career', 'Mid-Career', 'Senior', 'Executive'],
         },
-        careerHistory: {
-          type: 'json',
+        expertise: {
+          type: 'string',
         },
         onboardingStep: {
           type: 'integer',
           default: 0,
+        },
+        orcidId: {
+          type: 'string',
+        },
+        mentorAvailability: {
+          type: 'boolean',
+          default: false,
         },
       };
     }

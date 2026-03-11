@@ -18,8 +18,8 @@
 ## Technical Acceptance Criteria (TAC)
 
 ### 🛠️ Backend (Strapi)
-- [ ] Implement `MentorshipConnection` collection with `status` (Pending, Accepted, Declined).
-- [ ] Add `mentorAvailability` (boolean) to User schema.
+- [ ] Implement `MentorshipRequest` collection with `status` (Pending, Accepted, Declined).
+- [x] Ensure `mentorAvailability` (boolean) is present on User schema. [x]
 - [ ] Configure Strapi Webhooks or lifecycle hooks for local notifications on request.
 
 ### 🎨 Frontend (Next.js)

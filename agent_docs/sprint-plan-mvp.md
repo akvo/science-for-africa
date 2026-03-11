@@ -1,6 +1,6 @@
 # Sprint Plan: Phase 1 MVP (Identity, Community & Resources)
 
-**Sprint Goal**: Establish the core research identity system, community collaboration hubs, and a moderated resource pipeline.
+**Sprint Goal**: Establish the core research identity system, community collaboration hubs, and a moderated resource pipeline. (Aligned with Architecture v4 - Clean Slate)
 
 ## 1. Stories & Tasks Scope
 

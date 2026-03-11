@@ -76,6 +76,12 @@ module.exports = {
           target: 'api::mentorship-request.mentorship-request',
           mappedBy: 'mentee',
         },
+        resources: {
+          type: 'relation',
+          relation: 'oneToMany',
+          target: 'api::resource.resource',
+          mappedBy: 'author',
+        },
       };
     }
   },

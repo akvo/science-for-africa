@@ -12,7 +12,7 @@
 | [US-005-B](stories/US-005-orcid-validation.md) | ORCID API Integration Service | 2 | 4 | 2 | [x] Done |
 | [US-006-B](stories/US-006-forum-hierarchy.md) | Forum Collections & Recursive Relations | 3 | 8 | 6 | [x] Done |
 | [US-007-B](stories/US-007-mentorship-discovery.md) | Mentorship Join Table & Status Logic | 2 | 4 | 3 | [x] Done |
-| [US-008-B](stories/US-008-resource-moderation.md) | Resource Draft/Publish & Review Pipeline | 3 | 6 | 0 | [ ] Todo |
+| [US-008-B](stories/US-008-resource-moderation.md) | Resource Draft/Publish & Review Pipeline | 3 | 6 | 2 | [x] Done |
 
 ### 🎨 Frontend (Next.js 15)
 | ID | Title | Points | Est. (h) | Act. (h) | Status |

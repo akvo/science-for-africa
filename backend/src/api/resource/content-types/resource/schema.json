@@ -1,0 +1,75 @@
+{
+  "kind": "collectionType",
+  "collectionName": "resources",
+  "info": {
+    "singularName": "resource",
+    "pluralName": "resources",
+    "displayName": "Resource",
+    "description": "User-submitted resources and toolkits"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "Toolkit",
+        "Story",
+        "Training",
+        "Dataset",
+        "Other"
+      ],
+      "required": true
+    },
+    "tags": {
+      "type": "json"
+    },
+    "reviewStatus": {
+      "type": "enumeration",
+      "enum": [
+        "Draft",
+        "Pending",
+        "Published",
+        "Rejected"
+      ],
+      "default": "Draft",
+      "required": true
+    },
+    "rejectionNotes": {
+      "type": "text"
+    },
+    "author": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "resources"
+    },
+    "community": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::community.community",
+      "inversedBy": "resources"
+    },
+    "attachment": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  }
+}

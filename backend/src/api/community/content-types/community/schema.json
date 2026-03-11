@@ -28,6 +28,12 @@
       "relation": "oneToMany",
       "target": "api::forum-category.forum-category",
       "mappedBy": "community"
+    },
+    "resources": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::resource.resource",
+      "mappedBy": "community"
     }
   }
 }

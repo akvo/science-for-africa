@@ -6,7 +6,7 @@
 ## Time Tracking
 | Domain | Est. (h) | Act. (h) | Status |
 |--------|----------|----------|--------|
-| Backend | 6 | 0 | [ ] Todo |
+| Backend | 6 | 2 | [x] Done |
 | Frontend | 8 | 0 | [ ] Todo |
 
 ## Acceptance Criteria (UAC)
@@ -19,9 +19,9 @@
 ## Technical Acceptance Criteria (TAC)
 
 ### 🛠️ Backend (Strapi)
-- [ ] Enable Draft/Publish on `Resource` collection.
-- [ ] Add `status` enum: `Draft`, `Pending`, `Published`, `Rejected`.
-- [ ] Implement relationship `Resource` belongs to `Community`.
+- [x] Enable Draft/Publish on `Resource` collection.
+- [x] Add `status` enum: `Draft`, `Pending`, `Published`, `Rejected`.
+- [x] Implement relationship `Resource` belongs to `Community`.
 
 ### 🎨 Frontend (Next.js)
 - [ ] Build 3-step Resource Submission form (Meta -> Community -> File).

@@ -43,13 +43,6 @@ async function setupStrapi() {
 async function teardownStrapi() {
   if (instance) {
     await instance.destroy();
-
-    // Clean up test database
-    const dbPath = path.join(__dirname, '../../.tmp/test.db');
-    if (fs.existsSync(dbPath)) {
-      fs.unlinkSync(dbPath);
-    }
-
     instance = null;
   }
 }

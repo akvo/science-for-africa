@@ -3,6 +3,12 @@
 **Role**: Member / Institution Admin
 **Objective**: Link my profile to my research institution for verified collaboration.
 
+## Time Tracking
+| Domain | Est. (h) | Act. (h) | Status |
+|--------|----------|----------|--------|
+| Backend | 6 | 0 | [ ] Todo |
+| Frontend | 6 | 0 | [ ] Todo |
+
 ## Acceptance Criteria (UAC)
 - [ ] Users can search for existing Institutions during or after onboarding.
 - [ ] Users can request affiliation with a selected institution.

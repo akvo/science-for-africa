@@ -3,6 +3,12 @@
 **Role**: Researcher
 **Objective**: Connect my ORCID iD to prove my scientific identity and pull public research data.
 
+## Time Tracking
+| Domain | Est. (h) | Act. (h) | Status |
+|--------|----------|----------|--------|
+| Backend | 4 | 0 | [ ] Todo |
+| Frontend | 4 | 0 | [ ] Todo |
+
 ## Acceptance Criteria (UAC)
 - [ ] User can enter their ORCID iD during onboarding or in profile edit.
 - [ ] Platform validates the ID format and existence via ORCID public API.

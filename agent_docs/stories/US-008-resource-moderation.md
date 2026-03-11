@@ -3,6 +3,12 @@
 **Role**: Member / Moderator
 **Objective**: Share research resources (toolkits, stories, training) while ensuring quality control.
 
+## Time Tracking
+| Domain | Est. (h) | Act. (h) | Status |
+|--------|----------|----------|--------|
+| Backend | 6 | 0 | [ ] Todo |
+| Frontend | 8 | 0 | [ ] Todo |
+
 ## Acceptance Criteria (UAC)
 - [ ] Members can submit a Resource via a multi-step form (Title, Category, Tags, File).
 - [ ] User must select a "Target Community" for the resource.

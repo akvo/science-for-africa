@@ -3,6 +3,12 @@
 **Role**: Member / Moderator
 **Objective**: Participate in topical or regional discussions with peers.
 
+## Time Tracking
+| Domain | Est. (h) | Act. (h) | Status |
+|--------|----------|----------|--------|
+| Backend | 8 | 0 | [ ] Todo |
+| Frontend | 8 | 0 | [ ] Todo |
+
 ## Acceptance Criteria (UAC)
 - [ ] Users can browse Communities -> Forum Categories -> Threads.
 - [ ] Users can create new Threads in open categories.

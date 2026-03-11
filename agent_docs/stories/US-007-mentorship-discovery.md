@@ -3,6 +3,12 @@
 **Role**: Mentee / Expert
 **Objective**: Find a mentor or offer guidance to junior researchers.
 
+## Time Tracking
+| Domain | Est. (h) | Act. (h) | Status |
+|--------|----------|----------|--------|
+| Backend | 4 | 0 | [ ] Todo |
+| Frontend | 6 | 0 | [ ] Todo |
+
 ## Acceptance Criteria (UAC)
 - [ ] Users can browse the Expert Directory (publicly available).
 - [ ] Users can filter experts by Expertise (Tags) and Region.

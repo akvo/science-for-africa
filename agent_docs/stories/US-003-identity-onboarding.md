@@ -3,6 +3,12 @@
 **Role**: New Researcher
 **Objective**: Create an account and set up my professional profile to access community features.
 
+## Time Tracking
+| Domain | Est. (h) | Act. (h) | Status |
+|--------|----------|----------|--------|
+| Backend | 4 | 6 | [x] Done |
+| Frontend | 8 | 0 | [ ] Todo |
+
 ## Acceptance Criteria (UAC)
 - [ ] User can sign up with Email, Password, First Name, and Last Name.
 - [ ] System sends a verification email upon signup.

@@ -6,7 +6,7 @@
 ## Time Tracking
 | Domain | Est. (h) | Act. (h) | Status |
 |--------|----------|----------|--------|
-| Backend | 6 | 0 | [ ] Todo |
+| Backend | 6 | 4 | [x] Completed |
 | Frontend | 6 | 0 | [ ] Todo |
 
 ## Acceptance Criteria (UAC)
@@ -19,9 +19,9 @@
 ## Technical Acceptance Criteria (TAC)
 
 ### 🛠️ Backend (Strapi)
-- [ ] Create/Update Many-to-One relation between `User` and `Institution`.
-- [ ] Implement `affiliationStatus` enum (Pending, Approved, Rejected) on the relation attribute.
-- [ ] Create a custom controller or policy to allow `Institution Admin` to update only their affiliated users' status.
+- [x] Create/Update Many-to-One relation between `User` and `Institution`.
+- [x] Implement `affiliationStatus` enum (Pending, Approved, Rejected) on the relation attribute.
+- [x] Create a custom controller or policy to allow `Institution Admin` to update only their affiliated users' status.
 
 ### 🎨 Frontend (Next.js)
 - [ ] Build "Search Institution" component with debounced API requests.

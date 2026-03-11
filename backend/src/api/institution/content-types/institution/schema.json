@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "institutions",
+  "info": {
+    "singularName": "institution",
+    "pluralName": "institutions",
+    "displayName": "Institution",
+    "description": "Research institutions and organizations"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "city": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "affiliationType": {
+      "type": "enumeration",
+      "enum": [
+        "University",
+        "Research Org",
+        "Funding Agency",
+        "Other"
+      ]
+    },
+    "users": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "institution"
+    }
+  }
+}

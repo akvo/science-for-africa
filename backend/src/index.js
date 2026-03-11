@@ -31,6 +31,17 @@ module.exports = {
           type: 'boolean',
           default: false,
         },
+        institution: {
+          type: 'relation',
+          relation: 'manyToOne',
+          target: 'api::institution.institution',
+          inversedBy: 'users',
+        },
+        affiliationStatus: {
+          type: 'enumeration',
+          enum: ['Pending', 'Approved', 'Rejected'],
+          default: 'Pending',
+        },
       };
     }
   },

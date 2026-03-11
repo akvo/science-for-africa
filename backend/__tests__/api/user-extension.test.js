@@ -48,16 +48,18 @@ describe("User Schema Extension (US-003-B)", () => {
     }
 
     // Fetch the user directly via query to verify schema fields
-    const fetchedUser = await strapi.query("plugin::users-permissions.user").findOne({
-      where: { id: user.id }
-    });
+    const fetchedUser = await strapi
+      .query("plugin::users-permissions.user")
+      .findOne({
+        where: { id: user.id },
+      });
 
     expect(fetchedUser).toHaveProperty("careerStage");
     expect(fetchedUser).toHaveProperty("expertise");
     expect(fetchedUser).toHaveProperty("orcidId");
     expect(fetchedUser).toHaveProperty("mentorAvailability");
     expect(fetchedUser).toHaveProperty("onboardingStep");
-    
+
     expect(fetchedUser.careerStage).toBe("Senior");
     expect(fetchedUser.expertise).toBe("Biotechnology");
     expect(fetchedUser.orcidId).toBe("0000-0001-2345-6789");
@@ -65,10 +67,53 @@ describe("User Schema Extension (US-003-B)", () => {
     expect(fetchedUser.onboardingStep).toBe(1);
   });
 
+  it("should support institutional affiliation with a status", async () => {
+    const strapi = getStrapi();
+
+    // Create an institution first
+    const institution = await strapi
+      .query("api::institution.institution")
+      .create({
+        data: {
+          name: "Test University",
+          city: "Nairobi",
+          country: "Kenya",
+          affiliationType: "University",
+        },
+      });
+
+    // Create a user linked to the institution
+    const userData = {
+      username: "affiliateduser",
+      email: "affil@example.com",
+      password: "Password123!",
+      institution: institution.id,
+      affiliationStatus: "Pending",
+    };
+
+    const user = await createMockUser(userData);
+
+    // Fetch user and verify relation
+    const fetchedUser = await strapi
+      .query("plugin::users-permissions.user")
+      .findOne({
+        where: { id: user.id },
+        populate: ["institution"],
+      });
+
+    expect(fetchedUser).toHaveProperty("institution");
+    expect(fetchedUser.institution).toBeDefined();
+    expect(fetchedUser.institution.name).toBe("Test University");
+    expect(fetchedUser).toHaveProperty("affiliationStatus");
+    expect(fetchedUser.affiliationStatus).toBe("Pending");
+  });
+
   it("should have the required roles in the system", async () => {
     const strapi = getStrapi();
-    const roles = await strapi.query("plugin::users-permissions.role").findMany();
-    const roleNames = roles.map(r => r.name);
+    const roles = await strapi
+      .query("plugin::users-permissions.role")
+      .findMany();
+    const roleNames = roles.map((r) => r.name);
 
     const expectedRoles = [
       "Platform Admin",
@@ -76,11 +121,11 @@ describe("User Schema Extension (US-003-B)", () => {
       "Institution Admin",
       "Expert",
       "Member",
-      "Individual"
+      "Individual",
     ];
 
     // This will likely FAIL as we haven't created them yet
-    expectedRoles.forEach(roleName => {
+    expectedRoles.forEach((roleName) => {
       expect(roleNames).toContain(roleName);
     });
   });

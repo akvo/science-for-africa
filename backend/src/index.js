@@ -7,7 +7,25 @@ module.exports = {
    *
    * This gives you an opportunity to extend code.
    */
-  register(/* { strapi } */) {},
+  register({ strapi }) {
+    // Extend User content-type programmatically to avoid overwriting default plugin attributes
+    const userModel = strapi.contentType('plugin::users-permissions.user');
+    if (userModel) {
+      userModel.attributes = {
+        ...userModel.attributes,
+        education: {
+          type: 'json',
+        },
+        careerHistory: {
+          type: 'json',
+        },
+        onboardingStep: {
+          type: 'integer',
+          default: 0,
+        },
+      };
+    }
+  },
 
   /**
    * An asynchronous bootstrap function that runs before

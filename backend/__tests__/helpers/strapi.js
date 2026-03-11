@@ -21,19 +21,33 @@ async function setupStrapi() {
     }).load();
 
     await instance.server.mount();
+  }
+
+  // Ensure isolation and permissions on every setup call (per test file)
+  try {
+    // Clear users and permissions before tests to ensure isolation in Postgres
+    await instance.query('plugin::users-permissions.user').deleteMany({});
+    await instance.query('plugin::users-permissions.permission').deleteMany({
+      where: { action: 'plugin::users-permissions.user.me' }
+    });
 
     // Grant permissions to Authenticated role for tests
     const authenticatedRole = await instance.query('plugin::users-permissions.role').findOne({
       where: { type: 'authenticated' },
     });
 
-    await instance.query('plugin::users-permissions.permission').create({
-      data: {
-        action: 'plugin::users-permissions.user.me',
-        role: authenticatedRole.id,
-      },
-    });
+    if (authenticatedRole) {
+      await instance.query('plugin::users-permissions.permission').create({
+        data: {
+          action: 'plugin::users-permissions.user.me',
+          role: authenticatedRole.id,
+        },
+      });
+    }
+  } catch (err) {
+    console.error('Error during setupStrapi isolation/cleanup:', err);
   }
+
   return instance;
 }
 
@@ -58,16 +72,23 @@ function getStrapi() {
  * Creates a mock user for testing authenticated routes
  */
 async function createMockUser(userData = {}) {
+  const strapi = getStrapi();
+
+  // Find the Authenticated role
+  const authenticatedRole = await strapi.query('plugin::users-permissions.role').findOne({
+    where: { type: 'authenticated' },
+  });
+
   const defaultUser = {
     username: 'testuser',
     email: 'test@example.com',
     password: 'Test123!',
     confirmed: true,
     blocked: false,
+    role: authenticatedRole ? authenticatedRole.id : null,
     ...userData,
   };
 
-  const strapi = getStrapi();
   const user = await strapi.plugins['users-permissions'].services.user.add(defaultUser);
 
   return user;

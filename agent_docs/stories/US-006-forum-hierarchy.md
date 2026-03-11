@@ -6,7 +6,7 @@
 ## Time Tracking
 | Domain | Est. (h) | Act. (h) | Status |
 |--------|----------|----------|--------|
-| Backend | 8 | 0 | [ ] Todo |
+| Backend | 8 | 6 | [x] Done |
 | Frontend | 8 | 0 | [ ] Todo |
 
 ## Acceptance Criteria (UAC)
@@ -19,10 +19,10 @@
 ## Technical Acceptance Criteria (TAC)
 
 ### 🛠️ Backend (Strapi)
-- [ ] Implement collections: `Community`, `ForumCategory`, `Thread`, `Post`.
-- [ ] Set up recursive `parentPost` relation on `Post` (One-to-Many self-referencing).
-- [ ] Configure `find` permissions: Public vs Private communities (via Strapi Policies).
-- [ ] Implement "Follow Thread" many-to-many relation with `User`.
+- [x] Implement collections: `Community`, `ForumCategory`, `Thread`, `Post`.
+- [x] Set up recursive `parentPost` relation on `Post` (One-to-Many self-referencing).
+- [x] Configure `find` permissions: Public vs Private communities (via Strapi Policies).
+- [x] Implement "Follow Thread" many-to-many relation with `User`.
 
 ### 🎨 Frontend (Next.js)
 - [ ] Build the hierarchical navigation: Community -> Category -> Thread List.

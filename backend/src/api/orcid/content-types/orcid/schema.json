@@ -10,5 +10,10 @@
   "options": {
     "draftAndPublish": false
   },
-  "attributes": {}
+  "attributes": {
+    "description": {
+      "type": "string",
+      "default": "Configuration for ORCID integration"
+    }
+  }
 }

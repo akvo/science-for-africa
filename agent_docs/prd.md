@@ -11,37 +11,60 @@ The Science for Africa (SfA) external platform aims to create a central Communit
 - Surface opportunities (funding, jobs, scholarships) logically and accessibly.
 - Drive engagement through structured, moderated community forums and **Mentorship**.
 
-## 2. Target Users
-- **Guest**: Unauthenticated users viewing public opportunities and basic platform information.
-- **Member**: Standard authenticated researcher. Can participate in forums, view directory, and request Mentorship/Institutional Affiliation.
-- **Institution Admin**: A designated member managing an Institution's profile, member affiliations, and organizational content.
-- **Moderator (Community Admin)**: Governance role handling reported content, managing forum flow, and approving generic user submissions.
-- **Platform/Super Admin**: Full platform management, global config, and oversight.
+## 2. Target Users (Roles)
+Based on Figma [Collaboration & Community](https://www.figma.com/board/Chk297BVmFWcw4zJjuqX5F/Science-for-Africa--External-?node-id=55-3793), the following roles are defined:
+- **Guest**: Unauthenticated. Read-only access to public threads, expert profiles, collaboration calls, and events.
+- **Individual User (No Org)**: Authenticated but not affiliated. Can participate in public forums and request mentorship.
+- **Community Member (Org Affiliated)**: Authenticated and affiliated with an Institution. Full participation in organization-scoped communities.
+- **Expert (Verified Member)**: Can offer/accept mentorship and create expert-led events.
+- **Institution Admin**: Manages their organization's workspace, members, and content.
+- **Community Admin (Moderator)**: Oversees forum content (lock/merge threads, remove content).
+- **Platform Admin (Strapi Superadmin)**: Full system control.
 
 ## 3. Key User Journeys
-- **Registration & Onboarding**: Users define their bio, expertise, career stage, open mentor availability, and either request an **Institutional Affiliation** or link an ORCID ID.
-- **Institutional Management**: An Institution Admin reviews affiliation requests from Members to build their verified directory.
-- **Content Submission & Moderation**: Users submit Resources/Opportunities/Events. These enter a "Pending" queue (Draft) until an Institution Admin (if representing the org) or a Moderator approves them.
-- **Community & Forum Participation**: Members browse structured Communities -> Forum Categories -> Threads. They can post Replies and Report violations.
-- **Mentorship Direct Matching**: Members review the Directory for those with "Mentor Availability" and send structured connection requests.
+- **Registration & Detailed Onboarding**:
+    - Sign-up with Email/Password -> Email Verification.
+    - Onboarding flow: Role selection (Individual vs Institutional) -> Expertise/Interests selection -> Education/Career progress.
+    - **Institutional Affiliation**: Search for existing Institution to join (Pending Admin approval) or trigger "Create New Institution" flow.
+    - **ORCID Integration**: Linking and validating ORCID ID during onboarding or profile edit.
+- **Identity & Profile Management**:
+    - Centralized dashboard for personal info, expertise, roles, and institutional status.
+    - Upload profile photo and manage notification preferences.
+- **Community Interaction**:
+    - **Discussion Forums**: Community -> Category -> Thread -> Post. Includes "Follow Thread" and "Reply" features.
+    - **Mentorship**: Browse Expert Directory -> Filter by Expertise/Region -> Send Mentorship Request (Pending Expert approval).
+    - **Events**: Browse Calendar -> Filter by Type -> Register/Sign up for events.
+- **Resource Management**: (See Section 5).
 
 ## 4. Feature Requirements (MoSCoW)
 ### Must Have
-- **Extended User Profiles**: Fields for Expertise, Regions, ORCID, and Roles.
-- **Institutions**: Organization profiles with an "Affiliation Request" and approval loop managed by their assigned Institution Admin.
-- **Resources, Opportunities & Events**: Central curated boards. Must support Strapi Draft/Publish for the moderation pipeline.
-- **Communities & Forums Hierarchy**: Nested discussions (Community -> Forum Category -> Thread -> Post).
-- **User Reporting System**: Peer moderation flow enabling users to flag posts/threads.
-- **Unified Tagging**: Centralized taxonomy linking across all entities.
+- **Expanded Identity System**: RBAC for the 6 roles identified.
+- **Onboarding Flow**: Multi-step flow including Institutional Affiliation requests.
+- **ORCID Validation**: Backend integration for ORCID verification.
+- **Community & Forums Hierarchy**: Public vs Private communities.
+- **Resource submission & Moderation**: (Figma Section 5).
 
-### Should Have
-- **Mentorship Flow**: Direct request/approval workflows between users.
-- **Real-Time Notifications**: Alerts for `@mentions` and replies.
+## 5. Phase 1 MVP Scope (Expanded)
+The Phase 1 MVP is now split into three core pillars: **Identity**, **Community**, and **Resources**.
 
-### Won't Have (In Initial Sandbox)
-- **Direct in-app messaging** outside of forum threads and initial mentorship connections.
+### 5.1 Identity & Onboarding (Foundation)
+- **Login/Sign-up**: Email-based auth with verification.
+- **Structured Onboarding**: Capturing career stage, expertise, and institutional status.
+- **Institutional Request Loop**: Workflow for members to request affiliation and admins to approve/reject.
+- **ORCID Linkage**: Ability to associate verified research ID.
 
-## 5. Non-Functional Requirements
+### 5.2 Community & Collaboration
+- **Discussion Forums**: Core discussion engine with threading and basic moderation (Lock/Merge).
+- **Expert Directory**: Publicly browsable directory of experts for mentorship discovery.
+- **Mentorship Requests**: Simple request/approval flow between members and experts.
+- **Events Listing**: Public calendar for Conferences, Workshops, and Webinars.
+
+### 5.3 Resource Management (from Figma 17:1217)
+- **Public Browsing**: Filtering by category/keyword.
+- **Moderated Submission**: Member upload -> Moderator review -> Publish.
+- **Draft/Publish Pipeline**: Strapi-native workflow for content quality control.
+
+## 6. Non-Functional Requirements
 - **Security**: Strict Role-Based Access Control (RBAC). Admin UI must be heavily filtered by logical conditions (e.g., Institution Admins only see their own members).
 - **Scalability**: ERD should gracefully handle relationships between unified tags and the many heavily relational content types.
 

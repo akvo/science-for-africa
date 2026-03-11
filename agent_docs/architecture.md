@@ -170,6 +170,8 @@ erDiagram
 
     %% Relationships - Resources & Opps
     USER ||--o{ RESOURCE : "Uploads"
+    USER ||--o{ EVENT : "Registers for"
+    RESOURCE }|--|| COMMUNITY : "Belongs to (Target)"
     USER ||--o{ EVENT : "Organizes"
     USER ||--o{ COURSE : "Enrolls in"
     INSTITUTION ||--o{ COURSE : "Provides (Partner)"

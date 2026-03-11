@@ -36,7 +36,7 @@ Strapi v5 is designed to be "plug-and-play." By extending the `plugin::users-per
 In our Next.js 15 frontend, displaying a Member Directory or a User Dashboard requires a single fetch request. Amelia (Developer) can access `user.bio` and `user.careerStage` without the overhead of Strapi's deep population (`?populate=user_profile`), which significantly reduces API response times and client-side logic complexity.
 
 ### 3.3 Relational Logic (Mentorship & Content)
-The **Science for Africa** platform relies heavily on peer-to-peer relationships (Mentors/Mentees) and content authorship. 
+The **Science for Africa** platform relies heavily on peer-to-peer relationships (Mentors/Mentees) and content authorship.
 *   **Logical Link**: A `Thread` is authored by a `User`.
 *   **Direct Access**: Displaying the author's expertise next to their forum post is instantaneous when the expertise is on the `User` object itself.
 

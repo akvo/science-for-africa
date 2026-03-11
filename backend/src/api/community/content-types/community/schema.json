@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "communities",
+  "info": {
+    "singularName": "community",
+    "pluralName": "communities",
+    "displayName": "Community",
+    "description": "Research communities on the platform"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "isPrivate": {
+      "type": "boolean",
+      "default": false
+    },
+    "forumCategories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::forum-category.forum-category",
+      "mappedBy": "community"
+    }
+  }
+}

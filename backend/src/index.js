@@ -46,6 +46,24 @@ module.exports = {
           type: 'boolean',
           default: false,
         },
+        threads: {
+          type: 'relation',
+          relation: 'oneToMany',
+          target: 'api::thread.thread',
+          mappedBy: 'author',
+        },
+        posts: {
+          type: 'relation',
+          relation: 'oneToMany',
+          target: 'api::post.post',
+          mappedBy: 'author',
+        },
+        followedThreads: {
+          type: 'relation',
+          relation: 'manyToMany',
+          target: 'api::thread.thread',
+          mappedBy: 'followers',
+        },
       };
     }
   },

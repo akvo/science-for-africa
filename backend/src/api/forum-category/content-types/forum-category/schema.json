@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "forum_categories",
+  "info": {
+    "singularName": "forum-category",
+    "pluralName": "forum-categories",
+    "displayName": "Forum Category",
+    "description": "Categories for forum threads"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "community": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::community.community",
+      "inversedBy": "forumCategories"
+    },
+    "parentCategory": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::forum-category.forum-category",
+      "inversedBy": "subCategories"
+    },
+    "subCategories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::forum-category.forum-category",
+      "mappedBy": "parentCategory"
+    },
+    "threads": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::thread.thread",
+      "mappedBy": "forumCategory"
+    }
+  }
+}

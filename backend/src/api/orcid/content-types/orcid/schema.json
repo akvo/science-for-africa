@@ -1,0 +1,14 @@
+{
+  "kind": "singleType",
+  "collectionName": "orcids",
+  "info": {
+    "singularName": "orcid",
+    "pluralName": "orcids",
+    "displayName": "ORCID Configuration",
+    "description": "Utility API for ORCID integration"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {}
+}

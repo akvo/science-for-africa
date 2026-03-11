@@ -42,6 +42,10 @@ module.exports = {
           enum: ['Pending', 'Approved', 'Rejected'],
           default: 'Pending',
         },
+        orcidVerified: {
+          type: 'boolean',
+          default: false,
+        },
       };
     }
   },
@@ -54,6 +58,38 @@ module.exports = {
    * run jobs, or perform some special logic.
    */
   async bootstrap({ strapi }) {
+    // Register lifecycle hooks for ORCID validation
+    strapi.db.lifecycles.subscribe({
+      models: ["plugin::users-permissions.user"],
+
+      async afterCreate(event) {
+        const { result, params } = event;
+        if (result.orcidId) {
+          const isValid = await strapi.service("api::orcid.orcid").validate(result.orcidId);
+          if (isValid) {
+            await strapi.query("plugin::users-permissions.user").update({
+              where: { id: result.id },
+              data: { orcidVerified: true },
+            });
+          }
+        }
+      },
+
+      async afterUpdate(event) {
+        const { result, params } = event;
+        // Check if orcidId was changed or if it's a new update that needs validation
+        if (result.orcidId && !result.orcidVerified) {
+          const isValid = await strapi.service("api::orcid.orcid").validate(result.orcidId);
+          if (isValid) {
+            await strapi.query("plugin::users-permissions.user").update({
+              where: { id: result.id },
+              data: { orcidVerified: true },
+            });
+          }
+        }
+      },
+    });
+
     const expectedRoles = [
       "Platform Admin",
       "Community Admin",

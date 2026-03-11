@@ -108,6 +108,26 @@ describe("User Schema Extension (US-003-B)", () => {
     expect(fetchedUser.affiliationStatus).toBe("Pending");
   });
 
+  it("should automatically validate ORCID iDs on user creation", async () => {
+    const strapi = getStrapi();
+    
+    const userData = {
+      username: "orciduser",
+      email: "orcid@example.com",
+      password: "Password123!",
+      orcidId: "0000-0002-1825-0097", // Josiah Carberry (Valid)
+    };
+
+    const user = await createMockUser(userData);
+
+    const fetchedUser = await strapi.query("plugin::users-permissions.user").findOne({
+      where: { id: user.id },
+    });
+
+    expect(fetchedUser.orcidId).toBe("0000-0002-1825-0097");
+    expect(fetchedUser.orcidVerified).toBe(true);
+  });
+
   it("should have the required roles in the system", async () => {
     const strapi = getStrapi();
     const roles = await strapi

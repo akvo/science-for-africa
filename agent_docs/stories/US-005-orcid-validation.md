@@ -6,7 +6,7 @@
 ## Time Tracking
 | Domain | Est. (h) | Act. (h) | Status |
 |--------|----------|----------|--------|
-| Backend | 4 | 0 | [ ] Todo |
+| Backend | 4 | 2 | [x] Completed |
 | Frontend | 4 | 0 | [ ] Todo |
 
 ## Acceptance Criteria (UAC)
@@ -18,9 +18,9 @@
 ## Technical Acceptance Criteria (TAC)
 
 ### 🛠️ Backend (Strapi)
-- [ ] Add `orcidId` field (string) to the User collection.
-- [ ] Implement a Strapi service to call the ORCID Public API (`pub.orcid.org/v3.0/`) for ID validation.
-- [ ] Create a custom endpoint or hook to trigger validation on profile update.
+- [x] Add `orcidId` field (string) to the User collection.
+- [x] Implement a Strapi service to call the ORCID Public API (`pub.orcid.org/v3.0/`) for ID validation.
+- [x] Create a custom endpoint or hook to trigger validation on profile update.
 
 ### 🎨 Frontend (Next.js)
 - [ ] Add ORCID ID field to user profile/onboarding form with regex validation.

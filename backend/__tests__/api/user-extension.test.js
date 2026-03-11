@@ -23,7 +23,7 @@ describe("User Schema Extension (US-003-B)", () => {
     await teardownStrapi();
   });
 
-  it("should include education and careerHistory fields in the user profile", async () => {
+  it("should include careerStage, expertise, orcidId, and mentorAvailability fields in the user profile", async () => {
     const strapi = getStrapi();
 
     // Create a mock user with the new fields
@@ -31,20 +31,10 @@ describe("User Schema Extension (US-003-B)", () => {
       username: "extensiontest",
       email: "ext@example.com",
       password: "Password123!",
-      education: [
-        {
-          school: "University of Nairobi",
-          degree: "PhD in Computer Science",
-          year: 2022,
-        },
-      ],
-      careerHistory: [
-        {
-          company: "Science for Africa",
-          role: "Lead Researcher",
-          period: "2023-Present",
-        },
-      ],
+      careerStage: "Senior",
+      expertise: "Biotechnology",
+      orcidId: "0000-0001-2345-6789",
+      mentorAvailability: true,
       onboardingStep: 1,
     };
 
@@ -62,13 +52,17 @@ describe("User Schema Extension (US-003-B)", () => {
       where: { id: user.id }
     });
 
-    expect(fetchedUser).toHaveProperty("education");
-    expect(fetchedUser).toHaveProperty("careerHistory");
+    expect(fetchedUser).toHaveProperty("careerStage");
+    expect(fetchedUser).toHaveProperty("expertise");
+    expect(fetchedUser).toHaveProperty("orcidId");
+    expect(fetchedUser).toHaveProperty("mentorAvailability");
     expect(fetchedUser).toHaveProperty("onboardingStep");
+    
+    expect(fetchedUser.careerStage).toBe("Senior");
+    expect(fetchedUser.expertise).toBe("Biotechnology");
+    expect(fetchedUser.orcidId).toBe("0000-0001-2345-6789");
+    expect(fetchedUser.mentorAvailability).toBe(true);
     expect(fetchedUser.onboardingStep).toBe(1);
-
-    expect(Array.isArray(fetchedUser.education)).toBe(true);
-    expect(fetchedUser.education[0].school).toBe("University of Nairobi");
   });
 
   it("should have the required roles in the system", async () => {

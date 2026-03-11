@@ -1,6 +1,6 @@
 # System Architecture & Data Model
 **Project**: Science for Africa - External Platform
-**Phase**: Architect (v2 - Google Docs Update)
+**Phase**: Architect (v3 - Figma & Google Docs Alignment)
 
 ## 1. System Overview
 The backend is powered by **Strapi v5**, acting as a headless CMS and community backend API. The architecture leverages Strapi's built-in `users-permissions` heavily extended to allow robust community engagement. It relies heavily on hierarchical collections (`Community` -> `Category` -> `Thread` -> `Post`) and a comprehensive reporting system for peer moderation.
@@ -20,7 +20,7 @@ erDiagram
         text bio
         string jobTitle
         string expertise
-        string careerStage
+        enum careerStage "Early-Career, Mid-Career, Senior, Executive"
         int yearsOfExperience
         boolean mentorAvailability
         string orcidId
@@ -48,6 +48,17 @@ erDiagram
         string name
         string slug
         enum tagGroup "Expertise, Opportunity Category, Resource Topic, Region"
+    }
+
+    COURSE {
+        string title
+        string slug
+        text description
+        enum type "Learning Course, Partner Course"
+        boolean isExternal
+        string externalUrl
+        boolean certificationAvailable
+        media thumbnail
     }
 
     %% Community & Hierarchical Forums
@@ -97,7 +108,7 @@ erDiagram
     RESOURCE {
         string title
         string slug
-        enum resourceType "Report, Tool, Training, Policy, Case Study"
+        enum resourceType "Publication, Training & Capacity Building, Impact Stories, Toolkits & Standards, Policy Brief, Case Study, Report, Tool"
         text description
         media file
         datetime publicationDate
@@ -124,6 +135,7 @@ erDiagram
     EVENT {
         string title
         string slug
+        enum eventType "Conference, Workshop, Webinar"
         text description
         string cost
         int maxParticipants
@@ -159,6 +171,8 @@ erDiagram
     %% Relationships - Resources & Opps
     USER ||--o{ RESOURCE : "Uploads"
     USER ||--o{ EVENT : "Organizes"
+    USER ||--o{ COURSE : "Enrolls in"
+    INSTITUTION ||--o{ COURSE : "Provides (Partner)"
 
     %% Taxonomy Links
     TAG }|--o{ USER : "Expertise of"
@@ -166,6 +180,7 @@ erDiagram
     TAG }|--o{ RESOURCE : "Categorizes"
     TAG }|--o{ EVENT : "Categorizes"
     TAG }|--o{ THREAD : "Tags"
+    TAG }|--o{ COURSE : "Tags"
 ```
 
 ### 2.2 Core Identity & Access Control
@@ -181,7 +196,7 @@ erDiagram
         text bio
         string jobTitle
         string expertise
-        string careerStage
+        enum careerStage "Early-Career, Mid-Career, Senior, Executive"
         int yearsOfExperience
         boolean mentorAvailability
         string orcidId
@@ -293,7 +308,7 @@ erDiagram
     RESOURCE {
         string title
         string slug
-        enum resourceType "Report, Tool, Training, Policy, Case Study"
+        enum resourceType "Publication, Training & Capacity Building, Impact Stories, Toolkits & Standards, Policy Brief, Case Study, Report, Tool"
         text description
         media file
         datetime publicationDate
@@ -320,6 +335,7 @@ erDiagram
     EVENT {
         string title
         string slug
+        enum eventType "Conference, Workshop, Webinar"
         text description
         string cost
         int maxParticipants
@@ -329,6 +345,13 @@ erDiagram
         string location
         string registrationUrl
         string recordingUrl
+    }
+
+    COURSE {
+        string title
+        string slug
+        enum type "Learning Course, Partner Course"
+        boolean isExternal
     }
 
     %% Core Entity References
@@ -343,12 +366,15 @@ erDiagram
     %% Relationships
     USER ||--o{ RESOURCE : "Uploads"
     USER ||--o{ EVENT : "Organizes"
+    USER ||--o{ COURSE : "Enrolls in"
+    INSTITUTION ||--o{ COURSE : "Provides (Partner)"
 
     TAG }|--o{ USER : "Expertise of"
     TAG }|--o{ OPPORTUNITY : "Categorizes"
     TAG }|--o{ RESOURCE : "Categorizes"
     TAG }|--o{ EVENT : "Categorizes"
     TAG }|--o{ THREAD : "Tags"
+    TAG }|--o{ COURSE : "Tags"
 ```
 
 ## 3. Data Model Explanation
@@ -367,3 +393,6 @@ A single `TAG` collection groups all taxonomy data (Expertise, Regions, Opportun
 
 ### Moderation via Reports
 Instead of users deleting others' content, users create a `REPORT`. The report holds relations to the reporter (`USER`) and the target (either a `POST` or `THREAD`). Moderators view this queue to make decisions, eventually updating the status of the Report and potentially `Hiding` the offending post.
+
+### Learning & Courses
+*   **COURSE**: Represents professional development content. Can be internal "Learning Courses" or "Partner Courses" that redirect externally. Linked to `USER` via enrollment and `INSTITUTION` for partner accreditation.

@@ -6,7 +6,7 @@
 ## Time Tracking
 | Domain | Est. (h) | Act. (h) | Status |
 |--------|----------|----------|--------|
-| Backend | 4 | 0 | [ ] Todo |
+| Backend | 4 | 3 | [x] Done |
 | Frontend | 6 | 0 | [ ] Todo |
 
 ## Acceptance Criteria (UAC)
@@ -18,9 +18,9 @@
 ## Technical Acceptance Criteria (TAC)
 
 ### 🛠️ Backend (Strapi)
-- [ ] Implement `MentorshipRequest` collection with `status` (Pending, Accepted, Declined).
-- [x] Ensure `mentorAvailability` (boolean) is present on User schema. [x]
-- [ ] Configure Strapi Webhooks or lifecycle hooks for local notifications on request.
+- [x] Implement `MentorshipRequest` collection with `status` (Pending, Accepted, Declined).
+- [x] Ensure `mentorAvailability` (boolean) is present on User schema.
+- [x] Configure Strapi Webhooks or lifecycle hooks for local notifications on request.
 
 ### 🎨 Frontend (Next.js)
 - [ ] Build Expert Directory page with Tag-based filtering.

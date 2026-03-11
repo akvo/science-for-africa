@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "mentorship_requests",
+  "info": {
+    "singularName": "mentorship-request",
+    "pluralName": "mentorship-requests",
+    "displayName": "Mentorship Request",
+    "description": "A request from a mentee to a mentor"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "message": {
+      "type": "text",
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "Pending",
+        "Accepted",
+        "Declined"
+      ],
+      "default": "Pending",
+      "required": true
+    },
+    "mentor": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "mentorshipRequestsReceived"
+    },
+    "mentee": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "mentorshipRequestsSent"
+    }
+  }
+}

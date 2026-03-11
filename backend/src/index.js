@@ -64,6 +64,18 @@ module.exports = {
           target: 'api::thread.thread',
           mappedBy: 'followers',
         },
+        mentorshipRequestsReceived: {
+          type: 'relation',
+          relation: 'oneToMany',
+          target: 'api::mentorship-request.mentorship-request',
+          mappedBy: 'mentor',
+        },
+        mentorshipRequestsSent: {
+          type: 'relation',
+          relation: 'oneToMany',
+          target: 'api::mentorship-request.mentorship-request',
+          mappedBy: 'mentee',
+        },
       };
     }
   },

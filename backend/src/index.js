@@ -81,11 +81,13 @@ module.exports = {
       models: ["plugin::users-permissions.user"],
 
       async afterCreate(event) {
-        const { result, params } = event;
-        if (result.orcidId) {
+        const { result } = event;
+        if (result.orcidId && !result.orcidVerified) {
           const isValid = await strapi.service("api::orcid.orcid").validate(result.orcidId);
           if (isValid) {
-            await strapi.query("plugin::users-permissions.user").update({
+            // Use db.query directly to avoid triggering lifecycles again if possible, 
+            // or use a flag. In Strapi v5, db.query is lower level.
+            await strapi.db.query("plugin::users-permissions.user").update({
               where: { id: result.id },
               data: { orcidVerified: true },
             });
@@ -94,12 +96,12 @@ module.exports = {
       },
 
       async afterUpdate(event) {
-        const { result, params } = event;
+        const { result } = event;
         // Check if orcidId was changed or if it's a new update that needs validation
         if (result.orcidId && !result.orcidVerified) {
           const isValid = await strapi.service("api::orcid.orcid").validate(result.orcidId);
           if (isValid) {
-            await strapi.query("plugin::users-permissions.user").update({
+            await strapi.db.query("plugin::users-permissions.user").update({
               where: { id: result.id },
               data: { orcidVerified: true },
             });
@@ -118,14 +120,12 @@ module.exports = {
     ];
 
     for (const roleName of expectedRoles) {
-      const exists = await strapi
-        .query("plugin::users-permissions.role")
-        .findOne({
-          where: { name: roleName },
-        });
+      const exists = await strapi.db.query("plugin::users-permissions.role").findOne({
+        where: { name: roleName },
+      });
 
       if (!exists) {
-        await strapi.query("plugin::users-permissions.role").create({
+        await strapi.db.query("plugin::users-permissions.role").create({
           data: {
             name: roleName,
             description: `Core project role: ${roleName}`,

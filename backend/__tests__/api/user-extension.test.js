@@ -42,16 +42,16 @@ describe("User Schema Extension (US-003-B)", () => {
     try {
       user = await createMockUser(userData);
     } catch (e) {
-      user = await strapi.query("plugin::users-permissions.user").findOne({
+      user = await strapi.documents("plugin::users-permissions.user").findFirst({
         where: { email: "ext@example.com" },
       });
     }
 
-    // Fetch the user directly via query to verify schema fields
+    // Fetch the user directly via documents to verify schema fields
     const fetchedUser = await strapi
-      .query("plugin::users-permissions.user")
+      .documents("plugin::users-permissions.user")
       .findOne({
-        where: { id: user.id },
+        documentId: user.documentId,
       });
 
     expect(fetchedUser).toHaveProperty("careerStage");
@@ -72,7 +72,7 @@ describe("User Schema Extension (US-003-B)", () => {
 
     // Create an institution first
     const institution = await strapi
-      .query("api::institution.institution")
+      .documents("api::institution.institution")
       .create({
         data: {
           name: "Test University",
@@ -80,6 +80,7 @@ describe("User Schema Extension (US-003-B)", () => {
           country: "Kenya",
           affiliationType: "University",
         },
+        status: 'published',
       });
 
     // Create a user linked to the institution
@@ -87,7 +88,7 @@ describe("User Schema Extension (US-003-B)", () => {
       username: "affiliateduser",
       email: "affil@example.com",
       password: "Password123!",
-      institution: institution.id,
+      institution: institution.documentId,
       affiliationStatus: "Pending",
     };
 
@@ -95,9 +96,9 @@ describe("User Schema Extension (US-003-B)", () => {
 
     // Fetch user and verify relation
     const fetchedUser = await strapi
-      .query("plugin::users-permissions.user")
+      .documents("plugin::users-permissions.user")
       .findOne({
-        where: { id: user.id },
+        documentId: user.documentId,
         populate: ["institution"],
       });
 
@@ -120,8 +121,8 @@ describe("User Schema Extension (US-003-B)", () => {
 
     const user = await createMockUser(userData);
 
-    const fetchedUser = await strapi.query("plugin::users-permissions.user").findOne({
-      where: { id: user.id },
+    const fetchedUser = await strapi.documents("plugin::users-permissions.user").findOne({
+      documentId: user.documentId,
     });
 
     expect(fetchedUser.orcidId).toBe("0000-0002-1825-0097");

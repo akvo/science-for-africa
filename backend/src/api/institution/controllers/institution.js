@@ -2,7 +2,7 @@ const { createCoreController } = require('@strapi/strapi').factories;
 
 module.exports = createCoreController('api::institution.institution', ({ strapi }) => ({
   async approveMember(ctx) {
-    const { id } = ctx.params; // Member user ID
+    const { id: documentId } = ctx.params; // Member documentId
     const { user: requester } = ctx.state;
     const { affiliationStatus } = ctx.request.body;
 
@@ -15,10 +15,14 @@ module.exports = createCoreController('api::institution.institution', ({ strapi 
     }
 
     // 1. Fetch requester with role and institution
-    const requesterFull = await strapi.query('plugin::users-permissions.user').findOne({
-      where: { id: requester.id },
+    const requesterFull = await strapi.documents('plugin::users-permissions.user').findOne({
+      documentId: requester.documentId,
       populate: ['role', 'institution'],
     });
+
+    if (!requesterFull) {
+       return ctx.unauthorized();
+    }
 
     const isInstAdmin = requesterFull.role && requesterFull.role.name === 'Institution Admin';
 
@@ -27,8 +31,8 @@ module.exports = createCoreController('api::institution.institution', ({ strapi 
     }
 
     // 2. Fetch target user
-    const targetUser = await strapi.query('plugin::users-permissions.user').findOne({
-      where: { id },
+    const targetUser = await strapi.documents('plugin::users-permissions.user').findOne({
+      documentId,
       populate: ['institution'],
     });
 
@@ -37,16 +41,17 @@ module.exports = createCoreController('api::institution.institution', ({ strapi 
     }
 
     // 3. Check if they belong to the same institution
-    const sameInst = requesterFull.institution && targetUser.institution && requesterFull.institution.id === targetUser.institution.id;
+    const sameInst = requesterFull.institution && targetUser.institution && requesterFull.institution.documentId === targetUser.institution.documentId;
 
     if (!sameInst) {
       return ctx.forbidden('User does not belong to your institution');
     }
 
     // 4. Update status
-    const updatedUser = await strapi.query('plugin::users-permissions.user').update({
-      where: { id },
+    const updatedUser = await strapi.documents('plugin::users-permissions.user').update({
+      documentId,
       data: { affiliationStatus },
+      status: 'published',
     });
 
     return ctx.send(updatedUser);

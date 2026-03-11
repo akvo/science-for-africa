@@ -24,16 +24,21 @@ describe("Affiliation Approval (US-004-B)", () => {
   beforeAll(async () => {
     strapi = await setupStrapi();
 
+    // Specific cleanup for this test suite
+    await strapi.db.query("plugin::users-permissions.user").deleteMany({});
+    await strapi.db.query("api::institution.institution").deleteMany({});
+    
     // Create an institution
-    institution = await strapi.query("api::institution.institution").create({
+    institution = await strapi.documents("api::institution.institution").create({
       data: {
         name: "Approval University",
         affiliationType: "University",
       },
+      status: 'published',
     });
 
     // Get the Institution Admin role
-    const adminRole = await strapi.query("plugin::users-permissions.role").findOne({
+    const adminRole = await strapi.db.query("plugin::users-permissions.role").findOne({
       where: { name: "Institution Admin" },
     });
 
@@ -42,25 +47,31 @@ describe("Affiliation Approval (US-004-B)", () => {
       username: "instadmin",
       email: "admin@approval.edu",
       role: adminRole.id,
-      institution: institution.id,
+      institution: institution.documentId,
       affiliationStatus: "Approved",
     });
 
     adminJwt = generateJwtToken(institutionAdmin);
 
     // Grant permission to Institution Admin role for the approveMember action
-    await strapi.query("plugin::users-permissions.permission").create({
-      data: {
-        action: "api::institution.institution.approveMember",
-        role: adminRole.id,
-      },
+    const permission = await strapi.db.query("plugin::users-permissions.permission").findOne({
+      where: { action: "api::institution.institution.approveMember", role: adminRole.id }
     });
+
+    if (!permission) {
+      await strapi.db.query("plugin::users-permissions.permission").create({
+        data: {
+          action: "api::institution.institution.approveMember",
+          role: adminRole.id,
+        },
+      });
+    }
 
     // Create a Member linked to the same institution (Pending)
     member = await createMockUser({
       username: "pendingmember",
       email: "member@approval.edu",
-      institution: institution.id,
+      institution: institution.documentId,
       affiliationStatus: "Pending",
     });
   });
@@ -72,43 +83,43 @@ describe("Affiliation Approval (US-004-B)", () => {
   it("should allow an Institution Admin to approve a member's affiliation if in the same institution", async () => {
     // Attempt to approve the member using the custom endpoint
     const response = await request(strapi.server.httpServer)
-      .put(`/api/institutions/approve-member/${member.id}`)
+      .put(`/api/institutions/approve-member/${member.documentId}`)
       .set("Authorization", `Bearer ${adminJwt}`)
       .send({
         affiliationStatus: "Approved",
       });
 
-    // This is expected to FAIL initially (either 403 Forbidden or no change)
-    // Strapi's default Users-Permissions doesn't allow users to edit other users
-    // even if they have an "Admin" named role, unless they are Platform Admin
-    // OR we implement a custom policy/controller.
-    
     expect(response.status).toBe(200);
     expect(response.body.affiliationStatus).toBe("Approved");
     
-    const updatedMember = await strapi.query("plugin::users-permissions.user").findOne({
-      where: { id: member.id }
+    const updatedMember = await strapi.documents("plugin::users-permissions.user").findOne({
+      documentId: member.documentId
     });
     expect(updatedMember.affiliationStatus).toBe("Approved");
   });
 
   it("should NOT allow an Institution Admin from a DIFFERENT institution to approve the member", async () => {
-    const otherInstitution = await strapi.query("api::institution.institution").create({
-      data: { name: "Other Uni" }
+    const otherInstitution = await strapi.documents("api::institution.institution").create({
+      data: { name: "Other Uni" },
+      status: 'published',
+    });
+
+    const adminRole = await strapi.db.query("plugin::users-permissions.role").findOne({
+      where: { name: "Institution Admin" },
     });
 
     const otherAdmin = await createMockUser({
       username: "otheradmin",
       email: "other@uni.edu",
-      role: institutionAdmin.role.id,
-      institution: otherInstitution.id,
+      role: adminRole.id,
+      institution: otherInstitution.documentId,
       affiliationStatus: "Approved",
     });
 
     const otherJwt = generateJwtToken(otherAdmin);
 
     const response = await request(strapi.server.httpServer)
-      .put(`/api/institutions/approve-member/${member.id}`)
+      .put(`/api/institutions/approve-member/${member.documentId}`)
       .set("Authorization", `Bearer ${otherJwt}`)
       .send({
         affiliationStatus: "Approved",

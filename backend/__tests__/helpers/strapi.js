@@ -26,23 +26,27 @@ async function setupStrapi() {
   // Ensure isolation and permissions on every setup call (per test file)
   try {
     // Clear users and permissions before tests to ensure isolation in Postgres
-    await instance.query('plugin::users-permissions.user').deleteMany({});
-    await instance.query('plugin::users-permissions.permission').deleteMany({
-      where: { action: 'plugin::users-permissions.user.me' }
-    });
-
+    await instance.db.query('plugin::users-permissions.user').deleteMany({});
+    
     // Grant permissions to Authenticated role for tests
-    const authenticatedRole = await instance.query('plugin::users-permissions.role').findOne({
+    const authenticatedRole = await instance.db.query('plugin::users-permissions.role').findOne({
       where: { type: 'authenticated' },
     });
 
     if (authenticatedRole) {
-      await instance.query('plugin::users-permissions.permission').create({
-        data: {
-          action: 'plugin::users-permissions.user.me',
-          role: authenticatedRole.id,
-        },
+      // Find if permission exists
+      const permission = await instance.db.query('plugin::users-permissions.permission').findOne({
+        where: { action: 'plugin::users-permissions.user.me', role: authenticatedRole.id }
       });
+
+      if (!permission) {
+        await instance.db.query('plugin::users-permissions.permission').create({
+          data: {
+            action: 'plugin::users-permissions.user.me',
+            role: authenticatedRole.id,
+          },
+        });
+      }
     }
   } catch (err) {
     console.error('Error during setupStrapi isolation/cleanup:', err);
@@ -75,7 +79,7 @@ async function createMockUser(userData = {}) {
   const strapi = getStrapi();
 
   // Find the Authenticated role
-  const authenticatedRole = await strapi.query('plugin::users-permissions.role').findOne({
+  const authenticatedRole = await strapi.db.query('plugin::users-permissions.role').findOne({
     where: { type: 'authenticated' },
   });
 
@@ -89,7 +93,10 @@ async function createMockUser(userData = {}) {
     ...userData,
   };
 
-  const user = await strapi.plugins['users-permissions'].services.user.add(defaultUser);
+  const user = await strapi.documents('plugin::users-permissions.user').create({
+    data: defaultUser,
+    status: 'published',
+  });
 
   return user;
 }

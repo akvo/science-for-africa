@@ -3,7 +3,7 @@
 **Phase**: Architect (v3 - Figma & Google Docs Alignment)
 
 ## 1. System Overview
-The backend is powered by **Strapi v5**, acting as a headless CMS and community backend API. The architecture leverages Strapi's built-in `users-permissions` heavily extended to allow robust community engagement. It relies heavily on hierarchical collections (`Community` -> `Category` -> `Thread` -> `Post`) and a comprehensive reporting system for peer moderation.
+The backend is powered by **Strapi v5**, acting as a headless CMS and community backend API. The architecture leverages Strapi's built-in `users-permissions` heavily extended to allow robust community engagement. It relies heavily on hierarchical collections (`Community` -> `Category` -> `Thread` -> `Post`) and a comprehensive reporting system for peer moderation. For detailed technical mapping of this ERD to Strapi v5 features, see the [Strapi v5 Architectural Mapping](research-findings/strapi-v5-mapping.md).
 
 ## 2. Data Model ERD (Entity-Relationship Diagram)
 

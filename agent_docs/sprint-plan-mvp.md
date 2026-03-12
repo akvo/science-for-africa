@@ -31,6 +31,12 @@
 - **Sprint Duration**: 2 Weeks (Proposed)
 - **Primary Team**: Amelia (Dev), Bob (SM), Winston (Arch)
 
+## 3. Total Effort (Synced)
+- **2026-03-10 (Tue)**: 3h (Architecture v4 discovery)
+- **2026-03-11 (Wed)**: 8h (Identity & Community functional models)
+- **2026-03-12 (Thu)**: 7.5h (RBAC synchronization & PR)
+- **Total Sprint Actual**: 18.5h
+
 ## 3. Roles & Permissions Matrix (Sprint MVP)
 - **Identity Foundation**: RBAC for the 6 roles (Platform Admin, Community Admin, Institution Admin, Expert, Member, Individual).
 - **Access Control**: Public (Guest) vs Private (Member) content visibility.

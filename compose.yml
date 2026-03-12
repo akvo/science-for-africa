@@ -23,8 +23,6 @@ services:
       - ./backend/scripts:/opt/app/scripts
       - ./backend/package.json:/opt/app/package.json
       - ./backend/package-lock.json:/opt/app/package-lock.json
-      - ./backend/package.json:/opt/package.json
-      - ./backend/package-lock.json:/opt/package-lock.json
       - ./backend/public/uploads:/opt/app/public/uploads
       - ./backend/__tests__:/opt/app/__tests__
     command: ["npm", "run", "develop"]

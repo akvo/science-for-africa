@@ -13,6 +13,8 @@
     "strapi": "strapi",
     "upgrade": "npx @strapi/upgrade latest",
     "upgrade:dry": "npx @strapi/upgrade latest --dry",
+    "seed": "node scripts/seed.js",
+    "test:seed": "NODE_ENV=test node scripts/seed.js",
     "test": "jest --runInBand --forceExit",
     "test:watch": "jest --watch --runInBand",
     "test:coverage": "jest --coverage --runInBand --forceExit",
@@ -32,6 +34,7 @@
     "styled-components": "^6.0.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.3.0",
     "jest": "^30.2.0",
     "supertest": "^7.1.4"
   },

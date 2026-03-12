@@ -126,9 +126,8 @@ erDiagram
 ## 3. Data Model Explanation
 
 ### 3.1 Identity & Access
-*   **USER**: Central social identity. Roles are derived from the Figma access matrices (Guest, Member, Expert, etc.). ORCID validation is a critical onboarding step.
-*   **INSTITUTION**: Represents organizations users can affiliate with. The affiliation process is a gated workflow.
-*   **MENTORSHIP_REQUEST**: A lightweight request model for connecting mentees with experts.
+*   **Two-Tier User Architecture**: The system distinguishes between system administrators (`admin_users`) and platform users (`up_users`). Detailed in the [RBAC & User Architecture](file:///Users/galihpratama/Sites/science-for-africa/agent_docs/features/RBAC-User-Architecture.md) specification.
+*   **USER**: Central social identity for the platform (`up_users`). Roles are derived from the Figma access matrices (Guest, Member, Expert, etc.). ORCID validation is a critical onboarding step.
 
 ### 3.2 Community Engine
 *   **Hierarchical Structure**: Following the Figma user journey: Community -> Category -> Thread -> Post.

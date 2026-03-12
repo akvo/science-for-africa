@@ -12,14 +12,18 @@ The Science for Africa (SfA) external platform aims to create a central Communit
 - Drive engagement through moderated community forums and **Mentorship**.
 
 ## 2. Target Users (Roles)
-Based on Figma [Collaboration & Community](https://www.figma.com/board/Chk297BVmFWcw4zJjuqX5F/Science-for-Africa--External-?node-id=55-3793), the following roles are defined:
+Based on Figma [Collaboration & Community](https://www.figma.com/board/Chk297BVmFWcw4zJjuqX5F/Science-for-Africa--External-?node-id=55-3793), roles are partitioned into two tiers (Detailed in [RBAC & User Architecture](file:///Users/galihpratama/Sites/science-for-africa/agent_docs/features/RBAC-User-Architecture.md)):
+
+### 2.1 Platform Users (Via Next.js Frontend Dashboard)
 - **Guest**: Unauthenticated. Read-only access to public content.
 - **Member (Individual)**: Authenticated. Can participate in public forums and request mentorship.
 - **Member (Institutional)**: Authenticated and affiliated with an Institution.
 - **Expert**: Verified member who can offer mentorship.
 - **Institution Admin**: Manages organization affiliation and members.
-- **Moderator**: Oversees forum content and reports.
-- **Platform Admin**: Full system control.
+- **Moderator/Community Admin**: Oversees forum content and reports.
+
+### 2.2 System Administrators (Via Strapi Admin Panel)
+- **Platform Admin / Developer**: Full system control and content modeling.
 
 ## 3. Key User Journeys
 - **Registration & Onboarding**:

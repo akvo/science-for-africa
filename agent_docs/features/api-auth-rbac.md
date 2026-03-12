@@ -5,6 +5,9 @@ This document outlines the required API permissions to align the Science for Afr
 
 **Status**: Implemented & Verified (2026-03-12)
 
+> [!NOTE]
+> The permissions documented here apply to **Platform Users** (`up_users`) accessing the system via the Next.js frontend or API. System Administrators managing the CMS use a separate internal system (`admin_users`).
+
 ---
 
 ## 2. Implementation State

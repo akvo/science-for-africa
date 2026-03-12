@@ -7,6 +7,7 @@
 |----|-------|--------|--------|
 | [US-001](stories/US-001-tailwind-vars.md) | Implement Custom Tailwind v4 Theme Variables | 3 | [ ] Todo |
 | [US-002](stories/US-002-verify-design.md) | Design System Verification Page | 2 | [ ] Todo |
+| [US-004](stories/US-004-customize-user-list.md) | Customize Strapi Admin User List Columns | 2 | [x] Done |
 
 ## Total Effort
 - **Total Points**: 5

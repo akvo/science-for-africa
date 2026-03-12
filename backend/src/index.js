@@ -152,5 +152,36 @@ module.exports = {
         });
       }
     }
+
+    // Programmatically set default columns for the User list view in Content Manager
+    try {
+      const store = strapi.store({
+        type: 'plugin',
+        name: 'content_manager',
+        key: 'configuration_content_types::plugin::users-permissions.user',
+      });
+
+      const config = await store.get();
+
+      if (config && config.layouts && config.layouts.list) {
+        const listLayout = config.layouts.list;
+        const requiredColumns = ['role', 'institution'];
+        let changed = false;
+
+        requiredColumns.forEach(column => {
+          if (!listLayout.includes(column)) {
+            listLayout.push(column);
+            changed = true;
+          }
+        });
+
+        if (changed) {
+          await store.set({ value: config });
+          strapi.log.info('Updated User list layout with role and institution columns.');
+        }
+      }
+    } catch (error) {
+      strapi.log.error('Failed to update User list layout configuration:', error);
+    }
   },
 };

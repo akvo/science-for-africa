@@ -8,6 +8,21 @@ const { faker } = require('@faker-js/faker');
 const seedData = async (strapi) => {
   console.log('🚀 Starting data seeding...');
 
+  // 0. Cleanup existing data to avoid unique constraint violations
+  console.log('🧹 Cleaning up existing data...');
+  await strapi.db.query('api::resource.resource').deleteMany({});
+  await strapi.db.query('api::community.community').deleteMany({});
+  await strapi.db.query('api::forum-category.forum-category').deleteMany({});
+  await strapi.db.query('api::thread.thread').deleteMany({});
+  await strapi.db.query('api::post.post').deleteMany({});
+  await strapi.db.query('api::mentorship-request.mentorship-request').deleteMany({});
+  await strapi.db.query('api::institution.institution').deleteMany({});
+  await strapi.db.query('plugin::users-permissions.user').deleteMany({
+    where: { 
+      email: { $ne: 'admin@example.com' } // Keep admin if necessary, or just clear all
+    }
+  });
+
   // 1. Fetch Roles
   const roles = await strapi.db.query('plugin::users-permissions.role').findMany();
   const roleMap = {};

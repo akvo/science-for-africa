@@ -7,8 +7,7 @@ services:
       - ./frontend:/app
     ports:
       - 3000:3000
-    entrypoint: /app/docker-entrypoint.sh
-    command: sh -c "npm install && npm run dev"
+    command: ["./scripts/start.sh"]
     environment:
       NEXT_TELEMETRY_DISABLED: 1
       NEXT_PUBLIC_BACKEND_URL: http://localhost:1337
@@ -18,14 +17,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile-dev
     volumes:
-      - ./backend/config:/opt/app/config
-      - ./backend/src:/opt/app/src
-      - ./backend/scripts:/opt/app/scripts
-      - ./backend/package.json:/opt/app/package.json
-      - ./backend/package-lock.json:/opt/app/package-lock.json
-      - ./backend/public/uploads:/opt/app/public/uploads
-      - ./backend/__tests__:/opt/app/__tests__
-    command: ["npm", "run", "develop"]
+      - ./backend:/opt/app
+    command: ["./scripts/start.sh"]
     ports:
       - 1337:1337
       - 5173:5173

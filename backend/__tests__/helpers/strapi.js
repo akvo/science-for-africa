@@ -29,6 +29,19 @@ async function setupStrapi() {
   try {
     await instance.db.query("plugin::users-permissions.user").deleteMany({});
 
+    // Clear other MVP data to avoid unique constraint violations
+    await instance.db.query("api::resource.resource").deleteMany({});
+    await instance.db.query("api::community.community").deleteMany({});
+    await instance.db
+      .query("api::forum-category.forum-category")
+      .deleteMany({});
+    await instance.db.query("api::thread.thread").deleteMany({});
+    await instance.db.query("api::post.post").deleteMany({});
+    await instance.db
+      .query("api::mentorship-request.mentorship-request")
+      .deleteMany({});
+    await instance.db.query("api::institution.institution").deleteMany({});
+
     // Grant permissions to Authenticated role
     const authenticatedRole = await instance.db
       .query("plugin::users-permissions.role")

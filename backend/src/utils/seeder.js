@@ -88,12 +88,12 @@ const seedData = async (strapi) => {
 
   // Create specific personas
   // Platform Admin
-  await createFakeUser('Platform admin (Strapi)');
+  await createFakeUser('Platform Admin');
 
   // Org Admin
   for (let i = 0; i < 3; i++) {
     const inst = faker.helpers.arrayElement(institutions);
-    await createFakeUser('Organisation Institution Admin', {
+    await createFakeUser('Institution Admin', {
       institution: inst.id,
     });
   }
@@ -101,7 +101,7 @@ const seedData = async (strapi) => {
   // Institution Members / Experts
   for (let i = 0; i < 10; i++) {
     const inst = faker.helpers.arrayElement(institutions);
-    const u = await createFakeUser('Organisation Institution Member', {
+    const u = await createFakeUser('Member', {
       institution: inst.id,
       mentorAvailability: faker.datatype.boolean(0.6),
       orcidId: `0000-000${faker.string.numeric(1)}-${faker.string.numeric(4)}-${faker.string.numeric(4)}`,
@@ -112,7 +112,7 @@ const seedData = async (strapi) => {
   // Community Admins
   const communityAdmins = [];
   for (let i = 0; i < 3; i++) {
-    const u = await createFakeUser('Community Admin (within org)');
+    const u = await createFakeUser('Community Admin');
     communityAdmins.push(u);
     users.push(u);
   }
@@ -125,13 +125,13 @@ const seedData = async (strapi) => {
 
   // Individual Users
   for (let i = 0; i < 5; i++) {
-    const u = await createFakeUser('Individual Users (no org)');
+    const u = await createFakeUser('Individual');
     users.push(u);
   }
 
   // Special Case: Users stuck in onboarding
   for (let i = 0; i < 3; i++) {
-    await createFakeUser('Individual Users (no org)', {
+    await createFakeUser('Individual', {
       onboardingStep: 1,
       careerStage: null,
       expertise: null,
@@ -141,7 +141,7 @@ const seedData = async (strapi) => {
   // Special Case: Pending Affiliations
   for (let i = 0; i < 3; i++) {
     const inst = faker.helpers.arrayElement(institutions);
-    await createFakeUser('Organisation Institution Member', {
+    await createFakeUser('Member', {
       institution: inst.id,
       affiliationStatus: 'Pending',
     });

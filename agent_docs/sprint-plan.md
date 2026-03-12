@@ -11,7 +11,10 @@
 
 ## Total Effort
 - **Total Points**: 7
-- **Actual Time (Today)**: 10h
+- **2026-03-10 (Tue)**: 3h (Design system foundations)
+- **2026-03-11 (Wed)**: 8h (Data model refactor, identity onboarding)
+- **2026-03-12 (Thu)**: 7.5h (Admin UI, RBAC sync, seeder, PR)
+- **Total Sprint Actual**: 18.5h
 - **Assigned Developer**: Amelia (bmad-dev)
 
 ## Dependencies

@@ -6,22 +6,43 @@ const { faker } = require('@faker-js/faker');
  * Seed data for Science for Africa platform
  */
 const seedData = async (strapi) => {
+  // --- PRODUCTION BARRIER ---
+  if (process.env.NODE_ENV === 'production' && process.env.ALLOW_SEED !== 'true') {
+    console.error('❌ SEEDING BLOCKED: You are attempting to run the seeder in PRODUCTION.');
+    console.error('If you REALLY need to do this, set ALLOW_SEED=true in your environment.');
+    throw new Error('Seeding prohibited in production.');
+  }
+
   console.log('🚀 Starting data seeding...');
 
-  // 0. Cleanup existing data to avoid unique constraint violations
-  console.log('🧹 Cleaning up existing data...');
-  await strapi.db.query('api::resource.resource').deleteMany({});
-  await strapi.db.query('api::community.community').deleteMany({});
-  await strapi.db.query('api::forum-category.forum-category').deleteMany({});
-  await strapi.db.query('api::thread.thread').deleteMany({});
-  await strapi.db.query('api::post.post').deleteMany({});
-  await strapi.db.query('api::mentorship-request.mentorship-request').deleteMany({});
-  await strapi.db.query('api::institution.institution').deleteMany({});
-  await strapi.db.query('plugin::users-permissions.user').deleteMany({
-    where: { 
-      email: { $ne: 'admin@example.com' } // Keep admin if necessary, or just clear all
+  // Helper for fast truncation
+  const truncateTable = async (uid) => {
+    try {
+      const tableName = strapi.db.metadata.get(uid).tableName;
+      await strapi.db.connection.raw(`TRUNCATE TABLE "${tableName}" RESTART IDENTITY CASCADE;`);
+      console.log(`  - Truncated ${uid}`);
+    } catch (error) {
+      console.warn(`  ! Failed to truncate ${uid}, falling back to deleteMany.`, error.message);
+      await strapi.db.query(uid).deleteMany({});
     }
-  });
+  };
+
+  // 0. Cleanup existing data
+  console.log('🧹 Cleaning up existing data using TRUNCATE...');
+  const tablesToClear = [
+    'api::resource.resource',
+    'api::community.community',
+    'api::forum-category.forum-category',
+    'api::thread.thread',
+    'api::post.post',
+    'api::mentorship-request.mentorship-request',
+    'api::institution.institution',
+    'plugin::users-permissions.user'
+  ];
+
+  for (const uid of tablesToClear) {
+    await truncateTable(uid);
+  }
 
   // 1. Fetch Roles
   const roles = await strapi.db.query('plugin::users-permissions.role').findMany();

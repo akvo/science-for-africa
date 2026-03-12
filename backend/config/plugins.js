@@ -58,5 +58,20 @@ module.exports = ({ env }) => {
         sizeLimit: 250 * 1024 * 1024,
       },
     },
+    documentation: {
+      enabled: true,
+      config: {
+        openapi: '3.0.0',
+        info: {
+          version: '1.0.0',
+          title: 'Science for Africa API',
+          description: 'API Documentation for the Science for Africa platform',
+        },
+        'x-strapi-config': {
+          path: '/documentation',
+          showOASSymbol: true,
+        },
+      },
+    },
   };
 };

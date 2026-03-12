@@ -28,14 +28,12 @@ docker compose exec backend npm test           # Run all tests
 docker compose exec backend npm run test:watch # Watch mode (sequential)
 
 # Frontend
-cd frontend && npm test
+cd frontend
+npm test                  # Run all tests
+npm run test:watch       # Watch mode
+npm run test:coverage    # Coverage report
+npm run test:update      # Update snapshots
 ```
-
-> [!TIP]
-> While `test:watch` is available, we recommend running it via Docker to ensure it uses the correct Postgres environment. Note that watch mode in the backend is configured to run sequentially to prevent database connection exhaustion.
-
-> [!IMPORTANT]
-> Backend tests should be run with `--runInBand` and `--forceExit` (included in `npm test`) to ensure stable database connections and clean process termination.
 
 ## Backend Testing
 
@@ -167,15 +165,17 @@ it('should create an article', async () => {
 ```javascript
 // __tests__/api/article.test.js
 const request = require('supertest');
-const { setupStrapi, teardownStrapi, getStrapi } = require('../helpers/strapi');
+const { setupStrapi } = require('../helpers/strapi');
 
 describe('Article API', () => {
-  beforeAll(async () => await setupStrapi());
-  afterAll(async () => await teardownStrapi());
+  let strapi;
+
+  beforeAll(async () => {
+    strapi = await setupStrapi();
+  });
 
   describe('GET /api/articles', () => {
     it('should return empty array initially', async () => {
-      const strapi = getStrapi();
       const response = await request(strapi.server.httpServer)
         .get('/api/articles')
         .expect(200);
@@ -186,7 +186,6 @@ describe('Article API', () => {
 
   describe('POST /api/articles', () => {
     it('should create a new article', async () => {
-      const strapi = getStrapi();
       const response = await request(strapi.server.httpServer)
         .post('/api/articles')
         .send({
@@ -197,7 +196,9 @@ describe('Article API', () => {
         })
         .expect(200);
 
-      expect(response.body.data.attributes.title).toBe('New Article');
+      // Strapi v5 flattened response (default)
+      expect(response.body.data.title).toBe('New Article');
+      expect(response.body.data.documentId).toBeDefined();
     });
   });
 });
@@ -541,8 +542,13 @@ module.exports = {
 
 #### Tests timing out
 - Increase timeout: `jest.setTimeout(60000)`
-- Check for unresolved promises
-- Ensure async operations are properly awaited
+- **Backend**: Ensure you are using the singleton pattern to avoid exhausting database connections.
+- **Backend**: If you see `KnexTimeoutError` or `too many clients already`, ensure you're running with `--runInBand`.
+- Check for unresolved promises or unawaited async operations.
+
+#### Database Connection Issues (Backend)
+- If tests hang: Run `docker compose down -v` to clear the test database volumes and restart.
+- Ensure `NODE_ENV` is set to `test` to use the optimized Postgres pool settings.
 
 #### Snapshot mismatches
 - Review changes carefully

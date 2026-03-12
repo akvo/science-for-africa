@@ -143,6 +143,19 @@ docker compose exec db pg_dump -U akvo ${PROJECT_DIR} > backup.sql
 cat backup.sql | docker compose exec -T db psql -U akvo -d ${PROJECT_DIR}
 ```
 
+### Data Seeding
+The project includes a comprehensive data seeder that populates the database with realistic test data and programmatically synchronizes API permissions (RBAC).
+
+```bash
+# Run seeder (standard method)
+docker compose exec backend npm run seed
+```
+
+**Features:**
+- **Programmatic RBAC**: Automatically sets up permissions for all roles (Guest, Member, Expert, etc.) based on the [RBAC Specification](agent_docs/features/api-auth-rbac.md).
+- **Realistic Data**: Generates institutions, users, communities, forums, and resources using Faker.
+- **Production Barrier**: Prevents accidental data loss. To run in production, you must set `ALLOW_SEED=true`.
+
 ## 🛠️ Configuration
 
 ### Environment Variables

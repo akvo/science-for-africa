@@ -144,7 +144,7 @@ const seedData = async (strapi) => {
 
   // Community Members
   for (let i = 0; i < 15; i++) {
-    const u = await createFakeUser('Community Member');
+    const u = await createFakeUser('Member');
     users.push(u);
   }
 

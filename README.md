@@ -10,6 +10,7 @@ docker compose up
 # Access your application:
 # - Frontend: http://localhost:3000
 # - Strapi Admin: http://localhost:1337/admin
+# - API Documentation: http://localhost:1337/documentation
 # - Database Admin: http://localhost:5050
 # - Mail Server: http://localhost:8025
 ```
@@ -336,9 +337,11 @@ For detailed testing documentation, see [TESTING.md](TESTING.md).
 - [Nginx](https://nginx.org/en/docs/) - Reverse Proxy
 
 ### API Documentation
-- Strapi automatically generates API documentation
-- Access via: http://localhost:1337/documentation (if enabled)
-- GraphQL playground: http://localhost:1337/graphql (if enabled)
+
+The Science for Africa API is fully documented using Swagger/OpenAPI v3.
+- **Interactive Playground**: http://localhost:1337/documentation
+- **OpenAPI JSON**: http://localhost:1337/documentation/v1/openapi.json
+- **GraphQL playground**: http://localhost:1337/graphql (if enabled)
 
 ## 🆘 Troubleshooting
 

@@ -56,6 +56,12 @@ Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/
 - [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
 - [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
 
+## 📚 API Documentation
+
+The backend includes interactive documentation via Swagger:
+- **Swagger UI**: [http://localhost:1337/documentation](http://localhost:1337/documentation)
+- **OpenAPI Spec**: [http://localhost:1337/documentation/v1/openapi.json](http://localhost:1337/documentation/v1/openapi.json)
+
 ---
 
 <sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>

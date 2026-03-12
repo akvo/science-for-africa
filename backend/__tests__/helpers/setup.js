@@ -5,8 +5,8 @@
 
 // Set test environment variables
 process.env.NODE_ENV = 'test';
-process.env.DATABASE_CLIENT = 'sqlite';
-process.env.DATABASE_FILENAME = '.tmp/test.db';
+// process.env.DATABASE_CLIENT = 'sqlite';
+// process.env.DATABASE_FILENAME = '.tmp/test.db';
 process.env.JWT_SECRET = 'test-jwt-secret';
 process.env.APP_KEYS = 'test-key-1,test-key-2';
 process.env.API_TOKEN_SALT = 'test-token-salt';

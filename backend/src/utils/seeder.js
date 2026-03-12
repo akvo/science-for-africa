@@ -1,6 +1,7 @@
 'use strict';
 
 const { faker } = require('@faker-js/faker');
+const { syncPermissions } = require('./permissions');
 
 /**
  * Seed data for Science for Africa platform
@@ -43,6 +44,9 @@ const seedData = async (strapi) => {
   for (const uid of tablesToClear) {
     await truncateTable(uid);
   }
+
+  // 1. Synchronize API Permissions (Ensure roles have access before seeding)
+  await syncPermissions(strapi);
 
   // 1. Fetch Roles
   const roles = await strapi.db.query('plugin::users-permissions.role').findMany();

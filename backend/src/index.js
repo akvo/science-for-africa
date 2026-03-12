@@ -1,4 +1,4 @@
-'use strict';
+const { syncPermissions } = require('./utils/permissions');
 
 module.exports = {
   /**
@@ -151,6 +151,13 @@ module.exports = {
           },
         });
       }
+    }
+
+    // Synchronize API permissions
+    try {
+      await syncPermissions(strapi);
+    } catch (error) {
+      strapi.log.error('Failed to synchronize API permissions during bootstrap:', error);
     }
 
     // Programmatically set default columns for the User list view in Content Manager

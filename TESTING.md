@@ -24,11 +24,15 @@ This project uses a comprehensive testing setup:
 
 ```bash
 # Backend (Recommended: Docker for stable Postgres/Isolation)
-docker compose exec backend npm test
+docker compose exec backend npm test           # Run all tests
+docker compose exec backend npm run test:watch # Watch mode (sequential)
 
 # Frontend
 cd frontend && npm test
 ```
+
+> [!TIP]
+> While `test:watch` is available, we recommend running it via Docker to ensure it uses the correct Postgres environment. Note that watch mode in the backend is configured to run sequentially to prevent database connection exhaustion.
 
 > [!IMPORTANT]
 > Backend tests should be run with `--runInBand` and `--forceExit` (included in `npm test`) to ensure stable database connections and clean process termination.

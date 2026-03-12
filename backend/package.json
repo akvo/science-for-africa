@@ -14,7 +14,7 @@
     "upgrade": "npx @strapi/upgrade latest",
     "upgrade:dry": "npx @strapi/upgrade latest --dry",
     "test": "jest --runInBand --forceExit",
-    "test:watch": "jest --watch",
+    "test:watch": "jest --watch --runInBand",
     "test:coverage": "jest --coverage --runInBand --forceExit",
     "test:ci": "jest --ci --coverage --runInBand --forceExit --reporters=default --reporters=jest-junit"
   },

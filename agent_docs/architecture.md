@@ -143,3 +143,6 @@ erDiagram
 2. **Community Foundation**: Basic forum hierarchy and posting.
 3. **Expert Directory**: Discovery via tags and mentorship requests.
 4. **Knowledge Base**: Moderated resource submission.
+
+## 5. Security & Access Control
+API authentication and Role-Based Access Control (RBAC) are documented in detail in the [API Authentication & RBAC Mapping](file:///Users/galihpratama/Sites/science-for-africa/agent_docs/features/api-auth-rbac.md) specification.

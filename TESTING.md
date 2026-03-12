@@ -23,19 +23,15 @@ This project uses a comprehensive testing setup:
 ### Quick Reference
 
 ```bash
-# Backend
-cd backend
-npm test                  # Run all tests
-npm run test:watch       # Watch mode
-npm run test:coverage    # Coverage report
+# Backend (Recommended: Docker for stable Postgres/Isolation)
+docker compose exec backend npm test
 
 # Frontend
-cd frontend
-npm test                  # Run all tests
-npm run test:watch       # Watch mode
-npm run test:coverage    # Coverage report
-npm run test:update      # Update snapshots
+cd frontend && npm test
 ```
+
+> [!IMPORTANT]
+> Backend tests should be run with `--runInBand` and `--forceExit` (included in `npm test`) to ensure stable database connections and clean process termination.
 
 ## Backend Testing
 
@@ -73,37 +69,40 @@ backend/__tests__/
 
 #### Setting Up Strapi Instance
 
+We use a **singleton pattern** for Strapi in our tests to optimize performance and prevent database connection exhaustion. `setupStrapi` boots the instance once and ensures isolation (clearing users/permissions) on every call.
+
 ```javascript
-const { setupStrapi, teardownStrapi, getStrapi } = require('../helpers/strapi');
+const { setupStrapi, getStrapi } = require('../helpers/strapi');
 
 describe('My API', () => {
-  beforeAll(async () => {
-    await setupStrapi();
-  });
+  let strapi;
 
-  afterAll(async () => {
-    await teardownStrapi();
+  beforeAll(async () => {
+    strapi = await setupStrapi();
   });
 
   it('should work', () => {
-    const strapi = getStrapi();
-    // Your tests here
+    // Your tests here using strapi or getStrapi()
   });
 });
 ```
+
+> [!NOTE]
+> `teardownStrapi` is now a no-op for sequential runs. We rely on Jest's `--forceExit` flag for final cleanup.
 
 #### Testing Endpoints with Supertest
 
 ```javascript
 const request = require('supertest');
-const { setupStrapi, getStrapi } = require('../helpers/strapi');
+const { setupStrapi } = require('../helpers/strapi');
 
 describe('GET /api/articles', () => {
-  beforeAll(async () => await setupStrapi());
+  let strapi;
+  beforeAll(async () => {
+    strapi = await setupStrapi();
+  });
 
   it('should return articles list', async () => {
-    const strapi = getStrapi();
-
     const response = await request(strapi.server.httpServer)
       .get('/api/articles')
       .expect('Content-Type', /json/)
@@ -123,7 +122,6 @@ it('should access protected route', async () => {
   const user = await createMockUser({
     username: 'testuser',
     email: 'test@example.com',
-    password: 'Password123!',
   });
 
   const token = generateJwtToken(user);
@@ -137,20 +135,23 @@ it('should access protected route', async () => {
 });
 ```
 
-#### Testing Entity Service
+#### Testing with Documents API (Strapi v5)
+
+Strapi v5 uses the **Documents API** instead of the Entity Service for most operations.
 
 ```javascript
 it('should create an article', async () => {
   const strapi = getStrapi();
 
-  const article = await strapi.entityService.create('api::article.article', {
+  const article = await strapi.documents('api::article.article').create({
     data: {
       title: 'Test Article',
       content: 'Test content',
     },
+    status: 'published', // Critical for v5 Draft & Publish
   });
 
-  expect(article.id).toBeDefined();
+  expect(article.documentId).toBeDefined();
   expect(article.title).toBe('Test Article');
 });
 ```

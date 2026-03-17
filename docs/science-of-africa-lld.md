@@ -63,10 +63,16 @@ erDiagram
     USER ||--o{ RESOURCE : "Author"
 
     %% Community & Forums
+    USER }|--o{ COMMUNITY : "Member of"
     COMMUNITY ||--o{ FORUM_CATEGORY : "Contains"
     FORUM_CATEGORY ||--o{ THREAD : "Organizes"
     THREAD ||--o{ POST : "Contains"
     POST |o--o{ POST : "Replies to"
+
+    %% Knowledge Base & Roadmap
+    TAG }|--o{ RESOURCE : "Tags"
+    TAG }|--o{ OPPORTUNITY : "Tags"
+    TAG }|--o{ USER : "Expertise of"
 
     %% Moderation
     REPORT }|--|| USER : "Filed by"
@@ -82,11 +88,17 @@ erDiagram
         boolean mentorAvailability
         enum affiliationStatus
     }
+    COMMUNITY {
+        string name
+        text description
+        boolean isPrivate
+    }
     INSTITUTION {
         string name
         string city
         string country
         enum affiliationType
+        media logo
     }
     RESOURCE {
         string title
@@ -94,11 +106,12 @@ erDiagram
         enum category
         enum reviewStatus
         json tags
+        text rejectionNotes
+        media attachment
     }
     MENTORSHIP_REQUEST {
         text message
         enum status
-        datetime requestedAt
     }
     THREAD {
         string title
@@ -107,7 +120,19 @@ erDiagram
     }
     POST {
         richtext content
-        boolean isSolution
+    }
+    REPORT {
+        text reason
+        enum status
+    }
+    TAG {
+        string name
+        enum group
+    }
+    OPPORTUNITY {
+        string title
+        enum type
+        datetime deadline
     }
 ```
 
@@ -126,7 +151,7 @@ erDiagram
 #### `COMMUNITY` (Collaboration Hub)
 - **Type**: Collection Type
 - **Description**: Thematic research circles (e.g., Genomics, Policy).
-- **Key Fields**: `name`, `isPrivate`, `forumCategories`.
+- **Key Fields**: `name`, `description`, `isPrivate`, `forumCategories`.
 
 #### `FORUM_CATEGORY` (Discussion Structure)
 - **Type**: Collection Type
@@ -146,7 +171,22 @@ erDiagram
 #### `RESOURCE` (Knowledge Registry)
 - **Type**: Collection Type
 - **Description**: Moderated repository for toolkits, datasets, and stories.
-- **Key Fields**: `title`, `category`, `reviewStatus`, `attachment`, `community`.
+- **Key Fields**: `title`, `description`, `category`, `reviewStatus`, `attachment`, `rejectionNotes`, `community`.
+
+#### `REPORT` (**Phase 2 Roadmap**)
+- **Type**: Collection Type
+- **Description**: User-filed reports for moderation of posts or resources.
+- **Key Fields**: `reason`, `status` (Pending, Resolved), `author` (Reporter), `targetPost`.
+
+#### `TAG` (**Phase 2 Roadmap**)
+- **Type**: Collection Type
+- **Description**: Unified taxonomy for expertise, region, and research topic.
+- **Key Fields**: `name`, `group` (Expertise, Region, Topic).
+
+#### `OPPORTUNITY` (**Phase 2 Roadmap**)
+- **Type**: Collection Type
+- **Description**: Funding, grants, jobs, and fellowship registries.
+- **Key Fields**: `title`, `type` (Grant, Job, Fellowship), `deadline`, `externalUrl`.
 
 ---
 

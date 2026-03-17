@@ -1,4 +1,4 @@
-# Science of Africa (SFA) - Ultra-Industrial Low Level Design (LLD)
+# Science of Africa (SFA) - Industrial Low Level Design (LLD)
 **Version**: 8.0 | **Status**: Final Alpha Specification | **Alignment**: FIGMA v4 & Clean Slate Architecture
 
 ---
@@ -151,7 +151,7 @@ erDiagram
     REPORT }|--o| POST : "Targets"
 ```
 
-### 4.2 Data Dictionary (Ultra-Granular)
+### 4.2 Data Dictionary (Granular)
 
 #### `USER` (Extending `plugin::users-permissions.user`)
 | Attribute | Type | Validation / Constraints | Default |

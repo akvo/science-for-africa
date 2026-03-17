@@ -1,426 +1,211 @@
-# Science of Africa - Comprehensive Low Level Design
+# Science of Africa - Comprehensive Low Level Design (v5.0)
 
-## 1. Introduction
+## 1. Executive Summary & Platform Vision
 
 ### 1.1 Platform Vision
-The Science for Africa Foundation Community of Practice (CoP) Platform enables research managers to:
-*   **Access funding and career opportunities** through a curated opportunities board.
-*   **Build capacity** through training, webinars, and certification programmes.
-*   **Share resources and best practices** through a searchable repository.
-*   **Connect with peers** via member directory and networking features.
-*   **Discuss common challenges** via moderated discussion forums.
-*   **Access mentorship** through expert collaboration channels.
+The Science for Africa Foundation Community of Practice (CoP) Platform is a strategic digital ecosystem designed to unify the African research landscape. By centralizing identity verification, institutional visibility, and resource discovery, the platform empowers individual research managers and organizations to collaborate effectively across borders.
 
-### 1.2 User Research Foundation
-This LLD is informed by primary user research conducted in 2023:
-*   **Total Respondents:** 254 from 44 countries across all African Union regions.
-*   **Response Rate:** 98%.
-*   **Institutional Representation:** 71% from universities and research institutions.
-*   **Engagement Intent:** 54% plan to log in weekly, indicating strong engagement intent.
-*   **Market Opportunity:** 56% are not currently part of any existing CoP, representing a greenfield opportunity.
-*   **Key Insight:** Users prioritise access to **opportunities and resources** over discussion features for the initial phase.
+**Core Value Propositions:**
+*   **Verified Scientific Identity**: Integration with ORCID Public API v3.0 ensures all profiles are tethered to global research IDs.
+*   **Institutional Transparency**: Highlighting affiliations to promote institutional capacity and trust.
+*   **Knowledge Equity**: Centralized access to toolkits, reports, and best practices.
+*   **Career Advancement**: Direct pipelines to funding, grants, and scholarships.
 
-### 1.3 Feature Prioritisation (User Research Ranked)
-1.  **Identity Verification** (ORCID OAuth) - High Priority
-2.  **Institutional Affiliation** - High Priority
-3.  **Opportunities & Resources Discovery** - Medium Priority
-4.  **Mentorship Requests** - Medium Priority
-5.  **Community Forums** - Phase 2 Priority
+### 1.2 Strategic Scope (Phase-Based Alignment)
+The current development iteration (Phase 1) focuses on the **Identity & Knowledge Foundation**.
+*   **Phase 1 (Active)**: User Identity (ORCID), Institutional Directory, Resource Repository, Mentorship Logic.
+*   **Phase 2 (Planned)**: Community forums, Advanced Moderation, Event Management.
 
-### 1.4 Scope
-This LLD covers the fullstack implementation of Phase 1 (Core Identity, Resources, and Opportunities) and provides the architectural framework for Phase 2 (Forums and Advanced Moderation).
+---
 
-## 2. User Research Insights
+## 2. User Research Deep-Dive
 
-### 2.1 Survey Demographics
-The survey targeted 254 researchers across 44 countries, with 71% representing universities and research institutions.
+### 2.1 Quantitative Insights (Survey 2023)
+The platform architecture is directly informed by a comprehensive survey of the African research community:
+*   **Reach**: 254 Respondents across 44 African countries.
+*   **Retention Potential**: 54% of respondents indicated an intent to log in weekly.
+*   **Market Opportunity**: 56% are not members of any existing CoP, making SFA their primary research hub.
+*   **Institutional Base**: 71% of users originate from Universities or Research Institutions.
 
-### 2.2 Feature Preferences by User Segment
--   **Early-Career Researchers**: High preference for Mentorship and Individual opportunities (Jobs, Scholarships).
--   **Senior Scientists**: Priority on Institutional visibility and Interactive virtual spaces.
--   **Female Researchers**: Stronger reported preference for individual development opportunities.
+### 2.2 Functional Priority Ranking
+Features were ranked by weighted score (Max ~1000):
+1.  **Funding Opportunities**: 920
+2.  **Webinars & Training**: 907
+3.  **Individual Opportunities**: 904
+4.  **Resource Repository**: 900
+5.  **Mentorship & Coaching**: 900
 
-### 2.3 Additional Features Requested (Qualitative)
--   Automated publication syncing via ORCID.
--   Private community spaces for sensitive or thematic research.
+---
 
-### 2.4 Existing Community Memberships
-56% of respondents are not currently part of any research community, highlighting the platform's role as a primary networking hub.
+## 3. Technology Stack & Infrastructure
 
-## 3. Technology Stack
+### 3.1 Backend Architecture (Strapi v5)
+Strapi acts as the headless core, managing content, authentication, and RBAC via a customized PostgreSQL schema.
+| Component | Technology | Version | Rationale |
+| :--- | :--- | :--- | :--- |
+| **CMS Engine** | Strapi | 5.33.0 | Modern plugin architecture, programmatic RBAC. |
+| **Runtime** | Node.js | v20+ | LTS stability for intensive API operations. |
+| **Database** | PostgreSQL | 16 | ACID compliance for sensitive mentorship/identity data. |
+| **Caching** | Redis (Planned) | - | Performance for high-concurrency forum access. |
 
-### 3.1 Backend
-- **Strapi v5.33.0**: Headless CMS.
-- **Node.js**: v20+ runtime.
-- **PostgreSQL 16**: Primary database.
-- **Nodemailer**: Email delivery provider.
+### 3.2 Frontend Architecture (Next.js v16)
+The frontend utilizes Next.js for its hybrid SSR/SSG capabilities, ensuring high SEO for resource repository visibility.
+| Component | Technology | Version | Rationale |
+| :--- | :--- | :--- | :--- |
+| **Framework** | Next.js | 16.1.0 | Fast refresh, App router optimization. |
+| **State** | React 19 | 19.2.3 | Use of Server Actions for form submissions. |
+| **Styling** | TailwindCSS | v4 | Utility-first design with SFA brand tokens. |
 
-### 3.2 Frontend
-- **Next.js 16.1.0**: React framework.
-- **React 19.2.3**: UI library.
-- **TailwindCSS v4**: Styling framework.
-- **Axios**: API client.
+---
 
-### 3.3 Infrastructure
-- **Docker**: Containerization.
-- **Nginx**: Reverse proxy and service routing.
-- **GitHub Actions**: CI/CD pipelines.
-- **Mailpit**: Development SMTP trap.
+## 4. Detailed Architecture & Logic Flows
 
-## 4. Architecture Overview
-
-### 4.1 System Architecture
-
-```mermaid
-flowchart TB
-    subgraph Client
-        Browser[Web Browser]
-    end
-    subgraph Frontend
-        NextJS[Next.js App]
-    end
-    subgraph Backend
-        Strapi[Strapi CMS]
-        RBAC[RBAC Service]
-        ORCID[ORCID Integration]
-    end
-    subgraph Database
-        PostgreSQL[(PostgreSQL)]
-    end
-    subgraph External
-        ORCID_API[ORCID Public API]
-        GCS[Google Cloud Storage]
-    end
-
-    Browser --> NextJS
-    NextJS --> Strapi
-    Strapi --> PostgreSQL
-    Strapi <--> ORCID_API
-    Strapi --> GCS
-```
-
-### 4.2 Request Flow (ORCID Validation)
+### 4.1 Request Flow: ORCID Lifecycle Hook
+Identity verification happens automatically via Strapi database lifecycles.
 
 ```mermaid
 sequenceDiagram
-    participant User
-    participant NextJS
-    participant Strapi
-    participant ORCID
+    participant U as User
+    participant S as Strapi API
+    participant OA as ORCID Public API
+    participant DB as PostgreSQL
     
-    User->>NextJS: Enters ORCID iD
-    NextJS->>Strapi: PUT /api/users/me
-    Strapi->>Strapi: afterUpdate Hook
-    Strapi->>ORCID: GET /v3.0/{orcidId}
-    ORCID-->>Strapi: 200 OK (Validated)
-    Strapi->>Strapi: Update orcidVerified = true
-    Strapi-->>NextJS: User Data (Verified)
-    NextJS-->>User: Show Verified Badge
+    U->>S: Registration with orcidId
+    S->>DB: Save User (Status: Pending)
+    S->>S: trigger afterCreate Lifecycle
+    S->>OA: GET /v3.0/{orcidId} (Accept: application/json)
+    alt Valid ID
+        OA-->>S: 200 OK (Identity Payload)
+        S->>DB: Update User { orcidVerified: true }
+    else Invalid ID
+        OA-->>S: 404/Error
+        S->>DB: Update User { orcidVerified: false, blocked: true }
+    end
+    S-->>U: Success/Status Result
 ```
 
-## 5. Data Model
-
-### 5.1 Entity-Relationship Diagram
+### 4.2 Bootstrap Flow: Programmatic RBAC Sync
+To ensure security is consistent across environments, permissions are defined in `src/utils/permissions.js` and applied during the `bootstrap` phase.
 
 ```mermaid
-erDiagram
-    %% Identity & Institutions
-    USER ||--o| INSTITUTION : "Affiliated with"
-    USER ||--o{ MENTORSHIP_REQUEST : "Sends/Receives"
-    USER ||--o{ THREAD : "Author"
-    USER ||--o{ POST : "Author"
-    USER ||--o{ RESOURCE : "Author"
-    USER }|--o{ COMMUNITY : "Member of"
-    USER ||--o{ REPORT : "Files"
-    TAG }|--o{ USER : "Expertise of"
-    
-    %% Community & Forums
-    COMMUNITY ||--o{ FORUM_CATEGORY : "Contains"
-    COMMUNITY ||--o{ RESOURCE : "Has"
-    FORUM_CATEGORY ||--o{ THREAD : "Organizes"
-    THREAD ||--o{ POST : "Contains"
-    POST |o--o{ POST : "Replies to"
-    REPORT }|--o| POST : "Targets"
-    
-    %% Knowledge Base & Taxonomy
-    TAG }|--o{ RESOURCE : "Tags"
-    TAG }|--o{ OPPORTUNITY : "Tags"
-
-    USER {
-        string firstName
-        string lastName
-        string email
-        text bio
-        string orcidId
-        boolean orcidVerified
-        enum careerStage
-        string expertise
-        boolean mentorAvailability
-        enum role
-        json notificationPreferences
-    }
-
-    INSTITUTION {
-        string name
-        string city
-        string country
-        media logo
-        enum affiliationType
-    }
-
-    COMMUNITY {
-        string name
-        string slug
-        text description
-        media featuredImage
-        enum privacy
-    }
-
-    FORUM_CATEGORY {
-        string name
-        string slug
-        int sortOrder
-    }
-
-    THREAD {
-        string title
-        string slug
-        text content
-        boolean isPinned
-        boolean isLocked
-    }
-
-    POST {
-        text content
-        boolean isSolution
-        enum status
-    }
-
-    RESOURCE {
-        string title
-        string slug
-        text content
-        enum type
-        media file
-        datetime publicationDate
-        enum visibility
-    }
-
-    OPPORTUNITY {
-        string title
-        string slug
-        text content
-        enum type
-        datetime deadline
-        string externalUrl
-    }
-
-    REPORT {
-        text reason
-        enum status
-    }
-
-    TAG {
-        string name
-        string slug
-        enum group
-    }
-
-    MENTORSHIP_REQUEST {
-        text message
-        enum status
-        datetime requestedAt
-    }
+flowchart LR
+    Start([Server Start]) --> Reg[index.js: register]
+    Reg --> Boot[index.js: bootstrap]
+    Boot --> Sync[utils/permissions.js: syncPermissions]
+    Sync --> FetchRoles[Fetch Roles from DB]
+    FetchRoles --> MapActions[Map JSON Actions to IDs]
+    MapActions --> UpsertPerms[Upsert Permissions Table]
+    UpsertPerms --> End([API Ready])
 ```
-
-### 5.2 Schema Definitions
-
-#### 5.2.1 Core User (Extended)
-**Path**: `backend/src/index.js` (Programmatic extension)
-- `firstName`: string
-- `lastName`: string
-- `orcidId`: string
-- `orcidVerified`: boolean
-- `careerStage`: enum (Early, Mid, Senior, Executive)
-- `mentorAvailability`: boolean
-
-#### 5.2.2 Opportunity
-- `title`: string
-- `type`: enum (Grant, Job, Fellowship, Award)
-- `deadline`: datetime
-- `externalUrl`: string
-
-#### 5.2.3 Resource
-- `title`: string
-- `slug`: string
-- `content`: text
-- `resource_type`: enum (report, case_study, best_practice, template, toolkit, guideline, policy, regulatory, presentation, video)
-- `reviewStatus`: enum (Draft, Pending, Published)
-- `visibility`: enum (public, private)
-- `uploaded_by`: relation (User)
-
-## 6. Component Design
-
-### 6.1 Frontend Components (Mobile-First)
-- **Top Navigation**: Sticky header with search and profile access.
-- **Responsive Cards**: Optimized for 320px screen width.
-- **Filter Drawers**: Mobile-optimized slide-in filters for Resources and Opportunities.
-
-### 6.2 Backend Services
-- **ORCID Service**: Handles token exchange and profile validation.
-- **RBAC Sync Service**: Automatically applies permission matrices to Strapi roles on bootstrap.
-
-## 7. Resource Repository Module - Detailed Design
-
-### 7.1 Resource Types
-The platform supports the following resource categorisation:
-| Type | Description | Examples |
-| :--- | :--- | :--- |
-| **report** | Research reports, studies | Annual reports, research findings |
-| **case_study** | Implementation case studies | Best practices from institutions |
-| **best_practice** | Documented best practices | Guidelines, methodologies |
-| **template** | Reusable templates | Budget templates, proposal formats |
-| **toolkit** | Comprehensive toolkits | Research management toolkits |
-| **guideline** | Official guidelines | Funder guidelines, ethics guidelines |
-| **policy** | Policy documents | Institutional policies |
-| **regulatory** | Regulatory information | Compliance requirements |
-| **presentation** | Slide decks | Conference presentations |
-| **video** | Video content | Training videos, webinar recordings |
-
-### 7.2 Resource Service (Implementation)
-```javascript
-// backend/src/api/resource/services/resource.js
-module.exports = ({ strapi }) => ({
-  async findByType(type, pagination = {}) {
-    return strapi.documents('api::resource.resource').findMany({
-      filters: {
-        resource_type: type,
-        visibility: 'public'
-      },
-      populate: ['tags', 'uploaded_by.profile', 'file'],
-      sort: { createdAt: 'desc' },
-      ...pagination
-    })
-  }
-})
-```
-
-## 8. Member Directory Module - Detailed Design
-
-### 8.1 Directory Features
-Based on user research requesting "networking by thematic area":
-| Feature | Implementation |
-| :--- | :--- |
-| **Search by expertise** | Filter on `expertise_areas` JSON field |
-| **Filter by region** | Filter on `region` enum |
-| **Filter by institution type** | Filter on `institution` with type tagging |
-| **Filter by career stage** | Filter on `career_stage` enum |
-| **Mentor availability** | Filter on `is_mentor_available` boolean |
-| **Profile visibility** | Controlled by `is_public` boolean |
-
-### 8.2 Directory Service (Implementation)
-```javascript
-// backend/src/api/user-profile/services/directory.js
-module.exports = ({ strapi }) => ({
-  async searchMembers(filters = {}, pagination = { page: 1, pageSize: 20 }) {
-    const queryFilters = { is_public: true };
-    
-    if (filters.expertise) {
-      queryFilters.expertise_areas = { $containsi: filters.expertise };
-    }
-    // ... additional filter logic
-    
-    return strapi.documents('api::profile.profile').findMany({
-      filters: queryFilters,
-      populate: ['user', 'expert_tags', 'institution'],
-      ...pagination
-    })
-  }
-})
-
-## 9. API Endpoints
-
-### 9.1 Opportunities API (Phase 1)
-- `GET /api/opportunities`: List with filtration.
-- `GET /api/opportunities/:id`: Single view.
-
-### 9.2 Resources API (Phase 1)
-- `GET /api/resources`: Published resources only.
-- `POST /api/resources`: User submission (initial state: Pending).
-
-### 9.3 Events API (Phase 1)
-- `GET /api/events`: List upcoming webinars and training sessions.
-
-### 9.4 Member Directory API (Phase 1)
-| Method | Endpoint | Description | Auth |
-| :--- | :--- | :--- | :--- |
-| GET | `/api/members` | Search member directory | Member |
-| GET | `/api/members/:username` | Get member profile | Member |
-| GET | `/api/members/mentors` | List available mentors | Member |
-| PUT | `/api/user-profiles/me` | Update own profile | Member |
-
-### 9.5 Forums API (Phase 2)
-- Deferred to Phase 2. To be documented upon commencement.
-
-## 10. Frontend Implementation
-
-### 10.1 Page Structure (Phase 1)
-- `/`: Homepage (Highlights).
-- `/opportunities`: Discovery list.
-- `/resources`: Knowledge base.
-- `/directory`: Expert finding.
-
-### 10.2 Homepage Component
-- Hero section with SFA Green gradient.
-- Latest Opportunities carousel (Mobile-Swipeable).
-
-## 11. Evolution & Scaling Pathway
-
-### 11.1 Revised Phase Approach
-- **Phase 1**: Identity, Resources, Opportunities.
-- **Phase 2**: Community Forums, Mentorship Tracking.
-
-### 11.2 Migration Path to Discourse (If Needed)
-The forum data model (Thread/Post) is kept simple to ensure easy CSV/JSON export if the community outgrows Strapi's built-in relations.
-
-## 12. Role-Based Access Control
-- **Public**: Find all (Read except Mentorship).
-- **Member**: Create threads/posts, request mentorship.
-- **Expert**: Manage own resources.
-- **Admin**: Full system control.
-
-## 13. Security Considerations
-
-### 13.1 Authentication & Authorization
-- Strapi JWT for API security.
-- OAuth 2.0 for ORCID verification.
-
-### 13.2 Data Protection
-- GDPR compliance for user profiles.
-- Role-based filtering for private community data.
-
-## 14. Diagram Sources
-Mermaid sources are maintained in `agent_docs/architecture.md`.
 
 ---
-## Appendix A: User Research Summary
-**Survey Details:**
-*   **Date:** June 2023
-*   **Respondents:** 254
-*   **Countries:** 44
-*   **Response Rate:** 98%
 
-**Top Feature Priorities (Score):**
-1.  **Funding Opportunities:** 920
-2.  **Webinars/Training:** 907
-3.  **Individual Opportunities (Jobs, Scholarships):** 904
-4.  **Resource Repository:** 900
-5.  **Mentorship & Coaching:** 900
-6.  **Interactive Virtual Space:** 871
-7.  **Search Navigation:** 864
-8.  **Collaborative Portal:** 857
+## 5. Exhaustive Data Dictionary
 
-**Key Segments:**
-*   **Early Career:** Prioritise mentorship.
-*   **Senior:** Prioritise interactive virtual space.
-*   **Female:** Stronger preference for individual opportunities.
+### 5.1 USER Entity (Extended)
+**UID**: `plugin::users-permissions.user`
+| Field | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `username` | string (unique) | - | User email |
+| `email` | email (unique) | - | Verified contact email |
+| `orcidId` | string | - | Unique researcher identifier |
+| `orcidVerified` | boolean | false | Verified via ORCID public API |
+| `careerStage` | enumeration | - | ['Early-Career', 'Mid-Career', 'Senior', 'Executive'] |
+| `expertise` | string | - | Primary research field |
+| `mentorAvailability`| boolean | false | Willingness to mentor peers |
+| `institution` | relation | - | manyToOne -> api::institution.institution |
+| `onboardingStep` | integer | 0 | Progress tracker for user setup |
+
+### 5.2 INSTITUTION Entity
+**UID**: `api::institution.institution`
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `name` | string | Legal name of the organization |
+| `city` | string | Location head office |
+| `country` | string | Country (African Union member states) |
+| `affiliationType` | enumeration | ['University', 'Research Org', 'Funding Agency'] |
+
+### 5.3 RESOURCE Entity
+**UID**: `api::resource.resource`
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `title` | string | Resource header |
+| `resource_type` | enumeration | ['report', 'case_study', 'toolkit', 'policy', 'video', etc.] |
+| `reviewStatus` | enumeration | ['Draft', 'Pending', 'Published', 'Rejected'] |
+| `author` | relation | oneToMany -> plugin::users-permissions.user |
+
+---
+
+## 6. Complete API Reference & RBAC
+
+### 6.1 Role Access Matrix
+The following matrix defines the programmatic mapping applied by `syncPermissions.js`.
+
+| Feature Area | Endpoint | Public | Member | Expert | Admin |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Resources** | `GET /api/resources` | R | R | R | CRUD |
+| **Communities** | `GET /api/communities`| R | R | R | CRUD |
+| **Forums** | `POST /api/threads` | - | C | C | CRUD |
+| **Identity** | `PUT /api/users/me` | - | U | U | CRUD |
+| **Mentorship** | `POST /api/mentorship`| - | C | C | CRUD |
+
+*(R=Read, C=Create, U=Update, CRUD=Full Access)*
+
+---
+
+## 7. UX Design System Alignment
+
+### 7.1 Design Tokens (SFA Foundation)
+The project utilizes a custom theme defined in `frontend/styles/globals.css`.
+*   **Brand Primary**: `green-500` (`#005850`) - Core identity.
+*   **Spacing Unit**: `sfa-` scale (e.g., `sfa-2` = 16px) for layout rhythm.
+*   **Typography**: Inter (Body), Outfit (Headings) - chosen for readability across mobile devices.
+
+### 7.2 Mobile-First Component Guidelines
+1.  **Touch Targets**: All CTAs must maintain a min-height of `48px` (`sfa-6`).
+2.  **Layout**: Single-column stacking for screens < 768px.
+3.  **OAuth UX**: ORCID login must handle same-tab redirection to prevent session timeouts on mobile Safari/Chrome.
+
+---
+
+## 8. Infrastructure & CI/CD Strategy
+
+### 8.1 Docker Container Orchestration
+*   **Traefik/Nginx**: Handles path-based routing (`/` to Next.js, `/cms` to Strapi).
+*   **Persistence**: PostgreSQL data stored in `pg-data` volume; Resource uploads stored in GCS via Strapi Provider.
+
+### 8.2 Deployment Pipeline (GitHub Actions)
+1.  **Lint & Test**: Run Vitest and Strapi unit tests.
+2.  **Build**: Multi-stage Docker builds for backend and frontend.
+3.  **Push**: Artifacts pushed to GCR.
+4.  **Rollout**: `kubectl apply` to Science for Africa K8s cluster.
+
+---
+
+## 9. Forward-Looking Roadmap
+
+### 9.1 Phase 2 Evolution
+*   **Moderation Dashboard**: Custom Strapi views for resolving User Reports.
+*   **Thematic Forums**: Integration of community-driven categorization logic.
+*   **Discourse Migration**: Architectural provision for exporting Forum data to Discourse if scaling exceeds relational limits.
+
+---
+
+## 10. Appendix & Technical Notes
+
+### 10.1 Survey Priority Scores (June 2023)
+| Feature | Score | Priority |
+| :--- | :--- | :--- |
+| Funding Opportunities | **920** | Critical |
+| Resource Repository | **900** | High |
+| Mentorship | **900** | High |
+
+### 10.2 Developer Quick-Start
+```bash
+# Clone and Boot
+git clone ...
+docker-compose up -d
+
+# Seed Initial Data
+docker exec -it soa-backend npm run seed
+```

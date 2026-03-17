@@ -55,27 +55,115 @@ The following ERD reflects the complete relational integrity of the SFA ecosyste
 
 ```mermaid
 erDiagram
-    USER ||--o| INSTITUTION : "is affiliated with"
-    USER ||--o{ COMMUNITY : "is member of"
-    USER ||--o{ THREAD : "authors"
-    USER ||--o{ POST : "authors"
-    USER ||--o{ RESOURCE : "submits"
-    USER ||--o{ MENTORSHIP_REQUEST : "sends/receives"
-    USER ||--o{ REPORT : "files"
+    %% Identity & Institutions
+    USER {
+        string firstName
+        string lastName
+        string email
+        text bio
+        string orcidId
+        enum careerStage "Early-Career, Mid-Career, Senior, Executive"
+        string expertise
+        boolean mentorAvailability
+        enum role "Platform Admin, Moderator, Institution Admin, Contributor, Member"
+        json notificationPreferences
+    }
+
+    INSTITUTION {
+        string name
+        string city
+        string country
+        media logo
+        enum affiliationType "University, Research Org, Funding Agency, Other"
+    }
+
+    MENTORSHIP_REQUEST {
+        text message
+        enum status "Pending, Accepted, Declined"
+        datetime requestedAt
+    }
+
+    %% Community & Forums
+    COMMUNITY {
+        string name
+        string slug
+        text description
+        media featuredImage
+        enum privacy "Public, Private"
+    }
+
+    FORUM_CATEGORY {
+        string name
+        string slug
+        int sortOrder
+    }
+
+    THREAD {
+        string title
+        string slug
+        text content
+        boolean isPinned
+        boolean isLocked
+    }
+
+    POST {
+        text content
+        boolean isSolution
+        enum status "Published, Hidden"
+    }
+
+    REPORT {
+        text reason
+        enum status "Pending, Resolved"
+    }
+
+    %% Knowledge Base & Resources
+    RESOURCE {
+        string title
+        string slug
+        text content
+        enum type "Publication, Training, Impact Story, Toolkit, Policy Brief, Case Study, Report, Tool"
+        media file
+        datetime publicationDate
+        enum visibility "Public, Members Only"
+    }
+
+    OPPORTUNITY {
+        string title
+        string slug
+        text content
+        enum type "Grant, Job, Fellowship, Award"
+        datetime deadline
+        string externalUrl
+    }
+
+    %% Taxonomy
+    TAG {
+        string name
+        string slug
+        enum group "Expertise, Region, Topic"
+    }
+
+    %% Relationships
+    USER }|--o| INSTITUTION : "Affiliated with"
+    USER ||--o{ MENTORSHIP_REQUEST : "Sends"
+    USER ||--o{ MENTORSHIP_REQUEST : "Receives"
     
-    INSTITUTION ||--o{ USER : "administers"
-    COMMUNITY ||--o{ FORUM_CATEGORY : "contains"
-    COMMUNITY ||--o{ RESOURCE : "categorizes"
-    
-    FORUM_CATEGORY ||--o{ THREAD : "organizes"
-    THREAD ||--o{ POST : "contains"
-    POST |o--o{ POST : "replies to"
-    
-    RESOURCE ||--o{ TAG : "tagged with"
-    USER ||--o{ TAG : "expert in"
-    
-    REPORT }|--o| POST : "targets"
-    REPORT }|--o| THREAD : "targets"
+    USER }|--o{ COMMUNITY : "Member of"
+    COMMUNITY ||--o{ FORUM_CATEGORY : "Contains"
+    FORUM_CATEGORY ||--o{ THREAD : "Organizes"
+    THREAD ||--o{ POST : "Contains"
+    POST |o--o{ POST : "Replies to"
+
+    USER ||--o{ THREAD : "Author"
+    USER ||--o{ POST : "Author"
+
+    REPORT }|--|| USER : "Filed by"
+    REPORT }|--o| POST : "Targets"
+
+    TAG }|--o{ RESOURCE : "Tags"
+    TAG }|--o{ OPPORTUNITY : "Tags"
+    TAG }|--o{ USER : "Expertise of"
 ```
 
 ### 4.2 Data Dictionary (Ultra-Granular)
@@ -83,21 +171,47 @@ erDiagram
 #### `USER` (Extending `plugin::users-permissions.user`)
 | Attribute | Type | Validation / Constraints | Default |
 | :--- | :--- | :--- | :--- |
+| `firstName` | string | Provided during registration | NULL |
+| `lastName` | string | Provided during registration | NULL |
+| `email` | string | Unique, valid email format | NULL |
+| `bio` | text | Professional summary | NULL |
 | `orcidId` | string | 19-digit pattern (e.g., 0000-000x-xxxx-xxxx) | NULL |
-| `orcidVerified` | boolean | Set via backend lifecycle hook only | false |
 | `careerStage` | enumeration| ['Early-Career', 'Mid-Career', 'Senior', 'Executive'] | NULL |
+| `expertise` | string | Comma-separated or tag-linked keywords | NULL |
+| `mentorAvailability`| boolean | UI toggle for directory visibility | false |
+| `role` | enumeration | ['Platform Admin', 'Moderator', 'Institution Admin', 'Contributor', 'Member'] | 'Member' |
+| `notificationPreferences` | json | JSON object for email/web toggles | {} |
+| `orcidVerified` | boolean | Set via backend lifecycle hook only | false |
 | `onboardingStep` | integer | range: [0, 5] | 0 |
 | `affiliationStatus`| enumeration| ['Pending', 'Approved', 'Rejected'] | 'Pending' |
-| `mentorAvailability`| boolean | UI toggle for directory visibility | false |
 
 #### `RESOURCE` (Document Registry)
 | Attribute | Type | Validation / Constraints | Default |
 | :--- | :--- | :--- | :--- |
 | `title` | string | Unique, Max 255 chars | NULL |
-| `description` | text | MD Support enabled | NULL |
-| `category` | enumeration| ['Toolkit', 'Story', 'Training', 'Dataset'] | NULL |
-| `reviewStatus` | enumeration| ['Draft', 'Pending', 'Published', 'Rejected'] | 'Draft'|
-| `attachment` | media | PDF, DOCX, MP4, JPEG | NULL |
+| `slug` | string | URL-friendly unique identifier | NULL |
+| `content` | text | MD Support enabled | NULL |
+| `type` | enumeration| ['Publication', 'Training', 'Impact Story', 'Toolkit', 'Policy Brief', 'Case Study', 'Report', 'Tool'] | NULL |
+| `file` | media | PDF, DOCX, MP4, JPEG | NULL |
+| `publicationDate` | datetime | Manual override or upload date | NOW |
+| `visibility` | enumeration| ['Public', 'Members Only'] | 'Public' |
+
+#### `OPPORTUNITY` (Funding & Careers)
+| Attribute | Type | Validation / Constraints | Default |
+| :--- | :--- | :--- | :--- |
+| `title` | string | Max 255 chars | NULL |
+| `slug` | string | URL-friendly unique identifier | NULL |
+| `content` | text | HTML/Markdown RichText | NULL |
+| `type` | enumeration| ['Grant', 'Job', 'Fellowship', 'Award'] | NULL |
+| `deadline` | datetime | Automatic expiration hook | NULL |
+| `externalUrl` | string | Source URL for application | NULL |
+
+#### `TAG` (Unified Taxonomy)
+| Attribute | Type | Validation / Constraints | Default |
+| :--- | :--- | :--- | :--- |
+| `name` | string | Display name (e.g. "AI", "Genomics") | NULL |
+| `slug` | string | URL-friendly unique identifier | NULL |
+| `group` | enumeration| ['Expertise', 'Region', 'Topic'] | 'Topic' |
 
 ---
 

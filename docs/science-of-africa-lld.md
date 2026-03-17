@@ -188,6 +188,38 @@ erDiagram
 | `onboardingStep` | integer | range: [0, 5] | 0 |
 | `affiliationStatus`| enumeration| ['Pending', 'Approved', 'Rejected'] | 'Pending' |
 
+#### `INSTITUTION` (Research & Funding Orgs)
+| Attribute | Type | Validation / Constraints | Default |
+| :--- | :--- | :--- | :--- |
+| `name` | string | Unique, Full institutional name | NULL |
+| `city` | string | City location | NULL |
+| `country` | string | ISO country code or full name | NULL |
+| `logo` | media | Image (PNG/JPG) | NULL |
+| `affiliationType`| enumeration| ['University', 'Research Org', 'Funding Agency', 'Other'] | 'University' |
+
+#### `MENTORSHIP_REQUEST` (Social Bridge)
+| Attribute | Type | Validation / Constraints | Default |
+| :--- | :--- | :--- | :--- |
+| `message` | text | Max 500 chars, initial greeting | NULL |
+| `status` | enumeration| ['Pending', 'Accepted', 'Rejected'] | 'Pending' |
+| `requestedAt` | datetime | Internal audit timestamp | NOW |
+
+#### `COMMUNITY` (Collaboration Spaces)
+| Attribute | Type | Validation / Constraints | Default |
+| :--- | :--- | :--- | :--- |
+| `name` | string | Unique, Max 100 chars | NULL |
+| `slug` | string | Unique, URL-friendly | NULL |
+| `description` | text | Markdown support | NULL |
+| `featuredImage` | media | High-res banner image | NULL |
+| `privacy` | enumeration| ['Public', 'Private'] | 'Public' |
+
+#### `FORUM_CATEGORY` (Structural Organization)
+| Attribute | Type | Validation / Constraints | Default |
+| :--- | :--- | :--- | :--- |
+| `name` | string | Category title | NULL |
+| `slug` | string | URL-friendly unique identifier | NULL |
+| `sortOrder` | integer | Position in UI list | 0 |
+
 #### `RESOURCE` (Document Registry)
 | Attribute | Type | Validation / Constraints | Default |
 | :--- | :--- | :--- | :--- |
@@ -208,6 +240,28 @@ erDiagram
 | `type` | enumeration| ['Grant', 'Job', 'Fellowship', 'Award'] | NULL |
 | `deadline` | datetime | Automatic expiration hook | NULL |
 | `externalUrl` | string | Source URL for application | NULL |
+
+#### `THREAD` (Discussion Starters)
+| Attribute | Type | Validation / Constraints | Default |
+| :--- | :--- | :--- | :--- |
+| `title` | string | Max 255 chars | NULL |
+| `slug` | string | Unique, URL-friendly | NULL |
+| `content` | text | Initial post content (Markdown) | NULL |
+| `isPinned` | boolean | Admin/Moderator override | false |
+| `isLocked` | boolean | Prevents new replies | false |
+
+#### `POST` (Individual Replies)
+| Attribute | Type | Validation / Constraints | Default |
+| :--- | :--- | :--- | :--- |
+| `content` | text | Reply content (Markdown) | NULL |
+| `isSolution` | boolean | Forum "mark as answer" feature | false |
+| `status` | enumeration| ['Published', 'Hidden'] | 'Published' |
+
+#### `REPORT` (Moderation Queue)
+| Attribute | Type | Validation / Constraints | Default |
+| :--- | :--- | :--- | :--- |
+| `reason` | text | User description of violation | NULL |
+| `status` | enumeration| ['Pending', 'Resolved'] | 'Pending' |
 
 #### `TAG` (Unified Taxonomy)
 | Attribute | Type | Validation / Constraints | Default |

@@ -3,10 +3,22 @@
 ## 1. Introduction
 
 ### 1.1 Platform Vision
-Science of Africa (SFA) is a research-centric collaboration platform designed to empower African scientists by providing a unified space for identity verification, community engagement, and resource discovery. The platform bridges the gap between individual research efforts and institutional visibility.
+The Science for Africa Foundation Community of Practice (CoP) Platform enables research managers to:
+*   **Access funding and career opportunities** through a curated opportunities board.
+*   **Build capacity** through training, webinars, and certification programmes.
+*   **Share resources and best practices** through a searchable repository.
+*   **Connect with peers** via member directory and networking features.
+*   **Discuss common challenges** via moderated discussion forums.
+*   **Access mentorship** through expert collaboration channels.
 
 ### 1.2 User Research Foundation
-The platform's design is heavily influenced by user research conducted with African scientists, focusing on the need for verified identities (ORCID), institutional affiliation visibility, and peer-to-peer mentorship.
+This LLD is informed by primary user research conducted in 2023:
+*   **Total Respondents:** 254 from 44 countries across all African Union regions.
+*   **Response Rate:** 98%.
+*   **Institutional Representation:** 71% from universities and research institutions.
+*   **Engagement Intent:** 54% plan to log in weekly, indicating strong engagement intent.
+*   **Market Opportunity:** 56% are not currently part of any existing CoP, representing a greenfield opportunity.
+*   **Key Insight:** Users prioritise access to **opportunities and resources** over discussion features for the initial phase.
 
 ### 1.3 Feature Prioritisation (User Research Ranked)
 1.  **Identity Verification** (ORCID OAuth) - High Priority
@@ -21,18 +33,19 @@ This LLD covers the fullstack implementation of Phase 1 (Core Identity, Resource
 ## 2. User Research Insights
 
 ### 2.1 Survey Demographics
-The initial survey targeted researchers across various career stages (Early-Career to Senior) within African universities and research organizations.
+The survey targeted 254 researchers across 44 countries, with 71% representing universities and research institutions.
 
 ### 2.2 Feature Preferences by User Segment
--   **Early-Career Researchers**: High preference for Mentorship and Opportunity discovery.
--   **Senior Scientists**: Priority on Institutional visibility and Resource sharing.
+-   **Early-Career Researchers**: High preference for Mentorship and Individual opportunities (Jobs, Scholarships).
+-   **Senior Scientists**: Priority on Institutional visibility and Interactive virtual spaces.
+-   **Female Researchers**: Stronger reported preference for individual development opportunities.
 
 ### 2.3 Additional Features Requested (Qualitative)
--   Automated publication syncing.
--   Private community spaces for sensitive research.
+-   Automated publication syncing via ORCID.
+-   Private community spaces for sensitive or thematic research.
 
 ### 2.4 Existing Community Memberships
-Users indicated reliance on fragmented tools (WhatsApp groups, LinkedIn) but expressed a need for a centralized, professionally-vetted research hub.
+56% of respondents are not currently part of any research community, highlighting the platform's role as a primary networking hub.
 
 ## 3. Technology Stack
 
@@ -239,8 +252,12 @@ erDiagram
 
 #### 5.2.3 Resource
 - `title`: string
-- `type`: enum (Publication, Training, Toolkit, etc.)
+- `slug`: string
+- `content`: text
+- `resource_type`: enum (report, case_study, best_practice, template, toolkit, guideline, policy, regulatory, presentation, video)
 - `reviewStatus`: enum (Draft, Pending, Published)
+- `visibility`: enum (public, private)
+- `uploaded_by`: relation (User)
 
 ## 6. Component Design
 
@@ -253,23 +270,73 @@ erDiagram
 - **ORCID Service**: Handles token exchange and profile validation.
 - **RBAC Sync Service**: Automatically applies permission matrices to Strapi roles on bootstrap.
 
-## 7. Core Modules - Detailed Design
+## 7. Resource Repository Module - Detailed Design
 
-### 7.1 Opportunity Service
-Handles the ingestion and categorization of career opportunities. Includes a "Deadline approaching" logic for notification alerts.
+### 7.1 Resource Types
+The platform supports the following resource categorisation:
+| Type | Description | Examples |
+| :--- | :--- | :--- |
+| **report** | Research reports, studies | Annual reports, research findings |
+| **case_study** | Implementation case studies | Best practices from institutions |
+| **best_practice** | Documented best practices | Guidelines, methodologies |
+| **template** | Reusable templates | Budget templates, proposal formats |
+| **toolkit** | Comprehensive toolkits | Research management toolkits |
+| **guideline** | Official guidelines | Funder guidelines, ethics guidelines |
+| **policy** | Policy documents | Institutional policies |
+| **regulatory** | Regulatory information | Compliance requirements |
+| **presentation** | Slide decks | Conference presentations |
+| **video** | Video content | Training videos, webinar recordings |
 
-### 7.2 Resource Service
-Implements a submission-to-review workflow. Resources are hidden from the frontend until `reviewStatus` is set to `Published` by an admin.
+### 7.2 Resource Service (Implementation)
+```javascript
+// backend/src/api/resource/services/resource.js
+module.exports = ({ strapi }) => ({
+  async findByType(type, pagination = {}) {
+    return strapi.documents('api::resource.resource').findMany({
+      filters: {
+        resource_type: type,
+        visibility: 'public'
+      },
+      populate: ['tags', 'uploaded_by.profile', 'file'],
+      sort: { createdAt: 'desc' },
+      ...pagination
+    })
+  }
+})
+```
 
 ## 8. Member Directory Module - Detailed Design
 
 ### 8.1 Directory Features
-- Search by expertise (Tags).
-- Filter by Institution.
-- Direct CTA for Mentorship requests.
+Based on user research requesting "networking by thematic area":
+| Feature | Implementation |
+| :--- | :--- |
+| **Search by expertise** | Filter on `expertise_areas` JSON field |
+| **Filter by region** | Filter on `region` enum |
+| **Filter by institution type** | Filter on `institution` with type tagging |
+| **Filter by career stage** | Filter on `career_stage` enum |
+| **Mentor availability** | Filter on `is_mentor_available` boolean |
+| **Profile visibility** | Controlled by `is_public` boolean |
 
-### 8.2 Directory Service
-Custom controller logic to query `up_users` where `onboardingStep` is complete.
+### 8.2 Directory Service (Implementation)
+```javascript
+// backend/src/api/user-profile/services/directory.js
+module.exports = ({ strapi }) => ({
+  async searchMembers(filters = {}, pagination = { page: 1, pageSize: 20 }) {
+    const queryFilters = { is_public: true };
+    
+    if (filters.expertise) {
+      queryFilters.expertise_areas = { $containsi: filters.expertise };
+    }
+    // ... additional filter logic
+    
+    return strapi.documents('api::profile.profile').findMany({
+      filters: queryFilters,
+      populate: ['user', 'expert_tags', 'institution'],
+      ...pagination
+    })
+  }
+})
 
 ## 9. API Endpoints
 
@@ -280,6 +347,20 @@ Custom controller logic to query `up_users` where `onboardingStep` is complete.
 ### 9.2 Resources API (Phase 1)
 - `GET /api/resources`: Published resources only.
 - `POST /api/resources`: User submission (initial state: Pending).
+
+### 9.3 Events API (Phase 1)
+- `GET /api/events`: List upcoming webinars and training sessions.
+
+### 9.4 Member Directory API (Phase 1)
+| Method | Endpoint | Description | Auth |
+| :--- | :--- | :--- | :--- |
+| GET | `/api/members` | Search member directory | Member |
+| GET | `/api/members/:username` | Get member profile | Member |
+| GET | `/api/members/mentors` | List available mentors | Member |
+| PUT | `/api/user-profiles/me` | Update own profile | Member |
+
+### 9.5 Forums API (Phase 2)
+- Deferred to Phase 2. To be documented upon commencement.
 
 ## 10. Frontend Implementation
 
@@ -323,5 +404,23 @@ Mermaid sources are maintained in `agent_docs/architecture.md`.
 
 ---
 ## Appendix A: User Research Summary
-- **Top Feature**: Identity Verification (Score: 9.2/10)
-- **Second Feature**: Institutional Visibility (Score: 8.8/10)
+**Survey Details:**
+*   **Date:** June 2023
+*   **Respondents:** 254
+*   **Countries:** 44
+*   **Response Rate:** 98%
+
+**Top Feature Priorities (Score):**
+1.  **Funding Opportunities:** 920
+2.  **Webinars/Training:** 907
+3.  **Individual Opportunities (Jobs, Scholarships):** 904
+4.  **Resource Repository:** 900
+5.  **Mentorship & Coaching:** 900
+6.  **Interactive Virtual Space:** 871
+7.  **Search Navigation:** 864
+8.  **Collaborative Portal:** 857
+
+**Key Segments:**
+*   **Early Career:** Prioritise mentorship.
+*   **Senior:** Prioritise interactive virtual space.
+*   **Female:** Stronger preference for individual opportunities.

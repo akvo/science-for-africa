@@ -297,7 +297,40 @@ stateDiagram-v2
 
 ---
 
-## 6. Role-Based Access Control (RBAC) Specification
+---
+
+## 6. Strategic Implementation Patterns
+
+To ensure a "Clean Slate" architecture that is resilient to version upgrades, the platform utilizes programmatic Strapi extensions instead of manual CMS configuration.
+
+### 6.1 Programmatic Content Modeling
+Unlike standard Strapi deployments, the `USER` model is extended dynamically in `backend/src/index.js` during the `register` phase. This ensures that career stages, ORCID identifiers, and mentorship relationships are logically enforced at the boot level.
+
+### 6.2 Admin UI Cognitive Optimization
+To improve management speed, the Strapi Admin UI is programmatically adjusted via the `content_manager` backend store.
+*   **Default Columns**: The User list view is automatically forced to display `role` and `institution` columns, facilitating rapid moderation.
+
+### 6.3 ORCID Validation Lifecycle
+The validation logic is decoupled from the controller layer using Strapi Lifecycle Hooks.
+*   **Hook**: `afterCreate` & `afterUpdate` on the User entity.
+*   **Action**: Automatically triggers the `api::orcid.orcid` service on `orcidId` presence to set `orcidVerified` transparency.
+
+---
+
+## 7. Infrastructure & Automation
+
+### 7.1 Multi-Tenant RBAC Synchronization
+The Role-Based Access Control system is synced programmatically via `backend/src/utils/permissions.js`. This prevents "configuration drift" where staging and production environments might have differing permission sets.
+
+### 7.2 Data Population (Persona-Driven Seeding)
+The platform includes a specialized seeder (`backend/src/utils/seeder.js`) that populates the environment with realistic African research personas:
+*   **Mentorship Pairs**: Automatically establishes relationship links between Mentors and Mentees.
+*   **Onboarding States**: Generates users at different stages of completion (Onboarding Step 0-5) to test UI resilience.
+*   **Institution Mapping**: Links users to research institutes across Nairobi, Cape Town, Lagos, etc.
+
+---
+
+## 8. Role-Based Access Control (RBAC) Specification
 
 Defined programmatically in `backend/src/utils/permissions.js` via the `syncPermissions` bootstrap routine.
 
@@ -320,9 +353,9 @@ Defined programmatically in `backend/src/utils/permissions.js` via the `syncPerm
 
 ---
 
-## 7. API Reference Object Shapes
+## 9. API Reference Object Shapes
 
-### 7.1 Resource API: Response Shape
+### 9.1 Resource API: Response Shape
 `GET /api/resources/:id`
 ```json
 {
@@ -339,7 +372,7 @@ Defined programmatically in `backend/src/utils/permissions.js` via the `syncPerm
 }
 ```
 
-### 7.2 Mentorship Request: Payload Shape
+### 9.2 Mentorship Request: Payload Shape
 `POST /api/mentorship-requests` (Role: Member)
 ```json
 {
@@ -354,14 +387,14 @@ Defined programmatically in `backend/src/utils/permissions.js` via the `syncPerm
 
 ---
 
-## 8. Development & Infrastructure Standards
+## 10. Development & Infrastructure Standards
 
-### 8.1 Docker Ecosystem
+### 10.1 Docker Ecosystem
 *   **App Node**: `node:20-alpine`.
 *   **Database**: `postgres:16-alpine`.
 *   **Volume Strategy**: `/var/lib/postgresql/data` persisted for data integrity.
 
-### 8.2 Design System Tokens (TailwindCSS v4)
+### 10.2 Design System Tokens (TailwindCSS v4)
 Defined in `frontend/styles/globals.css`:
 
 #### Core SFA Colors (Green Scale)
@@ -378,31 +411,31 @@ Defined in `frontend/styles/globals.css`:
 
 ---
 
-## 9. Phase 2 Roadmap: Evolutionary Specifications
+## 11. Phase 2 Roadmap: Evolutionary Specifications
 
-### 9.1 Polymorphic Reporting (US-009)
+### 11.1 Polymorphic Reporting (US-009)
 *   **Problem**: Content moderation needs a unified entry point for both Threads and Posts.
 *   **Solution**: A single `REPORT` content type using Strapi's polymorphic relations or two nullable relational fields.
 *   **Workflow**: User flags content -> `REPORT` created -> Moderator resolution clears the flag.
 
-### 9.2 Institutional Governance (App Admin Dashboard)
+### 11.2 Institutional Governance (App Admin Dashboard)
 *   **Logic**: Moving away from the Strapi Admin UI for institutional admins.
 *   **Feature**: Next.js-based "Institution Portal" where admins can approve/reject affiliation requests via the `affiliationStatus` flag.
 
-### 9.3 Fenced Communities (Privacy)
+### 11.3 Fenced Communities (Privacy)
 *   **Logic**: `isPrivate` toggle on the `COMMUNITY` entity.
 *   **Enforcement**: Backend middleware check on the `Thread` and `Post` controllers to verify user-community relationship before returning results.
 
 ---
 
-## 10. Appendix: Validation Protocols
+## 12. Appendix: Validation Protocols
 
-### 10.1 Formatting Rules
+### 12.1 Formatting Rules
 1.  All slugs must be lowercase, hyphenated.
 2.  Date fields must strictly follow ISO 8601 strings.
 3.  Rich text fields support standard GFM (GitHub Flavored Markdown).
 
-### 10.2 Error Object Standards
+### 12.2 Error Object Standards
 ```json
 {
   "error": {

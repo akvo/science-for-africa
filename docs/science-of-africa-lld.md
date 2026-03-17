@@ -53,6 +53,9 @@ The system enforces a strict logical separation between internal administrators 
 ### 4.1 Master Entity-Relationship Diagram (ERD)
 The following ERD reflects the complete relational integrity of the SFA ecosystem.
 
+> [!NOTE]
+> This ERD is synced with [science-of-africa-erd.mmd](file:///Users/galihpratama/Sites/science-for-africa/docs/science-of-africa-erd.mmd) and [science-of-africa-erd.mjs](file:///Users/galihpratama/Sites/science-for-africa/docs/science-of-africa-erd.mjs).
+
 ```mermaid
 erDiagram
     %% Identity & Institutions

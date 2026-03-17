@@ -1,0 +1,119 @@
+/**
+ * Science for Africa - Entity Relationship Diagram
+ * Generated from agent_docs/architecture.md
+ * Alignment: FIGMA v4 & Clean Slate Architecture
+ */
+
+export const erd = `erDiagram
+    %% Identity & Institutions
+    USER {
+        string firstName
+        string lastName
+        string email
+        text bio
+        string orcidId
+        enum careerStage "Early-Career, Mid-Career, Senior, Executive"
+        string expertise
+        boolean mentorAvailability
+        enum role "Platform Admin, Moderator, Institution Admin, Contributor, Member"
+        json notificationPreferences
+    }
+
+    INSTITUTION {
+        string name
+        string city
+        string country
+        media logo
+        enum affiliationType "University, Research Org, Funding Agency, Other"
+    }
+
+    MENTORSHIP_REQUEST {
+        text message
+        enum status "Pending, Accepted, Declined"
+        datetime requestedAt
+    }
+
+    %% Community & Forums
+    COMMUNITY {
+        string name
+        string slug
+        text description
+        media featuredImage
+        enum privacy "Public, Private"
+    }
+
+    FORUM_CATEGORY {
+        string name
+        string slug
+        int sortOrder
+    }
+
+    THREAD {
+        string title
+        string slug
+        text content
+        boolean isPinned
+        boolean isLocked
+    }
+
+    POST {
+        text content
+        boolean isSolution
+        enum status "Published, Hidden"
+    }
+
+    REPORT {
+        text reason
+        enum status "Pending, Resolved"
+    }
+
+    %% Knowledge Base & Resources
+    RESOURCE {
+        string title
+        string slug
+        text content
+        enum type "Publication, Training, Impact Story, Toolkit, Policy Brief, Case Study, Report, Tool"
+        media file
+        datetime publicationDate
+        enum visibility "Public, Members Only"
+    }
+
+    OPPORTUNITY {
+        string title
+        string slug
+        text content
+        enum type "Grant, Job, Fellowship, Award"
+        datetime deadline
+        string externalUrl
+    }
+
+    %% Taxonomy
+    TAG {
+        string name
+        string slug
+        enum group "Expertise, Region, Topic"
+    }
+
+    %% Relationships
+    USER }|--o| INSTITUTION : "Affiliated with"
+    USER ||--o{ MENTORSHIP_REQUEST : "Sends"
+    USER ||--o{ MENTORSHIP_REQUEST : "Receives"
+    
+    USER }|--o{ COMMUNITY : "Member of"
+    COMMUNITY ||--o{ FORUM_CATEGORY : "Contains"
+    FORUM_CATEGORY ||--o{ THREAD : "Organizes"
+    THREAD ||--o{ POST : "Contains"
+    POST |o--o{ POST : "Replies to"
+
+    USER ||--o{ THREAD : "Author"
+    USER ||--o{ POST : "Author"
+
+    REPORT }|--|| USER : "Filed by"
+    REPORT }|--o| POST : "Targets"
+
+    TAG }|--o{ RESOURCE : "Tags"
+    TAG }|--o{ OPPORTUNITY : "Tags"
+    TAG }|--o{ USER : "Expertise of"
+`;
+
+export default erd;

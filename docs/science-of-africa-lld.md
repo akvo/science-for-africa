@@ -12,6 +12,12 @@ The Science for Africa (SFA) Foundation Community of Practice (CoP) platform is 
 - **Phase 1 (Core)**: Identity (ORCID), Institutional Affiliation, Knowledge Base, and Peer Mentorship.
 - **Phase 2 (Growth)**: Polymorphic Moderation, Private Collaboration Spaces, and Opportunity Registries (Funding/Jobs).
 
+### Success KPIs (Target Performance)
+- **Identity Accuracy**: 100% of 'Expert' accounts must resolve to a valid ORCID iD.
+- **Onboarding Velocity**: New users should complete the 5-step profile setup in < 120 seconds.
+- **Trust Integrity**: 0% unauthorized access to community-restricted resources via Programmatic RBAC.
+- **Knowledge Recall**: 100% of resources must be tagged and searchable within 500ms API response time.
+
 ---
 
 ## 2. Technology Stack
@@ -134,9 +140,52 @@ flowchart TB
 ```
 
 ### Key Architectural Decisions
-1.  **Programmatic RBAC**: Permissions are synced via code (`permissions.js`) instead of manual DB config.
-2.  **Decoupled Validation**: ORCID checks run as background lifecycle hooks to prevent API latency.
-3.  **Clean Slate Model**: Models are extended programmatically in `backend/src/index.js` for version resilience.
+1.  **Programmatic RBAC**: Permissions are synced via code (`permissions.js`) instead of manual DB config, ensuring environment consistency across CI/CD.
+2.  **Decoupled Validation**: ORCID checks run as background lifecycle hooks to prevent API latency during registration.
+3.  **Clean Slate Model**: Models are extended programmatically in `backend/src/index.js` to ensure the platform remains independent of CMS version bloat.
+
+### Strategic Implementation Patterns
+
+#### Programmatic Content Modeling
+In alignment with the "Clean Slate" mandate, the `User` model is extended in `backend/src/index.js` during the `register` phase. This ensures that career stages, ORCID metadata, and mentorship relations are strictly defined without manual drift.
+
+#### Cognitive Admin UI Optimization
+The Strapi Admin UI is programmatically modified to display 'Role' and 'Institution' columns by default in the User list. This reduces management overhead for regional administrators.
+
+### Consumer Interaction Sequences
+
+#### ORCID Identity Lifecycle
+```mermaid
+sequenceDiagram
+    participant U as Researcher
+    participant F as Next.js Frontend
+    participant B as Strapi Backend
+    participant O as ORCID API (v3.0)
+
+    U->>F: Input ORCID iD during Onboarding
+    F->>B: POST /api/users/me { orcidId }
+    Note over B: Lifecycle: afterUpdate Hook
+    B->>O: GET /v3.0/[orcidId]/person
+    O-->>B: Return Identity Payload (Confirmed)
+    B->>B: Set orcidVerified: true
+    B-->>F: Return Updated Profile (200 OK)
+    F-->>U: Display Verified Badge
+```
+
+#### Resource Submission & Review
+```mermaid
+sequenceDiagram
+    participant E as Expert
+    participant B as Strapi Backend
+    participant A as Community Admin
+
+    E->>B: POST /api/resources (Status: Draft)
+    B-->>E: Submission Received
+    A->>B: GET /api/resources?filters[status]=Pending
+    B-->>A: List for Review
+    A->>B: PUT /api/resources/[id] (Status: Published)
+    Note over B: Resource visible to Community
+```
 
 ---
 
@@ -146,6 +195,16 @@ flowchart TB
 - **Standard**: Strapi automatically generates REST endpoints for all content types.
 - **Auth**: JWT Bearer token required for protected routes.
 - **Base URL**: `http://localhost:1337/api`
+
+### RBAC Permission Mapping Matrix
+| Resource | Public | Member / Individual | Expert | Admin (Community/Inst) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Resources** | find, findOne | find, findOne | create, find, findOne | update, delete, create |
+| **Communities**| find, findOne | find, findOne | find, findOne | update, delete, create |
+| **Threads** | - | find, create | find, create | update, delete, create |
+| **Posts** | - | find, create | find, create | update, delete, create |
+| **Users** | - | - | find (own) | find, findOne |
+| **Mentorship** | - | create (send) | find, create (receive) | - |
 
 ### API Reference Shapes
 - **Resource Object**:
@@ -234,15 +293,24 @@ docker compose exec backend npm test
 ## 10. Additional Technical Notes
 
 ### Industrial Validation Protocols
-1.  **Slugs**: Strictly derived using `kebab-case`.
-2.  **Temporal Data**: Mandatory ISO 8601 UTC format.
-3.  **Identity**: ORCID IDs must match 19-digit pattern.
+
+#### 1. Payload Integrity
+- **Slugs**: Strictly derived using `kebab-case`. Manual overrides are prohibited in the backend to ensure SEO and routing stability.
+- **Temporal Data**: All timestamps (createdAt, updatedAt) MUST follow ISO 8601 UTC format.
+- **Identity**: ORCID IDs must match the `0000-0000-0000-0000` 19-digit pattern with checksum validation.
+
+#### 2. Security Patterns
+- **RBAC Sync Trigger**: Any change to `permissions.js` must be followed by a `bootstrap` cycle to ensure synchronization.
+- **Fail-Fast and Inform**: Unauthorized API attempts must return clear 403 Forbidden responses without leaking internal schema details.
+- **Onboarding Guard**: Users are restricted to `Individual` level until ORCID and Institutional affiliation are verified via backend lifecycles.
 
 ### BMAD Team Audit Log (Final Sign-off)
 The final design has been verified by the full BMAD Agent Team:
-- **PM John**: KPI & Strategic Alignment ✅
-- **Analyst Mary**: Data Integrity ✅
-- **Architect Winston**: Structural Patterns ✅
-- **UX Sally**: Journey Flows ✅
-- **Tester Murat**: Validation Hardening ✅
-- **Writer Paige**: Professional Documentation ✅
+- **PM John**: Verified Strategic KPI alignment and Roadmap Phase 2 feasibility. ✅
+- **Analyst Mary**: Hardened the Data Dictionary with exact validation flags (Required/Unique). ✅
+- **Architect Winston**: Validated the "Clean Slate" programmatic extensions in `index.js`. ✅
+- **UX Sally**: Confirmed Sequence Diagram fidelity and Design System token consistency. ✅
+- **Tester Murat**: Defined Industrial Validation Protocols and RBAC sync integrity. ✅
+- **Writer Paige**: Performed structural audit to match Manager Template v9. ✅
+
+**Final Sign-off Date**: 2026-03-17 | **Orchestrator ID**: BMAD-LLD-FINAL-V9

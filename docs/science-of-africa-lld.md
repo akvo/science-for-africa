@@ -53,9 +53,6 @@ The system enforces a strict logical separation between internal administrators 
 ### 4.1 Master Entity-Relationship Diagram (ERD)
 The following ERD reflects the complete relational integrity of the SFA ecosystem.
 
-> [!NOTE]
-> This ERD is synced with [science-of-africa-erd.mmd](file:///Users/galihpratama/Sites/science-for-africa/docs/science-of-africa-erd.mmd) and [science-of-africa-erd.mjs](file:///Users/galihpratama/Sites/science-for-africa/docs/science-of-africa-erd.mjs).
-
 ```mermaid
 erDiagram
     %% Identity & Institutions
@@ -151,7 +148,7 @@ erDiagram
     USER }|--o| INSTITUTION : "Affiliated with"
     USER ||--o{ MENTORSHIP_REQUEST : "Sends"
     USER ||--o{ MENTORSHIP_REQUEST : "Receives"
-    
+
     USER }|--o{ COMMUNITY : "Member of"
     COMMUNITY ||--o{ FORUM_CATEGORY : "Contains"
     FORUM_CATEGORY ||--o{ THREAD : "Organizes"
@@ -182,7 +179,7 @@ erDiagram
 | `careerStage` | enumeration| ['Early-Career', 'Mid-Career', 'Senior', 'Executive'] | NULL |
 | `expertise` | string | Comma-separated or tag-linked keywords | NULL |
 | `mentorAvailability`| boolean | UI toggle for directory visibility | false |
-| `role` | enumeration | ['Platform Admin', 'Moderator', 'Institution Admin', 'Contributor', 'Member'] | 'Member' |
+| `role` | enumeration | ['Platform Admin', 'Community Admin', 'Moderator', 'Institution Admin', 'Individual', 'Member'] | 'Member' |
 | `notificationPreferences` | json | JSON object for email/web toggles | {} |
 | `orcidVerified` | boolean | Set via backend lifecycle hook only | false |
 | `onboardingStep` | integer | range: [0, 5] | 0 |
@@ -310,13 +307,16 @@ Defined programmatically in `backend/src/utils/permissions.js` via the `syncPerm
 *   **Header**: `Authorization: Bearer <jwt_token>`.
 
 ### 6.2 Permission Mapping Matrix
-| Resource | Public | Member | Expert | Moderator |
-| :--- | :--- | :--- | :--- | :--- |
-| `api::resource` | `find, findOne` | `find, findOne`| `create` | `CRUD` |
-| `api::community` | `find, findOne` | `find, findOne`| `find, findOne`| `CRUD` |
-| `api::thread` | - | `create, find` | `create, find` | `CRUD` |
-| `api::mentorship`| - | `create (req)` | `find, findOne` | - |
-| `api::institution`| `find, findOne` | - | - | `update (own)`|
+| Resource | Public | Member / Indiv. | Expert | Comm. Admin | Moder. | Plat. Admin | Inst. Admin |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `api::resource` | `find, findOne` | `find, findOne`| `create` | - | `CRUD` | `CRUD` | - |
+| `api::community` | `find, findOne` | `find, findOne`| `find, findOne`| `CRUD` | `CRUD` | `CRUD` | `find, findOne`|
+| `api::thread` | - | `CRUD (Own)` | `CRUD (Own)` | `CRUD` | `CRUD` | `CRUD` | - |
+| `api::post` | - | `CRUD (Own)` | `CRUD (Own)` | `CRUD` | `CRUD` | `CRUD` | - |
+| `api::mentorship`| - | `create (req)` | `find, findOne` | - | - | - | - |
+| `api::institution`| `find, findOne` | `find, findOne` | `find, findOne`| - | - | `CRUD` | `update` |
+| `api::forum-category`| `find, findOne` | `find, findOne` | `find, findOne`| `CRUD` | - | `CRUD` | - |
+| `plugin::users-perm`| - | - | - | - | - | - | `find users` |
 
 ---
 

@@ -77,14 +77,37 @@ erDiagram
         string orcidId
         enum careerStage
         boolean orcidVerified
+        int onboardingStep
+        string expertise
+        boolean mentorAvailability
+        enum affiliationStatus
     }
     INSTITUTION {
         string name
+        string city
         string country
+        enum affiliationType
     }
     RESOURCE {
         string title
+        text description
         enum category
+        enum reviewStatus
+        json tags
+    }
+    MENTORSHIP_REQUEST {
+        text message
+        enum status
+        datetime requestedAt
+    }
+    THREAD {
+        string title
+        boolean isPinned
+        boolean isLocked
+    }
+    POST {
+        richtext content
+        boolean isSolution
     }
 ```
 
@@ -93,17 +116,37 @@ erDiagram
 #### `USER` (Extended Identity)
 - **Type**: Collection Type (`plugin::users-permissions.user`)
 - **Description**: Central identity entity with ORCID verification and professional profiling.
-- **Key Fields**: `orcidId`, `orcidVerified`, `careerStage`, `institution`.
+- **Key Fields**: `orcidId`, `orcidVerified`, `careerStage`, `expertise`, `onboardingStep`, `institution`, `affiliationStatus`.
+
+#### `INSTITUTION` (Organizational Anchors)
+- **Type**: Collection Type
+- **Description**: African and international research organizations, universities, and funders.
+- **Key Fields**: `name`, `city`, `country`, `affiliationType` (University, Research Org, Funding Agency).
 
 #### `COMMUNITY` (Collaboration Hub)
 - **Type**: Collection Type
 - **Description**: Thematic research circles (e.g., Genomics, Policy).
 - **Key Fields**: `name`, `isPrivate`, `forumCategories`.
 
-#### `RESOURCE` (Document Registry)
+#### `FORUM_CATEGORY` (Discussion Structure)
+- **Type**: Collection Type
+- **Description**: Structural groupings for community-based forum threads.
+- **Key Fields**: `name`, `description`, `parentCategory` (Recursive), `community`.
+
+#### `THREAD` (Topic Starters)
+- **Type**: Collection Type
+- **Description**: User-initiated discussions within a specific forum category.
+- **Key Fields**: `title`, `author`, `isPinned`, `isLocked`, `forumCategory`.
+
+#### `POST` (Conversational Units)
+- **Type**: Collection Type
+- **Description**: Richtext replies and contributions to a thread.
+- **Key Fields**: `content`, `author`, `thread`, `parentPost` (Reply threading).
+
+#### `RESOURCE` (Knowledge Registry)
 - **Type**: Collection Type
 - **Description**: Moderated repository for toolkits, datasets, and stories.
-- **Key Fields**: `title`, `category`, `reviewStatus`, `attachment`.
+- **Key Fields**: `title`, `category`, `reviewStatus`, `attachment`, `community`.
 
 ---
 

@@ -121,6 +121,7 @@ erDiagram
     USER ||--o{ REPORT : "Files"
     TAG }|--o{ USER : "Expertise of"
     
+    %% Community & Forums
     COMMUNITY ||--o{ FORUM_CATEGORY : "Contains"
     COMMUNITY ||--o{ RESOURCE : "Has"
     FORUM_CATEGORY ||--o{ THREAD : "Organizes"
@@ -128,8 +129,95 @@ erDiagram
     POST |o--o{ POST : "Replies to"
     REPORT }|--o| POST : "Targets"
     
+    %% Knowledge Base & Taxonomy
     TAG }|--o{ RESOURCE : "Tags"
     TAG }|--o{ OPPORTUNITY : "Tags"
+
+    USER {
+        string firstName
+        string lastName
+        string email
+        text bio
+        string orcidId
+        boolean orcidVerified
+        enum careerStage
+        string expertise
+        boolean mentorAvailability
+        enum role
+        json notificationPreferences
+    }
+
+    INSTITUTION {
+        string name
+        string city
+        string country
+        media logo
+        enum affiliationType
+    }
+
+    COMMUNITY {
+        string name
+        string slug
+        text description
+        media featuredImage
+        enum privacy
+    }
+
+    FORUM_CATEGORY {
+        string name
+        string slug
+        int sortOrder
+    }
+
+    THREAD {
+        string title
+        string slug
+        text content
+        boolean isPinned
+        boolean isLocked
+    }
+
+    POST {
+        text content
+        boolean isSolution
+        enum status
+    }
+
+    RESOURCE {
+        string title
+        string slug
+        text content
+        enum type
+        media file
+        datetime publicationDate
+        enum visibility
+    }
+
+    OPPORTUNITY {
+        string title
+        string slug
+        text content
+        enum type
+        datetime deadline
+        string externalUrl
+    }
+
+    REPORT {
+        text reason
+        enum status
+    }
+
+    TAG {
+        string name
+        string slug
+        enum group
+    }
+
+    MENTORSHIP_REQUEST {
+        text message
+        enum status
+        datetime requestedAt
+    }
 ```
 
 ### 5.2 Schema Definitions

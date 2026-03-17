@@ -65,7 +65,7 @@ erDiagram
         enum careerStage "Early-Career, Mid-Career, Senior, Executive"
         string expertise
         boolean mentorAvailability
-        enum role "Platform Admin, Moderator, Institution Admin, Contributor, Member"
+        enum role "Platform Admin, Community Admin, Expert, Institution Admin, Individual, Member"
         json notificationPreferences
     }
 
@@ -120,28 +120,11 @@ erDiagram
     %% Knowledge Base & Resources
     RESOURCE {
         string title
-        string slug
-        text content
-        enum type "Publication, Training, Impact Story, Toolkit, Policy Brief, Case Study, Report, Tool"
-        media file
-        datetime publicationDate
-        enum visibility "Public, Members Only"
-    }
-
-    OPPORTUNITY {
-        string title
-        string slug
-        text content
-        enum type "Grant, Job, Fellowship, Award"
-        datetime deadline
-        string externalUrl
-    }
-
-    %% Taxonomy
-    TAG {
-        string name
-        string slug
-        enum group "Expertise, Region, Topic"
+        text description
+        enum category "Toolkit, Story, Training, Dataset, Other"
+        media attachment
+        enum reviewStatus "Draft, Pending, Published, Rejected"
+        json tags
     }
 
     %% Relationships
@@ -157,13 +140,10 @@ erDiagram
 
     USER ||--o{ THREAD : "Author"
     USER ||--o{ POST : "Author"
+    USER ||--o{ RESOURCE : "Author"
 
     REPORT }|--|| USER : "Filed by"
     REPORT }|--o| POST : "Targets"
-
-    TAG }|--o{ RESOURCE : "Tags"
-    TAG }|--o{ OPPORTUNITY : "Tags"
-    TAG }|--o{ USER : "Expertise of"
 ```
 
 ### 4.2 Data Dictionary (Ultra-Granular)
@@ -179,7 +159,13 @@ erDiagram
 | `careerStage` | enumeration| ['Early-Career', 'Mid-Career', 'Senior', 'Executive'] | NULL |
 | `expertise` | string | Comma-separated or tag-linked keywords | NULL |
 | `mentorAvailability`| boolean | UI toggle for directory visibility | false |
-| `role` | enumeration | ['Platform Admin', 'Community Admin', 'Moderator', 'Institution Admin', 'Individual', 'Member'] | 'Member' |
+| `role` | enumeration | ['Platform Admin', 'Community Admin', 'Expert', 'Institution Admin', 'Individual', 'Member'] | 'Member' |
+| `threads` | relation | oneToMany (api::thread) | - |
+| `posts` | relation | oneToMany (api::post) | - |
+| `followedThreads`| relation | manyToMany (api::thread) | - |
+| `mentorshipRequestsReceived` | relation | oneToMany (api::mentorship-request) | - |
+| `mentorshipRequestsSent` | relation | oneToMany (api::mentorship-request) | - |
+| `resources` | relation | oneToMany (api::resource) | - |
 | `notificationPreferences` | json | JSON object for email/web toggles | {} |
 | `orcidVerified` | boolean | Set via backend lifecycle hook only | false |
 | `onboardingStep` | integer | range: [0, 5] | 0 |
@@ -221,29 +207,24 @@ erDiagram
 | Attribute | Type | Validation / Constraints | Default |
 | :--- | :--- | :--- | :--- |
 | `title` | string | Unique, Max 255 chars | NULL |
-| `slug` | string | URL-friendly unique identifier | NULL |
-| `content` | text | MD Support enabled | NULL |
-| `type` | enumeration| ['Publication', 'Training', 'Impact Story', 'Toolkit', 'Policy Brief', 'Case Study', 'Report', 'Tool'] | NULL |
-| `file` | media | PDF, DOCX, MP4, JPEG | NULL |
-| `publicationDate` | datetime | Manual override or upload date | NOW |
-| `visibility` | enumeration| ['Public', 'Members Only'] | 'Public' |
+| `description` | text | MD Support enabled | NULL |
+| `category` | enumeration| ['Toolkit', 'Story', 'Training', 'Dataset', 'Other'] | NULL |
+| `attachment` | media | file, image, video, audio | NULL |
+| `reviewStatus` | enumeration| ['Draft', 'Pending', 'Published', 'Rejected'] | 'Draft' |
+| `rejectionNotes`| text | Internal feedback for authors | NULL |
+| `author` | relation | manyToOne (plugin::users-permissions.user) | NULL |
+| `community` | relation | manyToOne (api::community) | NULL |
+| `tags` | json | JSON array of keywords | {} |
 
-#### `OPPORTUNITY` (Funding & Careers)
-| Attribute | Type | Validation / Constraints | Default |
-| :--- | :--- | :--- | :--- |
-| `title` | string | Max 255 chars | NULL |
-| `slug` | string | URL-friendly unique identifier | NULL |
-| `content` | text | HTML/Markdown RichText | NULL |
-| `type` | enumeration| ['Grant', 'Job', 'Fellowship', 'Award'] | NULL |
-| `deadline` | datetime | Automatic expiration hook | NULL |
-| `externalUrl` | string | Source URL for application | NULL |
 
 #### `THREAD` (Discussion Starters)
 | Attribute | Type | Validation / Constraints | Default |
 | :--- | :--- | :--- | :--- |
 | `title` | string | Max 255 chars | NULL |
-| `slug` | string | Unique, URL-friendly | NULL |
-| `content` | text | Initial post content (Markdown) | NULL |
+| `author` | relation | manyToOne (plugin::users-permissions.user) | NULL |
+| `forumCategory` | relation | manyToOne (api::forum-category) | NULL |
+| `posts` | relation | oneToMany (api::post) | [] |
+| `followers` | relation | manyToMany (plugin::users-permissions.user) | [] |
 | `isPinned` | boolean | Admin/Moderator override | false |
 | `isLocked` | boolean | Prevents new replies | false |
 
@@ -259,13 +240,10 @@ erDiagram
 | :--- | :--- | :--- | :--- |
 | `reason` | text | User description of violation | NULL |
 | `status` | enumeration| ['Pending', 'Resolved'] | 'Pending' |
+| `filedBy` | relation | manyToOne (plugin::users-permissions.user) | NULL |
+| `targets` | relation | manyToOne (api::post) | NULL |
 
-#### `TAG` (Unified Taxonomy)
-| Attribute | Type | Validation / Constraints | Default |
-| :--- | :--- | :--- | :--- |
-| `name` | string | Display name (e.g. "AI", "Genomics") | NULL |
-| `slug` | string | URL-friendly unique identifier | NULL |
-| `group` | enumeration| ['Expertise', 'Region', 'Topic'] | 'Topic' |
+---
 
 ---
 
@@ -294,8 +272,6 @@ stateDiagram-v2
     Rejected --> Draft: User edits based on notes
     Published --> [*]: Visible to Category
 ```
-
----
 
 ---
 
@@ -334,13 +310,13 @@ The platform includes a specialized seeder (`backend/src/utils/seeder.js`) that 
 
 Defined programmatically in `backend/src/utils/permissions.js` via the `syncPermissions` bootstrap routine.
 
-### 6.1 Authentication Token Strategy
+### 8.1 Authentication Token Strategy
 *   **Provider**: Strapi `users-permissions`.
 *   **Standard**: JWT (24h expiry).
 *   **Header**: `Authorization: Bearer <jwt_token>`.
 
-### 6.2 Permission Mapping Matrix
-| Resource | Public | Member / Indiv. | Expert | Comm. Admin | Moder. | Plat. Admin | Inst. Admin |
+### 8.2 Permission Mapping Matrix
+| Resource | Public | Member / Indiv. | Expert | Comm. Admin | Plat. Admin | Inst. Admin |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | `api::resource` | `find, findOne` | `find, findOne`| `create` | - | `CRUD` | `CRUD` | - |
 | `api::community` | `find, findOne` | `find, findOne`| `find, findOne`| `CRUD` | `CRUD` | `CRUD` | `find, findOne`|
@@ -413,18 +389,14 @@ Defined in `frontend/styles/globals.css`:
 
 ## 11. Phase 2 Roadmap: Evolutionary Specifications
 
-### 11.1 Polymorphic Reporting (US-009)
-*   **Problem**: Content moderation needs a unified entry point for both Threads and Posts.
-*   **Solution**: A single `REPORT` content type using Strapi's polymorphic relations or two nullable relational fields.
-*   **Workflow**: User flags content -> `REPORT` created -> Moderator resolution clears the flag.
+### 11.4 Opportunity & Funding Registry (Roadmap)
+*   **Problem**: Users need a centralized hub for AU-specific grants and jobs.
+*   **Entity**: `OPPORTUNITY` collection with `type` (Grant, Job, Fellowship).
+*   **Automation**: Expiration logic to hide expired deadlines from the UI.
 
-### 11.2 Institutional Governance (App Admin Dashboard)
-*   **Logic**: Moving away from the Strapi Admin UI for institutional admins.
-*   **Feature**: Next.js-based "Institution Portal" where admins can approve/reject affiliation requests via the `affiliationStatus` flag.
-
-### 11.3 Fenced Communities (Privacy)
-*   **Logic**: `isPrivate` toggle on the `COMMUNITY` entity.
-*   **Enforcement**: Backend middleware check on the `Thread` and `Post` controllers to verify user-community relationship before returning results.
+### 11.5 Centralized Taxonomy Service (Relational Tags)
+*   **Draft**: Transition from JSON-based tags in `RESOURCE` to a relational `TAG` entity.
+*   **Benefit**: Enables "Global Search" across Communities and Resources by a shared Region or Topic.
 
 ---
 

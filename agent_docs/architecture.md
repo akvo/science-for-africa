@@ -127,7 +127,8 @@ erDiagram
 
 ### 3.1 Identity & Access
 *   **Two-Tier User Architecture**: The system distinguishes between system administrators (`admin_users`) and platform users (`up_users`). Detailed in the [RBAC & User Architecture](file:///Users/galihpratama/Sites/science-for-africa/agent_docs/features/RBAC-User-Architecture.md) specification.
-*   **USER**: Central social identity for the platform (`up_users`). Roles are derived from the Figma access matrices (Guest, Member, Expert, etc.). ORCID validation is a critical onboarding step.
+*   **USER**: Central social identity for the platform (`up_users`). Roles are derived from the Figma access matrices (Guest, Member, Expert, etc.). 
+*   **ORCID Verification**: Implemented via OAuth 2.0. A "Verified" badge is only awarded after successful OAuth handshake, proving ownership of the research identity. (Details in [ADR-003](file:///Users/galihpratama/Sites/science-for-africa/agent_docs/adrs/ADR-003-orcid-oauth.md)).
 
 ### 3.2 Community Engine
 *   **Hierarchical Structure**: Following the Figma user journey: Community -> Category -> Thread -> Post.

@@ -44,7 +44,13 @@ Applied to buttons, cards, and containers.
 - `radius-sfa-4`: 32px (Large sections)
 - `radius-sfa-full`: 999px (Pills/Circles)
 
-### Stroke Width
-- `border-sfa-1`: 1px (Standard borders)
-- `border-sfa-2`: 2px (Accented borders)
-- `border-sfa-3`: 3px (Heavy borders)
+### 4.2 Specialized Patterns: Identity
+- **ORCID Login Button**: Branded button (`#A6CE39`) with ORCID logo.
+- **Verified Badge**: Teal (`green-500`) checkmark next to ORCID ID on profiles.
+- **Unverified State**: Orange (`orange-500`) alert icon for self-declared IDs awaiting OAuth linkage.
+
+---
+
+## 5. Mobile Considerations
+- **OAuth Redirects**: Ensure the OAuth flow opens in the same tab or a well-managed popup to avoid session loss on mobile browsers.
+- **Touch Targets**: All "Link ORCID" CTAs must be at least `sfa-6` (48px) in height.

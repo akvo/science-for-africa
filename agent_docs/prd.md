@@ -28,8 +28,8 @@ Based on Figma [Collaboration & Community](https://www.figma.com/board/Chk297BVm
 ## 3. Key User Journeys
 - **Registration & Onboarding**:
     - Sign-up with Email/Password -> Email Verification.
+    - **ORCID OAuth 2.0**: Sign-up or sign-in directly using ORCID identity (Verified ownership).
     - **Institutional Affiliation**: Search/Join Institution (Pending Admin approval).
-    - **ORCID Integration**: Linking verified research identity.
 - **Community Interaction**:
     - **Forums**: Community -> Category -> Thread -> Post.
     - **Mentorship**: Discover Experts -> Send Mentorship Request.
@@ -42,7 +42,7 @@ Based on Figma [Collaboration & Community](https://www.figma.com/board/Chk297BVm
 ### 4.1 Identity (Foundation)
 - RBAC for the identified roles.
 - Institutional affiliation workflow.
-- ORCID verification integration.
+- **ORCID OAuth 2.0**: Mandatory for "Verified" researcher status.
 
 ### 4.2 Community
 - Hierarchical discussion engine (Threaded).

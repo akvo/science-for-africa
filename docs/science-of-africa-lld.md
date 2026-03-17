@@ -1,305 +1,244 @@
-# Science of Africa (SFA) - Industrial-Grade Low Level Design (LLD)
-**Version**: 7.0 | **Status**: Final Specification | **Alignment**: Figma v4 & Clean Slate Architecture
+# Science of Africa (SFA) - Ultra-Industrial Low Level Design (LLD)
+**Version**: 8.0 | **Status**: Final Alpha Specification | **Alignment**: FIGMA v4 & Clean Slate Architecture
 
 ---
 
-## 1. Executive Summary & Strategic Platform Vision
+## 1. Executive Summary & Strategic Roadmap
 
-### 1.1 Project Mission
-The Science for Africa Foundation Community of Practice (CoP) Platform is a mission-critical digital infrastructure designed to bridge the visibility and collaboration gap within the African research ecosystem. It serves as a centralized hub where research managers, scientists, and institutions can manage their professional identity, discover high-impact opportunities, and engage in peer-to-peer knowledge transfer.
+### 1.1 Mission Objectives
+The Science for Africa (SFA) Foundation Community of Practice (CoP) platform is an industrial-grade digital ecosystem designed to unify the African research landscape. This document serves as the definitive technical source of truth for Phase 1 (Core) and provides a rigorous blueprint for Phase 2 (Advanced Scaling).
 
-### 1.2 Platform Pillars
-*   **Identity**: Verified scientific professional profiles integrated with ORCID.
-*   **Community**: Hierarchical, moderated discussion spaces organized by theme and region.
-*   **Knowledge Base**: A curated repository of toolkits, publications, and impact stories.
-*   **Career Growth**: Direct pipelines to grants, jobs, fellowships, and mentorship.
+### 1.2 Technology Sovereignty
+By utilizing Strapi v5 as a headless engine and Next.js 16 as the interaction layer, the platform maintains a "Clean Slate" data model that is 100% independent of legacy architecture debt.
 
-### 1.3 Strategic Scope (Phase-Based Approach)
-*   **Phase 1 (Active Implementation)**: Core identity, institutional affiliation, knowledge base, and expert-led mentorship requests.
-*   **Phase 2 (Future Roadmap)**: Advanced polymorphic reporting, private community spaces, automated event management, and complex moderation workflows.
-
----
-
-## 2. User Research Foundation (Quantitative Deep-Dive)
-
-### 2.1 Research Methodology
-This LLD is informed by primary user research conducted in late 2023 with 254 respondents across 44 African Union member states.
-
-### 2.2 Key Quantitative Metrics
-*   **Institutional Profile**: 71% of respondents are affiliated with Universities and Research Institutions.
-*   **Engagement Intent**: 54% prioritized a "Weekly" login schedule, emphasizing the need for persistent value and notifications.
-*   **Market Opportunity**: 56% are not members of any existing research CoP, positioning SFA as the primary professional network.
-*   **Identity Standard**: Identity verification (ORCID) was rated the highest priority for platform trust (Score: 920/1000).
-
-### 2.3 Feature Ranking (Weighted Success Scores)
-| Feature Area | Weighted Score | Phase Alignment |
+### 1.3 High-Level Delivery Phases
+| Phase | Focus Areas | Implementation Status |
 | :--- | :--- | :--- |
-| **Funding & Career Ops** | 920 | Phase 1 (Critical) |
-| **Webinars & Capacity Building**| 907 | Phase 1 (Critical) |
-| **Individual Opportunities** | 904 | Phase 1 (Critical) |
-| **Resource Repository** | 900 | Phase 1 (Critical) |
-| **Mentorship & Coaching** | 900 | Phase 1 (Critical) |
-| **Interactive Community Spaces** | 871 | Phase 2 (High) |
+| **Phase 1: Core** | Identity, Institutional Affiliation, Knowledge Base, Mentorship | **Active Implementation** |
+| **Phase 2: Growth**| Polymorphic Reporting, Peer Moderation, Private Spaces, Events | **Planning / Roadmap** |
 
 ---
 
-## 3. Technology Ecosystem & Infrastructure Stack
+## 2. Quantitative User Research Baseline
 
-### 3.1 Backend: Strapi v5
-*   **Runtime**: Node.js v20 (LTS).
-*   **Framework**: Strapi 5.33.0.
-*   **Architecture**: Headless CMS providing Document Service APIs.
-*   **Database**: PostgreSQL 16 (Relational).
+### 2.1 Study Overview
+The architecture is directly informed by a 2023 survey of 254 research professionals across 44 AU member states.
 
-### 3.2 Frontend: Next.js v16 & React 19
-*   **Framework**: Next.js 16.1.0 using the App Router.
-*   **UI Engine**: React 19.2.3.
-*   **Styling**: TailwindCSS v4 with custom SFA Design Tokens.
-*   **Interactivity**: React Server Actions for seamless form handling.
-
-### 3.3 Infrastructure Strategy
-*   **Containerization**: Docker-orchestrated services.
-*   **Proxying**: Nginx/Traefik handling path-based routing.
-*   **Storage**: Google Cloud Storage for media and research toolkits.
-*   **CI/CD**: GitHub Actions deploying to a Kubernetes regional cluster in Africa.
+### 2.2 Critical Data Points
+*   **Affiliation Density**: 71% of users are based in Universities, necessitating robust multi-tenant institutional management.
+*   **Identity Priorities**: Verification (ORCID) scored **920/1000** on the critical priority index.
+*   **Gap Identification**: 56% of respondents have no current CoP membership, defining a greenfield requirement for intuitive onboarding.
 
 ---
 
-## 4. System Architecture (v4 - Clean Slate Refresh)
+## 3. Tiered System Architecture
 
-### 4.1 Tiered Component Overview
-1.  **Identity Layer**: ORCID v3.0 OAuth 2.0 and Strapi `users-permissions`.
-2.  **API Layer**: Strapi Document Services and customized controllers.
-3.  **Data Layer**: PostgreSQL 16 persisted via Docker volumes.
+### 3.1 Two-Tier User Model
+The system enforces a strict logical separation between internal administrators and external platform participants.
 
-### 4.2 Core Logical Flow: Identity Verification
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant S as Strapi API
-    participant OA as ORCID Public API
-    participant DB as PostgreSQL
-    
-    U->>S: Submit/Update profile with orcidId
-    S->>DB: Save draft profile
-    S->>S: trigger afterCreate/afterUpdate Lifecycle
-    S->>OA: GET /v3.0/{orcidId} (Accept: application/json)
-    alt Valid ID
-        OA-->>S: 200 OK (Biography Data)
-        S->>DB: Update User { orcidVerified: true }
-        S->>S: Grant "Verified" Badge
-    else Invalid ID
-        OA-->>S: 404/Error
-        S->>DB: Update User { orcidVerified: false }
-    end
-    S-->>U: Onboarding Step Completion
-```
+| Tier | Entity Table | UI Interface | Scope of Control |
+| :--- | :--- | :--- | :--- |
+| **System Admin** | `admin_users` | Strapi CMS (/admin) | Content Modeling, Infrastructure, Global Moderation |
+| **Platform User** | `up_users` | Next.js Dashboard | Peer Collaboration, Resource Discovery, Inst. Management |
+
+### 3.2 Decoupled Logic Layer
+*   **API Engine**: Strapi v5 (Node.js v20) providing Document Service APIs.
+*   **Design System**: Utility-first CSS via TailwindCSS v4 with SFA Custom Tokens.
+*   **Persistence**: PostgreSQL 16 (Transactional) + Google Cloud Storage (Assets).
 
 ---
 
-## 5. Detailed Entity-Relationship Diagram (ERD)
+## 4. Exhaustive Data Model (Clean Slate v4)
 
-This diagram represents the "Clean Slate" model, incorporating entities for both Phase 1 and Phase 2.
+### 4.1 Master Entity-Relationship Diagram (ERD)
+The following ERD reflects the complete relational integrity of the SFA ecosystem.
 
 ```mermaid
 erDiagram
-    %% Identity & Institutions
-    USER ||--o| INSTITUTION : "Affiliated with"
-    USER ||--o{ MENTORSHIP_REQUEST : "Sends/Receives"
-    USER ||--o{ THREAD : "Author"
-    USER ||--o{ POST : "Author"
-    USER ||--o{ RESOURCE : "Author"
-    USER }|--o{ COMMUNITY : "Member of"
-    USER ||--o{ REPORT : "Files"
-    TAG }|--o{ USER : "Expertise of"
+    USER ||--o| INSTITUTION : "is affiliated with"
+    USER ||--o{ COMMUNITY : "is member of"
+    USER ||--o{ THREAD : "authors"
+    USER ||--o{ POST : "authors"
+    USER ||--o{ RESOURCE : "submits"
+    USER ||--o{ MENTORSHIP_REQUEST : "sends/receives"
+    USER ||--o{ REPORT : "files"
     
-    %% Community & Forums
-    COMMUNITY ||--o{ FORUM_CATEGORY : "Contains"
-    COMMUNITY ||--o{ RESOURCE : "Has"
-    FORUM_CATEGORY ||--o{ THREAD : "Organizes"
-    THREAD ||--o{ POST : "Contains"
-    POST |o--o{ POST : "Replies to"
-    REPORT }|--o| POST : "Targets"
-    REPORT }|--o| THREAD : "Targets"
+    INSTITUTION ||--o{ USER : "administers"
+    COMMUNITY ||--o{ FORUM_CATEGORY : "contains"
+    COMMUNITY ||--o{ RESOURCE : "categorizes"
     
-    %% Knowledge Base & Taxonomy
-    TAG }|--o{ RESOURCE : "Tags"
-    TAG }|--o{ OPPORTUNITY : "Tags"
+    FORUM_CATEGORY ||--o{ THREAD : "organizes"
+    THREAD ||--o{ POST : "contains"
+    POST |o--o{ POST : "replies to"
+    
+    RESOURCE ||--o{ TAG : "tagged with"
+    USER ||--o{ TAG : "expert in"
+    
+    REPORT }|--o| POST : "targets"
+    REPORT }|--o| THREAD : "targets"
+```
 
-    USER {
-        string firstName
-        string lastName
-        string email
-        text bio
-        string orcidId
-        boolean orcidVerified
-        enum careerStage
-        string expertise
-        boolean mentorAvailability
-        enum role "Member, Expert, Admin, Moderator"
-        json notificationPreferences
-    }
+### 4.2 Data Dictionary (Ultra-Granular)
 
-    INSTITUTION {
-        string name
-        string city
-        string country
-        media logo
-        enum affiliationType "University, Research Org, Funding Agency"
-    }
+#### `USER` (Extending `plugin::users-permissions.user`)
+| Attribute | Type | Validation / Constraints | Default |
+| :--- | :--- | :--- | :--- |
+| `orcidId` | string | 19-digit pattern (e.g., 0000-000x-xxxx-xxxx) | NULL |
+| `orcidVerified` | boolean | Set via backend lifecycle hook only | false |
+| `careerStage` | enumeration| ['Early-Career', 'Mid-Career', 'Senior', 'Executive'] | NULL |
+| `onboardingStep` | integer | range: [0, 5] | 0 |
+| `affiliationStatus`| enumeration| ['Pending', 'Approved', 'Rejected'] | 'Pending' |
+| `mentorAvailability`| boolean | UI toggle for directory visibility | false |
 
-    COMMUNITY {
-        string name
-        string slug
-        text description
-        media featuredImage
-        enum privacy "Public, Private"
-    }
+#### `RESOURCE` (Document Registry)
+| Attribute | Type | Validation / Constraints | Default |
+| :--- | :--- | :--- | :--- |
+| `title` | string | Unique, Max 255 chars | NULL |
+| `description` | text | MD Support enabled | NULL |
+| `category` | enumeration| ['Toolkit', 'Story', 'Training', 'Dataset'] | NULL |
+| `reviewStatus` | enumeration| ['Draft', 'Pending', 'Published', 'Rejected'] | 'Draft'|
+| `attachment` | media | PDF, DOCX, MP4, JPEG | NULL |
 
-    FORUM_CATEGORY {
-        string name
-        string slug
-        int sortOrder
-    }
+---
 
-    THREAD {
-        string title
-        string slug
-        text content
-        boolean isPinned
-        boolean isLocked
-    }
+## 5. Core Logic & State Machines
 
-    POST {
-        text content
-        boolean isSolution
-        enum status "Published, Hidden"
-    }
+### 5.1 ORCID Identity Lifecycle (US-005)
+The system implements a "Proof-of-Existence" validation using the ORCID Public API v3.0.
 
-    RESOURCE {
-        string title
-        string slug
-        text content
-        enum type "Toolkit, Publication, Training"
-        media file
-        datetime publicationDate
-        enum visibility "Public, Members Only"
-    }
+*   **Trigger**: `afterCreate` or `afterUpdate` of a User entity where `orcidId` is present.
+*   **Service**: `api::orcid.orcid`
+*   **Mechanism**:
+    1.  Next.js Frontend validates regex format.
+    2.  Strapi Backend issues a `GET` request to `pub.orcid.org/v3.0/{orcidId}`.
+    3.  On `200 OK`, `orcidVerified` is patched to `true`.
+    4.  On `4xx/5xx`, `orcidVerified` is set to `false`, and an orange alert badge is rendered on the UI.
 
-    OPPORTUNITY {
-        string title
-        string slug
-        text content
-        enum type "Grant, Job, Fellowship"
-        datetime deadline
-        string externalUrl
-    }
+### 5.2 Resource Publishing Workflow (US-008)
+Resources follow a moderated state machine to ensure quality and compliance.
 
-    REPORT {
-        text reason
-        enum status "Pending, Resolved"
-    }
-
-    TAG {
-        string name
-        string slug
-        enum group "Expertise, Region, Topic"
-    }
-
-    MENTORSHIP_REQUEST {
-        text message
-        enum status "Pending, Accepted, Declined"
-        datetime requestedAt
-    }
+```mermaid
+stateDiagram-v2
+    [*] --> Draft: User starts creation
+    Draft --> Pending: User submits for review
+    Pending --> Published: Admin/Moderator approves
+    Pending --> Rejected: Moderator identifies gaps
+    Rejected --> Draft: User edits based on notes
+    Published --> [*]: Visible to Category
 ```
 
 ---
 
-## 6. Phase 1: Current Implementation Details
+## 6. Role-Based Access Control (RBAC) Specification
 
-### 6.1 Identity & Onboarding (Active)
-*   **Programmatic Schema Expansion**: The `up_user` model is extended via `backend/src/index.js` to include institutional relations and ORCID attributes.
-*   **Lifecycle Validation**: Automatic checking of ORCID validity on every user profile update.
-*   **Institutional Affiliation**: A "Tenant" model where users search and join an existing Institution (Pending admin approval).
+Defined programmatically in `backend/src/utils/permissions.js` via the `syncPermissions` bootstrap routine.
 
-### 6.2 Knowledge Base Management (Active)
-*   **Resource Submission**: Authenticated `Experts` and `Admins` can contribute to the repository.
-*   **Review Workflow**: Content starts in `Draft/Pending` and requires an admin `reviewStatus` change to `Published` for frontend visibility.
-*   **Attachment Handling**: Single-file media storage for toolkits and policy briefs.
+### 6.1 Authentication Token Strategy
+*   **Provider**: Strapi `users-permissions`.
+*   **Standard**: JWT (24h expiry).
+*   **Header**: `Authorization: Bearer <jwt_token>`.
 
-### 6.3 Expert Directory & Mentorship (Active)
-*   **Discovery**: Experts are discovered via `Expertise` tags and `careerStage` filters.
-*   **Engagement**: A direct mentee-to-mentor messaging system (`MENTORSHIP_REQUEST`) allows for initial contact and acceptance workflows.
-
----
-
-## 7. Phase 2: Future Roadmap Specifications
-
-### 7.1 Advanced Polymorphic Moderation (Report Logic)
-Planned as the secondary layer of platform trust.
-*   **Polymorphic Reporting**: A single `REPORT` entity will link to either a `POST` or a `THREAD` via nullable relations.
-*   **Moderator Dashboard**: A specialized Strapi view for `Community Admins` to resolve reported content, applying the `Hidden` or `Rejected` status.
-
-### 7.2 Event & Capacity Building Module
-*   **Implementation**: Integration of an `EVENT` entity to track webinars and training sessions.
-*   **Booking**: Ability for members to "Sign up" for events, triggering calendar invites.
-
-### 7.3 Community Private Spaces
-*   **Logic**: Expansion of the `privacy` enum on the `COMMUNITY` entity.
-*   **Security**: Introduction of an "Accept Invitation" workflow to allow researchers to collaborate on sensitive data in a fenced discussion space.
-
-### 7.4 Scalability & Third-Party Integration
-*   **Discourse Migration**: Provisions for moving high-volume forum data from Strapi's relational model to a dedicated Discourse instance if community size exceeds 50k active threads.
+### 6.2 Permission Mapping Matrix
+| Resource | Public | Member | Expert | Moderator |
+| :--- | :--- | :--- | :--- | :--- |
+| `api::resource` | `find, findOne` | `find, findOne`| `create` | `CRUD` |
+| `api::community` | `find, findOne` | `find, findOne`| `find, findOne`| `CRUD` |
+| `api::thread` | - | `create, find` | `create, find` | `CRUD` |
+| `api::mentorship`| - | `create (req)` | `find, findOne` | - |
+| `api::institution`| `find, findOne` | - | - | `update (own)`|
 
 ---
 
-## 8. Role-Based Access Control (RBAC) Specification
+## 7. API Reference Object Shapes
 
-Defined in `backend/src/utils/permissions.js` and synchronized on server bootstrap.
+### 7.1 Resource API: Response Shape
+`GET /api/resources/:id`
+```json
+{
+  "data": {
+    "id": 12,
+    "attributes": {
+      "title": "African Data Ethics Framework",
+      "category": "Toolkit",
+      "reviewStatus": "Published",
+      "author": { "data": { "id": 5, "attributes": { "username": "dr_smith" } } },
+      "community": { "data": { "id": 1, "attributes": { "name": "Ethics in AI" } } }
+    }
+  }
+}
+```
 
-| Feature Area | Public | Member | Expert | Moderator | Admin |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Directory** | READ | READ | READ | READ | CRUD |
-| **Resources** | READ | READ | CREATE | READ | CRUD |
-| **Forums** | READ | CREATE | CREATE | CRUD | CRUD |
-| **Identity** | - | UPDATE(me)| UPDATE(me)| READ | CRUD |
-| **Reports** | - | CREATE | CREATE | READ/RESOLVE| CRUD |
-
----
-
-## 9. UX Design System (Tokens & Alignment)
-
-### 9.1 SFA Brand Colors (Semantic)
-*   **Primary (`green-500`)**: `#005850` (Platform Headers/Primary Buttons).
-*   **Hover (`green-600`)**: `#005049`.
-*   **Accent (`teal-300`)**: Highlighting community active states.
-*   **Feedback (`orange-500`)**: Unverified state indicators.
-
-### 9.2 Mobile-First Component Principles
-1.  **Touch Targets**: CTAs (e.g., ORCID Login) must maintain min-height of `48px` (`sfa-6`).
-2.  **Navigation**: Slide-out tray menu for mobile browsers.
-3.  **Layout**: Single-column stacking for institutional lists on screens `< 768px`.
-
----
-
-## 10. DevOps & Security Strategy
-
-### 10.1 Automated Verification (QA)
-*   **Unit Testing**: Vitest suite for backend controller logic.
-*   **Integration Testing**: Docker-based CI steps for API consistency.
-
-### 10.2 Data Compliance
-*   **Identity Protection**: Encryption of researcher emails at rest.
-*   **Handshake Security**: Domain-restricted OAuth callback redirects.
+### 7.2 Mentorship Request: Payload Shape
+`POST /api/mentorship-requests` (Role: Member)
+```json
+{
+  "data": {
+    "message": "I would like guidance on my postdoc fellowship application.",
+    "status": "Pending",
+    "mentor": 45,
+    "mentee": 12
+  }
+}
+```
 
 ---
 
-## 11. Appendix
+## 8. Development & Infrastructure Standards
 
-### 11.1 Quantitative Priority Scores
-1. Funding Opportunities: **920**
-2. Resource Repository: **900**
-3. Peer Connection: **864**
+### 8.1 Docker Ecosystem
+*   **App Node**: `node:20-alpine`.
+*   **Database**: `postgres:16-alpine`.
+*   **Volume Strategy**: `/var/lib/postgresql/data` persisted for data integrity.
 
-### 11.2 Entity Dictionary Raw Source
-*(Reference to exhaustive schema.json paths in `backend/src/api/*/content-types/`) *
+### 8.2 Design System Tokens (TailwindCSS v4)
+Defined in `frontend/styles/globals.css`:
+
+#### Core SFA Colors (Green Scale)
+*   **50**: `#e6eeee` (Subtle backgrounds)
+*   **500**: `#005850` (Primary Brand Color)
+*   **600**: `#005049` (Primary Hover)
+*   **900**: `#002522` (High-contrast text)
+
+#### SFA Spacing Units (Figma Aligned)
+*   `sfa-1`: 8px
+*   `sfa-2`: 16px
+*   `sfa-3`: 24px
+*   `sfa-6`: 48px (Touch Target Standard)
+
+---
+
+## 9. Phase 2 Roadmap: Evolutionary Specifications
+
+### 9.1 Polymorphic Reporting (US-009)
+*   **Problem**: Content moderation needs a unified entry point for both Threads and Posts.
+*   **Solution**: A single `REPORT` content type using Strapi's polymorphic relations or two nullable relational fields.
+*   **Workflow**: User flags content -> `REPORT` created -> Moderator resolution clears the flag.
+
+### 9.2 Institutional Governance (App Admin Dashboard)
+*   **Logic**: Moving away from the Strapi Admin UI for institutional admins.
+*   **Feature**: Next.js-based "Institution Portal" where admins can approve/reject affiliation requests via the `affiliationStatus` flag.
+
+### 9.3 Fenced Communities (Privacy)
+*   **Logic**: `isPrivate` toggle on the `COMMUNITY` entity.
+*   **Enforcement**: Backend middleware check on the `Thread` and `Post` controllers to verify user-community relationship before returning results.
+
+---
+
+## 10. Appendix: Validation Protocols
+
+### 10.1 Formatting Rules
+1.  All slugs must be lowercase, hyphenated.
+2.  Date fields must strictly follow ISO 8601 strings.
+3.  Rich text fields support standard GFM (GitHub Flavored Markdown).
+
+### 10.2 Error Object Standards
+```json
+{
+  "error": {
+    "status": 403,
+    "name": "ForbiddenError",
+    "message": "You do not have permission to moderate this resource.",
+    "details": {}
+  }
+}
+```

@@ -15,7 +15,12 @@ By utilizing Strapi v5 as a headless engine and Next.js 16 as the interaction la
 | Phase | Focus Areas | Implementation Status |
 | :--- | :--- | :--- |
 | **Phase 1: Core** | Identity, Institutional Affiliation, Knowledge Base, Mentorship | **Active Implementation** |
-| **Phase 2: Growth**| Polymorphic Reporting, Peer Moderation, Private Spaces, Events | **Planning / Roadmap** |
+| **Phase 2: Growth**| Polymorphic Reporting, Peer Moderation, Private Spaces, Events, Opportunity Registry | **Planning / Roadmap** |
+
+### 1.4 Success KPIs (PM John's View)
+*   **Adoption**: > 500 Verified Research IDs within first 6 months.
+*   **Engagement**: average 3 daily peer-interactions (threads/posts) per active community.
+*   **Verification**: 100% ORCID validation for 'Expert' and 'Institution Admin' roles.
 
 ---
 
@@ -190,18 +195,19 @@ erDiagram
 #### `COMMUNITY` (Collaboration Spaces)
 | Attribute | Type | Validation / Constraints | Default |
 | :--- | :--- | :--- | :--- |
-| `name` | string | Unique, Max 100 chars | NULL |
-| `slug` | string | Unique, URL-friendly | NULL |
-| `description` | text | Markdown support | NULL |
-| `featuredImage` | media | High-res banner image | NULL |
-| `privacy` | enumeration| ['Public', 'Private'] | 'Public' |
+| `name` | string | **Required**, **Unique**, Max 100 chars | NULL |
+| `isPrivate` | boolean | Backend visibility toggle | false |
+| `forumCategories`| relation | oneToMany (api::forum-category) | - |
+| `resources` | relation | oneToMany (api::resource) | - |
 
 #### `FORUM_CATEGORY` (Structural Organization)
 | Attribute | Type | Validation / Constraints | Default |
 | :--- | :--- | :--- | :--- |
-| `name` | string | Category title | NULL |
-| `slug` | string | URL-friendly unique identifier | NULL |
-| `sortOrder` | integer | Position in UI list | 0 |
+| `name` | string | **Required**, Category title | NULL |
+| `community` | relation | manyToOne (api::community) | NULL |
+| `parentCategory`| relation | manyToOne (api::forum-category) | NULL |
+| `subCategories` | relation | oneToMany (api::forum-category) | [] |
+| `threads` | relation | oneToMany (api::thread) | [] |
 
 #### `RESOURCE` (Document Registry)
 | Attribute | Type | Validation / Constraints | Default |
@@ -235,10 +241,10 @@ erDiagram
 | `isSolution` | boolean | Forum "mark as answer" feature | false |
 | `status` | enumeration| ['Published', 'Hidden'] | 'Published' |
 
-#### `REPORT` (Moderation Queue)
+#### `REPORT` (**Phase 2 Roadmap**)
 | Attribute | Type | Validation / Constraints | Default |
 | :--- | :--- | :--- | :--- |
-| `reason` | text | User description of violation | NULL |
+| `reason` | text | **Required**, User description of violation | NULL |
 | `status` | enumeration| ['Pending', 'Resolved'] | 'Pending' |
 | `filedBy` | relation | manyToOne (plugin::users-permissions.user) | NULL |
 | `targets` | relation | manyToOne (api::post) | NULL |
@@ -251,6 +257,28 @@ erDiagram
 
 ### 5.1 ORCID Identity Lifecycle (US-005)
 The system implements a "Proof-of-Existence" validation using the ORCID Public API v3.0.
+
+```mermaid
+sequenceDiagram
+    participant U as Researcher
+    participant F as Next.js Frontend
+    participant B as Strapi Backend
+    participant O as ORCID API (v3)
+
+    U->>F: Enter ORCID ID
+    F->>F: Validate Regex (XXXX-XXXX-XXXX-XXXX)
+    F->>B: POST /api/auth/register (orcidId)
+    B->>O: GET /v3.0/{orcidId}
+    alt Success (200 OK)
+        O-->>B: Identity JSON
+        B->>B: Set orcidVerified = true
+    else Failure (4xx/5xx)
+        O-->>B: Error
+        B->>B: Set orcidVerified = false
+    end
+    B-->>F: User Object + JWT
+    F->>U: Show Verification Status Badge
+```
 
 *   **Trigger**: `afterCreate` or `afterUpdate` of a User entity where `orcidId` is present.
 *   **Service**: `api::orcid.orcid`
@@ -389,6 +417,19 @@ Defined in `frontend/styles/globals.css`:
 
 ## 11. Phase 2 Roadmap: Evolutionary Specifications
 
+### 11.1 Polymorphic Reporting (US-009)
+*   **Problem**: Content moderation needs a unified entry point for both Threads and Posts.
+*   **Solution**: A single `REPORT` content type using Strapi's polymorphic relations or two nullable relational fields.
+*   **Workflow**: User flags content -> `REPORT` created -> Moderator resolution clears the flag.
+
+### 11.2 Institutional Governance (App Admin Dashboard)
+*   **Logic**: Moving away from the Strapi Admin UI for institutional admins.
+*   **Feature**: Next.js-based "Institution Portal" where admins can approve/reject affiliation requests via the `affiliationStatus` flag.
+
+### 11.3 Fenced Communities (Privacy)
+*   **Logic**: `isPrivate` toggle on the `COMMUNITY` entity.
+*   **Enforcement**: Backend middleware check on the `Thread` and `Post` controllers to verify user-community relationship before returning results.
+
 ### 11.4 Opportunity & Funding Registry (Roadmap)
 *   **Problem**: Users need a centralized hub for AU-specific grants and jobs.
 *   **Entity**: `OPPORTUNITY` collection with `type` (Grant, Job, Fellowship).
@@ -400,21 +441,37 @@ Defined in `frontend/styles/globals.css`:
 
 ---
 
-## 12. Appendix: Validation Protocols
+## 12. Appendix: Industrial Validation Protocols
 
-### 12.1 Formatting Rules
-1.  All slugs must be lowercase, hyphenated.
-2.  Date fields must strictly follow ISO 8601 strings.
-3.  Rich text fields support standard GFM (GitHub Flavored Markdown).
+### 12.1 Formatting & Precision Rules
+1.  **Slugs**: All `slug` fields must be lowercase, hyphenated, and derived from the `title` or `name` using the `Kebab-Case` transformation.
+2.  **Temporal Data**: All `datetime` fields must strictly follow ISO 8601 UTC strings.
+3.  **Content Integrity**: Rich text fields support standard GFM (GitHub Flavored Markdown).
 
-### 12.2 Error Object Standards
+### 12.2 Security & Error Handling Standards
+The platform follows the "Fail-Fast and Inform" pattern for RBAC violations.
+
 ```json
 {
   "error": {
     "status": 403,
     "name": "ForbiddenError",
     "message": "You do not have permission to moderate this resource.",
-    "details": {}
+    "details": {
+      "hint": "Check if user is 'Community Admin' for this specific community."
+    }
   }
 }
 ```
+
+---
+
+## 13. BMAD Team Audit Log (2026-03-17)
+| Role | Auditor | Status | Key Enhancement |
+| :--- | :--- | :--- | :--- |
+| **PM** | John | ✅ Approved | Added Success KPIs and Vision Alignment. |
+| **Analyst** | Mary | ✅ Approved | Strengthened Data Dictionary with Validation Flags. |
+| **Architect** | Winston | ✅ Approved | Deep-dived into Programmatic Logic vs CMS Config. |
+| **UX** | Sally | ✅ Approved | Implemented User Journey Sequences. |
+| **Tester** | Murat | ✅ Approved | Hardened Appendix Validation Rules. |
+| **Writer** | Paige | ✅ Approved | Polished Tone and Mermaid Structural Clarity. |

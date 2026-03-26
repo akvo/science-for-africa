@@ -70,12 +70,12 @@ export default function StyleGuide() {
         <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">
           Brand Assets
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-4 p-6 bg-white border border-gray-100 rounded-16 shadow-xs">
             <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
               Full Color
             </h4>
-            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8">
+            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8 h-24">
               <img
                 src="/logo-full.png"
                 alt="SFA Full Color Logo"
@@ -87,7 +87,7 @@ export default function StyleGuide() {
             <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
               Black
             </h4>
-            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8">
+            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8 h-24">
               <img
                 src="/logo-black.png"
                 alt="SFA Black Logo"

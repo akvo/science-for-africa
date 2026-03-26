@@ -4,9 +4,31 @@ export default function StyleGuide() {
   // Force utilities: bg-brand-gray-50 bg-brand-brand-teal-50 bg-brand-orange-50 bg-brand-gray-100 bg-brand-gray-200 bg-brand-gray-300 bg-brand-gray-400 bg-brand-gray-500 bg-brand-gray-600 bg-brand-gray-700 bg-brand-gray-800 bg-brand-gray-900
 
   const colorPalettes = {
-    Primary: ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
+    Primary: [
+      "50",
+      "100",
+      "200",
+      "300",
+      "400",
+      "500",
+      "600",
+      "700",
+      "800",
+      "900",
+    ],
     Teal: ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
-    Orange: ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
+    Orange: [
+      "50",
+      "100",
+      "200",
+      "300",
+      "400",
+      "500",
+      "600",
+      "700",
+      "800",
+      "900",
+    ],
     Gray: ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
   };
 
@@ -31,41 +53,89 @@ export default function StyleGuide() {
       </Head>
 
       <header className="max-w-4xl">
-        <h1 className="text-display-md text-primary-500 mb-4 uppercase">Science for Africa</h1>
-        <h2 className="text-display-xs text-gray-900 mb-6">Design System Foundation v1.0</h2>
+        <h1 className="text-display-md text-primary-500 mb-4 uppercase">
+          Science for Africa
+        </h1>
+        <h2 className="text-display-xs text-gray-900 mb-6">
+          Design System Foundation v1.0
+        </h2>
         <p className="text-lg text-gray-600">
-          This foundation is built using Tailwind 4 CSS-native tokens, extracted directly from the SFA Figma Specification (Node 6:87 & 25:692).
+          This foundation is built using Tailwind 4 CSS-native tokens, extracted
+          directly from the SFA Figma Specification (Node 6:87 & 25:692).
         </p>
       </header>
 
       {/* Brand Assets */}
       <section className="space-y-8">
-        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">Brand Assets</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-4 p-8 bg-white border border-gray-100 rounded-16 shadow-xs">
-            <h4 className="text-sm font-bold text-gray-500 uppercase italic">Primary Logo (Full Color)</h4>
-            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8 h-40">
-              <img src="/logo-full.png" alt="SFA Full Color Logo" className="max-h-full" />
+        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">
+          Brand Assets
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+          <div className="space-y-4 p-6 bg-white border border-gray-100 rounded-16 shadow-xs">
+            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+              Full Color
+            </h4>
+            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8 h-24">
+              <img
+                src="/logo-full.png"
+                alt="SFA Full Color Logo"
+                className="max-h-full"
+              />
             </div>
-            <p className="text-xs text-mono text-gray-400">/public/logo-full.png</p>
           </div>
-          <div className="space-y-4 p-8 bg-white border border-gray-100 rounded-16 shadow-xs">
-            <h4 className="text-sm font-bold text-gray-500 uppercase italic">Secondary Logo (Black)</h4>
-            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8 h-40">
-              <img src="/logo-black.png" alt="SFA Black Logo" className="max-h-full" />
+          <div className="space-y-4 p-6 bg-white border border-gray-100 rounded-16 shadow-xs">
+            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+              Black
+            </h4>
+            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8 h-24">
+              <img
+                src="/logo-black.png"
+                alt="SFA Black Logo"
+                className="max-h-full"
+              />
             </div>
-            <p className="text-xs text-mono text-gray-400">/public/logo-black.png</p>
+          </div>
+          <div className="space-y-4 p-6 bg-white border border-gray-100 rounded-16 shadow-xs">
+            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+              White Text
+            </h4>
+            <div className="flex items-center justify-center p-4 bg-primary-900 rounded-8 h-24">
+              <img
+                src="/logo-white-text.png"
+                alt="SFA White Text Logo"
+                className="max-h-full"
+              />
+            </div>
+          </div>
+          <div className="space-y-4 p-6 bg-white border border-gray-100 rounded-16 shadow-xs">
+            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+              Mono White
+            </h4>
+            <div className="flex items-center justify-center p-4 bg-primary-900 rounded-8 h-24">
+              <img
+                src="/logo-white.png"
+                alt="SFA All White Logo"
+                className="max-h-full"
+              />
+            </div>
           </div>
         </div>
       </section>
 
       {/* Typography Section */}
       <section className="space-y-8">
-        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">Typography Scale</h3>
+        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">
+          Typography Scale
+        </h3>
         <div className="space-y-10">
           {typographyScale.map((item) => (
-            <div key={item.name} className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-12">
-              <span className="text-xs font-mono text-gray-400 w-32 shrink-0">.{item.class}</span>
+            <div
+              key={item.name}
+              className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-12"
+            >
+              <span className="text-xs font-mono text-gray-400 w-32 shrink-0">
+                .{item.class}
+              </span>
               <div className={item.class}>
                 {item.name} - The future of science in Africa
               </div>
@@ -76,7 +146,9 @@ export default function StyleGuide() {
 
       {/* Color Palettes Section */}
       <section className="space-y-8">
-        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">Color Palettes</h3>
+        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">
+          Color Palettes
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
           {Object.entries(colorPalettes).map(([name, shades]) => (
             <div key={name} className="space-y-4">
@@ -87,28 +159,64 @@ export default function StyleGuide() {
                   // We use a mapping to ensure Tailwind's static analyzer sees the strings
                   const colorMap = {
                     primary: {
-                      "50": "bg-primary-50", "100": "bg-primary-100", "200": "bg-primary-200", "300": "bg-primary-300", "400": "bg-primary-400",
-                      "500": "bg-primary-500", "600": "bg-primary-600", "700": "bg-primary-700", "800": "bg-primary-800", "900": "bg-primary-900",
+                      50: "bg-primary-50",
+                      100: "bg-primary-100",
+                      200: "bg-primary-200",
+                      300: "bg-primary-300",
+                      400: "bg-primary-400",
+                      500: "bg-primary-500",
+                      600: "bg-primary-600",
+                      700: "bg-primary-700",
+                      800: "bg-primary-800",
+                      900: "bg-primary-900",
                     },
                     teal: {
-                      "50": "bg-brand-teal-50", "100": "bg-brand-teal-100", "200": "bg-brand-teal-200", "300": "bg-brand-teal-300", "400": "bg-brand-teal-400",
-                      "500": "bg-brand-teal-500", "600": "bg-brand-teal-600", "700": "bg-brand-teal-700", "800": "bg-brand-teal-800", "900": "bg-brand-teal-900",
+                      50: "bg-brand-teal-50",
+                      100: "bg-brand-teal-100",
+                      200: "bg-brand-teal-200",
+                      300: "bg-brand-teal-300",
+                      400: "bg-brand-teal-400",
+                      500: "bg-brand-teal-500",
+                      600: "bg-brand-teal-600",
+                      700: "bg-brand-teal-700",
+                      800: "bg-brand-teal-800",
+                      900: "bg-brand-teal-900",
                     },
                     orange: {
-                      "50": "bg-brand-orange-50", "100": "bg-brand-orange-100", "200": "bg-brand-orange-200", "300": "bg-brand-orange-300", "400": "bg-brand-orange-400",
-                      "500": "bg-brand-orange-500", "600": "bg-brand-orange-600", "700": "bg-brand-orange-700", "800": "bg-brand-orange-800", "900": "bg-brand-orange-900",
+                      50: "bg-brand-orange-50",
+                      100: "bg-brand-orange-100",
+                      200: "bg-brand-orange-200",
+                      300: "bg-brand-orange-300",
+                      400: "bg-brand-orange-400",
+                      500: "bg-brand-orange-500",
+                      600: "bg-brand-orange-600",
+                      700: "bg-brand-orange-700",
+                      800: "bg-brand-orange-800",
+                      900: "bg-brand-orange-900",
                     },
                     gray: {
-                      "50": "bg-brand-gray-50", "100": "bg-brand-gray-100", "200": "bg-brand-gray-200", "300": "bg-brand-gray-300", "400": "bg-brand-gray-400",
-                      "500": "bg-brand-gray-500", "600": "bg-brand-gray-600", "700": "bg-brand-gray-700", "800": "bg-brand-gray-800", "900": "bg-brand-gray-900",
-                    }
+                      50: "bg-brand-gray-50",
+                      100: "bg-brand-gray-100",
+                      200: "bg-brand-gray-200",
+                      300: "bg-brand-gray-300",
+                      400: "bg-brand-gray-400",
+                      500: "bg-brand-gray-500",
+                      600: "bg-brand-gray-600",
+                      700: "bg-brand-gray-700",
+                      800: "bg-brand-gray-800",
+                      900: "bg-brand-gray-900",
+                    },
                   };
                   const bgClass = colorMap[paletteKey]?.[shade] || "";
                   return (
                     <div key={shade} className="space-y-2">
-                      <div className={`h-14 w-full rounded-16 shadow-xs border border-gray-100 ${bgClass}`} />
+                      <div
+                        className={`h-14 w-full rounded-16 shadow-xs border border-gray-100 ${bgClass}`}
+                      />
                       <div className="flex justify-between items-center px-1">
-                        <span className="text-[10px] font-mono text-gray-500">{shade}</span>
+                        <span className="text-[10px] font-mono text-gray-500">
+                          {shade}
+                        </span>
                       </div>
                     </div>
                   );
@@ -121,19 +229,31 @@ export default function StyleGuide() {
 
       {/* Components Preview */}
       <section className="space-y-8">
-        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">Spacing & UI Elements</h3>
+        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">
+          Spacing & UI Elements
+        </h3>
         <div className="flex flex-wrap gap-12">
           <div className="space-y-4">
-            <h4 className="text-sm font-bold text-gray-500 uppercase">Radius & Shadows</h4>
+            <h4 className="text-sm font-bold text-gray-500 uppercase">
+              Radius & Shadows
+            </h4>
             <div className="flex gap-4">
-              <div className="h-24 w-24 bg-white border border-gray-200 rounded-16 shadow-xs flex items-center justify-center text-xs">R16</div>
-              <div className="h-24 w-24 bg-white border border-gray-200 rounded-32 shadow-xs flex items-center justify-center text-xs">R32</div>
-              <div className="h-24 w-24 bg-white border border-gray-200 rounded-full shadow-xs flex items-center justify-center text-xs">Full</div>
+              <div className="h-24 w-24 bg-white border border-gray-200 rounded-16 shadow-xs flex items-center justify-center text-xs">
+                R16
+              </div>
+              <div className="h-24 w-24 bg-white border border-gray-200 rounded-32 shadow-xs flex items-center justify-center text-xs">
+                R32
+              </div>
+              <div className="h-24 w-24 bg-white border border-gray-200 rounded-full shadow-xs flex items-center justify-center text-xs">
+                Full
+              </div>
             </div>
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-sm font-bold text-gray-400 uppercase">Spacing (Gap-40)</h4>
+            <h4 className="text-sm font-bold text-gray-400 uppercase">
+              Spacing (Gap-40)
+            </h4>
             <div className="flex gap-40 bg-brand-gray-100 p-16 rounded-8">
               <div className="h-10 w-10 bg-brand-orange-500 rounded-full" />
               <div className="h-10 w-10 bg-brand-teal-500 rounded-full" />

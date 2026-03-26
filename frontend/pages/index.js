@@ -1,6 +1,8 @@
 import Head from "next/head";
 
 export default function StyleGuide() {
+  // Force utilities: bg-brand-gray-50 bg-brand-brand-teal-50 bg-brand-orange-50 bg-brand-gray-100 bg-brand-gray-200 bg-brand-gray-300 bg-brand-gray-400 bg-brand-gray-500 bg-brand-gray-600 bg-brand-gray-700 bg-brand-gray-800 bg-brand-gray-900
+
   const colorPalettes = {
     Primary: ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
     Teal: ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -68,16 +70,16 @@ export default function StyleGuide() {
                       "500": "bg-primary-500", "600": "bg-primary-600", "700": "bg-primary-700", "800": "bg-primary-800", "900": "bg-primary-900",
                     },
                     teal: {
-                      "50": "bg-teal-50", "100": "bg-teal-100", "200": "bg-teal-200", "300": "bg-teal-300", "400": "bg-teal-400",
-                      "500": "bg-teal-500", "600": "bg-teal-600", "700": "bg-teal-700", "800": "bg-teal-800", "900": "bg-teal-900",
+                      "50": "bg-brand-teal-50", "100": "bg-brand-teal-100", "200": "bg-brand-teal-200", "300": "bg-brand-teal-300", "400": "bg-brand-teal-400",
+                      "500": "bg-brand-teal-500", "600": "bg-brand-teal-600", "700": "bg-brand-teal-700", "800": "bg-brand-teal-800", "900": "bg-brand-teal-900",
                     },
                     orange: {
-                      "50": "bg-orange-50", "100": "bg-orange-100", "200": "bg-orange-200", "300": "bg-orange-300", "400": "bg-orange-400",
-                      "500": "bg-orange-500", "600": "bg-orange-600", "700": "bg-orange-700", "800": "bg-orange-800", "900": "bg-orange-900",
+                      "50": "bg-brand-orange-50", "100": "bg-brand-orange-100", "200": "bg-brand-orange-200", "300": "bg-brand-orange-300", "400": "bg-brand-orange-400",
+                      "500": "bg-brand-orange-500", "600": "bg-brand-orange-600", "700": "bg-brand-orange-700", "800": "bg-brand-orange-800", "900": "bg-brand-orange-900",
                     },
                     gray: {
-                      "50": "bg-gray-50", "100": "bg-gray-100", "200": "bg-gray-200", "300": "bg-gray-300", "400": "bg-gray-400",
-                      "500": "bg-gray-500", "600": "bg-gray-600", "700": "bg-gray-700", "800": "bg-gray-800", "900": "bg-gray-900",
+                      "50": "bg-brand-gray-50", "100": "bg-brand-gray-100", "200": "bg-brand-gray-200", "300": "bg-brand-gray-300", "400": "bg-brand-gray-400",
+                      "500": "bg-brand-gray-500", "600": "bg-brand-gray-600", "700": "bg-brand-gray-700", "800": "bg-brand-gray-800", "900": "bg-brand-gray-900",
                     }
                   };
                   const bgClass = colorMap[paletteKey]?.[shade] || "";
@@ -110,10 +112,10 @@ export default function StyleGuide() {
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-sm font-bold text-gray-500 uppercase">Spacing (Gap-40)</h4>
-            <div className="flex gap-40 bg-gray-100 p-16 rounded-8">
-              <div className="h-10 w-10 bg-orange-500 rounded-full" />
-              <div className="h-10 w-10 bg-teal-500 rounded-full" />
+            <h4 className="text-sm font-bold text-gray-400 uppercase">Spacing (Gap-40)</h4>
+            <div className="flex gap-40 bg-brand-gray-100 p-16 rounded-8">
+              <div className="h-10 w-10 bg-brand-orange-500 rounded-full" />
+              <div className="h-10 w-10 bg-brand-teal-500 rounded-full" />
               <div className="h-10 w-10 bg-primary-500 rounded-full" />
             </div>
           </div>

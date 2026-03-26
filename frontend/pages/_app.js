@@ -6,10 +6,14 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+import MainLayout from "@/components/layout/MainLayout";
+
 export default function App({ Component, pageProps }) {
   return (
     <div className={`${inter.variable} font-sans`}>
-      <Component {...pageProps} />
+      <MainLayout>
+        <Component {...pageProps} />
+      </MainLayout>
     </div>
   );
 }

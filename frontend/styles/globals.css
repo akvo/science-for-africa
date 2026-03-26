@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #111827;
+  --letter-spacing-display: -0.02em;
 }
 
 @theme {
@@ -63,7 +64,7 @@
   --text-lg: 1.125rem;
   --text-md: 1rem;
   --text-sm: 0.875rem;
-  --text-xs: 0.625rem;
+  --text-xs: 0.75rem;
 
   --font-weight-regular: 400;
   --font-weight-bold: 700;
@@ -102,15 +103,15 @@
 }
 
 @layer utilities {
-  .text-display-2xl { font-size: var(--text-display-2xl); font-family: var(--font-heading); }
-  .text-display-xl { font-size: var(--text-display-xl); font-family: var(--font-heading); }
-  .text-display-lg { font-size: var(--text-display-lg); font-weight: var(--font-weight-bold); }
-  .text-display-md { font-size: var(--text-display-md); font-weight: var(--font-weight-bold); }
-  .text-display-sm { font-size: var(--text-display-sm); font-weight: var(--font-weight-bold); }
-  .text-display-xs { font-size: var(--text-display-xs); font-weight: var(--font-weight-bold); }
-  .text-xl { font-size: var(--text-xl); font-weight: var(--font-weight-bold); }
-  .text-lg { font-size: var(--text-lg); font-weight: var(--font-weight-bold); }
-  .text-md { font-size: var(--text-md); }
-  .text-sm { font-size: var(--text-sm); }
-  .text-xs { font-size: var(--text-xs); }
+  .text-display-2xl { font-size: 4.5rem; font-family: var(--font-heading); line-height: 5.625rem; letter-spacing: -0.02em; }
+  .text-display-xl { font-size: 3.75rem; font-family: var(--font-heading); line-height: 4.5rem; letter-spacing: -0.02em; }
+  .text-display-lg { font-size: 3rem; font-weight: 700; line-height: 3.75rem; letter-spacing: -0.02em; }
+  .text-display-md { font-size: 2.25rem; font-weight: 700; line-height: 2.75rem; letter-spacing: -0.02em; }
+  .text-display-sm { font-size: 1.875rem; font-weight: 700; line-height: 2.375rem; }
+  .text-display-xs { font-size: 1.5rem; font-weight: 700; line-height: 2rem; }
+  .text-xl { font-size: 1.25rem; font-weight: 700; line-height: 1.875rem; }
+  .text-lg { font-size: 1.125rem; font-weight: 700; line-height: 1.75rem; }
+  .text-md { font-size: 1rem; line-height: 1.5rem; }
+  .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+  .text-xs { font-size: 0.75rem; line-height: 1.125rem; }
 }

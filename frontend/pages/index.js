@@ -47,7 +47,7 @@ export default function StyleGuide() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8 space-y-16">
+    <div className="min-h-screen p-8 space-y-16">
       <Head>
         <title>SFA Design System | Style Guide</title>
       </Head>

@@ -1,22 +1,22 @@
-import React from 'react';
-import { useRouter } from 'next/router';
-import AppLayout from './AppLayout';
-import AuthLayout from './AuthLayout';
+import React from "react";
+import { useRouter } from "next/router";
+import AppLayout from "./AppLayout";
+import AuthLayout from "./AuthLayout";
 
 /**
  * MainLayout Component
- * 
- * Automatically switches between Standard App Layout and Auth Layout 
+ *
+ * Automatically switches between Standard App Layout and Auth Layout
  * based on the current route.
  */
 const MainLayout = ({ children }) => {
   const router = useRouter();
-  
+
   // Define routes that use the specialized AuthLayout
   // login, signup, forget password, 2fa, etc.
-  const isAuthRoute = 
-    router.pathname.startsWith('/auth') || 
-    ['/login', '/signup'].includes(router.pathname);
+  const isAuthRoute =
+    router.pathname.startsWith("/auth") ||
+    ["/login", "/signup"].includes(router.pathname);
 
   if (isAuthRoute) {
     return <AuthLayout>{children}</AuthLayout>;

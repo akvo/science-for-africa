@@ -75,7 +75,7 @@ export default function StyleGuide() {
             <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
               Full Color
             </h4>
-            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8 h-24">
+            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8">
               <img
                 src="/logo-full.png"
                 alt="SFA Full Color Logo"
@@ -87,7 +87,7 @@ export default function StyleGuide() {
             <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
               Black
             </h4>
-            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8 h-24">
+            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8">
               <img
                 src="/logo-black.png"
                 alt="SFA Black Logo"

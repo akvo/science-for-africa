@@ -16,8 +16,9 @@ The Science for Africa platform is a full-stack application leveraging **Strapi 
 - `config/`: Application, database, plugin, and server configurations.
 - `src/api/`: Custom content types, controllers, services, and routes.
 - `src/extensions/`: Extensions to core Strapi plugins (e.g., `users-permissions`).
-- `src/middlewares/`: Custom global and route-specific middlewares.
+- `src/middlewares/`: Custom global and route-specific middlewares (e.g., `two-factor-lock`).
 - `src/index.js`: Initialization scripts and lifecycle hooks.
+- `src/api/auth/`: Custom authentication extensions for 2FA.
 
 ### `/frontend` (Next.js 16)
 - `pages/`: Application routes following the Page Router convention.
@@ -29,8 +30,23 @@ The Science for Africa platform is a full-stack application leveraging **Strapi 
 Strapi manages the data layer. For the Authentication and Onboarding flow, the **Unified User Entity** will extend the default `users-permissions` User content type with additional profile fields.
 
 **Core Entities:**
-- **User**: Extended with `firstName`, `lastName`, `fullName`, `interests`, `educationTopic`, `educationLevel`, `institution`, `affiliationStatus`, `orcidId`, `orcidVerified`, `onboardingComplete`.
-- **Institution**: (To be defined) Collection type for institutional selection.
+- **User**: Extended with:
+    - `firstName`, `lastName` (String)
+    - `fullName` (Computed via lifecycle)
+    - `interests` (Component: `user.interest`, Max 5)
+    - `educationTopic` (String)
+    - `educationLevel` (Enum: `Bachelors`, `Masters`, `PhD`, etc.)
+    - `institution` (Relation: Many-to-One with Institution)
+    - `affiliationStatus` (Enum: `Pending`, `Approved`, `Rejected`)
+    - `orcidId` (String, 16-digit regex)
+    - `onboardingComplete` (Boolean)
+    - `twoFactorSecret` (String, Private)
+    - `twoFactorEnabled` (Boolean)
+- **Institution**:
+    - `name` (String, Unique)
+    - `country` (String)
+    - `type` (Enum: `Academic`, `Research`, `NGO`, `Government`, `Private`)
+    - `verified` (Boolean)
 
 ## Integration Points
 - **Email Service**: Configured via `@strapi/provider-email-nodemailer` for verification and recovery links.
@@ -39,6 +55,11 @@ Strapi manages the data layer. For the Authentication and Onboarding flow, the *
 
 ## Security & Safety
 - **Authentication**: JWT-based session management managed by Strapi.
-- **2FA**: Mandatory Authenticator App setup for all users.
-- **Protection**: Middleware blocks access to protected routes for unverified or non-2FA users.
+- **2FA Flow (ADR-001)**:
+    1. User authenticates via password.
+    2. Server detects `twoFactorEnabled: true`.
+    3. Server issues a "Partial JWT" (restricted scope).
+    4. Client presents TOTP challenge.
+    5. Server verifies TOTP and issues "Full Access JWT".
+- **Protection**: `two-factor-lock` middleware blocks access to protected routes for users with a Partial JWT or unverified onboarding.
 - **Case Sensitivity**: Unique fields (e.g., names) will enforce case-insensitive uniqueness at the database/lifecycle level.

@@ -158,6 +158,21 @@ graph TD
 | **Email Spamming** | 5 clicks/min -> Disable link for 60 seconds. |
 | **Mismatched Fields** | Disable "Reset password" button + "Passwords do not match." |
 
+## 🏗️ Architectural Decisions (ADRs)
+
+### ADR-001: Mandatory 2FA via TOTP
+- **Status**: Accepted
+- **Context**: High security requirements for researcher data.
+- **Decision**: Use industry-standard TOTP (Time-based One-Time Password) using the `otplib` library.
+- **Consequences**: Users must have a TOTP-compatible app (Google Authenticator, Authy). Increases login friction but significantly improves security.
+
+### ADR-002: Partial JWT Flow for Multi-Step Auth
+- **Status**: Accepted
+- **Context**: Strapi's default JWT grants full access immediately upon password verification.
+- **Decision**: Implement a custom "partial" JWT for users who have 2FA enabled but haven't provided the code. The `two-factor-lock` middleware will reject Partial JWTs on all non-auth routes.
+- **Alternatives Considered**: Session-based state (rejected for stateless scalability).
+- **Consequences**: Requires custom JWT validation logic and frontend handling for two-step authentication.
+
 ---
 
 ## 🔮 Future Enhancements

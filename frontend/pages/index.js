@@ -38,6 +38,27 @@ export default function StyleGuide() {
         </p>
       </header>
 
+      {/* Brand Assets */}
+      <section className="space-y-8">
+        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">Brand Assets</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-4 p-8 bg-white border border-gray-100 rounded-16 shadow-xs">
+            <h4 className="text-sm font-bold text-gray-500 uppercase italic">Primary Logo (Full Color)</h4>
+            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8 h-40">
+              <img src="/logo-full.png" alt="SFA Full Color Logo" className="max-h-full" />
+            </div>
+            <p className="text-xs text-mono text-gray-400">/public/logo-full.png</p>
+          </div>
+          <div className="space-y-4 p-8 bg-white border border-gray-100 rounded-16 shadow-xs">
+            <h4 className="text-sm font-bold text-gray-500 uppercase italic">Secondary Logo (Black)</h4>
+            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8 h-40">
+              <img src="/logo-black.png" alt="SFA Black Logo" className="max-h-full" />
+            </div>
+            <p className="text-xs text-mono text-gray-400">/public/logo-black.png</p>
+          </div>
+        </div>
+      </section>
+
       {/* Typography Section */}
       <section className="space-y-8">
         <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">Typography Scale</h3>

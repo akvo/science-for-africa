@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { Button } from "@/components/ui/button";
 
 export default function StyleGuide() {
   // Force utilities: bg-brand-gray-50 bg-brand-brand-teal-50 bg-brand-orange-50 bg-brand-gray-100 bg-brand-gray-200 bg-brand-gray-300 bg-brand-gray-400 bg-brand-gray-500 bg-brand-gray-600 bg-brand-gray-700 bg-brand-gray-800 bg-brand-gray-900
@@ -224,6 +225,35 @@ export default function StyleGuide() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* UI Components Section */}
+      <section className="space-y-8">
+        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">
+          shadcn/ui Components
+        </h3>
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold text-gray-500 uppercase">Buttons</h4>
+            <div className="flex flex-wrap gap-4">
+              <Button>Default Button</Button>
+              <Button variant="secondary">Secondary</Button>
+              <Button variant="outline">Outline</Button>
+              <Button variant="ghost">Ghost</Button>
+              <Button variant="destructive">Destructive</Button>
+              <Button variant="link">Link</Button>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold text-gray-500 uppercase">Button Sizes</h4>
+            <div className="flex flex-wrap items-center gap-4">
+              <Button size="xs">Extra Small</Button>
+              <Button size="sm">Small</Button>
+              <Button size="default">Default</Button>
+              <Button size="lg">Large</Button>
+            </div>
+          </div>
         </div>
       </section>
 

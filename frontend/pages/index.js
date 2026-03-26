@@ -233,25 +233,70 @@ export default function StyleGuide() {
         <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">
           shadcn/ui Components
         </h3>
-        <div className="space-y-8">
-          <div className="space-y-4">
-            <h4 className="text-sm font-bold text-gray-500 uppercase">Buttons</h4>
-            <div className="flex flex-wrap gap-4">
-              <Button>Default Button</Button>
-              <Button variant="secondary">Secondary</Button>
-              <Button variant="outline">Outline</Button>
-              <Button variant="ghost">Ghost</Button>
-              <Button variant="destructive">Destructive</Button>
-              <Button variant="link">Link</Button>
+        <div className="space-y-12">
+          {/* Button Hierarchies */}
+          <div className="space-y-6">
+            <h4 className="text-sm font-bold text-gray-500 uppercase tracking-widest">
+              Button Hierarchies
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="space-y-3">
+                <p className="text-xs text-gray-400 font-mono">Primary (Default)</p>
+                <Button>Button CTA</Button>
+              </div>
+              <div className="space-y-3">
+                <p className="text-xs text-gray-400 font-mono">Secondary Color</p>
+                <Button variant="secondary">Button CTA</Button>
+              </div>
+              <div className="space-y-3">
+                <p className="text-xs text-gray-400 font-mono">Secondary Gray (Outline)</p>
+                <Button variant="outline">Button CTA</Button>
+              </div>
+              <div className="space-y-3">
+                <p className="text-xs text-gray-400 font-mono">Tertiary Color</p>
+                <Button variant="tertiary">Button CTA</Button>
+              </div>
+              <div className="space-y-3">
+                <p className="text-xs text-gray-400 font-mono">Tertiary Gray (Ghost)</p>
+                <Button variant="ghost">Button CTA</Button>
+              </div>
+              <div className="space-y-3">
+                <p className="text-xs text-gray-400 font-mono">Destructive</p>
+                <Button variant="destructive">Delete Account</Button>
+              </div>
+              <div className="space-y-3">
+                <p className="text-xs text-gray-400 font-mono">Link</p>
+                <Button variant="link">View Details</Button>
+              </div>
             </div>
           </div>
-          <div className="space-y-4">
-            <h4 className="text-sm font-bold text-gray-500 uppercase">Button Sizes</h4>
-            <div className="flex flex-wrap items-center gap-4">
-              <Button size="xs">Extra Small</Button>
-              <Button size="sm">Small</Button>
-              <Button size="default">Default</Button>
-              <Button size="lg">Large</Button>
+
+          {/* Button Sizes */}
+          <div className="space-y-6">
+            <h4 className="text-sm font-bold text-gray-500 uppercase tracking-widest">
+              Button Sizes
+            </h4>
+            <div className="flex flex-wrap items-end gap-6">
+              <div className="space-y-2 text-center">
+                <Button size="sm">Small (36px)</Button>
+                <p className="text-[10px] text-gray-400 font-mono">sm</p>
+              </div>
+              <div className="space-y-2 text-center">
+                <Button size="md">Medium (40px)</Button>
+                <p className="text-[10px] text-gray-400 font-mono">md</p>
+              </div>
+              <div className="space-y-2 text-center">
+                <Button size="lg">Large (44px)</Button>
+                <p className="text-[10px] text-gray-400 font-mono">lg</p>
+              </div>
+              <div className="space-y-2 text-center">
+                <Button size="xl">X-Large (46px)</Button>
+                <p className="text-[10px] text-gray-400 font-mono">xl</p>
+              </div>
+              <div className="space-y-2 text-center">
+                <Button size="2xl">2X-Large (56px)</Button>
+                <p className="text-[10px] text-gray-400 font-mono">2xl</p>
+              </div>
             </div>
           </div>
         </div>
@@ -295,7 +340,7 @@ export default function StyleGuide() {
 
       <footer className="pt-12 border-t border-gray-200 text-sm text-gray-400 flex justify-between">
         <span>Science for Africa | Sprint 1: Foundation</span>
-        <span className="font-mono">STORY-003: COMPLETE</span>
+        <span className="font-mono">STORY-011: IN PROGRESS</span>
       </footer>
     </div>
   );

@@ -2,58 +2,115 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #111827;
 }
 
 @theme {
   --color-primary-50: #e6eeee;
+  --color-primary-100: #cce0df;
   --color-primary-200: #8ab2af;
+  --color-primary-300: #5c8a86;
+  --color-primary-400: #2e615d;
   --color-primary-500: #005850;
+  --color-primary-600: #004d46;
   --color-primary-700: #003e39;
+  --color-primary-800: #002f2b;
+  --color-primary-900: #001f1d;
 
-  --color-success-500: #12b76a;
-  --color-error-500: #f04438;
+  --color-teal-50: #f0fdf9;
+  --color-teal-100: #ccfbef;
+  --color-teal-200: #99f6e0;
+  --color-teal-300: #5eead4;
+  --color-teal-400: #2dd4bf;
+  --color-teal-500: #14b8a6;
+  --color-teal-600: #0d9488;
+  --color-teal-700: #0f766e;
+  --color-teal-800: #115e59;
+  --color-teal-900: #134e48;
 
-  --color-gray-50: #f3f4f4;
-  --color-gray-100: #d9dcde;
-  --color-gray-200: #c6cbcd;
-  --color-gray-300: #d0d5dd;
-  --color-gray-500: #838d93;
-  --color-gray-600: #778086;
-  --color-gray-700: #344054;
+  --color-orange-50: #fff7ed;
+  --color-orange-100: #ffedd5;
+  --color-orange-200: #fed7aa;
+  --color-orange-300: #fdba74;
+  --color-orange-400: #fb923c;
+  --color-orange-500: #f97316;
+  --color-orange-600: #ea580c;
+  --color-orange-700: #c2410c;
+  --color-orange-800: #9a3412;
+  --color-orange-900: #7c2d12;
 
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  --font-heading: "LEMON MILK", ui-sans-serif, system-ui;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
+  --text-display-2xl: 4.5rem;
+  --text-display-xl: 3.75rem;
+  --text-display-lg: 3rem;
+  --text-display-md: 2.25rem;
+  --text-display-sm: 1.875rem;
+  --text-display-xs: 1.5rem;
+  --text-xl: 1.25rem;
+  --text-lg: 1.125rem;
+  --text-md: 1rem;
+  --text-sm: 0.875rem;
+  --text-xs: 0.625rem;
+
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+
+  --spacing-8: 8px;
+  --spacing-16: 16px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-56: 56px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-96: 96px;
+  --spacing-112: 112px;
+  --spacing-128: 128px;
+  --spacing-144: 144px;
+  --spacing-160: 160px;
+
   --radius-8: 8px;
+  --radius-16: 16px;
+  --radius-24: 24px;
+  --radius-32: 32px;
+  --radius-40: 40px;
+  --radius-48: 48px;
+  --radius-64: 64px;
+  --radius-full: 9999px;
 
   --shadow-xs: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
 }
 
 @layer base {
   body {
-    background: var(--background);
-    color: var(--color-gray-700);
-    @apply antialiased;
+    @apply font-sans antialiased bg-white text-gray-900;
   }
+}
 
-  /* Custom Typography Classes based on UX Spec */
-  .text-display-1 {
-    @apply text-[48px] leading-[60px] font-bold;
-  }
-
-  .text-h3 {
-    @apply text-[30px] font-bold text-primary-500;
-  }
-
-  .text-h6 {
-    @apply text-[18px] leading-[24px] font-bold;
-  }
-
-  .text-body-1 {
-    @apply text-[16px] leading-[22px];
-  }
-
-  .text-body-2 {
-    @apply text-[14px] leading-[18px];
-  }
+@layer utilities {
+  .text-display-2xl { font-size: var(--text-display-2xl); font-family: var(--font-heading); }
+  .text-display-xl { font-size: var(--text-display-xl); font-family: var(--font-heading); }
+  .text-display-lg { font-size: var(--text-display-lg); font-weight: var(--font-weight-bold); }
+  .text-display-md { font-size: var(--text-display-md); font-weight: var(--font-weight-bold); }
+  .text-display-sm { font-size: var(--text-display-sm); font-weight: var(--font-weight-bold); }
+  .text-display-xs { font-size: var(--text-display-xs); font-weight: var(--font-weight-bold); }
+  .text-xl { font-size: var(--text-xl); font-weight: var(--font-weight-bold); }
+  .text-lg { font-size: var(--text-lg); font-weight: var(--font-weight-bold); }
+  .text-md { font-size: var(--text-md); }
+  .text-sm { font-size: var(--text-sm); }
+  .text-xs { font-size: var(--text-xs); }
 }

@@ -1,93 +1,129 @@
-export default function Home() {
+import Head from "next/head";
+
+export default function StyleGuide() {
+  const colorPalettes = {
+    Primary: ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
+    Teal: ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
+    Orange: ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
+    Gray: ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  };
+
+  const typographyScale = [
+    { name: "Display 2xl", class: "text-display-2xl" },
+    { name: "Display xl", class: "text-display-xl" },
+    { name: "Display lg", class: "text-display-lg" },
+    { name: "Display md", class: "text-display-md" },
+    { name: "Display sm", class: "text-display-sm" },
+    { name: "Display xs", class: "text-display-xs" },
+    { name: "Text xl", class: "text-xl" },
+    { name: "Text lg", class: "text-lg" },
+    { name: "Text md", class: "text-md" },
+    { name: "Text sm", class: "text-sm" },
+    { name: "Text xs", class: "text-xs" },
+  ];
+
   return (
-    <main className="min-h-screen bg-white font-sans text-gray-700">
-      <div className="container mx-auto px-4 py-16 max-w-4xl">
-        <header className="mb-16 border-b border-gray-100 pb-8">
-          <h1 className="text-display-1 text-primary-500 mb-2">
-            Design System
-          </h1>
-          <p className="text-body-1 text-gray-500">
-            Science for Africa - Design System Foundation Verification
-          </p>
-        </header>
+    <div className="min-h-screen bg-gray-50 p-8 space-y-16">
+      <Head>
+        <title>SFA Design System | Style Guide</title>
+      </Head>
 
-        {/* Colors */}
-        <section className="mb-16">
-          <h2 className="text-h6 uppercase tracking-wider text-gray-400 mb-6">
-            Colors
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="space-y-2">
-              <div className="h-20 w-full rounded-lg bg-primary-500 shadow-sm"></div>
-              <p className="text-body-2 font-medium">Primary 500</p>
-              <p className="text-xs text-gray-400">#005850</p>
-            </div>
-            <div className="space-y-2">
-              <div className="h-20 w-full rounded-lg bg-primary-700 shadow-sm"></div>
-              <p className="text-body-2 font-medium">Primary 700</p>
-              <p className="text-xs text-gray-400">#003e39</p>
-            </div>
-            <div className="space-y-2">
-              <div className="h-20 w-full rounded-lg bg-success-500 shadow-sm"></div>
-              <p className="text-body-2 font-medium">Success 500</p>
-              <p className="text-xs text-gray-400">#12b76a</p>
-            </div>
-            <div className="space-y-2">
-              <div className="h-20 w-full rounded-lg bg-error-500 shadow-sm"></div>
-              <p className="text-body-2 font-medium">Error 500</p>
-              <p className="text-xs text-gray-400">#f04438</p>
-            </div>
-          </div>
-        </section>
+      <header className="max-w-4xl">
+        <h1 className="text-display-md text-primary-500 mb-4 uppercase">Science for Africa</h1>
+        <h2 className="text-display-xs text-gray-900 mb-6">Design System Foundation v1.0</h2>
+        <p className="text-lg text-gray-600">
+          This foundation is built using Tailwind 4 CSS-native tokens, extracted directly from the SFA Figma Specification (Node 6:87 & 25:692).
+        </p>
+      </header>
 
-        {/* Typography */}
-        <section className="mb-16 space-y-8">
-          <h2 className="text-h6 uppercase tracking-wider text-gray-400">
-            Typography (Inter)
-          </h2>
-          <div>
-            <p className="text-xs text-gray-400 mb-1">.text-display-1</p>
-            <h1 className="text-display-1">Science for Africa</h1>
-          </div>
-          <div>
-            <p className="text-xs text-gray-400 mb-1">.text-h3</p>
-            <h3 className="text-h3">Global Health Progress</h3>
-          </div>
-          <div>
-            <p className="text-xs text-gray-400 mb-1">.text-h6</p>
-            <h6 className="text-h6">Research Collaboration Portal</h6>
-          </div>
-          <div>
-            <p className="text-xs text-gray-400 mb-1">.text-body-1</p>
-            <p className="text-body-1">
-              This is the primary body text. It uses the Inter font with a line
-              height of 22px, providing excellent readability for long-form
-              scientific content.
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-gray-400 mb-1">.text-body-2</p>
-            <p className="text-body-2 text-gray-500">
-              Captions and secondary information use body-2 (14px).
-            </p>
-          </div>
-        </section>
+      {/* Typography Section */}
+      <section className="space-y-8">
+        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">Typography Scale</h3>
+        <div className="space-y-10">
+          {typographyScale.map((item) => (
+            <div key={item.name} className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-12">
+              <span className="text-xs font-mono text-gray-400 w-32 shrink-0">.{item.class}</span>
+              <div className={item.class}>
+                {item.name} - The future of science in Africa
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
-        {/* Components */}
-        <section>
-          <h2 className="text-h6 uppercase tracking-wider text-gray-400 mb-6">
-            Base Components
-          </h2>
-          <div className="flex flex-wrap gap-4">
-            <button className="rounded-full bg-primary-500 px-8 py-3 text-white font-medium hover:bg-primary-700 transition-colors shadow-xs">
-              Primary Button
-            </button>
-            <button className="rounded-full border border-gray-200 bg-white px-8 py-3 text-gray-700 font-medium hover:bg-gray-50 transition-colors shadow-xs">
-              Secondary Button
-            </button>
+      {/* Color Palettes Section */}
+      <section className="space-y-8">
+        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">Color Palettes</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+          {Object.entries(colorPalettes).map(([name, shades]) => (
+            <div key={name} className="space-y-4">
+              <h4 className="text-lg font-bold">{name} Palette</h4>
+              <div className="grid grid-cols-5 gap-3">
+                {shades.map((shade) => {
+                  const paletteKey = name.toLowerCase();
+                  // We use a mapping to ensure Tailwind's static analyzer sees the strings
+                  const colorMap = {
+                    primary: {
+                      "50": "bg-primary-50", "100": "bg-primary-100", "200": "bg-primary-200", "300": "bg-primary-300", "400": "bg-primary-400",
+                      "500": "bg-primary-500", "600": "bg-primary-600", "700": "bg-primary-700", "800": "bg-primary-800", "900": "bg-primary-900",
+                    },
+                    teal: {
+                      "50": "bg-teal-50", "100": "bg-teal-100", "200": "bg-teal-200", "300": "bg-teal-300", "400": "bg-teal-400",
+                      "500": "bg-teal-500", "600": "bg-teal-600", "700": "bg-teal-700", "800": "bg-teal-800", "900": "bg-teal-900",
+                    },
+                    orange: {
+                      "50": "bg-orange-50", "100": "bg-orange-100", "200": "bg-orange-200", "300": "bg-orange-300", "400": "bg-orange-400",
+                      "500": "bg-orange-500", "600": "bg-orange-600", "700": "bg-orange-700", "800": "bg-orange-800", "900": "bg-orange-900",
+                    },
+                    gray: {
+                      "50": "bg-gray-50", "100": "bg-gray-100", "200": "bg-gray-200", "300": "bg-gray-300", "400": "bg-gray-400",
+                      "500": "bg-gray-500", "600": "bg-gray-600", "700": "bg-gray-700", "800": "bg-gray-800", "900": "bg-gray-900",
+                    }
+                  };
+                  const bgClass = colorMap[paletteKey]?.[shade] || "";
+                  return (
+                    <div key={shade} className="space-y-2">
+                      <div className={`h-14 w-full rounded-16 shadow-xs border border-gray-100 ${bgClass}`} />
+                      <div className="flex justify-between items-center px-1">
+                        <span className="text-[10px] font-mono text-gray-500">{shade}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Components Preview */}
+      <section className="space-y-8">
+        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">Spacing & UI Elements</h3>
+        <div className="flex flex-wrap gap-12">
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold text-gray-500 uppercase">Radius & Shadows</h4>
+            <div className="flex gap-4">
+              <div className="h-24 w-24 bg-white border border-gray-200 rounded-16 shadow-xs flex items-center justify-center text-xs">R16</div>
+              <div className="h-24 w-24 bg-white border border-gray-200 rounded-32 shadow-xs flex items-center justify-center text-xs">R32</div>
+              <div className="h-24 w-24 bg-white border border-gray-200 rounded-full shadow-xs flex items-center justify-center text-xs">Full</div>
+            </div>
           </div>
-        </section>
-      </div>
-    </main>
+
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold text-gray-500 uppercase">Spacing (Gap-40)</h4>
+            <div className="flex gap-40 bg-gray-100 p-16 rounded-8">
+              <div className="h-10 w-10 bg-orange-500 rounded-full" />
+              <div className="h-10 w-10 bg-teal-500 rounded-full" />
+              <div className="h-10 w-10 bg-primary-500 rounded-full" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="pt-12 border-t border-gray-200 text-sm text-gray-400 flex justify-between">
+        <span>Science for Africa | Sprint 1: Foundation</span>
+        <span className="font-mono">STORY-003: COMPLETE</span>
+      </footer>
+    </div>
   );
 }

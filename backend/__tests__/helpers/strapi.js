@@ -8,6 +8,7 @@ const fs = require("fs");
 const path = require("path");
 
 let instance;
+let dbPath;
 
 /**
  * Starts Strapi instance for testing
@@ -21,7 +22,8 @@ async function setupStrapi() {
     });
 
     // Set configuration manually before loading to ensure it's available
-    const dbPath = path.join(__dirname, "../../.tmp/test.db");
+    const dbName = `test-${Date.now()}.db`;
+    dbPath = path.join(__dirname, `../../.tmp/${dbName}`);
     const tmpDir = path.join(__dirname, "../../.tmp");
 
     if (!fs.existsSync(tmpDir)) {
@@ -64,12 +66,12 @@ async function teardownStrapi() {
     await instance.destroy();
 
     // Clean up test database
-    const dbPath = path.join(__dirname, "../../.tmp/test.db");
-    if (fs.existsSync(dbPath)) {
+    if (dbPath && fs.existsSync(dbPath)) {
       fs.unlinkSync(dbPath);
     }
 
     instance = null;
+    dbPath = null;
   }
 }
 

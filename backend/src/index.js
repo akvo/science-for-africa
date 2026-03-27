@@ -87,6 +87,57 @@ module.exports = {
         },
       });
     }
+
+    // 2. Override users-permissions register route and controller
+    const usersPermissionsPlugin = strapi.plugin("users-permissions");
+
+    // Disable route-level body validation for the register endpoint
+    // Strapi v5 uses route.request.body for validation, which occurs before the controller.
+    const registerRoute = usersPermissionsPlugin.routes["content-api"].routes.find(
+      (route) =>
+        route.method === "POST" && route.path === "/auth/local/register",
+    );
+
+    if (registerRoute && registerRoute.request) {
+      delete registerRoute.request.body;
+    }
+
+    // Override the register controller to bypass internal allowedKeys check
+    const originalRegister = usersPermissionsPlugin.controller("auth").register;
+
+    usersPermissionsPlugin.controller("auth").register = async (ctx) => {
+      // Extract fullName and remove it from the body sent to the original controller
+      // this bypasses the internal "Invalid parameters" check in the users-permissions plugin
+      const { fullName, ...body } = ctx.request.body;
+      ctx.request.body = body;
+
+      // Call the original register logic
+      await originalRegister(ctx);
+
+      // If registration was successful (status 200), update the user with fullName
+      if (ctx.response.status === 200 && fullName) {
+        const user = ctx.body.user;
+
+        // Split fullName into firstName and lastName for backend logic compatibility
+        const nameParts = fullName.trim().split(/\s+/);
+        const firstName = nameParts[0];
+        const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+
+        await strapi.db.query("plugin::users-permissions.user").update({
+          where: { id: user.id },
+          data: {
+            fullName,
+            firstName,
+            lastName,
+          },
+        });
+
+        // Update the response user object
+        ctx.body.user.fullName = fullName;
+        ctx.body.user.firstName = firstName;
+        ctx.body.user.lastName = lastName;
+      }
+    };
   },
 
   async bootstrap({ strapi }) {

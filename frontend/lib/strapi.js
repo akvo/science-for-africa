@@ -13,21 +13,37 @@ export async function fetchFromStrapi(endpoint) {
   }
 }
 
-export async function postToStrapi(endpoint, data) {
+export async function postToStrapi(endpoint, data, wrapInData = true) {
   try {
     const response = await fetch(`${API_URL}${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ data }),
+      body: JSON.stringify(wrapInData ? { data } : data),
     });
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error?.message || `HTTP error! status: ${response.status}`);
     }
     return await response.json();
   } catch (error) {
     console.error('Error posting to Strapi:', error);
     return null;
   }
+}
+
+/**
+ * Register a new user
+ */
+export async function registerUser(userData) {
+  // Auth endpoints in Strapi do not use the { data: ... } wrapper
+  return postToStrapi("/auth/local/register", userData, false);
+}
+
+/**
+ * Resend email confirmation
+ */
+export async function resendVerification(email) {
+  return postToStrapi("/auth/send-email-confirmation", { email }, false);
 }

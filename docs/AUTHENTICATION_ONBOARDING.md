@@ -70,20 +70,20 @@ graph TD
 ## 🔧 Implementation Details
 
 ### Phase 1: Foundation & Backend
-- [ ] Extend Strapi User schema with custom fields.
-- [ ] Implement case-insensitive uniqueness for name/email.
-- [ ] Configure Nodemailer for verification links.
-- [ ] Create 2FA TOTP service in Strapi.
+- [x] Extend Strapi User schema with custom fields.
+- [x] Implement case-insensitive uniqueness for name/email.
+- [x] Configure Nodemailer for verification links.
+- [x] Create 2FA TOTP service in Strapi.
 
 ### Phase 2: Frontend Scaffolding
-- [ ] Setup shadcn/ui and Tailwind 4 tokens.
-- [ ] Build reusable Auth Layout (Logo, Sidebar/Illustration).
-- [ ] Implement Form validation (Zod + React Hook Form).
+- [x] Setup shadcn/ui and Tailwind 4 tokens.
+- [x] Build reusable Auth Layout (Logo, Sidebar/Illustration).
+- [x] Implement Form validation (Zod + React Hook Form).
 
 ### Phase 3: Auth & Core Validation
-- [ ] **Sign Up/Login**: Email/Password + Google OAuth.
-- [ ] **Validation**: 8+ chars password, special char/number requirement, duplicate email check.
-- [ ] **Email Verification**: Handler for unique links + success redirect to Login.
+- [x] **Sign Up/Login**: Email/Password + Google OAuth.
+- [x] **Validation**: 8+ chars password, special char/number requirement, duplicate email check.
+- [x] **Email Verification**: Handler for unique links + success redirect to Login.
 - [ ] **2FA Setup**: QR Code generation + TOTP verification.
 
 ### Phase 4: Onboarding Journey (Step-by-Step)

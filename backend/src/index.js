@@ -133,11 +133,41 @@ module.exports = {
         });
 
         // Update the response user object
+        // Update the response user object
         ctx.body.user.fullName = fullName;
         ctx.body.user.firstName = firstName;
         ctx.body.user.lastName = lastName;
       }
     };
+
+    // 3. Update Swagger documentation for fullName
+    try {
+      if (strapi.plugin("documentation")) {
+        strapi
+          .plugin("documentation")
+          .service("override")
+          .registerOverride({
+            components: {
+              schemas: {
+                "Users-PermissionsAuthRegisterRequest": {
+                  type: "object",
+                  properties: {
+                    username: { type: "string" },
+                    email: { type: "string" },
+                    password: { type: "string" },
+                    fullName: { type: "string" },
+                  },
+                  required: ["username", "email", "password", "fullName"],
+                },
+              },
+            },
+          });
+      }
+    } catch (error) {
+      strapi.log.warn(
+        "Failed to register Swagger documentation override: " + error.message,
+      );
+    }
   },
 
   async bootstrap({ strapi }) {

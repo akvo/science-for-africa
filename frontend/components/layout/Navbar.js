@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { Button } from "@/components/ui/button";
 
 const Navbar = ({ isLoggedIn = false }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -79,12 +80,14 @@ const Navbar = ({ isLoggedIn = false }) => {
             {isLoggedIn ? (
               <div className="flex items-center gap-4">
                 {/* Publish Button */}
-                <button className="hidden sm:flex items-center gap-2 px-6 py-2.5 border-2 border-primary-600 rounded-full text-[14px] font-bold text-primary-600 hover:bg-primary-50 transition-all">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" />
-                  </svg>
-                  Publish
-                </button>
+                <Button variant="outline" className="hidden sm:flex" asChild>
+                  <Link href="/publish" className="gap-2 font-bold">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Publish
+                  </Link>
+                </Button>
                 {/* User Avatar */}
                 <div className="h-10 w-10 rounded-full bg-[#E6F0EE] flex items-center justify-center text-primary-600 font-bold text-sm border-2 border-white shadow-sm cursor-pointer hover:ring-2 hover:ring-primary-100 transition-all">
                   OR
@@ -92,18 +95,16 @@ const Navbar = ({ isLoggedIn = false }) => {
               </div>
             ) : (
               <div className="flex items-center gap-3">
-                <Link
-                  href="/login"
-                  className="px-6 py-2.5 border-2 border-primary-600 rounded-full text-[14px] font-bold text-primary-600 hover:bg-primary-50 transition-all"
-                >
-                  Login
-                </Link>
-                <Link
-                  href="/signup"
-                  className="px-6 py-2.5 bg-primary-600 rounded-full text-[14px] font-bold text-white hover:bg-primary-700 transition-all shadow-md active:scale-95"
-                >
-                  Sign up
-                </Link>
+                <Button variant="outline" asChild>
+                  <Link href="/login" className="font-bold">
+                    Login
+                  </Link>
+                </Button>
+                <Button variant="default" className="shadow-md active:scale-95" asChild>
+                  <Link href="/signup" className="font-bold">
+                    Sign up
+                  </Link>
+                </Button>
               </div>
             )}
 
@@ -130,12 +131,16 @@ const Navbar = ({ isLoggedIn = false }) => {
               </Link>
             ))}
             <div className="flex flex-col gap-3 pt-4">
-              <Link href="/login" className="w-full text-center py-3 border-2 border-primary-600 rounded-full font-bold text-primary-600">
-                Login
-              </Link>
-              <Link href="/signup" className="w-full text-center py-3 bg-primary-600 rounded-full font-bold text-white shadow-lg">
-                Sign up
-              </Link>
+              <Button variant="outline" className="w-full" asChild>
+                <Link href="/login" className="font-bold">
+                  Login
+                </Link>
+              </Button>
+              <Button variant="default" className="w-full shadow-lg" asChild>
+                <Link href="/signup" className="font-bold">
+                  Sign up
+                </Link>
+              </Button>
             </div>
           </nav>
         </div>

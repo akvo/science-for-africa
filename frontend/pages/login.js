@@ -1,76 +1,82 @@
 import React from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const LoginPage = () => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="space-y-2">
         <h1 className="text-display-sm font-bold text-brand-gray-900 tracking-tight">
           Welcome back
         </h1>
-        <p className="text-brand-gray-500">
+        <p className="text-brand-gray-500 font-medium">
           Enter your details to access your account.
         </p>
       </div>
 
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <label className="text-sm font-semibold text-brand-gray-700">
+      <div className="space-y-5">
+        <div className="space-y-2.5">
+          <Label htmlFor="email" className="text-brand-gray-700 font-bold">
             Email Address
-          </label>
-          <input
+          </Label>
+          <Input
+            id="email"
             type="email"
             placeholder="name@institution.org"
-            className="w-full px-4 py-3 rounded-8 border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
+            required
           />
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           <div className="flex justify-between items-center">
-            <label className="text-sm font-semibold text-brand-gray-700">
+            <Label htmlFor="password" className="text-brand-gray-700 font-bold">
               Password
-            </label>
-            <a
-              href="#"
-              className="text-xs font-medium text-primary-600 hover:underline"
+            </Label>
+            <Link
+              href="/auth/forgot-password"
+              className="text-xs font-bold text-primary-600 hover:underline"
             >
               Forgot password?
-            </a>
+            </Link>
           </div>
-          <input
+          <Input
+            id="password"
             type="password"
             placeholder="••••••••"
-            className="w-full px-4 py-3 rounded-8 border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
+            required
           />
         </div>
-        <button className="w-full py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-8 transition-colors shadow-sm">
+        <Button size="2xl" className="w-full shadow-md active:scale-95">
           Sign In
-        </button>
+        </Button>
       </div>
 
-      <div className="relative py-4">
+      <div className="relative py-2">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-100"></div>
+          <div className="w-full border-t border-brand-gray-100"></div>
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white px-2 text-brand-gray-400 font-bold tracking-wider">
+          <span className="bg-white px-3 text-brand-gray-400 font-bold tracking-widest">
             Or continue with
           </span>
         </div>
       </div>
 
-      <button className="w-full py-3 px-4 bg-white border border-gray-200 hover:bg-gray-50 text-brand-gray-700 font-bold rounded-8 transition-colors flex items-center justify-center gap-3">
+      <Button variant="outline" size="xl" className="w-full gap-3 shadow-sm font-bold">
         <img
           src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/layout/google.svg"
           alt="Google"
           className="h-5 w-5"
         />
         Sign in with Google
-      </button>
+      </Button>
 
-      <p className="text-center text-sm text-brand-gray-500">
+      <p className="text-center text-sm text-brand-gray-500 font-medium">
         Don't have an account?{" "}
-        <a href="#" className="text-primary-600 font-bold hover:underline">
+        <Link href="/signup" className="text-primary-600 font-bold hover:underline">
           Create an account
-        </a>
+        </Link>
       </p>
     </div>
   );

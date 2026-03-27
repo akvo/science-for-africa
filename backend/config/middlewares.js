@@ -9,5 +9,6 @@ module.exports = [
   'strapi::session',
   'strapi::favicon',
   'strapi::public',
+  'global::documentation-redirect',
   'global::two-factor-lock',
 ];

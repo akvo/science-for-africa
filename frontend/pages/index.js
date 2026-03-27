@@ -11,15 +11,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -378,7 +369,7 @@ export default function StyleGuide() {
         <section className="space-y-12 pb-24">
           <div className="space-y-2">
             <h2 className="text-display-xs text-brand-teal-900 uppercase tracking-wider">
-              03. Metadata & Menus
+              03. Metadata
             </h2>
             <div className="h-1 w-20 bg-brand-orange-500 rounded-full" />
           </div>
@@ -396,28 +387,6 @@ export default function StyleGuide() {
                   Error LG
                 </Badge>
               </div>
-            </div>
-
-            <div className="space-y-4">
-              <Label className="text-brand-gray-400 uppercase text-[10px] tracking-widest">
-                Dropdown Menu
-              </Label>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline">Action Menu</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel>Account</DropdownMenuLabel>
-                    <DropdownMenuItem>Profile Settings</DropdownMenuItem>
-                    <DropdownMenuItem>Member Directory</DropdownMenuItem>
-                  </DropdownMenuGroup>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-red-500">
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </div>
           </div>
         </section>

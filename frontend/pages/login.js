@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+import { SocialButton } from "@/components/auth/social-auth";
+
 const LoginPage = () => {
   return (
     <div className="space-y-8">
@@ -63,18 +65,14 @@ const LoginPage = () => {
         </div>
       </div>
 
-      <Button variant="outline" size="xl" className="w-full gap-3 shadow-sm font-bold">
-        <img
-          src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/layout/google.svg"
-          alt="Google"
-          className="h-5 w-5"
-        />
-        Sign in with Google
-      </Button>
+      <SocialButton provider="google" />
 
       <p className="text-center text-sm text-brand-gray-500 font-medium">
         Don't have an account?{" "}
-        <Link href="/signup" className="text-primary-600 font-bold hover:underline">
+        <Link
+          href="/signup"
+          className="text-primary-600 font-bold hover:underline"
+        >
           Create an account
         </Link>
       </p>

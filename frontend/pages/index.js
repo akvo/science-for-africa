@@ -422,19 +422,6 @@ export default function StyleGuide() {
           </div>
         </section>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-brand-teal-900 text-white py-16">
-        <div className="container mx-auto px-4 text-center">
-          <div className="text-2xl font-bold mb-4">Science for Africa</div>
-          <p className="text-brand-teal-100 mb-8 max-w-md mx-auto">
-            Design System Phase 3: Verified for Avatars, Cards, and Modals.
-          </p>
-          <div className="text-xs font-mono text-brand-teal-200">
-            SFA-SYSTEM-V1.3-REF
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

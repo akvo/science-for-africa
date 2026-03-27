@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
+import { cva } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -44,10 +45,27 @@ function DialogOverlay({ className, ...props }) {
   );
 }
 
+const dialogContentVariants = cva(
+  "fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 gap-6 rounded-16 bg-white p-6 text-sm text-popover-foreground border border-brand-gray-100 shadow-lg duration-100 outline-none max-w-[calc(100%-2rem)] data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+  {
+    variants: {
+      size: {
+        md: "sm:max-w-md",
+        sm: "sm:max-w-[392px]",
+        lg: "sm:max-w-[600px]",
+      },
+    },
+    defaultVariants: {
+      size: "md",
+    },
+  },
+);
+
 function DialogContent({
   className,
   children,
   showCloseButton = true,
+  size = "md",
   ...props
 }) {
   return (
@@ -55,10 +73,7 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Popup
         data-slot="dialog-content"
-        className={cn(
-          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-6 rounded-16 bg-white p-8 text-sm text-popover-foreground border border-brand-gray-100 shadow-lg duration-100 outline-none sm:max-w-md data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
-          className,
-        )}
+        className={cn(dialogContentVariants({ size, className }))}
         {...props}
       >
         {children}
@@ -68,7 +83,7 @@ function DialogContent({
             render={
               <Button
                 variant="ghost"
-                className="absolute top-2 right-2"
+                className="absolute top-3 right-3"
                 size="icon-sm"
               />
             }
@@ -86,33 +101,27 @@ function DialogHeader({ className, ...props }) {
   return (
     <div
       data-slot="dialog-header"
-      className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
+      data-testid="dialog-header"
+      className={cn("flex flex-col gap-2 text-left", className)}
       {...props}
     />
   );
 }
 
-function DialogFooter({
-  className,
-  showCloseButton = false,
-  children,
-  ...props
-}) {
+function DialogFooter({ className, variant = "default", children, ...props }) {
   return (
     <div
       data-slot="dialog-footer"
+      data-testid="dialog-footer"
       className={cn(
-        "-mx-8 -mb-8 flex flex-col-reverse gap-4 rounded-b-16 border-t border-brand-gray-100 bg-brand-gray-50 p-8 sm:flex-row sm:justify-end",
+        "flex flex-col-reverse gap-3 sm:flex-row sm:justify-end",
+        variant === "block" &&
+          "-mx-6 -mb-6 mt-4 rounded-b-16 border-t border-brand-gray-100 bg-brand-gray-50 p-6",
         className,
       )}
       {...props}
     >
       {children}
-      {showCloseButton && (
-        <DialogPrimitive.Close render={<Button variant="outline" />}>
-          Close
-        </DialogPrimitive.Close>
-      )}
     </div>
   );
 }
@@ -121,8 +130,9 @@ function DialogTitle({ className, ...props }) {
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
+      data-testid="dialog-title"
       className={cn(
-        "font-heading text-display-xs leading-tight font-bold text-brand-gray-900",
+        "font-heading text-xl leading-tight font-bold text-brand-gray-900",
         className,
       )}
       {...props}
@@ -134,8 +144,9 @@ function DialogDescription({ className, ...props }) {
   return (
     <DialogPrimitive.Description
       data-slot="dialog-description"
+      data-testid="dialog-description"
       className={cn(
-        "text-sm text-brand-gray-600 *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground",
+        "text-md text-brand-gray-600 *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground",
         className,
       )}
       {...props}

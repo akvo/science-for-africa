@@ -16,7 +16,7 @@ const Navbar = ({ isLoggedIn = false }) => {
   ];
 
   return (
-    <header className="w-full fixed top-0 z-50 bg-white">
+    <header className="w-full fixed top-0 z-100 bg-white">
       {/* Top Banner - 34px */}
       <div className="h-8.5 bg-brand-gray-50 border-b border-brand-gray-100 flex items-center">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex justify-between items-center text-sm font-medium text-primary-500">

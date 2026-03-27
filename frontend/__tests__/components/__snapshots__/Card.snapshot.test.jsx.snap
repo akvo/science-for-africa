@@ -1,0 +1,110 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Card Component Snapshots matches snapshot for feature grid layout 1`] = `
+<div
+  class="grid md:grid-cols-4 gap-8"
+>
+  <div
+    class="bg-white p-6 rounded-xl shadow-lg"
+  >
+    <h3
+      class="text-xl font-semibold mb-3 text-gray-900"
+    >
+      Strapi CMS
+    </h3>
+    <p
+      class="text-gray-600"
+    >
+      Headless CMS for content management
+    </p>
+  </div>
+  <div
+    class="bg-white p-6 rounded-xl shadow-lg"
+  >
+    <h3
+      class="text-xl font-semibold mb-3 text-gray-900"
+    >
+      Next.js
+    </h3>
+    <p
+      class="text-gray-600"
+    >
+      React framework for production
+    </p>
+  </div>
+  <div
+    class="bg-white p-6 rounded-xl shadow-lg"
+  >
+    <h3
+      class="text-xl font-semibold mb-3 text-gray-900"
+    >
+      PostgreSQL
+    </h3>
+    <p
+      class="text-gray-600"
+    >
+      Reliable database with PgAdmin
+    </p>
+  </div>
+  <div
+    class="bg-white p-6 rounded-xl shadow-lg"
+  >
+    <h3
+      class="text-xl font-semibold mb-3 text-gray-900"
+    >
+      Mailpit
+    </h3>
+    <p
+      class="text-gray-600"
+    >
+      Email testing and development
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Card Component Snapshots matches snapshot with children 1`] = `
+<div
+  class="bg-white p-6 rounded-xl shadow-lg"
+>
+  <h3
+    class="text-xl font-semibold mb-3 text-gray-900"
+  >
+    Card with Content
+  </h3>
+  <button
+    class="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+  >
+    Action Button
+  </button>
+</div>
+`;
+
+exports[`Card Component Snapshots matches snapshot with title and description 1`] = `
+<div
+  class="bg-white p-6 rounded-xl shadow-lg"
+>
+  <h3
+    class="text-xl font-semibold mb-3 text-gray-900"
+  >
+    Feature Card
+  </h3>
+  <p
+    class="text-gray-600"
+  >
+    This is a description of the feature
+  </p>
+</div>
+`;
+
+exports[`Card Component Snapshots matches snapshot with title only 1`] = `
+<div
+  class="bg-white p-6 rounded-xl shadow-lg"
+>
+  <h3
+    class="text-xl font-semibold mb-3 text-gray-900"
+  >
+    Simple Card
+  </h3>
+</div>
+`;

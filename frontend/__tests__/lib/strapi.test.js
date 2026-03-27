@@ -22,7 +22,7 @@ describe('Strapi API Utilities', () => {
         meta: { pagination: { page: 1, pageSize: 10, pageCount: 1, total: 1 } },
       };
 
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
+      global.fetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockData,
       });
@@ -36,9 +36,10 @@ describe('Strapi API Utilities', () => {
     });
 
     it('should return null on HTTP error', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
+      global.fetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
+        json: jest.fn().mockResolvedValue({}),
       });
 
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -51,7 +52,7 @@ describe('Strapi API Utilities', () => {
     });
 
     it('should return null on network error', async () => {
-      (global.fetch as jest.Mock).mockRejectedValueOnce(
+      global.fetch.mockRejectedValueOnce(
         new Error('Network error')
       );
 
@@ -71,7 +72,7 @@ describe('Strapi API Utilities', () => {
         data: { id: 1, attributes: { name: 'New Item' } },
       };
 
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
+      global.fetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockResponse,
       });
@@ -90,9 +91,10 @@ describe('Strapi API Utilities', () => {
     });
 
     it('should return null on POST error', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
+      global.fetch.mockResolvedValueOnce({
         ok: false,
         status: 400,
+        json: jest.fn().mockResolvedValue({ error: { message: 'Bad Request' } }),
       });
 
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();

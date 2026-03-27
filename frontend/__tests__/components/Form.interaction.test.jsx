@@ -42,9 +42,9 @@ const ContactForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} data-testid="contact-form">
+    <form onSubmit={handleSubmit} data-testid="contact-form" noValidate>
       <div>
-        <label htmlFor="name">Name</label>
+        <label htmlFor="name">Full Name</label>
         <input
           id="name"
           type="text"
@@ -56,7 +56,7 @@ const ContactForm = ({ onSubmit }) => {
       </div>
 
       <div>
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email">Email Address</label>
         <input
           id="email"
           type="email"

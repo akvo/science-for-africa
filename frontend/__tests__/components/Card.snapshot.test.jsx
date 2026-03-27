@@ -12,10 +12,6 @@ const Card = ({
   title,
   description,
   children,
-}: {
-  title: string;
-  description?: string;
-  children?: React.ReactNode;
 }) => (
   <div className="bg-white p-6 rounded-xl shadow-lg">
     <h3 className="text-xl font-semibold mb-3 text-gray-900">{title}</h3>

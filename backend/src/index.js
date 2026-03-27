@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 module.exports = {
   /**
@@ -8,78 +8,80 @@ module.exports = {
    * This gives you an opportunity to extend code.
    */
   register({ strapi }) {
-    // Extend the user content type attributes
-    const userModel = strapi.contentType('plugin::users-permissions.user');
+    // 1. Extend the user content type attributes
+    const userModel = strapi.contentType("plugin::users-permissions.user");
     if (userModel) {
       userModel.attributes = {
         ...userModel.attributes,
-        firstName: { type: 'string' },
-        lastName: { type: 'string' },
-        fullName: { type: 'string' },
-        position: { type: 'string' },
-        biography: { type: 'text' },
+        firstName: { type: "string" },
+        lastName: { type: "string" },
+        fullName: { type: "string" },
+        position: { type: "string" },
+        biography: { type: "text" },
         interests: {
-          type: 'component',
+          type: "component",
           repeatable: true,
-          component: 'user.interest',
+          component: "user.interest",
           max: 5,
         },
-        educationTopic: { type: 'string' },
+        educationTopic: { type: "string" },
         educationLevel: {
-          type: 'enumeration',
-          enum: ['Bachelors', 'Masters', 'PhD', 'Other'],
+          type: "enumeration",
+          enum: ["Bachelors", "Masters", "PhD", "Other"],
         },
         institution: {
-          type: 'relation',
-          relation: 'manyToOne',
-          target: 'api::institution.institution',
-          inversedBy: 'users',
+          type: "relation",
+          relation: "manyToOne",
+          target: "api::institution.institution",
+          inversedBy: "users",
         },
         affiliationStatus: {
-          type: 'enumeration',
-          enum: ['Pending', 'Approved', 'Rejected'],
-          default: 'Pending',
+          type: "enumeration",
+          enum: ["Pending", "Approved", "Rejected"],
+          default: "Pending",
         },
         orcidId: {
-          type: 'string',
-          regex: '^\\d{4}-\\d{4}-\\d{4}-\\d{3}[\\dX]$',
+          type: "string",
+          regex: "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[\\dX]$",
         },
         onboardingComplete: {
-          type: 'boolean',
+          type: "boolean",
           default: false,
         },
         twoFactorSecret: {
-          type: 'password',
+          type: "string", // Changed from password to string to avoid hashing
           private: true,
         },
         twoFactorEnabled: {
-          type: 'boolean',
+          type: "boolean",
           default: false,
         },
         verificationStatus: {
-          type: 'enumeration',
-          enum: ['unverified', 'verified'],
-          default: 'unverified',
+          type: "enumeration",
+          enum: ["unverified", "verified"],
+          default: "unverified",
         },
         socialLinks: {
-          type: 'json',
+          type: "json",
         },
       };
 
       // Add user lifecycles using the more reliable subscribe method
       strapi.db.lifecycles.subscribe({
-        models: ['plugin::users-permissions.user'],
+        models: ["plugin::users-permissions.user"],
         async beforeCreate(event) {
           const { data } = event.params;
           if (data.firstName || data.lastName) {
-            data.fullName = `${data.firstName || ''} ${data.lastName || ''}`.trim();
+            data.fullName =
+              `${data.firstName || ""} ${data.lastName || ""}`.trim();
           }
         },
         async beforeUpdate(event) {
           const { data } = event.params;
           if (data.firstName || data.lastName) {
-            const firstName = data.firstName !== undefined ? data.firstName : '';
-            const lastName = data.lastName !== undefined ? data.lastName : '';
+            const firstName =
+              data.firstName !== undefined ? data.firstName : "";
+            const lastName = data.lastName !== undefined ? data.lastName : "";
             data.fullName = `${firstName} ${lastName}`.trim();
           }
         },
@@ -87,5 +89,20 @@ module.exports = {
     }
   },
 
-  bootstrap(/* { strapi } */) {},
+  async bootstrap({ strapi }) {
+    // Ensure email confirmation is enabled in advanced settings
+    const store = strapi.store({
+      type: "plugin",
+      name: "users-permissions",
+      key: "advanced",
+    });
+    const settings = await store.get();
+
+    if (!settings.email_confirmation) {
+      await store.set({ value: { ...settings, email_confirmation: true } });
+      strapi.log.info(
+        "Email verification enabled in Users-Permissions settings.",
+      );
+    }
+  },
 };

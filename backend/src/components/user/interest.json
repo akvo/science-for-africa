@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_user_interests",
+  "info": {
+    "displayName": "Interest",
+    "icon": "bulletList"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

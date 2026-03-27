@@ -1,0 +1,79 @@
+{
+  "attributes": {
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "fullName": {
+      "type": "string"
+    },
+    "position": {
+      "type": "string"
+    },
+    "biography": {
+      "type": "text"
+    },
+    "interests": {
+      "type": "component",
+      "repeatable": true,
+      "component": "user.interest",
+      "max": 5
+    },
+    "educationTopic": {
+      "type": "string"
+    },
+    "educationLevel": {
+      "type": "enumeration",
+      "enum": [
+        "Bachelors",
+        "Masters",
+        "PhD",
+        "Other"
+      ]
+    },
+    "institution": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::institution.institution",
+      "inversedBy": "users"
+    },
+    "affiliationStatus": {
+      "type": "enumeration",
+      "enum": [
+        "Pending",
+        "Approved",
+        "Rejected"
+      ],
+      "default": "Pending"
+    },
+    "orcidId": {
+      "type": "string",
+      "regex": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[\\dX]$"
+    },
+    "onboardingComplete": {
+      "type": "boolean",
+      "default": false
+    },
+    "twoFactorSecret": {
+      "type": "password",
+      "private": true
+    },
+    "twoFactorEnabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "verificationStatus": {
+      "type": "enumeration",
+      "enum": [
+        "unverified",
+        "verified"
+      ],
+      "default": "unverified"
+    },
+    "socialLinks": {
+      "type": "json"
+    }
+  }
+}

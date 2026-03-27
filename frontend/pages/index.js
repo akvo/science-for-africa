@@ -29,7 +29,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { ButtonGroup, ButtonGroupItem } from "@/components/ui/button-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -57,7 +56,7 @@ export default function StyleGuide() {
             <span>Design System</span>
           </div>
           <Badge variant="primary" size="sm">
-            v1.3 Expanded
+            Components
           </Badge>
         </div>
       </nav>
@@ -66,10 +65,10 @@ export default function StyleGuide() {
         {/* Hero Section */}
         <header className="max-w-3xl space-y-4">
           <h1 className="text-display-lg text-brand-teal-900 uppercase">
-            Brand Expansion v2
+            Brand Expansion
           </h1>
           <p className="text-xl text-brand-gray-600">
-            Phase 3: Official Button System, Avatars, Cards, and Modals.
+            Official Button System, Avatars, Cards, and Modals.
           </p>
         </header>
 
@@ -77,7 +76,7 @@ export default function StyleGuide() {
         <section className="space-y-12">
           <div className="space-y-2">
             <h2 className="text-display-xs text-brand-teal-900 uppercase tracking-wider">
-              01. Official Button System
+              00. Official Button System
             </h2>
             <div className="h-1 w-20 bg-brand-orange-500 rounded-full" />
           </div>

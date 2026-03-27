@@ -1,346 +1,285 @@
 import Head from "next/head";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Switch } from "@/components/ui/switch"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { ButtonGroup, ButtonGroupItem } from "@/components/ui/button-group"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 
 export default function StyleGuide() {
-  // Force utilities: bg-brand-gray-50 bg-brand-brand-teal-50 bg-brand-orange-50 bg-brand-gray-100 bg-brand-gray-200 bg-brand-gray-300 bg-brand-gray-400 bg-brand-gray-500 bg-brand-gray-600 bg-brand-gray-700 bg-brand-gray-800 bg-brand-gray-900
-
-  const colorPalettes = {
-    Primary: [
-      "50",
-      "100",
-      "200",
-      "300",
-      "400",
-      "500",
-      "600",
-      "700",
-      "800",
-      "900",
-    ],
-    Teal: ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
-    Orange: [
-      "50",
-      "100",
-      "200",
-      "300",
-      "400",
-      "500",
-      "600",
-      "700",
-      "800",
-      "900",
-    ],
-    Gray: ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  };
-
-  const typographyScale = [
-    { name: "Display 2xl", class: "text-display-2xl" },
-    { name: "Display xl", class: "text-display-xl" },
-    { name: "Display lg", class: "text-display-lg" },
-    { name: "Display md", class: "text-display-md" },
-    { name: "Display sm", class: "text-display-sm" },
-    { name: "Display xs", class: "text-display-xs" },
-    { name: "Text xl", class: "text-xl" },
-    { name: "Text lg", class: "text-lg" },
-    { name: "Text md", class: "text-md" },
-    { name: "Text sm", class: "text-sm" },
-    { name: "Text xs", class: "text-xs" },
-  ];
-
   return (
-    <div className="min-h-screen p-8 space-y-16">
+    <div className="min-h-screen bg-white">
       <Head>
         <title>SFA Design System | Style Guide</title>
       </Head>
 
-      <header className="max-w-4xl">
-        <h1 className="text-display-md text-primary-500 mb-4 uppercase">
-          Science for Africa
-        </h1>
-        <h2 className="text-display-xs text-gray-900 mb-6">
-          Design System Foundation v1.0
-        </h2>
-        <p className="text-lg text-gray-600">
-          This foundation is built using Tailwind 4 CSS-native tokens, extracted
-          directly from the SFA Figma Specification (Node 6:87 & 25:692).
-        </p>
-      </header>
-
-      {/* Brand Assets */}
-      <section className="space-y-8">
-        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">
-          Brand Assets
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="space-y-4 p-6 bg-white border border-gray-100 rounded-16 shadow-xs">
-            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-              Full Color
-            </h4>
-            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8 h-100">
-              <img
-                src="/logo-full.png"
-                alt="SFA Full Color Logo"
-                className="max-h-full object-contain"
-              />
-            </div>
+      <nav className="border-b border-brand-gray-100 py-4 sticky top-0 bg-white/80 backdrop-blur-md z-50">
+        <div className="container mx-auto px-4 flex justify-between items-center">
+          <div className="flex items-center gap-2 font-bold text-brand-teal-900">
+            <span className="text-2xl">SFA</span>
+            <span className="text-brand-gray-400">/</span>
+            <span>Design System</span>
           </div>
-          <div className="space-y-4 p-6 bg-white border border-gray-100 rounded-16 shadow-xs">
-            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-              Black
-            </h4>
-            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-8 h-100">
-              <img
-                src="/logo-black.png"
-                alt="SFA Black Logo"
-                className="max-h-full object-contain"
-              />
-            </div>
-          </div>
-          <div className="space-y-4 p-6 bg-white border border-gray-100 rounded-16 shadow-xs">
-            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-              White Text
-            </h4>
-            <div className="flex items-center justify-center p-4 bg-primary-900 rounded-8 h-100">
-              <img
-                src="/logo-white-text.png"
-                alt="SFA White Text Logo"
-                className="max-h-full object-contain"
-              />
-            </div>
-          </div>
-          <div className="space-y-4 p-6 bg-white border border-gray-100 rounded-16 shadow-xs">
-            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-              Mono White
-            </h4>
-            <div className="flex items-center justify-center p-4 bg-primary-900 rounded-8 h-100">
-              <img
-                src="/logo-white.png"
-                alt="SFA All White Logo"
-                className="max-h-full object-contain"
-              />
-            </div>
-          </div>
+          <Badge variant="primary" size="sm">v1.3 Expanded</Badge>
         </div>
-      </section>
+      </nav>
 
-      {/* Typography Section */}
-      <section className="space-y-8">
-        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">
-          Typography Scale
-        </h3>
-        <div className="space-y-10">
-          {typographyScale.map((item) => (
-            <div
-              key={item.name}
-              className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-12"
-            >
-              <span className="text-xs font-mono text-gray-400 w-32 shrink-0">
-                .{item.class}
-              </span>
-              <div className={item.class}>
-                {item.name} - The future of science in Africa
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <main className="container mx-auto px-4 py-12 space-y-24">
+        {/* Hero Section */}
+        <header className="max-w-3xl space-y-4">
+          <h1 className="text-display-lg text-brand-teal-900 uppercase">
+            Brand Expansion v2
+          </h1>
+          <p className="text-xl text-brand-gray-600">
+            Phase 3: Avatars, Cards, and Modals refined for Science for Africa.
+          </p>
+        </header>
 
-      {/* Color Palettes Section */}
-      <section className="space-y-8">
-        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">
-          Color Palettes
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-          {Object.entries(colorPalettes).map(([name, shades]) => (
-            <div key={name} className="space-y-4">
-              <h4 className="text-lg font-bold">{name} Palette</h4>
-              <div className="grid grid-cols-5 gap-3">
-                {shades.map((shade) => {
-                  const paletteKey = name.toLowerCase();
-                  // We use a mapping to ensure Tailwind's static analyzer sees the strings
-                  const colorMap = {
-                    primary: {
-                      50: "bg-primary-50",
-                      100: "bg-primary-100",
-                      200: "bg-primary-200",
-                      300: "bg-primary-300",
-                      400: "bg-primary-400",
-                      500: "bg-primary-500",
-                      600: "bg-primary-600",
-                      700: "bg-primary-700",
-                      800: "bg-primary-800",
-                      900: "bg-primary-900",
-                    },
-                    teal: {
-                      50: "bg-brand-teal-50",
-                      100: "bg-brand-teal-100",
-                      200: "bg-brand-teal-200",
-                      300: "bg-brand-teal-300",
-                      400: "bg-brand-teal-400",
-                      500: "bg-brand-teal-500",
-                      600: "bg-brand-teal-600",
-                      700: "bg-brand-teal-700",
-                      800: "bg-brand-teal-800",
-                      900: "bg-brand-teal-900",
-                    },
-                    orange: {
-                      50: "bg-brand-orange-50",
-                      100: "bg-brand-orange-100",
-                      200: "bg-brand-orange-200",
-                      300: "bg-brand-orange-300",
-                      400: "bg-brand-orange-400",
-                      500: "bg-brand-orange-500",
-                      600: "bg-brand-orange-600",
-                      700: "bg-brand-orange-700",
-                      800: "bg-brand-orange-800",
-                      900: "bg-brand-orange-900",
-                    },
-                    gray: {
-                      50: "bg-brand-gray-50",
-                      100: "bg-brand-gray-100",
-                      200: "bg-brand-gray-200",
-                      300: "bg-brand-gray-300",
-                      400: "bg-brand-gray-400",
-                      500: "bg-brand-gray-500",
-                      600: "bg-brand-gray-600",
-                      700: "bg-brand-gray-700",
-                      800: "bg-brand-gray-800",
-                      900: "bg-brand-gray-900",
-                    },
-                  };
-                  const bgClass = colorMap[paletteKey]?.[shade] || "";
-                  return (
-                    <div key={shade} className="space-y-2">
-                      <div
-                        className={`h-14 w-full rounded-16 shadow-xs border border-gray-100 ${bgClass}`}
-                      />
-                      <div className="flex justify-between items-center px-1">
-                        <span className="text-[10px] font-mono text-gray-500">
-                          {shade}
-                        </span>
+        {/* 01. Form Elements */}
+        <section className="space-y-12">
+          <div className="space-y-2">
+            <h2 className="text-display-xs text-brand-teal-900 uppercase tracking-wider">01. Form Elements & Typography</h2>
+            <div className="h-1 w-20 bg-brand-orange-500 rounded-full" />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>Inputs & Selection</CardTitle>
+                <CardDescription>Consistent typography and premium 48px height.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-8">
+                <div className="space-y-2">
+                  <Label>Email Address</Label>
+                  <Input placeholder="olivia@untitledui.com" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Country Selector (Heading Font applied)</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a country" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ke">Kenya</SelectItem>
+                      <SelectItem value="ug">Uganda</SelectItem>
+                      <SelectItem value="tz">Tanzania</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Selection Controls</CardTitle>
+                <CardDescription>Brand Teal active states with 8px/full radii.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center justify-between p-4 bg-brand-gray-50 rounded-lg">
+                  <Label className="text-base">Push Notifications</Label>
+                  <Switch defaultChecked />
+                </div>
+                <div className="flex items-center gap-3">
+                  <Checkbox id="terms" defaultChecked />
+                  <Label htmlFor="terms">Agree to Terms</Label>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* 02. Premium UI Elements */}
+        <section className="space-y-12">
+          <div className="space-y-2">
+            <h2 className="text-display-xs text-brand-teal-900 uppercase tracking-wider">02. Premium UI Elements</h2>
+            <div className="h-1 w-20 bg-brand-orange-500 rounded-full" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Avatars */}
+            <Card className="md:col-span-2">
+              <CardHeader>
+                <CardTitle>Avatar Scale</CardTitle>
+                <CardDescription>Brand sizes from XS (24px) to 2XL (64px).</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap items-end gap-6">
+                  {["xs", "sm", "md", "lg", "xl", "2xl"].map((s) => (
+                    <div key={s} className="flex flex-col items-center gap-2">
+                      <Avatar size={s}>
+                        <AvatarFallback>{s.toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <span className="text-[10px] font-mono text-brand-gray-400">{s}</span>
+                    </div>
+                  ))}
+                  <div className="flex flex-col items-center gap-2">
+                    <Avatar size="lg">
+                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarFallback>JD</AvatarFallback>
+                    </Avatar>
+                    <span className="text-[10px] font-mono text-brand-gray-400">image</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Modals */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Dialogs & Modals</CardTitle>
+                <CardDescription>Refined for SFA with 16px radius.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="w-full">Open Modal Example</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Profile Information</DialogTitle>
+                      <DialogDescription>
+                        Update your researcher profile and affiliation details here.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4 space-y-4">
+                      <div className="space-y-2">
+                        <Label>Full Name</Label>
+                        <Input defaultValue="Dr. Olivia Rhye" />
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* UI Components Section */}
-      <section className="space-y-8">
-        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">
-          shadcn/ui Components
-        </h3>
-        <div className="space-y-12">
-          {/* Button Hierarchies */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold text-gray-500 uppercase tracking-widest">
-              Button Hierarchies
-            </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="space-y-3">
-                <p className="text-xs text-gray-400 font-mono">Primary (Default)</p>
-                <Button>Button CTA</Button>
-              </div>
-              <div className="space-y-3">
-                <p className="text-xs text-gray-400 font-mono">Secondary Color</p>
-                <Button variant="secondary">Button CTA</Button>
-              </div>
-              <div className="space-y-3">
-                <p className="text-xs text-gray-400 font-mono">Secondary Gray (Outline)</p>
-                <Button variant="outline">Button CTA</Button>
-              </div>
-              <div className="space-y-3">
-                <p className="text-xs text-gray-400 font-mono">Tertiary Color</p>
-                <Button variant="tertiary">Button CTA</Button>
-              </div>
-              <div className="space-y-3">
-                <p className="text-xs text-gray-400 font-mono">Tertiary Gray (Ghost)</p>
-                <Button variant="ghost">Button CTA</Button>
-              </div>
-              <div className="space-y-3">
-                <p className="text-xs text-gray-400 font-mono">Destructive</p>
-                <Button variant="destructive">Delete Account</Button>
-              </div>
-              <div className="space-y-3">
-                <p className="text-xs text-gray-400 font-mono">Link</p>
-                <Button variant="link">View Details</Button>
-              </div>
-            </div>
+                    <DialogFooter showCloseButton>
+                      <Button variant="primary">Save Changes</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Button Sizes */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold text-gray-500 uppercase tracking-widest">
-              Button Sizes
-            </h4>
-            <div className="flex flex-wrap items-end gap-6">
-              <div className="space-y-2 text-center">
-                <Button size="sm">Small (36px)</Button>
-                <p className="text-[10px] text-gray-400 font-mono">sm</p>
+          {/* Card Layouts */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card>
+              <CardHeader className="border-b mb-4">
+                <CardTitle>Community Card</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <Avatar size="lg">
+                    <AvatarFallback>RD</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h4 className="font-bold text-brand-gray-900">Research & Dev</h4>
+                    <p className="text-xs text-brand-gray-500">1.2k Members</p>
+                  </div>
+                </div>
+                <p className="text-sm text-brand-gray-600 line-clamp-2">
+                  Exploring new frontiers in African science and technology collaboration.
+                </p>
+              </CardContent>
+              <CardFooter>
+                <Button variant="secondary" className="w-full">Join Community</Button>
+              </CardFooter>
+            </Card>
+
+            <Card>
+              <CardHeader className="border-b mb-4">
+                <CardTitle>Event Card</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between items-start">
+                  <Badge variant="secondary">Upcoming</Badge>
+                  <span className="text-xs font-bold text-brand-orange-500 uppercase">24 Mar 2026</span>
+                </div>
+                <h4 className="font-bold text-brand-gray-900 text-lg">Science Summit 2026</h4>
+                <p className="text-sm text-brand-gray-600">
+                  Join leading scientists in Nairobi for the annual SFA summit.
+                </p>
+              </CardContent>
+              <CardFooter className="bg-brand-gray-50">
+                <Button className="w-full">Register Now</Button>
+              </CardFooter>
+            </Card>
+          </div>
+        </section>
+
+        {/* 03. Metadata & Navigation */}
+        <section className="space-y-12 pb-24">
+          <div className="space-y-2">
+            <h2 className="text-display-xs text-brand-teal-900 uppercase tracking-wider">03. Metadata & Menus</h2>
+            <div className="h-1 w-20 bg-brand-orange-500 rounded-full" />
+          </div>
+
+          <div className="flex flex-wrap gap-8">
+            <div className="space-y-4">
+              <Label className="text-brand-gray-400 uppercase text-[10px] tracking-widest">Badges</Label>
+              <div className="flex gap-2 flex-wrap">
+                <Badge variant="primary">Primary</Badge>
+                <Badge variant="secondary">Secondary</Badge>
+                <Badge variant="success">Success</Badge>
+                <Badge variant="error" size="lg">Error LG</Badge>
               </div>
-              <div className="space-y-2 text-center">
-                <Button size="md">Medium (40px)</Button>
-                <p className="text-[10px] text-gray-400 font-mono">md</p>
-              </div>
-              <div className="space-y-2 text-center">
-                <Button size="lg">Large (44px)</Button>
-                <p className="text-[10px] text-gray-400 font-mono">lg</p>
-              </div>
-              <div className="space-y-2 text-center">
-                <Button size="xl">X-Large (46px)</Button>
-                <p className="text-[10px] text-gray-400 font-mono">xl</p>
-              </div>
-              <div className="space-y-2 text-center">
-                <Button size="2xl">2X-Large (56px)</Button>
-                <p className="text-[10px] text-gray-400 font-mono">2xl</p>
-              </div>
+            </div>
+
+            <div className="space-y-4">
+              <Label className="text-brand-gray-400 uppercase text-[10px] tracking-widest">Dropdown Menu</Label>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline">Action Menu</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel>Account</DropdownMenuLabel>
+                    <DropdownMenuItem>Profile Settings</DropdownMenuItem>
+                    <DropdownMenuItem>Member Directory</DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="text-red-500">Sign Out</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* Components Preview */}
-      <section className="space-y-8">
-        <h3 className="text-xl border-b border-gray-200 pb-2 text-primary-700">
-          Spacing & UI Elements
-        </h3>
-        <div className="flex flex-wrap gap-12">
-          <div className="space-y-4">
-            <h4 className="text-sm font-bold text-gray-500 uppercase">
-              Radius & Shadows
-            </h4>
-            <div className="flex gap-4">
-              <div className="h-24 w-24 bg-white border border-gray-200 rounded-16 shadow-xs flex items-center justify-center text-xs">
-                R16
-              </div>
-              <div className="h-24 w-24 bg-white border border-gray-200 rounded-32 shadow-xs flex items-center justify-center text-xs">
-                R32
-              </div>
-              <div className="h-24 w-24 bg-white border border-gray-200 rounded-full shadow-xs flex items-center justify-center text-xs">
-                Full
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h4 className="text-sm font-bold text-gray-400 uppercase">
-              Spacing (Gap-40)
-            </h4>
-            <div className="flex gap-40 bg-brand-gray-100 p-16 rounded-8">
-              <div className="h-10 w-10 bg-brand-orange-500 rounded-full" />
-              <div className="h-10 w-10 bg-brand-teal-500 rounded-full" />
-              <div className="h-10 w-10 bg-primary-500 rounded-full" />
-            </div>
+      {/* Footer */}
+      <footer className="bg-brand-teal-900 text-white py-16">
+        <div className="container mx-auto px-4 text-center">
+          <div className="text-2xl font-bold mb-4">Science for Africa</div>
+          <p className="text-brand-teal-100 mb-8 max-w-md mx-auto">
+            Design System Phase 3: Verified for Avatars, Cards, and Modals.
+          </p>
+          <div className="text-xs font-mono text-brand-teal-200">
+            SFA-SYSTEM-V1.3-REF
           </div>
         </div>
-      </section>
-
-      <footer className="pt-12 border-t border-gray-200 text-sm text-gray-400 flex justify-between">
-        <span>Science for Africa | Sprint 1: Foundation</span>
-        <span className="font-mono">STORY-011: IN PROGRESS</span>
       </footer>
     </div>
   );

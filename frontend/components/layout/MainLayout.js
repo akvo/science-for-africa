@@ -19,7 +19,16 @@ const MainLayout = ({ children }) => {
     ["/login", "/signup"].includes(router.pathname);
 
   if (isAuthRoute) {
-    return <AuthLayout>{children}</AuthLayout>;
+    // Map paths to auth steps
+    const stepMap = {
+      "/signup": 1,
+      "/login": 1,
+      "/auth/verify-email": 2,
+      "/auth/two-factor": 3,
+    };
+    const activeStep = stepMap[router.pathname] || 1;
+    
+    return <AuthLayout activeStep={activeStep}>{children}</AuthLayout>;
   }
 
   return <AppLayout>{children}</AppLayout>;

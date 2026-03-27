@@ -3,41 +3,47 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 import { SocialButton } from "@/components/auth/social-auth";
 
 const LoginPage = () => {
   return (
-    <div className="space-y-8">
-      <div className="space-y-2">
-        <h1 className="text-display-sm font-bold text-brand-gray-900 tracking-tight">
-          Welcome back
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="space-y-2 mb-32">
+        <h1 className="text-display-sm font-bold text-brand-teal-900 tracking-tight">
+          Log in
         </h1>
-        <p className="text-brand-gray-500 font-medium">
-          Enter your details to access your account.
+        <p className="text-brand-gray-500 font-medium text-sm">
+          Welcome back to the platform! Please enter your details.
         </p>
       </div>
 
       <div className="space-y-5">
-        <div className="space-y-2.5">
-          <Label htmlFor="email" className="text-brand-gray-700 font-bold">
-            Email Address
+        <div className="space-y-2">
+          <Label
+            htmlFor="email"
+            className="text-sm font-bold text-brand-gray-900"
+          >
+            Email
           </Label>
           <Input
             id="email"
             type="email"
             placeholder="name@institution.org"
             required
+            className="rounded-lg border-brand-gray-200 focus:ring-brand-teal-500 h-10"
           />
         </div>
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <Label htmlFor="password" className="text-brand-gray-700 font-bold">
+            <Label
+              htmlFor="password"
+              className="text-sm font-bold text-brand-gray-900"
+            >
               Password
             </Label>
             <Link
               href="/auth/forgot-password"
-              className="text-xs font-bold text-primary-600 hover:underline"
+              className="text-xs font-bold text-brand-teal-700 hover:text-brand-teal-900 transition-colors"
             >
               Forgot password?
             </Link>
@@ -47,33 +53,35 @@ const LoginPage = () => {
             type="password"
             placeholder="••••••••"
             required
+            className="rounded-lg border-brand-gray-200 focus:ring-brand-teal-500 h-10"
           />
         </div>
-        <Button size="2xl" className="w-full shadow-md active:scale-95">
-          Sign In
+        <Button
+          size="lg"
+          variant="primary"
+          className="w-full rounded-full h-11 shadow-sm transition-all active:scale-[0.98]"
+        >
+          Login
         </Button>
       </div>
 
-      <div className="relative py-2">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-brand-gray-100"></div>
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white px-3 text-brand-gray-400 font-bold tracking-widest">
-            Or continue with
-          </span>
-        </div>
+      <div className="relative flex items-center gap-4">
+        <div className="h-px grow bg-brand-gray-100"></div>
+        <span className="text-xs font-bold text-brand-gray-400 uppercase tracking-widest whitespace-nowrap">
+          Or continue with
+        </span>
+        <div className="h-px grow bg-brand-gray-100"></div>
       </div>
 
       <SocialButton provider="google" />
 
-      <p className="text-center text-sm text-brand-gray-500 font-medium">
+      <p className="text-center text-sm text-brand-gray-500 font-medium pt-2">
         Don't have an account?{" "}
         <Link
           href="/signup"
-          className="text-primary-600 font-bold hover:underline"
+          className="text-brand-teal-700 font-bold hover:text-brand-teal-900 transition-colors"
         >
-          Create an account
+          Sign up
         </Link>
       </p>
     </div>

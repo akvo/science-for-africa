@@ -110,24 +110,29 @@ describe('Authentication API', () => {
 
     it('should allow access with valid authentication token', async () => {
       const strapi = getStrapi();
+      const uniqueId = Date.now();
+      const testEmail = `protected-${uniqueId}@example.com`;
+      const testUser = `user-${uniqueId}`;
 
-      // Create a user and generate token
-      let user;
-      try {
-        user = await createMockUser({
-          username: 'authtest',
-          email: 'authtest@example.com',
+      // Register first to ensure a clean user exists with the current hashing secret
+      await request(strapi.server.httpServer)
+        .post('/api/auth/local/register')
+        .send({
+          username: testUser,
+          email: testEmail,
           password: 'Password123!',
         });
-      } catch (e) {
-        // User might already exist, try to find them
-        user = await strapi.query('plugin::users-permissions.user').findOne({
-          where: { email: 'authtest@example.com' },
-        });
-      }
 
-      if (user) {
-        const token = generateJwtToken(user);
+      // Login to get a valid token
+      const loginResponse = await request(strapi.server.httpServer)
+        .post('/api/auth/local')
+        .send({
+          identifier: testEmail,
+          password: 'Password123!',
+        });
+
+      if (loginResponse.status === 200) {
+        const token = loginResponse.body.jwt;
 
         const response = await request(strapi.server.httpServer)
           .get('/api/users/me')
@@ -135,6 +140,8 @@ describe('Authentication API', () => {
           .expect('Content-Type', /json/);
 
         expect([200, 403]).toContain(response.status);
+      } else {
+        throw new Error(`Login failed for ${testEmail} with status ${loginResponse.status}: ${JSON.stringify(loginResponse.body)}`);
       }
     });
   });

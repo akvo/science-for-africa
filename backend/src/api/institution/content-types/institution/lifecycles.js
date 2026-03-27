@@ -14,7 +14,7 @@ module.exports = {
       const existing = await strapi.db.query('api::institution.institution').findOne({
         where: {
           name: {
-            $looki: data.name,
+            $eqi: data.name,
           },
         },
       });
@@ -31,7 +31,7 @@ module.exports = {
       const existing = await strapi.db.query('api::institution.institution').findOne({
         where: {
           name: {
-            $looki: data.name,
+            $eqi: data.name,
           },
           id: {
             $ne: where.id,

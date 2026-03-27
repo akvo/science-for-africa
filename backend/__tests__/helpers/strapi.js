@@ -3,7 +3,7 @@
  * Helper functions for testing Strapi applications
  */
 
-const Strapi = require('@strapi/strapi');
+const { createStrapi } = require('@strapi/strapi');
 const fs = require('fs');
 const path = require('path');
 
@@ -15,10 +15,38 @@ let instance;
  */
 async function setupStrapi() {
   if (!instance) {
-    instance = await Strapi({
+    instance = createStrapi({
       appDir: path.resolve(__dirname, '../..'),
-      distDir: path.resolve(__dirname, '../../dist'),
-    }).load();
+      env: 'test',
+    });
+
+    // Set configuration manually before loading to ensure it's available
+    const dbPath = path.join(__dirname, '../../.tmp/test.db');
+    const tmpDir = path.join(__dirname, '../../.tmp');
+    
+    if (!fs.existsSync(tmpDir)) {
+      fs.mkdirSync(tmpDir, { recursive: true });
+    }
+
+    // Database is still set here to ensure it uses the test DB during load()
+    instance.config.set('database', {
+      connection: {
+        client: 'sqlite',
+        connection: {
+          filename: dbPath,
+        },
+        useNullAsDefault: true,
+      },
+    });
+
+    await instance.load();
+
+    // Set configuration manually after loading to ensure it's not overwritten by files
+    instance.config.set('admin.auth.secret', 'test-secret');
+    instance.config.set('admin.apiToken.salt', 'test-api-token-salt');
+    instance.config.set('admin.transfer.token.salt', 'test-transfer-token-salt');
+    instance.config.set('plugin::users-permissions.jwtSecret', 'test-secret');
+    instance.config.set('server.app.keys', ['testKey1', 'testKey2']);
 
     await instance.server.mount();
   }

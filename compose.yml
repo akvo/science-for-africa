@@ -21,6 +21,7 @@ services:
       - ./backend/config:/opt/app/config
       - ./backend/src:/opt/app/src
       - ./backend/scripts:/opt/app/scripts
+      - ./backend/__tests__:/opt/app/__tests__
       - ./backend/package.json:/opt/package.json
       - ./backend/package-lock.json:/opt/package-lock.json
       - ./backend/public/uploads:/opt/app/public/uploads

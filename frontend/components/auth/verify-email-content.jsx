@@ -57,60 +57,85 @@ export const VerifyEmailContent = ({ email }) => {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="space-y-6 text-center">
-        <div className="mx-auto w-16 h-16 bg-brand-teal-50 rounded-full flex items-center justify-center text-brand-teal-600 shadow-sm border border-brand-teal-100/50">
-          <Mail size={32} />
-        </div>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-sm">
+      {/* Back Button */}
+      <div className="mb-4">
+        <Link
+          href="/signup"
+          className="inline-flex items-center gap-2 text-sm font-bold text-brand-gray-500 hover:text-brand-gray-900 transition-colors"
+        >
+          <ArrowLeft size={18} />
+          <span>Back</span>
+        </Link>
+      </div>
 
-        <div className="space-y-2">
-          <h1 className="text-display-sm font-bold text-brand-teal-900 tracking-tight">
-            Check your inbox
-          </h1>
-          <p className="text-brand-gray-500 font-medium text-sm">
-            We've sent a verification link to{" "}
-            <span className="text-brand-gray-900 font-bold">
+      {/* Main Content Area */}
+      <div className="space-y-3">
+        <h1 className="text-[30px] font-bold text-brand-teal-900 leading-tight">
+          Confirm email
+        </h1>
+        <div className="space-y-6">
+          <p className="text-brand-gray-500 font-medium text-base leading-relaxed">
+            We sent you an email to{" "}
+            <span className="text-brand-teal-800 font-bold">
               {email || "your email"}
+            </span>{" "}
+            with a secret link to confirm your account.
+          </p>
+
+          <p className="text-brand-gray-500 font-medium text-base leading-relaxed">
+            If you do not see the email within 5 minutes, please contact us at{" "}
+            <span className="text-brand-teal-800 font-bold">
+              support@sfa.com
             </span>
-            . Please click the link to activate your account.
           </p>
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6 pt-4">
         {message && (
           <div
-            className={`p-4 text-sm font-medium rounded-lg text-center ${isError ? "text-destructive bg-destructive/10 border border-destructive/20" : "text-brand-teal-700 bg-brand-teal-50 border border-brand-teal-100"}`}
+            className={`p-4 text-sm font-medium rounded-lg text-center ${
+              isError
+                ? "text-destructive bg-destructive/10 border border-destructive/20"
+                : "text-brand-teal-700 bg-brand-teal-50 border border-brand-teal-100"
+            }`}
           >
             {message}
           </div>
         )}
 
-        <Button
-          onClick={handleResend}
-          disabled={isLoading || countdown > 0}
-          variant="outline"
-          className="w-full rounded-full border-brand-gray-200 text-brand-gray-700 font-bold h-11 transition-all active:scale-[0.98] flex items-center justify-center gap-2 group disabled:opacity-50"
-        >
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : countdown > 0 ? (
-            <span>Resend in {countdown}s</span>
-          ) : (
-            <>
-              <RefreshCw className="h-4 w-4 group-hover:rotate-180 transition-transform duration-500" />
-              <span>Resend email</span>
-            </>
-          )}
-        </Button>
+        {/* Resend Action - Subtly integrated as a secondary ghost button/link */}
+        <div className="flex flex-col items-start gap-3">
+          <Button
+            onClick={handleResend}
+            disabled={isLoading || countdown > 0}
+            variant="ghost"
+            className="p-0 h-auto text-brand-teal-700 hover:text-brand-teal-900 font-bold hover:bg-transparent transition-all flex items-center gap-2 disabled:opacity-50"
+          >
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : countdown > 0 ? (
+              <span>Resend link in {countdown}s</span>
+            ) : (
+              <>
+                <RefreshCw size={16} />
+                <span>Resend verification email</span>
+              </>
+            )}
+          </Button>
+        </div>
 
-        <Link
-          href="/login"
-          className="flex items-center justify-center gap-2 text-sm font-bold text-brand-gray-500 hover:text-brand-gray-900 transition-colors"
-        >
-          <ArrowLeft size={16} />
-          Back to login
-        </Link>
+        {/* Footer Navigation */}
+        <div className="flex items-center gap-1 text-sm font-medium text-brand-gray-500 pt-4 border-t border-brand-gray-100">
+          <span>Already have an account?</span>
+          <Link
+            href="/login"
+            className="text-brand-teal-800 font-bold hover:text-brand-teal-900 transition-colors"
+          >
+            Sign in
+          </Link>
+        </div>
       </div>
     </div>
   );

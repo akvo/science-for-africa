@@ -20,13 +20,27 @@ export const VerifyEmailContent = ({ email }) => {
 
   const handleResend = async () => {
     if (countdown > 0) return;
-    
+
     setIsLoading(true);
     setMessage("");
     setIsError(false);
 
     try {
       const result = await resendVerification(email);
+
+      if (result && result.error) {
+        setIsError(true);
+        if (
+          result.error.toLowerCase().includes("already confirmed") ||
+          result.status === 400
+        ) {
+          setMessage("Your account is already verified! Please log in.");
+        } else {
+          setMessage(result.error);
+        }
+        return;
+      }
+
       if (result) {
         setMessage("Verification email resent successfully!");
         setCountdown(30);
@@ -48,20 +62,26 @@ export const VerifyEmailContent = ({ email }) => {
         <div className="mx-auto w-16 h-16 bg-brand-teal-50 rounded-full flex items-center justify-center text-brand-teal-600 shadow-sm border border-brand-teal-100/50">
           <Mail size={32} />
         </div>
-        
+
         <div className="space-y-2">
           <h1 className="text-display-sm font-bold text-brand-teal-900 tracking-tight">
             Check your inbox
           </h1>
           <p className="text-brand-gray-500 font-medium text-sm">
-            We've sent a verification link to <span className="text-brand-gray-900 font-bold">{email || "your email"}</span>. Please click the link to activate your account.
+            We've sent a verification link to{" "}
+            <span className="text-brand-gray-900 font-bold">
+              {email || "your email"}
+            </span>
+            . Please click the link to activate your account.
           </p>
         </div>
       </div>
 
       <div className="space-y-4">
         {message && (
-          <div className={`p-4 text-sm font-medium rounded-lg text-center ${isError ? "text-destructive bg-destructive/10 border border-destructive/20" : "text-brand-teal-700 bg-brand-teal-50 border border-brand-teal-100"}`}>
+          <div
+            className={`p-4 text-sm font-medium rounded-lg text-center ${isError ? "text-destructive bg-destructive/10 border border-destructive/20" : "text-brand-teal-700 bg-brand-teal-50 border border-brand-teal-100"}`}
+          >
             {message}
           </div>
         )}
@@ -84,7 +104,10 @@ export const VerifyEmailContent = ({ email }) => {
           )}
         </Button>
 
-        <Link href="/login" className="flex items-center justify-center gap-2 text-sm font-bold text-brand-gray-500 hover:text-brand-gray-900 transition-colors">
+        <Link
+          href="/login"
+          className="flex items-center justify-center gap-2 text-sm font-bold text-brand-gray-500 hover:text-brand-gray-900 transition-colors"
+        >
           <ArrowLeft size={16} />
           Back to login
         </Link>

@@ -1,4 +1,5 @@
-const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:1337/api';
+const API_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api";
 
 export async function fetchFromStrapi(endpoint) {
   try {
@@ -8,7 +9,7 @@ export async function fetchFromStrapi(endpoint) {
     }
     return await response.json();
   } catch (error) {
-    console.error('Error fetching from Strapi:', error);
+    console.error("Error fetching from Strapi:", error);
     return null;
   }
 }
@@ -16,20 +17,26 @@ export async function fetchFromStrapi(endpoint) {
 export async function postToStrapi(endpoint, data, wrapInData = true) {
   try {
     const response = await fetch(`${API_URL}${endpoint}`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(wrapInData ? { data } : data),
     });
+
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error?.message || `HTTP error! status: ${response.status}`);
+      return {
+        error:
+          errorData.error?.message || `HTTP error! status: ${response.status}`,
+        status: response.status,
+      };
     }
+
     return await response.json();
   } catch (error) {
-    console.error('Error posting to Strapi:', error);
-    return null;
+    console.error("Error posting to Strapi:", error);
+    return { error: error.message || "An unexpected error occurred" };
   }
 }
 

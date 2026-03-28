@@ -59,6 +59,11 @@ export const SignUpForm = () => {
 
       const result = await registerUser(payload);
 
+      if (result && result.error) {
+        setError(result.error);
+        return;
+      }
+
       if (result && result.jwt) {
         // Success! Redirect to verify email
         router.push(

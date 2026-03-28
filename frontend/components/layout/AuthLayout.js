@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const carouselData = [
   {
@@ -23,17 +29,20 @@ const carouselData = [
 ];
 
 const AuthLayout = ({ children, activeStep }) => {
+  const [api, setApi] = useState();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % carouselData.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
+    if (!api) return;
 
-  // Use activeStep if provided, otherwise use currentSlide for the stepper dots
-  const displayStep = activeStep !== undefined ? activeStep - 1 : currentSlide;
+    setCurrentSlide(api.selectedScrollSnap());
+
+    api.on("select", () => {
+      setCurrentSlide(api.selectedScrollSnap());
+    });
+  }, [api]);
+
+  // Synchronize carousel position with currentSlide state
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-white font-sans text-brand-gray-900 antialiased">
@@ -82,57 +91,73 @@ const AuthLayout = ({ children, activeStep }) => {
       </div>
 
       {/* Right Column: Visual Section */}
-      <div className="hidden md:flex md:w-[56%] relative p-3 overflow-hidden">
-        <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl transition-all duration-700 bg-brand-gray-50">
-          {carouselData.map((slide, index) => (
-            <div
-              key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
-              }`}
-            >
-              {/* Main Background Image */}
-              <img
-                src={slide.image}
-                alt={slide.title}
-                className={`absolute inset-0 w-full h-full object-cover transition-transform duration-6000 ${
-                  index === currentSlide ? "scale-105" : "scale-100"
-                }`}
-              />
+      <div className="hidden md:flex md:w-[56%] relative overflow-hidden h-screen">
+        <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl bg-brand-gray-50 border border-brand-gray-100">
+          <Carousel
+            setApi={setApi}
+            plugins={[
+              Autoplay({
+                delay: 5000,
+                stopOnInteraction: false,
+              }),
+            ]}
+            className="w-full h-full"
+            opts={{
+              loop: true,
+              align: "start",
+              containScroll: "trimSnaps",
+            }}
+          >
+            <CarouselContent wrapperClassName="w-full h-full" className="h-full ml-0">
+              {carouselData.map((slide, index) => (
+                <CarouselItem
+                  key={index}
+                  className="relative basis-full min-w-full h-full pl-0 overflow-hidden"
+                >
+                  <div className="relative w-full h-full">
+                    {/* Main Background Image */}
+                    <img
+                      src={slide.image}
+                      alt={slide.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-6000 scale-105"
+                    />
 
-              {/* Noise Overlay */}
-              <div className="absolute inset-0 opacity-15 pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+                    {/* Subtle Overlay instead of broken noisy SVG */}
+                    <div className="absolute inset-0 opacity-10 pointer-events-none mix-blend-overlay bg-black"></div>
 
-              {/* Gradient Overlay for Text Readability */}
-              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
+                    {/* Gradient Overlay for Text Readability */}
+                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
 
-              {/* Text Area */}
-              <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 text-center text-white space-y-4">
-                <h2 className="text-xl md:text-2xl font-bold leading-tight drop-shadow-lg max-w-md mx-auto">
-                  {slide.title}
-                </h2>
-                <p className="text-sm text-white/90 leading-relaxed font-medium max-w-lg mx-auto drop-shadow-md">
-                  {slide.description}
-                </p>
-              </div>
+                    {/* Text Area */}
+                    <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 text-center text-white space-y-4 pb-24">
+                      <h2 className="text-xl md:text-2xl font-bold leading-tight drop-shadow-lg max-w-md mx-auto">
+                        {slide.title}
+                      </h2>
+                      <p className="text-sm text-white/90 leading-relaxed font-medium max-w-lg mx-auto drop-shadow-md">
+                        {slide.description}
+                      </p>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+
+            {/* Stepper Dots (Overlay) - Integrated with Carousel API */}
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex justify-center gap-3 items-center">
+              {carouselData.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => api?.scrollTo(index)}
+                  className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
+                    currentSlide === index
+                      ? "w-8 bg-brand-teal-500 shadow-[0_0_12px_rgba(0,128,115,0.7)]"
+                      : "w-1.5 bg-white/40 hover:bg-white/70"
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
             </div>
-          ))}
-
-          {/* Stepper Dots (Overlay) */}
-          <div className="absolute bottom-10 left-0 right-0 z-20 flex justify-center gap-3 items-center">
-            {carouselData.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
-                  displayStep === index
-                    ? "w-8 bg-brand-teal-500 shadow-[0_0_12px_rgba(0,128,115,0.7)]"
-                    : "w-1.5 bg-white/40 hover:bg-white/70"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
+          </Carousel>
         </div>
       </div>
     </div>

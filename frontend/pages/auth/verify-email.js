@@ -4,9 +4,10 @@ import { VerifyEmailContent } from "@/components/auth/verify-email-content";
 
 const VerifyEmailPage = () => {
   const router = useRouter();
-  const { email } = router.query;
+  const { email, confirmation } = router.query;
 
-  return <VerifyEmailContent email={email} />;
+  return <VerifyEmailContent email={email} confirmation={confirmation} />;
 };
+
 
 export default VerifyEmailPage;

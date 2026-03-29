@@ -54,3 +54,27 @@ export async function registerUser(userData) {
 export async function resendVerification(email) {
   return postToStrapi("/auth/send-email-confirmation", { email }, false);
 }
+
+/**
+ * Verify email with token
+ */
+export async function verifyEmailToken(token) {
+  try {
+    const response = await fetch(
+      `${API_URL}/auth/email-confirmation?confirmation=${token}`,
+    );
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return {
+        error:
+          errorData.error?.message || `HTTP error! status: ${response.status}`,
+        status: response.status,
+      };
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error verifying email:", error);
+    return { error: error.message || "An unexpected error occurred" };
+  }
+}
+

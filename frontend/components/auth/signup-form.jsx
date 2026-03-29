@@ -64,13 +64,13 @@ export const SignUpForm = () => {
         return;
       }
 
-      if (result && result.jwt) {
+      if (result && (result.jwt || result.user)) {
         // Success! Redirect to verify email
         router.push(
           `/auth/verify-email?email=${encodeURIComponent(values.email)}`,
         );
       } else {
-        setError("Registration failed. Email might already be in use.");
+        setError("Registration failed. Please try again.");
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");

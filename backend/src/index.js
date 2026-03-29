@@ -186,21 +186,20 @@ module.exports = {
       process.env.EMAIL_CONFIRMATION_URL ||
       "http://localhost:3000/auth/verify-email";
 
-    if (
-      !settings.email_confirmation ||
-      (emailRedirectUrl &&
-        settings.email_confirmation_redirection !== emailRedirectUrl)
-    ) {
+    const isEmailEnabled = settings.email_confirmation;
+    const isRedirectOk =
+      settings.email_confirmation_redirection === emailRedirectUrl;
+
+    if (!isEmailEnabled || !isRedirectOk) {
       await advancedStore.set({
         value: {
           ...settings,
           email_confirmation: true,
-          email_confirmation_redirection:
-            emailRedirectUrl || settings.email_confirmation_redirection,
+          email_confirmation_redirection: emailRedirectUrl,
         },
       });
       strapi.log.info(
-        `Email verification enabled and redirection set to ${emailRedirectUrl}`,
+        `Email verification settings synchronized to ${emailRedirectUrl}`,
       );
     }
 

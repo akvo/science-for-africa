@@ -182,7 +182,9 @@ module.exports = {
     });
     const settings = await advancedStore.get();
 
-    const emailRedirectUrl = process.env.EMAIL_CONFIRMATION_URL;
+    const emailRedirectUrl =
+      process.env.EMAIL_CONFIRMATION_URL ||
+      "http://localhost:3000/auth/verify-email";
 
     if (
       !settings.email_confirmation ||

@@ -1,0 +1,28 @@
+{
+  "key": "core_admin_homepage-layout:1",
+  "value": {
+    "version": 1,
+    "widgets": [
+      {
+        "uid": "plugin::content-manager.last-published-entries",
+        "width": 12
+      },
+      {
+        "uid": "plugin::admin.profile-info",
+        "width": 6
+      },
+      {
+        "uid": "plugin::content-manager.chart-entries",
+        "width": 6
+      },
+      {
+        "uid": "plugin::admin.key-statistics",
+        "width": 12
+      }
+    ],
+    "updatedAt": "2026-03-29T04:08:22.306Z"
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

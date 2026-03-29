@@ -22,8 +22,8 @@ services:
       - ./backend/src:/opt/app/src
       - ./backend/scripts:/opt/app/scripts
       - ./backend/__tests__:/opt/app/__tests__
-      - ./backend/package.json:/opt/package.json
-      - ./backend/package-lock.json:/opt/package-lock.json
+      - ./backend/package.json:/opt/app/package.json
+      - ./backend/package-lock.json:/opt/app/package-lock.json
       - ./backend/public/uploads:/opt/app/public/uploads
     ports:
       - 1337:1337
@@ -43,8 +43,8 @@ services:
       DATABASE_USERNAME: akvo
       DATABASE_PASSWORD: password
       DATABASE_SSL: false
-      EMAIL_CONFIRMATION_URL: http://localhost:3000/verify-email
-      PASSWORD_RESET_URL: http://localhost:3000/reset-password
+      EMAIL_CONFIRMATION_URL: ${EMAIL_CONFIRMATION_URL:-http://localhost:3000/auth/verify-email}
+      PASSWORD_RESET_URL: ${PASSWORD_RESET_URL:-http://localhost:3000/auth/reset-password}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-}
       SMTP_USERNAME: ${SMTP_USERNAME:-}

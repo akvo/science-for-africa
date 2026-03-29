@@ -1,0 +1,570 @@
+{
+  "key": "plugin_content_manager_configuration_content_types::plugin::users-permissions.user",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "username",
+      "defaultSortBy": "username",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "username": {
+        "edit": {
+          "label": "username",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "username",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "email": {
+        "edit": {
+          "label": "email",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "email",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "provider": {
+        "edit": {
+          "label": "provider",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "provider",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "password": {
+        "edit": {
+          "label": "password",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "password",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "resetPasswordToken": {
+        "edit": {
+          "label": "resetPasswordToken",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "resetPasswordToken",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "confirmationToken": {
+        "edit": {
+          "label": "confirmationToken",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "confirmationToken",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "confirmed": {
+        "edit": {
+          "label": "confirmed",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "confirmed",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "blocked": {
+        "edit": {
+          "label": "blocked",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "blocked",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "role": {
+        "edit": {
+          "label": "role",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "name"
+        },
+        "list": {
+          "label": "role",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "firstName": {
+        "edit": {
+          "label": "firstName",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "firstName",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "lastName": {
+        "edit": {
+          "label": "lastName",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "lastName",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "fullName": {
+        "edit": {
+          "label": "fullName",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "fullName",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "position": {
+        "edit": {
+          "label": "position",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "position",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "biography": {
+        "edit": {
+          "label": "biography",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "biography",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "interests": {
+        "edit": {
+          "label": "interests",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "interests",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "educationTopic": {
+        "edit": {
+          "label": "educationTopic",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "educationTopic",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "educationLevel": {
+        "edit": {
+          "label": "educationLevel",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "educationLevel",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "institution": {
+        "edit": {
+          "label": "institution",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "name"
+        },
+        "list": {
+          "label": "institution",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "affiliationStatus": {
+        "edit": {
+          "label": "affiliationStatus",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "affiliationStatus",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "orcidId": {
+        "edit": {
+          "label": "orcidId",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "orcidId",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "onboardingComplete": {
+        "edit": {
+          "label": "onboardingComplete",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "onboardingComplete",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "twoFactorSecret": {
+        "edit": {
+          "label": "twoFactorSecret",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "twoFactorSecret",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "twoFactorEnabled": {
+        "edit": {
+          "label": "twoFactorEnabled",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "twoFactorEnabled",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "verificationStatus": {
+        "edit": {
+          "label": "verificationStatus",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "verificationStatus",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "socialLinks": {
+        "edit": {
+          "label": "socialLinks",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "socialLinks",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "createdAt": {
+        "edit": {
+          "label": "createdAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "createdAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedAt": {
+        "edit": {
+          "label": "updatedAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "updatedAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "createdBy": {
+        "edit": {
+          "label": "createdBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "createdBy",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedBy": {
+        "edit": {
+          "label": "updatedBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "updatedBy",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "username",
+        "email",
+        "confirmed"
+      ],
+      "edit": [
+        [
+          {
+            "name": "username",
+            "size": 6
+          },
+          {
+            "name": "email",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "password",
+            "size": 6
+          },
+          {
+            "name": "confirmed",
+            "size": 4
+          }
+        ],
+        [
+          {
+            "name": "blocked",
+            "size": 4
+          },
+          {
+            "name": "role",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "firstName",
+            "size": 6
+          },
+          {
+            "name": "lastName",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "fullName",
+            "size": 6
+          },
+          {
+            "name": "position",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "biography",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "interests",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "educationTopic",
+            "size": 6
+          },
+          {
+            "name": "educationLevel",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "institution",
+            "size": 6
+          },
+          {
+            "name": "affiliationStatus",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "orcidId",
+            "size": 6
+          },
+          {
+            "name": "onboardingComplete",
+            "size": 4
+          }
+        ],
+        [
+          {
+            "name": "twoFactorSecret",
+            "size": 6
+          },
+          {
+            "name": "twoFactorEnabled",
+            "size": 4
+          }
+        ],
+        [
+          {
+            "name": "verificationStatus",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "socialLinks",
+            "size": 12
+          }
+        ]
+      ]
+    },
+    "uid": "plugin::users-permissions.user"
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

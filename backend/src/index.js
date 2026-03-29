@@ -1,4 +1,4 @@
-"use strict";
+const { emailTemplate } = require("./helpers/email-template");
 
 module.exports = {
   /**
@@ -93,7 +93,9 @@ module.exports = {
 
     // Disable route-level body validation for the register endpoint
     // Strapi v5 uses route.request.body for validation, which occurs before the controller.
-    const registerRoute = usersPermissionsPlugin.routes["content-api"].routes.find(
+    const registerRoute = usersPermissionsPlugin.routes[
+      "content-api"
+    ].routes.find(
       (route) =>
         route.method === "POST" && route.path === "/auth/local/register",
     );
@@ -121,7 +123,8 @@ module.exports = {
         // Split fullName into firstName and lastName for backend logic compatibility
         const nameParts = fullName.trim().split(/\s+/);
         const firstName = nameParts[0];
-        const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+        const lastName =
+          nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
 
         await strapi.db.query("plugin::users-permissions.user").update({
           where: { id: user.id },
@@ -171,19 +174,66 @@ module.exports = {
   },
 
   async bootstrap({ strapi }) {
-    // Ensure email confirmation is enabled in advanced settings
-    const store = strapi.store({
+    // 1. Ensure email confirmation is enabled in advanced settings
+    const advancedStore = strapi.store({
       type: "plugin",
       name: "users-permissions",
       key: "advanced",
     });
-    const settings = await store.get();
+    const settings = await advancedStore.get();
 
-    if (!settings.email_confirmation) {
-      await store.set({ value: { ...settings, email_confirmation: true } });
+    const emailRedirectUrl = process.env.EMAIL_CONFIRMATION_URL;
+
+    if (
+      !settings.email_confirmation ||
+      (emailRedirectUrl &&
+        settings.email_confirmation_redirection !== emailRedirectUrl)
+    ) {
+      await advancedStore.set({
+        value: {
+          ...settings,
+          email_confirmation: true,
+          email_confirmation_redirection:
+            emailRedirectUrl || settings.email_confirmation_redirection,
+        },
+      });
       strapi.log.info(
-        "Email verification enabled in Users-Permissions settings.",
+        `Email verification enabled and redirection set to ${emailRedirectUrl}`,
       );
+    }
+
+    // 2. Set branded email template for confirmation
+    const emailStore = strapi.store({
+      type: "plugin",
+      name: "users-permissions",
+      key: "email",
+    });
+    const emailSettings = await emailStore.get();
+
+    if (emailSettings && emailSettings.email_confirmation) {
+      const confirmationLink = `${emailRedirectUrl}?confirmation=<%= CODE %>`;
+      const brandedBody = `
+        <p>Hello <%= USER.username %>,</p>
+        <p>Thank you for joining the Science for Africa platform. To complete your registration and active your account, please click the button below to verify your email address:</p>
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${confirmationLink}" style="background-color: #008080; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Verify Email Address</a>
+        </div>
+        <p>If the button doesn't work, you can also copy and paste the following link into your browser:</p>
+        <p style="word-break: break-all; color: #008080;">${confirmationLink}</p>
+        <p>If you did not create an account, please ignore this email.</p>
+      `;
+
+      emailSettings.email_confirmation.options.message = emailTemplate({
+        title: "Confirm Your Email",
+        body: brandedBody,
+      });
+      emailSettings.email_confirmation.options.object =
+        "Verify your Science for Africa account";
+      emailSettings.email_confirmation.options.from.name = "Science for Africa";
+
+      await emailStore.set({ value: emailSettings });
+      strapi.log.info("Branded email confirmation template initialized.");
     }
   },
 };
+

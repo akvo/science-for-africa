@@ -16,7 +16,8 @@
     "test": "STRAPI_ADMIN_AUTH_SECRET=test-secret API_TOKEN_SALT=test-api-token-salt TRANSFER_TOKEN_SALT=test-transfer-token-salt JWT_SECRET=test-secret APP_KEYS=testKey1,testKey2 jest --runInBand",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-junit"
+    "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-junit",
+    "config-sync": "config-sync"
   },
   "dependencies": {
     "@strapi-community/strapi-provider-upload-google-cloud-storage": "^5.0.5",
@@ -32,6 +33,7 @@
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
     "speakeasy": "^2.0.0",
+    "strapi-plugin-config-sync": "^3.2.0",
     "styled-components": "^6.0.0"
   },
   "devDependencies": {

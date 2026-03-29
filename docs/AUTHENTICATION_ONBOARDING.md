@@ -175,6 +175,18 @@ graph TD
 
 ---
 
+### ADR-003: Environment-Driven Sign-Up Redirection
+- **Status**: Accepted
+- **Context**: Signup redirection failed when email confirmation was enabled because the JWT was null. Additionally, the confirmation URL was hardcoded, causing 404s in some environments.
+- **Decision**:
+    1. Update frontend to treat `result.user` as a success signal for redirection.
+    2. Use `PUBLIC_URL` from the environment to dynamically construct `EMAIL_CONFIRMATION_URL`.
+    3. Configure Strapi's `email_confirmation_redirection` in the `bootstrap` lifecycle to ensure consistency with the frontend host.
+- **Consequences**: Ensures portability across environments (local, staging, prod) and fixes the "stuck on signup" bug.
+
+---
+
 ## 🔮 Future Enhancements
 - Automated institutional verification via email domain.
 - Multi-institutional profiles.
+

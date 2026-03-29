@@ -63,6 +63,7 @@ export async function verifyEmailToken(token) {
     const response = await fetch(
       `${API_URL}/auth/email-confirmation?confirmation=${token}`,
     );
+
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       return {
@@ -71,7 +72,15 @@ export async function verifyEmailToken(token) {
         status: response.status,
       };
     }
-    return await response.json();
+
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return await response.json();
+    }
+
+    // If it's successful but not JSON (e.g. redirected to an HTML page),
+    // it usually means success in Strapi's email confirmation flow.
+    return { success: true };
   } catch (error) {
     console.error("Error verifying email:", error);
     return { error: error.message || "An unexpected error occurred" };

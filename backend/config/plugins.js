@@ -83,5 +83,15 @@ module.exports = ({ env }) => {
         ],
       },
     },
+    'users-permissions': {
+      config: {
+        register: {
+          allowedFields: ['fullName'],
+        },
+        advanced: {
+          email_confirmation_redirection: env('NEXT_PUBLIC_FRONTEND_URL', 'http://localhost:3000') + '/login?confirmed=true',
+        },
+      },
+    },
   };
 };

@@ -27,7 +27,12 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
 
         if (result && result.error) {
           setIsError(true);
-          setMessage(result.error);
+          // Special case: if token is invalid, it may have already been used (success)
+          if (result.error.toLowerCase().includes("invalid token")) {
+            setMessage("The verification link was invalid or already used. If you continue to have trouble, please try logging in.");
+          } else {
+            setMessage(result.error);
+          }
           setIsVerifying(false);
         } else {
           setIsVerified(true);

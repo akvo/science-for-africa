@@ -90,7 +90,7 @@ describe('Strapi API Utilities', () => {
       expect(result).toEqual(mockResponse);
     });
 
-    it('should return null on POST error', async () => {
+    it('should return error object on POST error', async () => {
       global.fetch.mockResolvedValueOnce({
         ok: false,
         status: 400,
@@ -100,7 +100,19 @@ describe('Strapi API Utilities', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       const result = await postToStrapi('/articles', { invalid: 'data' });
 
-      expect(result).toBeNull();
+      expect(result).toEqual({ error: 'Bad Request', status: 400 });
+
+      consoleSpy.mockRestore();
+    });
+
+    it('should return error object on network error', async () => {
+      global.fetch.mockRejectedValueOnce(new Error('Network error'));
+
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const result = await postToStrapi('/articles', { name: 'Test' });
+
+      expect(result).toEqual({ error: 'Network error' });
+      expect(consoleSpy).toHaveBeenCalled();
 
       consoleSpy.mockRestore();
     });

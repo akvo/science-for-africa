@@ -141,7 +141,9 @@ describe("VerifyEmailContent", () => {
 
     await waitFor(() => {
       expect(screen.getByText(/verification failed/i)).toBeInTheDocument();
-      expect(screen.getByText(/invalid token/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/The verification link was invalid or already used/i),
+      ).toBeInTheDocument();
     });
 
     // Should show "Return to Login" button on failure

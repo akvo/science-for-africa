@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useOnboardingStore } from "@/lib/onboarding-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Search } from "lucide-react";
 import { fetchFromStrapi, updateUserProfile } from "@/lib/strapi";
 import { useRouter } from "next/router";
 
@@ -80,10 +80,10 @@ const OnboardingStep5 = () => {
       {/* Header Section */}
       <div className="space-y-3 mb-32">
         <h1 className="text-display-sm font-bold text-brand-teal-900 leading-tight">
-          Institutional affiliation
+          Current affiliation
         </h1>
         <p className="text-md text-brand-gray-800 leading-relaxed">
-          We'll suggest research partners and funders based on your
+          We'll suggest research partners and funders based on your current
           institutional affiliation.
         </p>
       </div>
@@ -95,12 +95,15 @@ const OnboardingStep5 = () => {
             Search institution
           </label>
           <div className="relative">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-gray-400">
+              <Search className="w-4 h-4" />
+            </div>
             <Input
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
               onFocus={() => searchTerm.length > 2 && setShowDropdown(true)}
               placeholder="Type your primary institution"
-              className="w-full h-11 px-3.5 py-2.5 border-brand-gray-100 rounded-8 text-md focus:ring-brand-teal-500"
+              className="w-full h-11 pl-10 pr-10 py-2.5 border-brand-gray-100 rounded-8 text-md focus:ring-brand-teal-500"
             />
             {loading && (
               <div className="absolute right-3 top-1/2 -translate-y-1/2">

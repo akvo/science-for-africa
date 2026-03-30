@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useOnboardingStore } from "@/lib/onboarding-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,13 +9,46 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2, Search } from "lucide-react";
+import { fetchFromStrapi } from "@/lib/strapi";
 
 import { EDUCATION_LEVEL_OPTIONS } from "@/lib/onboarding-constants";
 
 const OnboardingStep3 = () => {
   const { formData, updateFormData, nextStep, prevStep, skipStep } =
     useOnboardingStore();
+
+  const [institutions, setInstitutions] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(
+    formData.educationInstitution || "",
+  );
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSearch = async (val) => {
+    setSearchTerm(val);
+    updateFormData({ educationInstitution: val });
+
+    if (val.length > 2) {
+      setLoading(true);
+      setShowDropdown(true);
+      const response = await fetchFromStrapi(
+        `/institutions?filters[name][$containsi]=${val}`,
+      );
+      if (response?.data) {
+        setInstitutions(response.data.map((item) => item.name));
+      }
+      setLoading(false);
+    } else {
+      setShowDropdown(false);
+    }
+  };
+
+  const handleSelect = (name) => {
+    setSearchTerm(name);
+    updateFormData({ educationInstitution: name });
+    setShowDropdown(false);
+  };
 
   const handleConfirm = () => {
     nextStep();
@@ -79,18 +112,41 @@ const OnboardingStep3 = () => {
         </div>
 
         {/* Institution Name */}
-        <div className="space-y-2">
+        <div className="space-y-2 relative">
           <label className="text-md font-medium text-black">
-            Name of educational institution
+            Educational institution (where you studied)
           </label>
-          <Input
-            value={formData.educationInstitution}
-            onChange={(e) =>
-              updateFormData({ educationInstitution: e.target.value })
-            }
-            placeholder="Type your institution name"
-            className="w-full h-11 px-3.5 py-2.5 border-brand-gray-100 rounded-8 text-md focus:ring-brand-teal-500"
-          />
+          <div className="relative">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-gray-400">
+              <Search className="w-4 h-4" />
+            </div>
+            <Input
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+              onFocus={() => searchTerm.length > 2 && setShowDropdown(true)}
+              placeholder="Search or type your university"
+              className="w-full h-11 pl-10 py-2.5 border-brand-gray-100 rounded-8 text-md focus:ring-brand-teal-500"
+            />
+            {loading && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <Loader2 className="w-4 h-4 animate-spin text-brand-teal-600" />
+              </div>
+            )}
+          </div>
+
+          {showDropdown && institutions.length > 0 && (
+            <div className="absolute z-50 w-full mt-1 bg-white border border-brand-gray-100 rounded-8 shadow-xl max-h-48 overflow-y-auto animate-in fade-in slide-in-from-top-2">
+              {institutions.map((name, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSelect(name)}
+                  className="w-full text-left px-4 py-3 hover:bg-brand-teal-50 transition-colors text-md text-brand-gray-900 border-b last:border-0 border-brand-gray-50"
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

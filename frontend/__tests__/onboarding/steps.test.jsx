@@ -159,25 +159,27 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
     expect(confirmBtn).not.toBeDisabled();
   });
 
-  test("renders Step 3 (Education & Career) and handles input", () => {
+  test("renders Step 3 (Education & Career) and handles input", async () => {
     useOnboardingStore.getState().setStep(3);
-    const { getByText, getByPlaceholderText } = render(<OnboardingStep3 />);
+    useOnboardingStore.getState().updateFormData({ educationInstitution: "" });
+
+    const { getByText, getByPlaceholderText, findByText } = render(
+      <OnboardingStep3 />,
+    );
 
     expect(getByText(/Education and career/i)).toBeInTheDocument();
 
-    // Use a more specific selector for the label
-    const labels = screen.getAllByText(/Education level/i);
-    expect(labels.length).toBeGreaterThanOrEqual(1);
+    const input = getByPlaceholderText(/Search or type your university/i);
 
-    const input = getByPlaceholderText(/Type your institution name/i);
+    // Simulate typing to trigger search
+    fireEvent.change(input, { target: { value: "Scien" } });
 
-    fireEvent.change(input, { target: { value: "Harvard University" } });
+    // Wait for dropdown result
+    const option = await findByText("Science Foundation");
+    fireEvent.click(option);
 
-    // Note: Select component testing in RTL/shadcn can be tricky,
-    // usually requires looking for the trigger or mocking Select.
-    // For now, we verify the input change affects the store.
     expect(useOnboardingStore.getState().formData.educationInstitution).toBe(
-      "Harvard University",
+      "Science Foundation",
     );
   });
 
@@ -248,7 +250,7 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
     );
 
     expect(
-      getByRole("heading", { name: /Institutional affiliation/i }),
+      getByRole("heading", { name: /Current affiliation/i }),
     ).toBeInTheDocument();
 
     const input = getByPlaceholderText(/Type your primary institution/i);

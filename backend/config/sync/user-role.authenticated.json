@@ -6,6 +6,11 @@
   "locale": null,
   "permissions": [
     {
+      "documentId": "update-me-auth-per-id",
+      "action": "api::auth.auth.updateMe",
+      "locale": null
+    },
+    {
       "documentId": "i1qzvw333tf14mccwmx1hb6d",
       "action": "api::institution.institution.find",
       "locale": null
@@ -26,13 +31,13 @@
       "locale": null
     },
     {
-      "documentId": "vn2jwoo3kjeuhfb3toew45t4",
-      "action": "plugin::users-permissions.user.me",
+      "documentId": "find-user-perm-id",
+      "action": "plugin::users-permissions.user.find",
       "locale": null
     },
     {
-      "documentId": "find-user-perm-id",
-      "action": "plugin::users-permissions.user.find",
+      "documentId": "vn2jwoo3kjeuhfb3toew45t4",
+      "action": "plugin::users-permissions.user.me",
       "locale": null
     },
     {

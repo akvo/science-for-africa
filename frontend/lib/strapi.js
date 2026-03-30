@@ -121,17 +121,56 @@ export async function loginUser(credentials) {
 }
 
 /**
+ * Transforms frontend onboarding data to match backend schema contract
+ */
+function transformProfileUpdatePayload(userData) {
+  const data = { ...userData };
+
+  // 1. Map Interests: array of strings -> component objects [{name: "string"}]
+  if (data.interests && Array.isArray(data.interests)) {
+    data.interests = data.interests.map((item) =>
+      typeof item === "string" ? { name: item } : item,
+    );
+  }
+
+  // 2. Map Affiliation Institution: {id, name} -> institution (relation ID) or institutionName (string)
+  if (data.affiliationInstitution) {
+    if (data.affiliationInstitution.id) {
+      data.institution = data.affiliationInstitution.id;
+    } else if (data.affiliationInstitution.name) {
+      data.institutionName = data.affiliationInstitution.name;
+    }
+    delete data.affiliationInstitution;
+  }
+
+  // 3. Map Education Institution: {id, name} -> educationInstitutionName (string)
+  if (data.educationInstitution && data.educationInstitution.name) {
+    data.educationInstitutionName = data.educationInstitution.name;
+    delete data.educationInstitution;
+  }
+
+  // 4. Ensure onboardingComplete is explicitly handled
+  if (data.onboardingComplete === undefined) {
+    data.onboardingComplete = true;
+  }
+
+  return data;
+}
+
+/**
  * Update authenticated user profile
  */
 export async function updateUserProfile(userData, token) {
   try {
-    const response = await fetch(`${API_URL}/users/me`, {
+    const payload = transformProfileUpdatePayload(userData);
+
+    const response = await fetch(`${API_URL}/auth/me`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {

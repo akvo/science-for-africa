@@ -67,7 +67,7 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
 
     // Should advance to Step 2
     expect(
-      await screen.findByText(/Expertise & Interests/i),
+      await screen.findByText(/Interests and expertise/i),
     ).toBeInTheDocument();
   });
 
@@ -79,7 +79,7 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
 
     // Should advance to Step 2
     expect(
-      await screen.findByText(/Expertise & Interests/i),
+      await screen.findByText(/Interests and expertise/i),
     ).toBeInTheDocument();
   });
 
@@ -90,7 +90,7 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
 
     render(<OnboardingPage />);
 
-    expect(screen.getByText(/Expertise & Interests/i)).toBeInTheDocument();
+    expect(screen.getByText(/Interests and expertise/i)).toBeInTheDocument();
 
     // Find tags (assuming they have specific text or labels)
     const tags = [

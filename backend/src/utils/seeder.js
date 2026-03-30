@@ -97,6 +97,36 @@ const INSTITUTIONS = [
 ];
 
 /**
+ * Helper to grant permissions to a role
+ */
+const grantPermission = async (strapi, roleType, action) => {
+  const role = await strapi.db
+    .query("plugin::users-permissions.role")
+    .findOne({ where: { type: roleType } });
+
+  if (role) {
+    const existing = await strapi.db
+      .query("plugin::users-permissions.permission")
+      .findOne({
+        where: {
+          role: role.id,
+          action: action,
+        },
+      });
+
+    if (!existing) {
+      strapi.log.info(`Granting ${action} to ${roleType}...`);
+      await strapi.db.query("plugin::users-permissions.permission").create({
+        data: {
+          action: action,
+          role: role.id,
+        },
+      });
+    }
+  }
+};
+
+/**
  * Seeder Utility
  */
 const seed = async (strapi) => {
@@ -134,6 +164,19 @@ const seed = async (strapi) => {
       });
     }
     strapi.log.info(`Seeded ${INSTITUTIONS.length} Institutions.`);
+  }
+
+  // 3. Set Permissions (Ensure Public and Authenticated can search)
+  const roles = ["public", "authenticated"];
+  const actions = [
+    "api::interest.interest.find",
+    "api::institution.institution.find",
+  ];
+
+  for (const role of roles) {
+    for (const action of actions) {
+      await grantPermission(strapi, role, action);
+    }
   }
 };
 

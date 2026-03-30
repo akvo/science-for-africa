@@ -6,6 +6,16 @@
   "locale": null,
   "permissions": [
     {
+      "documentId": "u3gw7of8mlrh17vn8tec9alv",
+      "action": "api::institution.institution.find",
+      "locale": null
+    },
+    {
+      "documentId": "g49fkd18ut0lwcqls7b64g07",
+      "action": "api::interest.interest.find",
+      "locale": null
+    },
+    {
       "documentId": "y43b17wp73igusno5350ddbh",
       "action": "plugin::users-permissions.auth.callback",
       "locale": null

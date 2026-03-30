@@ -62,7 +62,18 @@ export async function verifyEmailToken(token) {
   try {
     const response = await fetch(
       `${API_URL}/auth/email-confirmation?confirmation=${token}`,
+      { redirect: "manual" },
     );
+
+    // With redirect: 'manual', a 302 redirect results in a response with status 0 and type 'opaqueredirect'
+    // or an actual 302 if it's same-origin. Strapi redirects ONLY after successful verification.
+    if (
+      response.type === "opaqueredirect" ||
+      response.status === 0 ||
+      (response.status >= 300 && response.status < 400)
+    ) {
+      return { success: true };
+    }
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));

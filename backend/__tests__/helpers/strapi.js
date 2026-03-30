@@ -54,6 +54,18 @@ async function setupStrapi() {
     instance.config.set("server.app.keys", ["testKey1", "testKey2"]);
 
     await instance.server.mount();
+
+    // Mock the email service to ensure no real emails/network calls are made during tests
+    if (instance.plugins["email"]) {
+      instance.plugins["email"].services.email.send = jest
+        .fn()
+        .mockImplementation((options) => {
+          console.log(
+            `[MOCK EMAIL] Sent to: ${options.to}, Subject: ${options.subject}`,
+          );
+          return Promise.resolve(true);
+        });
+    }
   }
   return instance;
 }
@@ -135,12 +147,26 @@ async function grantPermissions(roleType, permissions) {
 
   for (const [controller, actions] of Object.entries(permissions)) {
     for (const action of actions) {
-      await strapi.query("plugin::users-permissions.permission").create({
-        data: {
-          action: `api::auth.auth.${action}`,
-          role: role.id,
-        },
-      });
+      const actionString = `api::auth.auth.${action}`;
+
+      // Check if permission already exists for this role
+      const existingPermission = await strapi
+        .query("plugin::users-permissions.permission")
+        .findOne({
+          where: {
+            action: actionString,
+            role: role.id,
+          },
+        });
+
+      if (!existingPermission) {
+        await strapi.query("plugin::users-permissions.permission").create({
+          data: {
+            action: actionString,
+            role: role.id,
+          },
+        });
+      }
     }
   }
 }

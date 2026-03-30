@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Mail, ArrowLeft, RefreshCw, Loader2, CheckCircle2, XCircle } from "lucide-react";
+import {
+  Mail,
+  ArrowLeft,
+  RefreshCw,
+  Loader2,
+  CheckCircle2,
+  XCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -29,7 +36,9 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
           setIsError(true);
           // Special case: if token is invalid, it may have already been used (success)
           if (result.error.toLowerCase().includes("invalid token")) {
-            setMessage("The verification link was invalid or already used. If you continue to have trouble, please try logging in.");
+            setMessage(
+              "The verification link was invalid or already used. If you continue to have trouble, please try logging in.",
+            );
           } else {
             setMessage(result.error);
           }
@@ -110,12 +119,16 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
   if (isVerifying) {
     return (
       <div className="flex flex-col items-center text-center space-y-6 animate-in fade-in duration-500 max-w-sm">
-        <div className="w-16 h-16 bg-brand-teal-50 rounded-full flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-brand-teal-600" />
+        <div className="w-auto h-auto bg-brand-teal-50 rounded-full flex items-center justify-center">
+          <Loader2 className="h-32 w-32 animate-spin text-brand-teal-600" />
         </div>
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-brand-teal-900">Verifying your email</h1>
-          <p className="text-brand-gray-500 font-medium">Please wait while we confirm your email address...</p>
+          <h1 className="text-2xl font-bold text-brand-teal-900">
+            Verifying your email
+          </h1>
+          <p className="text-brand-gray-500 font-medium">
+            Please wait while we confirm your email address...
+          </p>
         </div>
       </div>
     );
@@ -125,14 +138,19 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
   if (isVerified) {
     return (
       <div className="flex flex-col items-center text-center space-y-6 animate-in zoom-in-95 duration-500 max-w-sm">
-        <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center">
-          <CheckCircle2 className="h-8 w-8 text-green-600" />
+        <div className="w-auto h-auto bg-green-50 rounded-full flex items-center justify-center">
+          <CheckCircle2 className="h-32 w-32 text-green-600" />
         </div>
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-brand-teal-900">Email verified successfully!</h1>
-          <p className="text-brand-gray-500 font-medium">Your account is now active. Redirecting to login page in {redirectCountdown}s...</p>
+          <h1 className="text-2xl font-bold text-brand-teal-900">
+            Email verified successfully!
+          </h1>
+          <p className="text-brand-gray-500 font-medium">
+            Your account is now active. Redirecting to login page in{" "}
+            {redirectCountdown}s...
+          </p>
         </div>
-        <Button 
+        <Button
           onClick={() => router.push("/login")}
           className="w-full bg-brand-teal-600 hover:bg-brand-teal-700 text-white font-bold h-12 rounded-xl transition-all"
         >
@@ -146,21 +164,25 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
   if (isError && confirmation) {
     return (
       <div className="flex flex-col items-center text-center space-y-6 animate-in fade-in duration-500 max-w-sm">
-        <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center">
-          <XCircle className="h-8 w-8 text-red-600" />
+        <div className="w-auto h-auto bg-red-50 rounded-full flex items-center justify-center">
+          <XCircle className="h-32 w-32 text-red-600" />
         </div>
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-brand-teal-900">Verification failed</h1>
-          <p className="text-destructive font-medium">{message || "The verification link is invalid or has expired."}</p>
+          <h1 className="text-2xl font-bold text-brand-teal-900">
+            Verification failed
+          </h1>
+          <p className="text-destructive font-medium">
+            {message || "The verification link is invalid or has expired."}
+          </p>
         </div>
         <div className="space-y-4 w-full">
-          <Button 
+          <Button
             onClick={() => router.push("/signup")}
             className="w-full bg-brand-teal-600 hover:bg-brand-teal-700 text-white font-bold h-12 rounded-xl transition-all"
           >
             Return to Signup
           </Button>
-          <Button 
+          <Button
             variant="outline"
             onClick={() => router.push("/login")}
             className="w-full border-brand-teal-200 text-brand-teal-700 font-bold h-12 rounded-xl transition-all"
@@ -258,4 +280,3 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
     </div>
   );
 };
-

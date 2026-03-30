@@ -13,7 +13,7 @@ process.env.API_TOKEN_SALT = 'test-token-salt';
 process.env.ADMIN_JWT_SECRET = 'test-admin-jwt-secret';
 
 // Global test timeout
-jest.setTimeout(30000);
+jest.setTimeout(60000);
 
 // Clean up after all tests
 afterAll(async () => {

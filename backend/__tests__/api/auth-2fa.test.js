@@ -31,10 +31,14 @@ describe("2FA Security Flow", () => {
     await teardownStrapi();
   });
 
-  it("should flow through the entire 2FA lifecycle", async () => {
-    // 1. Register a new user
+  let accessJwt;
+  let partialJwt;
+  let userEmail;
+  let secret;
+
+  it("Step 1: User registration and initial access (2FA Disabled)", async () => {
     const uniqueId = Date.now();
-    const userEmail = `2fa-${uniqueId}@example.com`;
+    userEmail = `2fa-${uniqueId}@example.com`;
 
     const registrationRes = await request(strapi.server.httpServer)
       .post("/api/auth/local/register")
@@ -52,19 +56,19 @@ describe("2FA Security Flow", () => {
       data: { confirmed: true },
     });
 
-    // 2. Initial login (Password ONLY) - Expect full access since 2FA is NOT enabled yet
-    const loginRes1 = await request(strapi.server.httpServer)
+    const loginRes = await request(strapi.server.httpServer)
       .post("/api/auth/local")
       .send({
         identifier: userEmail,
         password: "Password123!",
       });
 
-    expect(loginRes1.status).toBe(200);
-    expect(loginRes1.body.requires2FA).toBeUndefined();
-    const accessJwt = loginRes1.body.jwt;
+    expect(loginRes.status).toBe(200);
+    expect(loginRes.body.requires2FA).toBeUndefined();
+    accessJwt = loginRes.body.jwt;
+  });
 
-    // 3. Generate 2FA Secret
+  it("Step 2: Generate 2FA Secret", async () => {
     const generateRes = await request(strapi.server.httpServer)
       .post("/api/auth/2fa/generate")
       .set("Authorization", `Bearer ${accessJwt}`)
@@ -73,15 +77,16 @@ describe("2FA Security Flow", () => {
     expect(generateRes.status).toBe(200);
     expect(generateRes.body.qrCodeUrl).toBeDefined();
 
-    // Get the secret directly from DB for testing
     const dbUser = await strapi
       .query("plugin::users-permissions.user")
       .findOne({
         where: { email: userEmail },
       });
-    const secret = dbUser.twoFactorSecret;
+    secret = dbUser.twoFactorSecret;
+    expect(secret).toBeDefined();
+  });
 
-    // 4. Verify/Enable 2FA
+  it("Step 3: Verify and Enable 2FA", async () => {
     const validToken = speakeasy.totp({
       secret,
       encoding: "base32",
@@ -94,8 +99,10 @@ describe("2FA Security Flow", () => {
 
     expect(verifyRes.status).toBe(200);
     expect(verifyRes.body.success).toBe(true);
+  });
 
-    // 5. Login again after enabling 2FA - Expect Partial JWT
+  it("Step 4: Multi-Step 2FA Login Flow", async () => {
+    // 1. Password Login -> Receive Partial JWT
     const loginRes2 = await request(strapi.server.httpServer)
       .post("/api/auth/local")
       .send({
@@ -103,14 +110,11 @@ describe("2FA Security Flow", () => {
         password: "Password123!",
       });
 
-    // DEBUG: print login body
-    console.log("Login2 Body:", loginRes2.body);
-
     expect(loginRes2.status).toBe(200);
     expect(loginRes2.body.requires2FA).toBe(true);
-    const partialJwt = loginRes2.body.jwt;
+    partialJwt = loginRes2.body.jwt;
 
-    // 6. Try to access a protected route with Partial JWT - Expect 403
+    // 2. Validate Partial JWT doesn't have full access
     const protectedRes1 = await request(strapi.server.httpServer)
       .get("/api/users/me")
       .set("Authorization", `Bearer ${partialJwt}`)
@@ -118,7 +122,7 @@ describe("2FA Security Flow", () => {
 
     expect(protectedRes1.status).toBe(403);
 
-    // 7. Login Step 2 (TOTP)
+    // 3. TOTP Login -> Receive Full JWT
     const loginStep2Res = await request(strapi.server.httpServer)
       .post("/api/auth/2fa/login")
       .set("Authorization", `Bearer ${partialJwt}`)
@@ -133,7 +137,7 @@ describe("2FA Security Flow", () => {
     expect(loginStep2Res.body.jwt).toBeDefined();
     const fullJwt = loginStep2Res.body.jwt;
 
-    // 8. Access protected route with Full JWT - Expect 200
+    // 4. Access protected route with Full JWT
     const protectedRes2 = await request(strapi.server.httpServer)
       .get("/api/users/me")
       .set("Authorization", `Bearer ${fullJwt}`)

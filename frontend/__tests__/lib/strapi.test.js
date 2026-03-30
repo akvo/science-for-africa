@@ -117,4 +117,57 @@ describe('Strapi API Utilities', () => {
       consoleSpy.mockRestore();
     });
   });
+
+  describe('verifyEmailToken', () => {
+    const { verifyEmailToken } = require('@/lib/strapi');
+
+    it('should handle opaqueredirect as success', async () => {
+      global.fetch.mockResolvedValueOnce({
+        type: 'opaqueredirect',
+        status: 0,
+        ok: false 
+      });
+
+      const result = await verifyEmailToken('test-token');
+      expect(result).toEqual({ success: true });
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('confirmation=test-token'),
+        expect.objectContaining({ redirect: 'manual' })
+      );
+    });
+
+    it('should handle 302 redirect as success', async () => {
+      global.fetch.mockResolvedValueOnce({
+        status: 302,
+        ok: false
+      });
+
+      const result = await verifyEmailToken('test-token');
+      expect(result).toEqual({ success: true });
+    });
+
+    it('should handle successful JSON response', async () => {
+      const mockResponse = { user: { id: 1 }, jwt: 'token' };
+      global.fetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: { get: () => 'application/json' },
+        json: async () => mockResponse
+      });
+
+      const result = await verifyEmailToken('test-token');
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('should handle error response', async () => {
+      global.fetch.mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        json: async () => ({ error: { message: 'Invalid token' } })
+      });
+
+      const result = await verifyEmailToken('test-token');
+      expect(result).toEqual({ error: 'Invalid token', status: 400 });
+    });
+  });
 });

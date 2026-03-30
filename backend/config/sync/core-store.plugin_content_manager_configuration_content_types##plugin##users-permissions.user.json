@@ -371,6 +371,62 @@
           "sortable": false
         }
       },
+      "userType": {
+        "edit": {
+          "label": "userType",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "userType",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "roleType": {
+        "edit": {
+          "label": "roleType",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "roleType",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "educationInstitutionName": {
+        "edit": {
+          "label": "educationInstitutionName",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "educationInstitutionName",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "institutionName": {
+        "edit": {
+          "label": "institutionName",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "institutionName",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -558,6 +614,26 @@
           {
             "name": "socialLinks",
             "size": 12
+          }
+        ],
+        [
+          {
+            "name": "userType",
+            "size": 6
+          },
+          {
+            "name": "roleType",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "educationInstitutionName",
+            "size": 6
+          },
+          {
+            "name": "institutionName",
+            "size": 6
           }
         ]
       ]

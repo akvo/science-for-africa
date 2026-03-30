@@ -71,6 +71,19 @@ module.exports = {
         socialLinks: {
           type: "json",
         },
+        userType: {
+          type: "enumeration",
+          enum: ["individual", "institution"],
+        },
+        roleType: {
+          type: "string",
+        },
+        educationInstitutionName: {
+          type: "string",
+        },
+        institutionName: {
+          type: "string",
+        },
       };
 
       // Add user lifecycles using the more reliable subscribe method
@@ -102,6 +115,35 @@ module.exports = {
           if (data.provider && data.provider !== "local") {
             data.verificationStatus = "verified";
             data.confirmed = true;
+          }
+
+          // --- ONBOARDING DATA MAPPING ---
+
+          // 1. Map Interests (Array of strings -> user.interest components)
+          if (data.interests && Array.isArray(data.interests)) {
+            data.interests = data.interests.map((item) =>
+              typeof item === "string" ? { name: item } : item,
+            );
+          }
+
+          // 2. Map Affiliation Institution { id, name } -> institution relation
+          if (data.affiliationInstitution && data.affiliationInstitution.id) {
+            data.institution = data.affiliationInstitution.id;
+            // Clear the frontend object to avoid persistence conflicts
+            delete data.affiliationInstitution;
+          } else if (
+            data.affiliationInstitution &&
+            data.affiliationInstitution.name
+          ) {
+            // If it's a custom name without ID, we can store it in institutionName
+            data.institutionName = data.affiliationInstitution.name;
+            delete data.affiliationInstitution;
+          }
+
+          // 3. Map Education Institution { id, name } -> educationInstitutionName
+          if (data.educationInstitution && data.educationInstitution.name) {
+            data.educationInstitutionName = data.educationInstitution.name;
+            delete data.educationInstitution;
           }
         },
       });

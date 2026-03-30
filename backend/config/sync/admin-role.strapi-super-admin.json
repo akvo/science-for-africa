@@ -414,7 +414,7 @@
       "locale": null
     },
     {
-      "documentId": "gclgviftleo4moyq47t2uy6n",
+      "documentId": "uqpc59623c8h5ek2fq49s72y",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -444,7 +444,11 @@
           "twoFactorSecret",
           "twoFactorEnabled",
           "verificationStatus",
-          "socialLinks"
+          "socialLinks",
+          "userType",
+          "roleType",
+          "educationInstitutionName",
+          "institutionName"
         ]
       },
       "conditions": [],
@@ -469,7 +473,7 @@
       "locale": null
     },
     {
-      "documentId": "vbxnauuqluak4zud3dbca7ki",
+      "documentId": "q20dk3mp7j939b12qu3eih2b",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -499,14 +503,18 @@
           "twoFactorSecret",
           "twoFactorEnabled",
           "verificationStatus",
-          "socialLinks"
+          "socialLinks",
+          "userType",
+          "roleType",
+          "educationInstitutionName",
+          "institutionName"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "moh16m8kajqbqcoz81in68qu",
+      "documentId": "yp8ck3w62uqllbs93tvtmlao",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -536,7 +544,11 @@
           "twoFactorSecret",
           "twoFactorEnabled",
           "verificationStatus",
-          "socialLinks"
+          "socialLinks",
+          "userType",
+          "roleType",
+          "educationInstitutionName",
+          "institutionName"
         ]
       },
       "conditions": [],

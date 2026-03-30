@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-03-30T10:21:11.759Z"
+    "x-generation-date": "2026-03-30T11:03:37.864Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -3295,7 +3295,23 @@
                     "verified"
                   ]
                 },
-                "socialLinks": {}
+                "socialLinks": {},
+                "userType": {
+                  "type": "string",
+                  "enum": [
+                    "individual",
+                    "institution"
+                  ]
+                },
+                "roleType": {
+                  "type": "string"
+                },
+                "educationInstitutionName": {
+                  "type": "string"
+                },
+                "institutionName": {
+                  "type": "string"
+                }
               }
             }
           },

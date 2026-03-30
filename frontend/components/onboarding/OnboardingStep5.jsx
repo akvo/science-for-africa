@@ -97,7 +97,7 @@ const OnboardingStep5 = () => {
           Current affiliation
         </h1>
         <p className="text-md text-brand-gray-800 leading-relaxed">
-          We'll suggest research partners and funders based on your current
+          We&apos;ll suggest research partners and funders based on your current
           institutional affiliation.
         </p>
       </div>

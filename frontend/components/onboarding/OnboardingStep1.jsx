@@ -111,7 +111,7 @@ const OnboardingStep1 = () => {
           </TabsList>
         </div>
 
-        <TabsContent value="individual" className="space-y-6 mt-0">
+        <TabsContent value="individual" className="space-y-6 mb-12">
           <div className="my-16">
             <p className="text-md text-brand-gray-800 leading-relaxed">
               Lorem ipsum dolor sit amet consectetur. Rhoncus quis nunc ipsum
@@ -143,7 +143,7 @@ const OnboardingStep1 = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="institution" className="space-y-6 mt-0">
+        <TabsContent value="institution" className="space-y-6 mb-12">
           <div className="my-16">
             <p className="text-md text-brand-gray-800 leading-relaxed">
               Lorem ipsum dolor sit amet consectetur. Rhoncus quis nunc ipsum
@@ -197,7 +197,7 @@ const OnboardingStep1 = () => {
         </TabsContent>
       </Tabs>
 
-      <div className="flex flex-col pt-8 mt-4">
+      <div className="flex flex-col">
         <Button
           onClick={nextStep}
           disabled={!isFormValid()}

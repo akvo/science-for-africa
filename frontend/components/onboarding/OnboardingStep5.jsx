@@ -35,7 +35,7 @@ const OnboardingStep5 = () => {
   return (
     <div className="flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-90 mx-auto">
       {/* Top Navigation Row */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-24">
         <button
           onClick={prevStep}
           className="flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"
@@ -47,8 +47,8 @@ const OnboardingStep5 = () => {
       </div>
 
       {/* Header Section */}
-      <div className="space-y-3 mb-8">
-        <h1 className="text-display-sm font-bold text-brand-teal-600 leading-tight">
+      <div className="space-y-3 mb-32">
+        <h1 className="text-display-sm font-bold text-brand-teal-900 leading-tight">
           Institutional affiliation
         </h1>
         <p className="text-md text-brand-gray-800 leading-relaxed">
@@ -61,7 +61,7 @@ const OnboardingStep5 = () => {
       <div className="space-y-6 mb-12">
         <div className="space-y-2">
           <label className="text-md font-medium text-black">
-            Name of institution
+            Search institution
           </label>
           <Input
             value={formData.affiliationInstitution}
@@ -75,7 +75,7 @@ const OnboardingStep5 = () => {
       </div>
 
       {/* Action Footer */}
-      <div className="flex flex-col pt-8 border-t border-brand-gray-100">
+      <div className="flex flex-col">
         <Button
           onClick={handleComplete}
           disabled={!isFormValid || isSubmitting}
@@ -87,7 +87,7 @@ const OnboardingStep5 = () => {
               Finishing...
             </>
           ) : (
-            "Complete Onboarding"
+            "Confirm"
           )}
         </Button>
       </div>

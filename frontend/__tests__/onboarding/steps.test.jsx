@@ -1,5 +1,12 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor, act, cleanup } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+  cleanup,
+} from "@testing-library/react";
 import OnboardingPage from "../../pages/onboarding/index";
 import { useOnboardingStore } from "../../lib/onboarding-store";
 import OnboardingStep2 from "@/components/onboarding/OnboardingStep2";
@@ -39,7 +46,9 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
   it("renders Step 1 (Account Type Selection) by default", () => {
     render(<OnboardingPage />);
     expect(
-      screen.getByRole("heading", { name: /What kind of account you'd like to create\?/i }),
+      screen.getByRole("heading", {
+        name: /What kind of account you'd like to create\?/i,
+      }),
     ).toBeInTheDocument();
   });
 
@@ -129,12 +138,10 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
 
   test("renders Step 3 (Education & Career) and handles input", () => {
     useOnboardingStore.getState().setStep(3);
-    const { getByText, getByPlaceholderText } = render(
-      <OnboardingStep3 />,
-    );
+    const { getByText, getByPlaceholderText } = render(<OnboardingStep3 />);
 
     expect(getByText(/Education and career/i)).toBeInTheDocument();
-    
+
     // Use a more specific selector for the label
     const labels = screen.getAllByText(/Education level/i);
     expect(labels.length).toBeGreaterThanOrEqual(1);
@@ -175,21 +182,25 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
     expect(getByRoleAfter("button", { name: /Confirm/i })).toBeEnabled();
   });
 
-  test("renders Step 4 (ORCID) and handles connect", async () => {
+  test("renders Step 4 (ORCID) and handles input", async () => {
     useOnboardingStore.getState().setStep(4);
-    const { getByText, getByRole } = render(<OnboardingStep4 />);
+    const { getByPlaceholderText, getByRole } = render(<OnboardingStep4 />);
 
-    expect(getByRole("heading", { name: /Connect ORCID/i })).toBeInTheDocument();
-    
-    // Select the button specifically. It includes the image alt text "ORCID iD"
-    const connectBtn = getByRole("button", { name: /Connect ORCID/i });
-    fireEvent.click(connectBtn);
+    expect(
+      getByRole("heading", { name: /Do you have ORCID\?/i }),
+    ).toBeInTheDocument();
 
+    const input = getByPlaceholderText("0000-0000-0000-0000");
+    fireEvent.change(input, { target: { value: "0000-0002-1825-0097" } });
 
-    // Wait for mock connect timeout
-    await waitFor(() => {
-      expect(useOnboardingStore.getState().formData.orcidId).toBeTruthy();
-    }, { timeout: 1000 });
+    expect(useOnboardingStore.getState().formData.orcidId).toBe(
+      "0000-0002-1825-0097",
+    );
+
+    const confirmBtn = getByRole("button", { name: /Confirm/i });
+    fireEvent.click(confirmBtn);
+
+    expect(useOnboardingStore.getState().step).toBe(5);
   });
 
   test("institutions skip Step 3 and 4", () => {
@@ -201,7 +212,7 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
 
     // Call nextStep - should jump to 5
     act(() => {
-        useOnboardingStore.getState().nextStep();
+      useOnboardingStore.getState().nextStep();
     });
 
     expect(useOnboardingStore.getState().step).toBe(5);
@@ -209,15 +220,19 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
 
   test("renders Step 5 (Affiliation) and handles completion", async () => {
     useOnboardingStore.getState().setStep(5);
-    const { getByText, getByPlaceholderText, getByRole } = render(<OnboardingStep5 />);
+    const { getByText, getByPlaceholderText, getByRole } = render(
+      <OnboardingStep5 />,
+    );
 
-    expect(getByRole("heading", { name: /Institutional affiliation/i })).toBeInTheDocument();
-    
+    expect(
+      getByRole("heading", { name: /Institutional affiliation/i }),
+    ).toBeInTheDocument();
+
     const input = getByPlaceholderText(/Type your primary institution/i);
 
     fireEvent.change(input, { target: { value: "Science Foundation" } });
 
-    const completeBtn = getByRole("button", { name: /Complete Onboarding/i });
+    const completeBtn = getByRole("button", { name: /Confirm/i });
     fireEvent.click(completeBtn);
 
     await waitFor(() => {

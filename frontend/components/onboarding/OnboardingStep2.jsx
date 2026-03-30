@@ -115,7 +115,7 @@ const OnboardingStep2 = () => {
         </div>
       </div>
 
-      <div className="flex flex-col pt-8 gap-4">
+      <div className="flex flex-col gap-4">
         <Button
           onClick={nextStep}
           disabled={formData.interests.length === 0}

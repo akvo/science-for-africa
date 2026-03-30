@@ -55,17 +55,23 @@ export const useOnboardingStore = create(
       nextStep: () =>
         set((state) => {
           let nextStep = state.step + 1;
-          // Skip Step 3 and 4 for institutions
-          if (state.userType === "institution" && (nextStep === 3 || nextStep === 4)) {
-            nextStep = 5; // Jump to final step or whatever is next
+          // Skip Step 3, 4, and 5 for institutions
+          if (
+            state.userType === "institution" &&
+            (nextStep === 3 || nextStep === 4 || nextStep === 5)
+          ) {
+            nextStep = 6; // Move to Finish
           }
           return { step: nextStep };
         }),
       prevStep: () =>
         set((state) => {
           let prevStep = state.step - 1;
-          // Skip Step 3 and 4 for institutions
-          if (state.userType === "institution" && (prevStep === 3 || prevStep === 4)) {
+          // Skip Step 3, 4, and 5 for institutions
+          if (
+            state.userType === "institution" &&
+            (prevStep === 3 || prevStep === 4 || prevStep === 5)
+          ) {
             prevStep = 2;
           }
           return { step: Math.max(1, prevStep) };
@@ -74,8 +80,11 @@ export const useOnboardingStore = create(
       skipStep: () =>
         set((state) => {
           let nextStep = state.step + 1;
-          if (state.userType === "institution" && (nextStep === 3 || nextStep === 4)) {
-            nextStep = 5;
+          if (
+            state.userType === "institution" &&
+            (nextStep === 3 || nextStep === 4 || nextStep === 5)
+          ) {
+            nextStep = 6;
           }
           return { step: nextStep };
         }),

@@ -123,7 +123,7 @@ export async function loginUser(credentials) {
 /**
  * Transforms frontend onboarding data to match backend schema contract
  */
-function transformProfileUpdatePayload(userData) {
+export function transformProfileUpdatePayload(userData) {
   const data = { ...userData };
 
   // 1. Map Interests: array of strings -> component objects [{name: "string"}]
@@ -149,7 +149,25 @@ function transformProfileUpdatePayload(userData) {
     delete data.educationInstitution;
   }
 
-  // 4. Ensure onboardingComplete is explicitly handled
+  // 4. Type-Specific Cleanup for Institutions
+  // Institutions skip the Career and ORCID steps, so we should NOT send these fields
+  if (data.userType === "institution") {
+    delete data.educationLevel;
+    delete data.educationTopic;
+    delete data.educationInstitutionName;
+    delete data.orcidId;
+    delete data.position; // Position is also an individual field in Step 3
+  }
+
+  // 5. Universal Sanitization: Remove any remaining empty strings
+  // This prevents Strapi from failing on optional enums or regex fields
+  Object.keys(data).forEach((key) => {
+    if (data[key] === "") {
+      delete data[key];
+    }
+  });
+
+  // 6. Ensure onboardingComplete is explicitly handled
   if (data.onboardingComplete === undefined) {
     data.onboardingComplete = true;
   }

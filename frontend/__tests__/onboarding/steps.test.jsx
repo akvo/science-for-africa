@@ -162,7 +162,7 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
     // Wait for dynamic data
     await screen.findByText("Bioinformatics");
 
-    const confirmBtn = screen.getByRole("button", { name: /Confirm/i });
+    const confirmBtn = screen.getByText(/Confirm|Complete Setup/i);
     expect(confirmBtn).toBeDisabled();
 
     // Select 1 tag
@@ -248,12 +248,12 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
       useOnboardingStore.getState().setStep(2);
     });
 
-    // Call nextStep - should jump to 5
+    // Call nextStep - should jump to 6 (Finish)
     act(() => {
       useOnboardingStore.getState().nextStep();
     });
 
-    expect(useOnboardingStore.getState().step).toBe(5);
+    expect(useOnboardingStore.getState().step).toBe(6);
   });
 
   test("renders Step 5 (Affiliation) and handles completion", async () => {
@@ -280,7 +280,7 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
       name: "Science Foundation",
     });
 
-    const completeBtn = getByRole("button", { name: /Confirm/i });
+    const completeBtn = screen.getByText(/Complete Setup/i);
     fireEvent.click(completeBtn);
 
     await waitFor(() => {

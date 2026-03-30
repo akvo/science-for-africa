@@ -5,13 +5,19 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
-import { fetchFromStrapi } from "@/lib/strapi";
+import { fetchFromStrapi, updateUserProfile } from "@/lib/strapi";
+import { useAuthStore } from "@/lib/auth-store";
+import { useRouter } from "next/router";
 
 const OnboardingStep2 = () => {
-  const { formData, toggleInterest, nextStep, prevStep, skipStep } =
+  const router = useRouter();
+  const { formData, toggleInterest, nextStep, prevStep, skipStep, userType } =
     useOnboardingStore();
+  const { jwt, updateUser } = useAuthStore();
+
   const [categories, setCategories] = React.useState({});
   const [loading, setLoading] = React.useState(true);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   React.useEffect(() => {
     const loadInterests = async () => {
@@ -35,6 +41,31 @@ const OnboardingStep2 = () => {
   const isSelected = (interest) => formData.interests.includes(interest);
   const isLimitReached = formData.interests.length >= 5;
 
+  const handleComplete = async () => {
+    setIsSubmitting(true);
+    try {
+      const result = await updateUserProfile(
+        {
+          ...formData,
+          userType,
+          onboardingComplete: true,
+        },
+        jwt,
+      );
+
+      if (result && !result.error) {
+        updateUser({ onboardingComplete: true });
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Failed to complete onboarding:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const isInstitution = userType === "institution";
+
   return (
     <div className="flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-90 mx-auto">
       {/* Top Navigation Row */}
@@ -46,12 +77,14 @@ const OnboardingStep2 = () => {
           <ArrowLeft size={18} />
           <span>Back</span>
         </button>
-        <button
-          onClick={skipStep}
-          className="text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"
-        >
-          Skip
-        </button>
+        {!isInstitution && (
+          <button
+            onClick={skipStep}
+            className="text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"
+          >
+            Skip
+          </button>
+        )}
       </div>
 
       {/* Header Section */}
@@ -111,11 +144,20 @@ const OnboardingStep2 = () => {
 
       <div className="flex flex-col gap-4">
         <Button
-          onClick={nextStep}
-          disabled={formData.interests.length === 0}
+          onClick={isInstitution ? handleComplete : nextStep}
+          disabled={formData.interests.length === 0 || isSubmitting}
           className="w-full h-11 rounded-full text-md font-medium transition-all duration-300 hover:shadow-lg disabled:bg-brand-teal-100 disabled:text-white"
         >
-          Confirm
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Finishing...
+            </>
+          ) : isInstitution ? (
+            "Complete Setup"
+          ) : (
+            "Confirm"
+          )}
         </Button>
       </div>
 

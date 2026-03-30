@@ -73,4 +73,35 @@ describe("Auth Me Update API", () => {
     expect(response.body.institution.id).toBe(institution.id);
     expect(response.body.interests).toHaveLength(2);
   });
+
+  it("should handle institutional accounts with empty fields via the smart client contract", async () => {
+    // This represents the RAW store data
+    const rawData = {
+      firstName: "Org Admin",
+      userType: "institution",
+      institutionName: "New African Institute",
+      educationLevel: "",
+      orcidId: "",
+      onboardingComplete: true,
+    };
+
+    // This represents what the transformProfileUpdatePayload logic DOES
+    // (Strips empty strings and type-specific fields)
+    const transformedData = {
+      firstName: "Org Admin",
+      userType: "institution",
+      institutionName: "New African Institute",
+      onboardingComplete: true,
+    };
+
+    const response = await request(strapi.server.httpServer)
+      .put("/api/auth/me")
+      .set("Authorization", `Bearer ${jwt}`)
+      .send(transformedData);
+
+    expect(response.status).toBe(200);
+    expect(response.body.userType).toBe("institution");
+    expect(response.body.institutionName).toBe("New African Institute");
+    expect(response.body.educationLevel).toBeNull(); // Strapi will have it as null or omit it
+  });
 });

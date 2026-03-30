@@ -53,6 +53,7 @@ const OnboardingStep5 = () => {
       const result = await updateUserProfile(
         {
           ...formData,
+          userType,
           onboardingComplete: true,
         },
         jwt,
@@ -172,7 +173,7 @@ const OnboardingStep5 = () => {
               Finishing...
             </>
           ) : (
-            "Confirm"
+            "Complete Setup"
           )}
         </Button>
       </div>

@@ -14,6 +14,18 @@ import OnboardingStep3 from "@/components/onboarding/OnboardingStep3";
 import OnboardingStep4 from "@/components/onboarding/OnboardingStep4";
 import OnboardingStep5 from "@/components/onboarding/OnboardingStep5";
 import { updateUserProfile } from "@/lib/strapi";
+import { useAuthStore } from "@/lib/auth-store";
+
+// Mock auth store
+jest.mock("@/lib/auth-store", () => ({
+  useAuthStore: jest.fn(() => ({
+    jwt: "mock-jwt",
+    isAuthenticated: true,
+    user: { id: 1, onboardingComplete: false },
+    setAuth: jest.fn(),
+    updateUser: jest.fn(),
+  })),
+}));
 
 // Mock router
 jest.mock("next/router", () => ({
@@ -48,7 +60,7 @@ jest.mock("@/lib/strapi", () => ({
     }
     if (endpoint.includes("/institutions")) {
       return Promise.resolve({
-        data: [{ name: "Science Foundation" }],
+        data: [{ id: 51, name: "Science Foundation" }],
       });
     }
     return Promise.resolve({ data: [] });
@@ -178,9 +190,10 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
     const option = await findByText("Science Foundation");
     fireEvent.click(option);
 
-    expect(useOnboardingStore.getState().formData.educationInstitution).toBe(
-      "Science Foundation",
-    );
+    expect(useOnboardingStore.getState().formData.educationInstitution).toEqual({
+      id: 51,
+      name: "Science Foundation",
+    });
   });
 
   test("enables 'Confirm' button in Step 3 only after required fields are filled", () => {
@@ -262,9 +275,10 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
     const option = await findByText("Science Foundation");
     fireEvent.click(option);
 
-    expect(useOnboardingStore.getState().formData.affiliationInstitution).toBe(
-      "Science Foundation",
-    );
+    expect(useOnboardingStore.getState().formData.affiliationInstitution).toEqual({
+      id: 51,
+      name: "Science Foundation",
+    });
 
     const completeBtn = getByRole("button", { name: /Confirm/i });
     fireEvent.click(completeBtn);

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useOnboardingStore } from "@/lib/onboarding-store";
+import { useAuthStore } from "@/lib/auth-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Loader2, Search } from "lucide-react";
@@ -9,17 +10,18 @@ import { useRouter } from "next/router";
 const OnboardingStep5 = () => {
   const router = useRouter();
   const { formData, updateFormData, prevStep, userType } = useOnboardingStore();
+  const { jwt, updateUser } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [institutions, setInstitutions] = useState([]);
   const [searchTerm, setSearchTerm] = useState(
-    formData.affiliationInstitution || "",
+    formData.affiliationInstitution?.name || "",
   );
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async (val) => {
     setSearchTerm(val);
-    updateFormData({ affiliationInstitution: val });
+    updateFormData({ affiliationInstitution: { id: null, name: val } });
 
     if (val.length > 2) {
       setLoading(true);
@@ -28,7 +30,9 @@ const OnboardingStep5 = () => {
         `/institutions?filters[name][$containsi]=${val}`,
       );
       if (response?.data) {
-        setInstitutions(response.data.map((item) => item.name));
+        setInstitutions(
+          response.data.map((item) => ({ id: item.id, name: item.name })),
+        );
       }
       setLoading(false);
     } else {
@@ -36,9 +40,9 @@ const OnboardingStep5 = () => {
     }
   };
 
-  const handleSelect = (name) => {
-    setSearchTerm(name);
-    updateFormData({ affiliationInstitution: name });
+  const handleSelect = (inst) => {
+    setSearchTerm(inst.name);
+    updateFormData({ affiliationInstitution: inst });
     setShowDropdown(false);
   };
 
@@ -46,22 +50,32 @@ const OnboardingStep5 = () => {
     setIsSubmitting(true);
     try {
       // Sync with Strapi
-      await updateUserProfile({
-        ...formData,
-        onboardingComplete: true,
-      });
+      const result = await updateUserProfile(
+        {
+          ...formData,
+          onboardingComplete: true,
+        },
+        jwt,
+      );
 
-      // Redirect to dashboard
-      router.push("/dashboard");
+      if (result && !result.error) {
+        // Update local auth store so redirects work correctly
+        updateUser({ onboardingComplete: true });
+
+        // Redirect to dashboard
+        router.push("/");
+      } else {
+        console.error("Failed to update profile:", result.error);
+        // Error handling could go here
+      }
     } catch (error) {
       console.error("Failed to complete onboarding:", error);
-      // In a real app, show a toast here
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const isFormValid = formData.affiliationInstitution?.trim() !== "";
+  const isFormValid = formData.affiliationInstitution?.name?.trim() !== "";
 
   return (
     <div className="flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-90 mx-auto">
@@ -114,13 +128,13 @@ const OnboardingStep5 = () => {
 
           {showDropdown && institutions.length > 0 && (
             <div className="absolute z-50 w-full mt-1 bg-white border border-brand-gray-100 rounded-8 shadow-xl max-h-64 overflow-y-auto animate-in fade-in slide-in-from-top-2">
-              {institutions.map((name, index) => (
+              {institutions.map((inst, index) => (
                 <button
                   key={index}
-                  onClick={() => handleSelect(name)}
+                  onClick={() => handleSelect(inst)}
                   className="w-full text-left px-4 py-3 hover:bg-brand-teal-50 transition-colors text-md text-brand-gray-900 border-b last:border-0 border-brand-gray-50"
                 >
-                  {name}
+                  {inst.name}
                 </button>
               ))}
             </div>

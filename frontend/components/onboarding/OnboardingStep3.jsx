@@ -20,14 +20,15 @@ const OnboardingStep3 = () => {
 
   const [institutions, setInstitutions] = useState([]);
   const [searchTerm, setSearchTerm] = useState(
-    formData.educationInstitution || "",
+    formData.educationInstitution?.name || "",
   );
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async (val) => {
     setSearchTerm(val);
-    updateFormData({ educationInstitution: val });
+    // If user is just typing, we store it with null ID (for "Other" cases)
+    updateFormData({ educationInstitution: { id: null, name: val } });
 
     if (val.length > 2) {
       setLoading(true);
@@ -36,7 +37,10 @@ const OnboardingStep3 = () => {
         `/institutions?filters[name][$containsi]=${val}`,
       );
       if (response?.data) {
-        setInstitutions(response.data.map((item) => item.name));
+        // Store full objects: { id, name }
+        setInstitutions(
+          response.data.map((item) => ({ id: item.id, name: item.name })),
+        );
       }
       setLoading(false);
     } else {
@@ -44,9 +48,9 @@ const OnboardingStep3 = () => {
     }
   };
 
-  const handleSelect = (name) => {
-    setSearchTerm(name);
-    updateFormData({ educationInstitution: name });
+  const handleSelect = (inst) => {
+    setSearchTerm(inst.name);
+    updateFormData({ educationInstitution: inst });
     setShowDropdown(false);
   };
 
@@ -55,7 +59,8 @@ const OnboardingStep3 = () => {
   };
 
   const isFormValid =
-    formData.educationLevel && formData.educationInstitution.trim() !== "";
+    formData.educationLevel &&
+    formData.educationInstitution?.name?.trim() !== "";
 
   return (
     <div className="flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-90 mx-auto">
@@ -136,13 +141,13 @@ const OnboardingStep3 = () => {
 
           {showDropdown && institutions.length > 0 && (
             <div className="absolute z-50 w-full mt-1 bg-white border border-brand-gray-100 rounded-8 shadow-xl max-h-48 overflow-y-auto animate-in fade-in slide-in-from-top-2">
-              {institutions.map((name, index) => (
+              {institutions.map((inst, index) => (
                 <button
                   key={index}
-                  onClick={() => handleSelect(name)}
+                  onClick={() => handleSelect(inst)}
                   className="w-full text-left px-4 py-3 hover:bg-brand-teal-50 transition-colors text-md text-brand-gray-900 border-b last:border-0 border-brand-gray-50"
                 >
-                  {name}
+                  {inst.name}
                 </button>
               ))}
             </div>

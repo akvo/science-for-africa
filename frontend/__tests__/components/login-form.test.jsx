@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { LoginForm } from "../../components/auth/login-form";
 import { loginUser } from "../../lib/strapi";
 import { useRouter } from "next/router";
+import { useAuthStore } from "../../lib/auth-store";
 
 // Mock the router
 jest.mock("next/router", () => ({
@@ -12,6 +13,15 @@ jest.mock("next/router", () => ({
 // Mock the strapi lib
 jest.mock("../../lib/strapi", () => ({
   loginUser: jest.fn(),
+}));
+
+// Mock the auth store
+jest.mock("../../lib/auth-store", () => ({
+  useAuthStore: Object.assign(jest.fn(), {
+    getState: jest.fn(() => ({
+      setAuth: jest.fn(),
+    })),
+  }),
 }));
 
 describe("LoginForm", () => {

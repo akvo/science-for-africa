@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { loginUser } from "@/lib/strapi";
+import { useAuthStore } from "@/lib/auth-store";
 import { useRouter } from "next/router";
 import { SocialButton } from "./social-auth";
 import Link from "next/link";
@@ -60,7 +61,11 @@ export const LoginForm = () => {
       }
 
       if (result && result.jwt) {
-        // Success! Redirect based on onboarding status
+        // Success! Persist auth state
+        const { setAuth } = useAuthStore.getState();
+        setAuth(result.user, result.jwt);
+
+        // Redirect based on onboarding status
         if (result.user?.onboardingComplete) {
           router.push("/");
         } else {

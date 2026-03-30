@@ -14,11 +14,11 @@ export const useOnboardingStore = create(
         interests: [],
         // Step 3
         educationLevel: "",
-        educationInstitution: "",
+        educationInstitution: { id: null, name: "" },
         // Step 4
         orcidId: "",
         // Step 5
-        affiliationInstitution: null, // will hold the selected institution object or string
+        affiliationInstitution: { id: null, name: "" },
       },
 
       // Actions
@@ -89,9 +89,9 @@ export const useOnboardingStore = create(
             institutionName: "",
             interests: [],
             educationLevel: "",
-            educationInstitution: "",
+            educationInstitution: { id: null, name: "" },
             orcidId: "",
-            affiliationInstitution: null,
+            affiliationInstitution: { id: null, name: "" },
           },
         }),
     }),

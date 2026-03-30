@@ -11,14 +11,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
 
-const EDUCATION_LEVELS = [
-  "High School",
-  "Bachelor's Degree",
-  "Master's Degree",
-  "Doctorate (PhD)",
-  "Post-Doctorate",
-  "Professional Certificate",
-];
+import { EDUCATION_LEVEL_OPTIONS } from "@/lib/onboarding-constants";
 
 const OnboardingStep3 = () => {
   const { formData, updateFormData, nextStep, prevStep, skipStep } =
@@ -76,7 +69,7 @@ const OnboardingStep3 = () => {
               <SelectValue placeholder="Select education level" />
             </SelectTrigger>
             <SelectContent>
-              {EDUCATION_LEVELS.map((level) => (
+              {EDUCATION_LEVEL_OPTIONS.map((level) => (
                 <SelectItem key={level} value={level} className="text-md">
                   {level}
                 </SelectItem>

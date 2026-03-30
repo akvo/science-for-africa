@@ -33,6 +33,26 @@ jest.mock("../../components/layout/AuthLayout", () => ({
 // Mock strapi lib
 jest.mock("@/lib/strapi", () => ({
   updateUserProfile: jest.fn().mockResolvedValue({ success: true }),
+  fetchFromStrapi: jest.fn().mockImplementation((endpoint) => {
+    if (endpoint.includes("/interests")) {
+      return Promise.resolve({
+        data: [
+          { name: "Bioinformatics", category: "Popular" },
+          { name: "Genetics", category: "Popular" },
+          { name: "Virology", category: "Popular" },
+          { name: "Ecology", category: "Popular" },
+          { name: "Immunology", category: "Popular" },
+          { name: "Sustainability", category: "Popular" },
+        ],
+      });
+    }
+    if (endpoint.includes("/institutions")) {
+      return Promise.resolve({
+        data: [{ name: "Science Foundation" }],
+      });
+    }
+    return Promise.resolve({ data: [] });
+  }),
 }));
 
 describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
@@ -99,9 +119,10 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
 
     render(<OnboardingPage />);
 
-    expect(screen.getByText(/Interests and expertise/i)).toBeInTheDocument();
+    // Wait for dynamic data
+    await screen.findByText("Bioinformatics");
 
-    // Find tags (assuming they have specific text or labels)
+    // Find tags
     const tags = [
       "Bioinformatics",
       "Genetics",
@@ -120,12 +141,14 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
     // Interests in store should be 5
     const { formData } = useOnboardingStore.getState();
     expect(formData.interests.length).toBe(5);
-    expect(formData.interests).not.toContain("Chemistry");
   });
 
   it("enables 'Confirm' button in Step 2 only after at least 1 interest is selected", async () => {
     useOnboardingStore.getState().setStep(2);
     render(<OnboardingPage />);
+
+    // Wait for dynamic data
+    await screen.findByText("Bioinformatics");
 
     const confirmBtn = screen.getByRole("button", { name: /Confirm/i });
     expect(confirmBtn).toBeDisabled();
@@ -220,7 +243,7 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
 
   test("renders Step 5 (Affiliation) and handles completion", async () => {
     useOnboardingStore.getState().setStep(5);
-    const { getByText, getByPlaceholderText, getByRole } = render(
+    const { getByPlaceholderText, getByRole, findByText } = render(
       <OnboardingStep5 />,
     );
 
@@ -230,7 +253,16 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
 
     const input = getByPlaceholderText(/Type your primary institution/i);
 
-    fireEvent.change(input, { target: { value: "Science Foundation" } });
+    // Simulate typing to trigger search
+    fireEvent.change(input, { target: { value: "Scien" } });
+
+    // Wait for dropdown result
+    const option = await findByText("Science Foundation");
+    fireEvent.click(option);
+
+    expect(useOnboardingStore.getState().formData.affiliationInstitution).toBe(
+      "Science Foundation",
+    );
 
     const completeBtn = getByRole("button", { name: /Confirm/i });
     fireEvent.click(completeBtn);

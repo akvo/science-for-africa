@@ -27,7 +27,14 @@ module.exports = {
         educationTopic: { type: "string" },
         educationLevel: {
           type: "enumeration",
-          enum: ["Bachelors", "Masters", "PhD", "Other"],
+          enum: [
+            "High School",
+            "Bachelor's Degree",
+            "Master's Degree",
+            "Doctorate (PhD)",
+            "Post-Doctorate",
+            "Professional Certificate",
+          ],
         },
         institution: {
           type: "relation",
@@ -247,6 +254,10 @@ module.exports = {
       await emailStore.set({ value: emailSettings });
       strapi.log.info("Branded email confirmation template initialized.");
     }
+
+    // 3. Seed development data
+    const { seed } = require("./utils/seeder");
+    await seed(strapi);
   },
 };
 

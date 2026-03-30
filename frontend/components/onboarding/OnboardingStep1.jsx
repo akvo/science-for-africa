@@ -13,16 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Building2 } from "lucide-react";
 
-const ROLE_OPTIONS = [
-  "Researcher",
-  "Principal Investigator / Lab Lead",
-  "Post-doctoral Fellow",
-  "PhD Candidate",
-  "Graduate / Undergraduate Student",
-  "Administrator / Support Staff",
-  "Program Manager / Funder representative",
-  "External Reviewer",
-];
+import { ROLE_OPTIONS } from "@/lib/onboarding-constants";
 
 const OnboardingStep1 = () => {
   const {

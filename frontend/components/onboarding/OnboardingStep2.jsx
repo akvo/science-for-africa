@@ -3,49 +3,34 @@ import { useOnboardingStore } from "@/lib/onboarding-store";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 
-const INTEREST_CATEGORIES = {
-  Popular: [
-    "Bioinformatics",
-    "Genetics",
-    "Virology",
-    "Immunology",
-    "Ecology",
-    "Epidemiology",
-    "Public Health",
-    "Climate Change",
-  ],
-  Education: [
-    "Curriculum Design",
-    "STEM Outreach",
-    "University Management",
-    "Teacher Training",
-  ],
-  "Clinical & Medical": [
-    "Clinical Trials",
-    "Diagnostics",
-    "Pharmacology",
-    "Neuroscience",
-    "Infectious Diseases",
-  ],
-  "Environmental & Earth": [
-    "Sustainability",
-    "Geophysics",
-    "Hydrology",
-    "Renewable Energy",
-  ],
-  "Socio-Economic": [
-    "Health Economics",
-    "Policy Analysis",
-    "Social Informatics",
-    "Gender Studies",
-  ],
-};
+import { fetchFromStrapi } from "@/lib/strapi";
 
 const OnboardingStep2 = () => {
   const { formData, toggleInterest, nextStep, prevStep, skipStep } =
     useOnboardingStore();
+  const [categories, setCategories] = React.useState({});
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadInterests = async () => {
+      const response = await fetchFromStrapi("/interests");
+      if (response?.data) {
+        // Group by category
+        const grouped = response.data.reduce((acc, item) => {
+          const { category, name } = item;
+          if (!acc[category]) acc[category] = [];
+          acc[category].push(name);
+          return acc;
+        }, {});
+        setCategories(grouped);
+      }
+      setLoading(false);
+    };
+
+    loadInterests();
+  }, []);
 
   const isSelected = (interest) => formData.interests.includes(interest);
   const isLimitReached = formData.interests.length >= 5;
@@ -81,38 +66,47 @@ const OnboardingStep2 = () => {
       </div>
 
       <div className="flex-1 overflow-y-auto pr-2 -mr-2 min-h-75 max-h-110 scrollbar-thin scrollbar-thumb-brand-gray-200 scrollbar-track-transparent">
-        <div className="space-y-6 py-2 pb-12">
-          {Object.entries(INTEREST_CATEGORIES).map(([category, items]) => (
-            <div key={category} className="space-y-4">
-              <h3 className="text-lg font-bold text-black px-1">{category}</h3>
-              <div className="flex flex-wrap gap-2">
-                {items.map((item) => {
-                  const selected = isSelected(item);
-                  const disabled = !selected && isLimitReached;
+        {loading ? (
+          <div className="flex flex-col items-center justify-center h-64 space-y-4">
+            <Loader2 className="w-12 h-12 animate-spin text-brand-teal-600" />
+            <p className="text-sm text-brand-gray-500">Loading interests...</p>
+          </div>
+        ) : (
+          <div className="space-y-6 py-2 pb-12">
+            {Object.entries(categories).map(([category, items]) => (
+              <div key={category} className="space-y-4">
+                <h3 className="text-lg font-bold text-black px-1">
+                  {category}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {items.map((item) => {
+                    const selected = isSelected(item);
+                    const disabled = !selected && isLimitReached;
 
-                  return (
-                    <Badge
-                      key={item}
-                      role="button"
-                      variant={selected ? "default" : "outline"}
-                      onClick={() => toggleInterest(item)}
-                      className={cn(
-                        "px-3.5 py-4 text-sm font-normal rounded-full transition-all duration-300 cursor-pointer shadow-none",
-                        selected
-                          ? "bg-brand-teal-600 text-white border-brand-teal-600 hover:bg-brand-teal-700 active:scale-95 transition-transform"
-                          : "bg-white text-brand-gray-700 border-brand-gray-200 hover:bg-brand-teal-50 hover:border-brand-teal-200 active:scale-95",
-                        disabled &&
-                          "opacity-30 cursor-not-allowed pointer-events-none",
-                      )}
-                    >
-                      {item}
-                    </Badge>
-                  );
-                })}
+                    return (
+                      <Badge
+                        key={item}
+                        role="button"
+                        variant={selected ? "default" : "outline"}
+                        onClick={() => toggleInterest(item)}
+                        className={cn(
+                          "px-3.5 py-4 text-sm font-normal rounded-full transition-all duration-300 cursor-pointer shadow-none",
+                          selected
+                            ? "bg-brand-teal-600 text-white border-brand-teal-600 hover:bg-brand-teal-700 active:scale-95 transition-transform"
+                            : "bg-white text-brand-gray-700 border-brand-gray-200 hover:bg-brand-teal-50 hover:border-brand-teal-200 active:scale-95",
+                          disabled &&
+                            "opacity-30 cursor-not-allowed pointer-events-none",
+                        )}
+                      >
+                        {item}
+                      </Badge>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col gap-4">

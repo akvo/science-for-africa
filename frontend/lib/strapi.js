@@ -98,3 +98,22 @@ export async function verifyEmailToken(token) {
   }
 }
 
+/**
+ * Login a user
+ */
+export async function loginUser(credentials) {
+  // credentials: { identifier, password }
+  try {
+    const result = await postToStrapi("/auth/local", credentials, false);
+
+    // If 2FA is required, the backend returns a custom object { requires2FA: true, email: ... }
+    if (result && result.requires2FA) {
+      return result;
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Error during login:", error);
+    return { error: error.message || "An unexpected error occurred" };
+  }
+}

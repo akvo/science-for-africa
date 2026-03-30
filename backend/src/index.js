@@ -75,6 +75,12 @@ module.exports = {
             data.fullName =
               `${data.firstName || ""} ${data.lastName || ""}`.trim();
           }
+
+          // Social Login Bypass: Automatically verify users from social providers
+          if (data.provider && data.provider !== "local") {
+            data.verificationStatus = "verified";
+            data.confirmed = true;
+          }
         },
         async beforeUpdate(event) {
           const { data } = event.params;
@@ -83,6 +89,12 @@ module.exports = {
               data.firstName !== undefined ? data.firstName : "";
             const lastName = data.lastName !== undefined ? data.lastName : "";
             data.fullName = `${firstName} ${lastName}`.trim();
+          }
+
+          // Ensure social users stay verified if provider is set/changed
+          if (data.provider && data.provider !== "local") {
+            data.verificationStatus = "verified";
+            data.confirmed = true;
           }
         },
       });

@@ -1,5 +1,7 @@
 const API_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api";
+  (typeof window !== "undefined" && window.__ENV?.NEXT_PUBLIC_BACKEND_URL) ||
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  "http://localhost:1337/api";
 
 export async function fetchFromStrapi(endpoint) {
   try {
@@ -114,6 +116,36 @@ export async function loginUser(credentials) {
     return result;
   } catch (error) {
     console.error("Error during login:", error);
+    return { error: error.message || "An unexpected error occurred" };
+  }
+}
+
+/**
+ * Update authenticated user profile
+ */
+export async function updateUserProfile(userData, token) {
+  try {
+    const response = await fetch(`${API_URL}/users/me`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return {
+        error:
+          errorData.error?.message || `HTTP error! status: ${response.status}`,
+        status: response.status,
+      };
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating profile:", error);
     return { error: error.message || "An unexpected error occurred" };
   }
 }

@@ -16,7 +16,8 @@ const MainLayout = ({ children }) => {
   // login, signup, forget password, 2fa, etc.
   const isAuthRoute =
     router.pathname.startsWith("/auth") ||
-    ["/login", "/signup"].includes(router.pathname);
+    ["/login", "/signup", "/onboarding"].includes(router.pathname);
+
 
   if (isAuthRoute) {
     // Map paths to auth steps

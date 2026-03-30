@@ -60,8 +60,12 @@ export const LoginForm = () => {
       }
 
       if (result && result.jwt) {
-        // Success! Redirect to home or dashboard
-        router.push("/");
+        // Success! Redirect based on onboarding status
+        if (result.user?.onboardingComplete) {
+          router.push("/");
+        } else {
+          router.push("/onboarding");
+        }
       } else {
         setError("Login failed. Please try again.");
       }

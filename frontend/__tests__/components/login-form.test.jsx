@@ -48,7 +48,7 @@ describe("LoginForm", () => {
   it("submits the form successfully and redirects", async () => {
     loginUser.mockResolvedValue({
       jwt: "fake-jwt",
-      user: { id: 1, email: "test@example.com" },
+      user: { id: 1, email: "test@example.com", onboardingComplete: true },
     });
 
     render(<LoginForm />);
@@ -68,6 +68,28 @@ describe("LoginForm", () => {
         password: "Password123!",
       });
       expect(mockPush).toHaveBeenCalledWith("/");
+    });
+  });
+
+  it("submits the form and redirects to /onboarding if not onboarded", async () => {
+    loginUser.mockResolvedValue({
+      jwt: "fake-jwt",
+      user: { id: 1, email: "test@example.com", onboardingComplete: false },
+    });
+
+    render(<LoginForm />);
+
+    fireEvent.change(screen.getByLabelText(/Email/i), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText(/Password/i), {
+      target: { value: "Password123!" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /Login/i }));
+
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith("/onboarding");
     });
   });
 

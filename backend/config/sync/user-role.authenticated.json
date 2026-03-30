@@ -29,6 +29,16 @@
       "documentId": "vn2jwoo3kjeuhfb3toew45t4",
       "action": "plugin::users-permissions.user.me",
       "locale": null
+    },
+    {
+      "documentId": "find-user-perm-id",
+      "action": "plugin::users-permissions.user.find",
+      "locale": null
+    },
+    {
+      "documentId": "update-user-perm-id",
+      "action": "plugin::users-permissions.user.update",
+      "locale": null
     }
   ]
 }

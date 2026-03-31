@@ -15,10 +15,16 @@ To provide a secure, seamless, and professional entry point for researchers and 
     - **Google**: Bypasses email verification.
 3. **2FA Setup (Mandatory)**: Upon first successful login/verification, user setup TOTP via QR Code.
 4. **Onboarding Journey**:
-    - **Step 1: Institutional Affiliation**: Choose between "Individual" or "Institutional" tabs. Select Role Type and search for Institution. (Can be skipped).
-    - **Step 2: Expertise & Interests**: Select up to 5 interests from categories (Popular, Education, etc.).
-    - **Step 3: Education & Career**: Select Education level and enter Institution type. (Can be skipped).
-    - **Step 4: ORCID Integration**: Link 16-digit ORCID iD. (Can be skipped).
+    - **Step 1: Account Type**: Choose between "Individual" or "Institutional" tabs. Select Role Type and search for Institution.
+    - **Path A: Individual** (5 Steps):
+        - Step 2: Interests (Select up to 5)
+        - Step 3: Career (Position & Education level)
+        - Step 4: ORCID Integration
+        - Step 5: Affiliation (Final institutional link)
+    - **Path B: Institutional** (2 Steps):
+        - Step 1: Search and select Institution immediately.
+        - Step 2: Interests (Select up to 5)
+        - Step 6: Completion (Skips Steps 3, 4, 5).
 5. **Completion**: User is automatically logged in and redirected to the homepage.
 
 ---
@@ -45,9 +51,12 @@ graph TD
     E -->|Yes| G[2FA Challenge]
     F --> G
     G --> H{Onboarding Done?}
-    H -->|No| I[Onboarding: Inst -> Int -> Edu -> ORCID]
-    H -->|Yes| J[Dashboard]
-    I --> J
+    H -->|No| I{Account Type?}
+    I -->|Individual| K[Steps 2-5: Int -> Edu -> ORCID -> Aff]
+    I -->|Institution| L[Step 2: Int only]
+    K --> J[Dashboard]
+    L --> J
+    H -->|Yes| J
 ```
 
 ### Database Schema / Data Structure
@@ -86,11 +95,12 @@ graph TD
 - [x] **Email Verification**: Handler for unique links + success redirect to Login.
 - [ ] **2FA Setup**: QR Code generation + TOTP verification.
 
-### Phase 4: Onboarding Journey (Step-by-Step)
-- [ ] **Institutional Affiliation**: Tabs for Individual/Institutional, searchable dropdown, "Skip" logic.
-- [ ] **Expertise & Interests**: Category-based selection, visual highlights, max 5 limit check.
-- [ ] **Education & Career**: Education level dropdown, institution type field, "Skip" logic.
-- [ ] **ORCID Integration**: 16-digit regex validation, "Skip" logic.
+### Phase 4: Onboarding Journey (Step-by-Step) [SHIPPED]
+- [x] **Account Type & Institution**: Branching logic for Individual/Institutional, searchable dropdown.
+- [x] **Expertise & Interests**: Category-based selection, visual highlights, max 5 limit check.
+- [x] **Education & Career**: Education level dropdown, institution type field, "Skip" logic (Individual only).
+- [x] **ORCID Integration**: 16-digit regex validation, "Skip" logic (Individual only).
+- [x] **Affiliation**: Search and select institution manually (Individual only).
 
 ### Phase 5: Password Recovery
 - [ ] **Request**: Forgot password link -> 6-digit OTP sent to email.

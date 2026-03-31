@@ -37,14 +37,14 @@ describe("Institution Search Optimization", () => {
       render(<OnboardingStep1 />);
 
       const input = screen.getByPlaceholderText(/Type your institution name/i);
-      
+
       // Simulate typing a name with spaces
       fireEvent.change(input, { target: { value: "Univ of Nairobi" } });
 
       await waitFor(() => {
         // This will FAIL initially if encodeURIComponent is not used
         expect(fetchFromStrapi).toHaveBeenCalledWith(
-          expect.stringContaining("Univ%20of%20Nairobi")
+          expect.stringContaining("Univ%20of%20Nairobi"),
         );
       });
     });
@@ -54,12 +54,12 @@ describe("Institution Search Optimization", () => {
       render(<OnboardingStep1 />);
 
       const input = screen.getByPlaceholderText(/Type your institution name/i);
-      
+
       fireEvent.change(input, { target: { value: "nai" } });
 
       await waitFor(() => {
         expect(fetchFromStrapi).toHaveBeenCalledWith(
-          expect.stringContaining("filters[name][$containsi]=nai")
+          expect.stringContaining("filters[name][$containsi]=nai"),
         );
       });
     });
@@ -69,13 +69,15 @@ describe("Institution Search Optimization", () => {
     it("encodes search terms with spaces correctly in Step 5", async () => {
       render(<OnboardingStep5 />);
 
-      const input = screen.getByPlaceholderText(/Type your primary institution/i);
-      
+      const input = screen.getByPlaceholderText(
+        /Type your primary institution/i,
+      );
+
       fireEvent.change(input, { target: { value: "Oxford Uni" } });
 
       await waitFor(() => {
         expect(fetchFromStrapi).toHaveBeenCalledWith(
-          expect.stringContaining("Oxford%20Uni")
+          expect.stringContaining("Oxford%20Uni"),
         );
       });
     });

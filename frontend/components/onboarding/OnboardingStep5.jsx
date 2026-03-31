@@ -9,7 +9,8 @@ import { useRouter } from "next/router";
 
 const OnboardingStep5 = () => {
   const router = useRouter();
-  const { formData, updateFormData, prevStep, userType } = useOnboardingStore();
+  const { formData, updateFormData, prevStep, userType, resetStore } =
+    useOnboardingStore();
   const { jwt, updateUser } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [institutions, setInstitutions] = useState([]);
@@ -62,6 +63,9 @@ const OnboardingStep5 = () => {
       if (result && !result.error) {
         // Update local auth store so redirects work correctly
         updateUser({ onboardingComplete: true });
+
+        // Purge professional onboarding data from sessionStorage
+        resetStore();
 
         // Redirect to dashboard
         router.push("/");

@@ -190,10 +190,12 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
     const option = await findByText("Science Foundation");
     fireEvent.click(option);
 
-    expect(useOnboardingStore.getState().formData.educationInstitution).toEqual({
-      id: 51,
-      name: "Science Foundation",
-    });
+    expect(useOnboardingStore.getState().formData.educationInstitution).toEqual(
+      {
+        id: 51,
+        name: "Science Foundation",
+      },
+    );
   });
 
   test("enables 'Confirm' button in Step 3 only after required fields are filled", () => {
@@ -275,7 +277,9 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
     const option = await findByText("Science Foundation");
     fireEvent.click(option);
 
-    expect(useOnboardingStore.getState().formData.affiliationInstitution).toEqual({
+    expect(
+      useOnboardingStore.getState().formData.affiliationInstitution,
+    ).toEqual({
       id: 51,
       name: "Science Foundation",
     });
@@ -285,6 +289,9 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
 
     await waitFor(() => {
       expect(updateUserProfile).toHaveBeenCalled();
+      // Verify store is reset (PII purged)
+      expect(useOnboardingStore.getState().formData.roleType).toBe("");
+      expect(useOnboardingStore.getState().step).toBe(1);
     });
   });
 });

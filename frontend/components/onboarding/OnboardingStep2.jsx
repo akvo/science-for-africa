@@ -11,8 +11,15 @@ import { useRouter } from "next/router";
 
 const OnboardingStep2 = () => {
   const router = useRouter();
-  const { formData, toggleInterest, nextStep, prevStep, skipStep, userType } =
-    useOnboardingStore();
+  const {
+    formData,
+    toggleInterest,
+    nextStep,
+    prevStep,
+    skipStep,
+    userType,
+    resetStore,
+  } = useOnboardingStore();
   const { jwt, updateUser } = useAuthStore();
 
   const [categories, setCategories] = React.useState({});
@@ -55,6 +62,7 @@ const OnboardingStep2 = () => {
 
       if (result && !result.error) {
         updateUser({ onboardingComplete: true });
+        resetStore();
         router.push("/");
       }
     } catch (error) {

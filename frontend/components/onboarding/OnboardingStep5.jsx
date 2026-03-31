@@ -20,24 +20,35 @@ const OnboardingStep5 = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const searchTimeoutRef = React.useRef(null);
+
   const handleSearch = async (val) => {
     setSearchTerm(val);
     updateFormData({ affiliationInstitution: { id: null, name: val } });
 
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
     if (val.length > 2) {
       setLoading(true);
       setShowDropdown(true);
-      const response = await fetchFromStrapi(
-        `/institutions?filters[name][$containsi]=${val}`,
-      );
-      if (response?.data) {
-        setInstitutions(
-          response.data.map((item) => ({ id: item.id, name: item.name })),
+
+      searchTimeoutRef.current = setTimeout(async () => {
+        const encodedVal = encodeURIComponent(val);
+        const response = await fetchFromStrapi(
+          `/institutions?filters[name][$containsi]=${encodedVal}`,
         );
-      }
-      setLoading(false);
+        if (response?.data) {
+          setInstitutions(
+            response.data.map((item) => ({ id: item.id, name: item.name })),
+          );
+        }
+        setLoading(false);
+      }, 300);
     } else {
       setShowDropdown(false);
+      setLoading(false);
     }
   };
 

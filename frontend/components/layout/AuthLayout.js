@@ -91,7 +91,7 @@ const AuthLayout = ({ children, activeStep }) => {
       </div>
 
       {/* Right Column: Visual Section */}
-      <div className="hidden md:flex md:w-[56%] p-3 relative overflow-hidden h-screen bg-white">
+      <div className="hidden md:flex md:w-[56%] p-2 relative overflow-hidden h-screen bg-white">
         <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xs border border-brand-gray-100">
           <Carousel
             setApi={setApi}

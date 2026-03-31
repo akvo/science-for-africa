@@ -31,19 +31,22 @@ Strapi manages the data layer. For the Authentication and Onboarding flow, the *
 
 **Core Entities:**
 - **User**: Extended with:
-    - `firstName`, `lastName` (String)
-    - `fullName` (Computed via lifecycle)
-    - `interests` (Component: `user.interest`, Max 5)
-    - `educationTopic` (String)
-    - `educationLevel` (Enum: `Bachelors`, `Masters`, `PhD`, etc.)
-    - `institution` (Relation: Many-to-One with Institution)
-    - `affiliationStatus` (Enum: `Pending`, `Approved`, `Rejected`)
-    - `orcidId` (String, 16-digit regex)
-    - `onboardingComplete` (Boolean)
-    - `twoFactorSecret` (String, Private)
-    - `twoFactorEnabled` (Boolean)
-- **Institution**:
-    - `name` (String, Unique)
+    - `firstName`, `lastName` (String) [IMPLEMENTED]
+    - `fullName` (Computed via lifecycle) [IMPLEMENTED]
+    - `position`, `biography` (String/Text) [IMPLEMENTED]
+    - `interests` (Component: `user.interest`, Max 5) [IMPLEMENTED]
+    - `educationTopic` (String) [IMPLEMENTED]
+    - `educationLevel` (Enum: `Bachelors`, `Masters`, `PhD`, etc.) [IMPLEMENTED]
+    - `institution` (Relation: Many-to-One with Institution) [IMPLEMENTED]
+    - `affiliationStatus` (Enum: `Pending`, `Approved`, `Rejected`) [IMPLEMENTED]
+    - `orcidId` (String, 16-digit regex) [IMPLEMENTED]
+    - `onboardingComplete` (Boolean) [IMPLEMENTED]
+    - `twoFactorSecret` (String, Private) [IMPLEMENTED]
+    - `twoFactorEnabled` (Boolean) [IMPLEMENTED]
+    - `verificationStatus` (Enum: `unverified`, `verified`) [IMPLEMENTED]
+    - `socialLinks` (JSON) [IMPLEMENTED]
+- **Institution**: [IMPLEMENTED]
+    - `name` (String, Unique, Case-insensitive)
     - `country` (String)
     - `type` (Enum: `Academic`, `Research`, `NGO`, `Government`, `Private`)
     - `verified` (Boolean)

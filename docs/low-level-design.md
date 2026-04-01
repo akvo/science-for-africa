@@ -177,7 +177,7 @@ Push to main
 
 ### 3.2 Azure Production (Kubernetes)
 
-Production runs on Azure Kubernetes Service (AKS), mirroring the GCP staging pattern but replacing Akvo-specific tooling with Azure-native equivalents.
+Production will run on Azure Kubernetes Service (AKS), mirroring the GCP staging pattern but replacing Akvo-specific tooling with Azure-native equivalents.
 
 #### What changes from GCP staging
 
@@ -223,7 +223,7 @@ The three-deployment pattern (nginx, frontend, backend) matches GCP staging exac
 
 #### GitHub Actions production workflow
 
-The production workflow will be a new file (e.g. `.github/workflows/deploy-prod.yml`) triggered on GitHub release publish, following the same pattern as climate-think-and-do-tank's release-based production deploys:
+The production workflow will be a new file (e.g. `.github/workflows/deploy-prod.yml`) triggered on GitHub release publish, following the standard akvo pattern of release-based production deploys:
 
 ```
 Release published
@@ -251,94 +251,76 @@ Release published
 6. Add `AZURE_CREDENTIALS` and `ACR_LOGIN_SERVER` to GitHub repo secrets
 7. Create a GitHub release to trigger the first production deploy
 
-### 3.4 Scaling Pathway
+## 4. Scaling Pathway
 
 #### MVP — Phase 1 (current)
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  Single Server                                      │
+┌─ AKS Cluster ──────────────────────────────────────┐
 │                                                     │
 │  ┌──────────┐  ┌──────────┐  ┌──────────────────┐  │
-│  │ Frontend  │  │  Nginx/  │  │     Strapi       │  │
-│  │ Next.js   │  │ Traefik  │  │  ┌────────────┐  │  │
-│  └──────────┘  └──────────┘  │  │User Service │  │  │
-│                              │  │Collab Service│  │  │
+│  │ Frontend  │  │  Nginx   │  │     Strapi       │  │
+│  │ Next.js   │  │ Ingress  │  │  ┌────────────┐  │  │
+│  │ (1 pod)   │  │          │  │  │User Service │  │  │
+│  └──────────┘  └──────────┘  │  │Collab Service│  │  │
 │                              │  │Content Service│ │  │
 │                              │  └────────────┘  │  │
+│                              │  (1 pod)          │  │
 │                              └──────────────────┘  │
-│                                                     │
-│  ┌──────────────┐  ┌───────────────────────────┐   │
-│  │ Azure DB for │  │ Azure Blob Storage        │   │
-│  │ PostgreSQL   │  │ (file uploads)            │   │
-│  │ (full-text   │  │                           │   │
-│  │  search)     │  │                           │   │
-│  └──────────────┘  └───────────────────────────┘   │
 └─────────────────────────────────────────────────────┘
+        │                              │
+┌───────▼──────────┐  ┌───────────────▼─────────────┐
+│ Azure DB for     │  │ Azure Blob Storage          │
+│ PostgreSQL       │  │ (file uploads)              │
+│ (full-text       │  │                             │
+│  search)         │  │                             │
+└──────────────────┘  └─────────────────────────────┘
 ```
 
-- Single server instance running all containers
+- Single replica per deployment on AKS (nginx, frontend, backend)
+- Managed PostgreSQL and Blob Storage external to the cluster
 - No real-time WebSockets
 - PostgreSQL full-text search (no dedicated search engine)
-- Synchronous email dispatch
+- Synchronous email dispatch via Mailjet
 - Strapi monolith handles all domain logic (User, Collaboration, Content services are logical modules within Strapi, not separate processes)
 
 #### Phase 2 — Evolution (when load demands it)
 
+Since Phase 1 is already on AKS, scaling is incremental — increase replica counts and deploy additional services into the same cluster.
+
 ```
-┌───────────┐
-│   CDN     │  Cloudflare / Akamai — static assets, edge caching
-└─────┬─────┘
-      │
-┌─────▼──────────┐
-│  API Gateway   │  Load balancing, routing, rate limiting
-└─────┬──────────┘
-      │
-┌─────▼──────────────────────────────────────────┐
-│  Application Services                          │
-│  ┌──────────────────────────────────────────┐  │
-│  │  Strapi (horizontal replicas)            │  │
-│  │  Stateless — add replicas behind LB      │  │
-│  └──────────────────────────────────────────┘  │
-│                                                │
-│  ┌────────────────┐  ┌──────────────────────┐  │
-│  │ Search Service │  │ Notification/Chat    │  │
-│  │ Elasticsearch  │  │ Socket.io            │  │
-│  └────────────────┘  └──────────────────────┘  │
-└────────────────────────────────────────────────┘
-      │              │              │
-┌─────▼───┐  ┌──────▼────┐  ┌─────▼──────┐
-│ RabbitMQ│  │   Redis   │  │ PostgreSQL │
-│ async   │  │ session + │  │ primary DB │
-│ email,  │  │ API cache │  │            │
-│ indexing│  │           │  │            │
-└─────────┘  └───────────┘  └────────────┘
+┌─ AKS Cluster ─────────────────────────────────────────────┐
+│                                                           │
+│  ┌─────────────────────────────────────────────────────┐  │
+│  │  Strapi (N replicas, scaled via K8s HPA)            │  │
+│  │  Stateless — increase replicas as needed            │  │
+│  └─────────────────────────────────────────────────────┘  │
+│                                                           │
+│  ┌─────────────────┐  ┌────────────────────────────────┐  │
+│  │ Search Service  │  │ Notification/Chat              │  │
+│  │ Elasticsearch   │  │ Socket.io                      │  │
+│  └─────────────────┘  └────────────────────────────────┘  │
+│                                                           │
+│  ┌─────────────────┐  ┌────────────────────────────────┐  │
+│  │ Azure Cache for │  │ RabbitMQ (or Azure Service Bus)│  │
+│  │ Redis           │  │ async email, indexing, fan-out  │  │
+│  └─────────────────┘  └────────────────────────────────┘  │
+└───────────────────────────────────────────────────────────┘
+        │                       │
+┌───────▼──────────┐  ┌────────▼────────────────────────┐
+│ Azure DB for     │  │ Azure Blob Storage              │
+│ PostgreSQL       │  │                                 │
+└──────────────────┘  └─────────────────────────────────┘
+        │
+   CDN (Azure Front Door / Cloudflare)
 ```
 
-**Additions over Phase 1:**
-- **CDN** — static asset delivery and edge caching
-- **API Gateway** — load balancing, routing, rate limiting
-- **Strapi horizontal scaling** — Strapi is stateless by design; add replicas behind a load balancer with no code changes
-- **Redis** — session/API cache with cache invalidation
-- **Elasticsearch** — advanced search and filtering, async indexing via message queue
-- **RabbitMQ** — async processing: email dispatch, search indexing, notification fan-out
-- **Socket.io** — real-time events (notifications, chat — future)
+**What changes from Phase 1:**
+- **Strapi horizontal scaling** — increase replica count in the deployment (or use Horizontal Pod Autoscaler). Strapi is stateless by design, so no code changes needed
+- **Azure Cache for Redis** — API response caching and session cache, deployed as an Azure managed service
+- **Elasticsearch** — advanced search and filtering, async indexing via message queue. Can run in-cluster or use Elastic Cloud
+- **RabbitMQ / Azure Service Bus** — async processing: email dispatch, search indexing, notification fan-out
+- **CDN** (Azure Front Door or Cloudflare) — static asset delivery and edge caching
+- **Socket.io** — real-time events (notifications, chat — future), deployed as a new service in the cluster
 
-**Key architectural property:** Strapi's stateless design means Phase 1 → Phase 2 requires **no application code changes** — only infrastructure additions. The Strapi instances themselves remain unchanged; new services (Redis, Elasticsearch, RabbitMQ) are added alongside them.
-
-### 3.5 Environment Variables Summary
-
-| Variable | Used By | Required In |
-|---|---|---|
-| `PUBLIC_URL` | Root | All environments |
-| `BACKEND_URL` | Backend (Strapi `url`) | Production, mimic-prod |
-| `EMAIL_CONFIRMATION_URL` | Backend | All environments |
-| `PASSWORD_RESET_URL` | Backend | All environments |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM` | Backend (email) | Production (optional in dev — falls back to Mailpit) |
-| `GCS_SERVICE_ACCOUNT`, `GCS_BUCKET_NAME`, `GCS_BASE_PATH`, `GCS_BASE_URL`, `GCS_PUBLIC_FILES`, `GCS_UNIFORM` | Backend (uploads) | GCP staging (optional — falls back to local) |
-| Azure Blob Storage credentials (TBD — depends on Strapi upload provider chosen) | Backend (uploads) | Azure production |
-| `HOST`, `PORT` | Backend (server) | All environments |
-| `APP_KEYS`, `API_TOKEN_SALT`, `ADMIN_JWT_SECRET`, `TRANSFER_TOKEN_SALT`, `JWT_SECRET` | Backend (security) | All environments |
-| `DATABASE_CLIENT`, `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_NAME`, `DATABASE_USERNAME`, `DATABASE_PASSWORD` | Backend (database) | Production |
-| `AZURE_CREDENTIALS` | GitHub Actions | Production CI/CD |
-| `ACR_LOGIN_SERVER` | GitHub Actions | Production CI/CD |
+**Key architectural property:** Since Phase 1 is already on K8s, Phase 2 only requires deploying additional services and scaling existing ones. No substantial migration or application code changes are needed but we still get significant scalability improvements.

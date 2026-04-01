@@ -106,6 +106,8 @@ erDiagram
 
     CommunityMembership {
         string id PK
+        string user FK
+        string community FK
         enum role "admin|moderator|curator|member"
         datetime joinedAt
     }
@@ -186,6 +188,8 @@ erDiagram
 
     EventRegistration {
         string id PK
+        string user FK
+        string event FK
         enum status "registered|waitlisted|attended"
         datetime registeredAt
         boolean certificateIssued
@@ -193,6 +197,8 @@ erDiagram
 
     CollaborationMentor {
         string id PK
+        string collaboration FK
+        string mentor FK
         enum status "Requested|Active|Completed|Declined"
         text goals
         datetime assignedAt
@@ -209,6 +215,9 @@ erDiagram
 
     Report {
         string id PK
+        string reportedBy FK
+        string targetPost FK "nullable"
+        string targetThread FK "nullable"
         enum reason "Spam|Harassment|Misinformation|Other"
         text description
         enum status "Pending|Resolved|Dismissed"
@@ -218,6 +227,7 @@ erDiagram
 
     Notification {
         string id PK
+        string recipient FK
         enum type "email_verification|password_reset|moderation|invite|event_reminder|collaboration_mentor|new_member"
         string subject
         text message
@@ -228,10 +238,14 @@ erDiagram
 
     SavedPost {
         string id PK
+        string user FK
+        string post FK
         datetime savedAt
     }
 
     Follow {
         string id PK
+        string follower FK
+        string following FK
         datetime followedAt
     }

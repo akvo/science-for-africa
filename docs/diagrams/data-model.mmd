@@ -1,0 +1,238 @@
+erDiagram
+    User ||--o| Institution : "affiliated_with"
+    User ||--o{ CommunityMembership : "has"
+    User ||--o{ Thread : "creates"
+    User ||--o{ Post : "writes"
+    User ||--o{ Report : "submits"
+    User ||--o{ Notification : "receives"
+    User ||--o{ SavedPost : "bookmarks"
+    User ||--o{ Follow : "follows"
+    User ||--o{ MentorshipRelation : "mentor_or_mentee"
+    User ||--o{ EventRegistration : "registers"
+    User ||--o{ Resource : "uploads"
+    User }o--o{ Tag : "tagged_with"
+
+    Institution ||--o{ User : "has_members"
+
+    Community ||--o| Community : "parent"
+    Community ||--o{ CommunityMembership : "has_members"
+    Community ||--o{ CommunityRule : "has_rules"
+    Community ||--o{ ForumCategory : "has_categories"
+    Community ||--o{ CollaborationCall : "has_calls"
+    Community ||--o{ Resource : "has_resources"
+    Community ||--o{ Event : "hosts"
+    Community }o--o{ Tag : "tagged_with"
+
+    CommunityMembership }o--|| User : "user"
+    CommunityMembership }o--|| Community : "community"
+
+    ForumCategory ||--o| ForumCategory : "parent"
+    ForumCategory ||--o{ Thread : "contains"
+
+    Thread ||--o{ Post : "has_replies"
+    Thread }o--|| ForumCategory : "in_category"
+    Thread }o--|| User : "created_by"
+    Thread }o--o{ Tag : "tagged_with"
+
+    Post ||--o| Post : "reply_to"
+    Post }o--|| Thread : "belongs_to"
+    Post }o--|| User : "authored_by"
+    Post ||--o{ Report : "reported_in"
+
+    CollaborationCall }o--|| Community : "within"
+    CollaborationCall }o--o| User : "mentor"
+
+    Resource }o--|| Community : "belongs_to"
+    Resource }o--|| User : "uploaded_by"
+    Resource }o--o{ Tag : "tagged_with"
+
+    Event }o--|| Community : "hosted_by"
+    Event ||--o{ EventRegistration : "has_registrations"
+
+    EventRegistration }o--|| User : "registered_by"
+    EventRegistration }o--|| Event : "for_event"
+
+    MentorshipRelation }o--|| User : "mentor"
+    MentorshipRelation }o--|| User : "mentee"
+
+    SavedPost }o--|| User : "saved_by"
+    SavedPost }o--|| Post : "post"
+
+    Follow }o--|| User : "follower"
+    Follow }o--|| User : "following"
+
+    Report }o--|| User : "reported_by"
+
+    User {
+        string documentId PK
+        string username UK
+        string email UK
+        string password
+        string fullName
+        text bio
+        string orcidId
+        enum careerStage "Early|Mid|Senior"
+        enum educationLevel
+        boolean mentorAvailability
+        json notificationPreferences
+        boolean confirmed
+        boolean blocked
+        boolean onboardingComplete
+        json socialLinks
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    Institution {
+        string documentId PK
+        string name UK
+        enum type "Academic|Research|NGO|Government|Private"
+        string country
+        boolean verified
+    }
+
+    Community {
+        string documentId PK
+        string name UK
+        string slug UK
+        text description
+        enum type "Community|SubCommunity"
+        enum privacy "Public|Private|Restricted"
+        enum status "Active|Archived"
+        media logo
+        media banner
+        integer memberCount
+    }
+
+    CommunityMembership {
+        string documentId PK
+        enum role "admin|moderator|curator|member"
+        datetime joinedAt
+    }
+
+    CommunityRule {
+        string documentId PK
+        string title
+        text description
+        integer sortOrder
+    }
+
+    ForumCategory {
+        string documentId PK
+        string name
+        string slug UK
+        text description
+        integer sortOrder
+        boolean isLocked
+    }
+
+    Thread {
+        string documentId PK
+        string title
+        string slug UK
+        richtext content
+        boolean isPinned
+        boolean isLocked
+        boolean isAnswered
+        integer viewCount
+        integer replyCount
+        datetime lastActivityAt
+    }
+
+    Post {
+        string documentId PK
+        richtext content
+        enum status "pending|approved|declined"
+        boolean isAcceptedAnswer
+        string moderationReason
+        integer upvoteCount
+        datetime editedAt
+    }
+
+    CollaborationCall {
+        string documentId PK
+        string title
+        richtext description
+        datetime startDate
+        datetime endDate
+        enum status "Active|Completed"
+        text goals
+    }
+
+    Resource {
+        string documentId PK
+        string title
+        string slug UK
+        richtext description
+        enum resourceType "Publication|Training|Toolkit|Dataset|Other"
+        media file
+        string externalUrl
+        integer downloadCount
+        date publicationDate
+    }
+
+    Event {
+        string documentId PK
+        string title
+        richtext description
+        datetime startDatetime
+        datetime endDatetime
+        enum eventType "Webinar|Workshop|InPerson"
+        string location
+        string virtualLink
+        integer maxParticipants
+        boolean issuesCertificate
+    }
+
+    EventRegistration {
+        string documentId PK
+        enum status "registered|waitlisted|attended"
+        datetime registeredAt
+        boolean certificateIssued
+    }
+
+    MentorshipRelation {
+        string documentId PK
+        enum status "Requested|Active|Completed|Cancelled"
+        text goals
+        datetime startedAt
+        datetime endedAt
+    }
+
+    Tag {
+        string documentId PK
+        string name UK
+        string slug UK
+        text description
+        string color
+        integer usageCount
+    }
+
+    Report {
+        string documentId PK
+        enum reason "Spam|Harassment|Misinformation|Other"
+        text description
+        enum status "Pending|Resolved|Dismissed"
+        text moderatorNotes
+        datetime resolvedAt
+    }
+
+    Notification {
+        string documentId PK
+        enum type "email_verification|password_reset|moderation|invite|event_reminder|mentorship|new_member"
+        string subject
+        text message
+        enum status "sent|failed"
+        json metadata
+        datetime sentAt
+    }
+
+    SavedPost {
+        string documentId PK
+        datetime savedAt
+    }
+
+    Follow {
+        string documentId PK
+        datetime followedAt
+    }

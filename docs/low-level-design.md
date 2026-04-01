@@ -197,17 +197,17 @@ The GCP staging pipeline uses Akvo's private `composite-actions` repo for Docker
 **Prerequisites:**
 1. **Azure Container Registry (ACR)** — stores Docker images for nginx, frontend, backend
 2. **Azure Kubernetes Service (AKS)** — if an existing AKS cluster is available, deploy into a dedicated namespace; no need to provision a new cluster
-3. **Azure Database for PostgreSQL Flexible Server** — managed PostgreSQL 16 (replaces in-cluster database container)
+3. **Azure Database for PostgreSQL Flexible Server** — managed PostgreSQL 16 (replaces in-cluster database container). Automated backups enabled with 7-day retention (default) and point-in-time restore (PITR); adjust retention period as needed
 4. **Azure Blob Storage** — file uploads (swap `GCS_*` env vars for Azure equivalents, use a community Strapi Azure upload provider or mount as volume)
 5. **DNS** — A-record pointing to AKS ingress controller external IP
 
 **AKS cluster layout:**
 
 ```
-Namespace: science-of-africa
-├── nginx-deployment        (1 replica)   — reverse proxy
-├── frontend-deployment     (1 replica)   — Next.js
-├── backend-deployment      (1 replica)   — Strapi
+Namespace: science-of-africa-namespace
+├── nginx-deployment        (HPA min 1)   — reverse proxy
+├── frontend-deployment     (HPA min 1)   — Next.js
+├── backend-deployment      (HPA min 1)   — Strapi
 ├── nginx-service           (ClusterIP)
 ├── frontend-service        (ClusterIP)
 ├── backend-service         (ClusterIP)
@@ -251,9 +251,9 @@ Release published
 
 #### Setup steps
 
-1. Create resource group, ACR, AKS cluster, and managed PostgreSQL via Azure CLI or Terraform
+1. Create resource group, ACR, and managed PostgreSQL via Azure CLI or Terraform (use existing AKS cluster)
 2. Attach ACR to AKS (`az aks update --attach-acr`)
-3. Install NGINX Ingress Controller and cert-manager in the cluster
+3. Ensure NGINX Ingress Controller and cert-manager are available in the cluster
 4. Apply K8s manifests: namespace, deployments, services, ingress, configmap, secret
 5. Configure DNS A-record to point to the ingress external IP
 6. Add `AZURE_CREDENTIALS` and `ACR_LOGIN_SERVER` to GitHub repo secrets

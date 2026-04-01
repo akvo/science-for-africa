@@ -100,7 +100,6 @@ The email verification flow: after registration, the user lands on a verificatio
 |---|---|
 | Docker & Docker Compose | Containerised development, mimic-prod, and self-hosted environments |
 | Nginx 1.26 (Alpine) | Reverse proxy in dev/staging — routes `/` → frontend:3000, `/cms/` → backend:1337 with path rewrite |
-| Traefik v3.3 | Self-hosted reverse proxy with automatic HTTPS via Let's Encrypt ACME |
 | Google Cloud Storage | Production file uploads (swappable — falls back to local if `GCS_SERVICE_ACCOUNT` not set) |
 | GitHub Actions | CI/CD — build, push to GCR, Kubernetes rollout |
 | Mailpit | Dev email testing (SMTP mock + web inspector) |
@@ -217,9 +216,9 @@ Namespace: science-of-africa
 └── secret                  (SMTP creds, JWT keys, DB connection string, ACR pull secret)
 ```
 
-The three-deployment pattern (nginx, frontend, backend) matches GCP staging exactly. The only differences are infrastructure-level: managed database instead of a container, Azure Blob instead of GCS, and cert-manager for TLS instead of Traefik.
+The three-deployment pattern (nginx, frontend, backend) matches GCP staging exactly. The only differences are infrastructure-level: managed database instead of a container, Azure Blob instead of GCS, and cert-manager for TLS.
 
-**TLS:** Use the [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) with [cert-manager](https://cert-manager.io/) for automatic Let's Encrypt certificates. This replaces Traefik (which is used in the self-hosted Docker Compose pattern but is not needed in K8s).
+**TLS:** Use the [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) with [cert-manager](https://cert-manager.io/) for automatic Let's Encrypt certificates.
 
 #### GitHub Actions production workflow
 

@@ -196,7 +196,7 @@ The GCP staging pipeline uses Akvo's private `composite-actions` repo for Docker
 
 **Prerequisites:**
 1. **Azure Container Registry (ACR)** — stores Docker images for nginx, frontend, backend
-2. **Azure Kubernetes Service (AKS)** — runs the cluster (minimum: 2-node pool, Standard_B2s for MVP)
+2. **Azure Kubernetes Service (AKS)** — if an existing AKS cluster is available, deploy into a dedicated namespace; no need to provision a new cluster
 3. **Azure Database for PostgreSQL Flexible Server** — managed PostgreSQL 16 (replaces in-cluster database container)
 4. **Azure Blob Storage** — file uploads (swap `GCS_*` env vars for Azure equivalents, use a community Strapi Azure upload provider or mount as volume)
 5. **DNS** — A-record pointing to AKS ingress controller external IP
@@ -216,6 +216,16 @@ Namespace: science-of-africa
 └── secret                  (SMTP creds, JWT keys, DB connection string, ACR pull secret)
 ```
 
+**Pod resource requests and limits (initial — adjust based on observed usage via `kubectl top pods` or metrics-server):**
+
+| Deployment | CPU Request | CPU Limit | Memory Request | Memory Limit |
+|---|---|---|---|---|
+| nginx | 100m | 200m | 64Mi | 128Mi |
+| frontend (Next.js) | 500m | 1000m | 512Mi | 1Gi |
+| backend (Strapi) | 500m | 1000m | 512Mi | 1Gi |
+
+> **Note:** Set `NODE_OPTIONS=--max-old-space-size=768` on both frontend and backend deployments to align V8 heap limits with container memory limits and prevent OOMKills.
+
 The three-deployment pattern (nginx, frontend, backend) matches GCP staging exactly. The only differences are infrastructure-level: managed database instead of a container, Azure Blob instead of GCS, and cert-manager for TLS.
 
 **TLS:** Use the [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) with [cert-manager](https://cert-manager.io/) for automatic Let's Encrypt certificates.
@@ -228,8 +238,7 @@ The production workflow will be a new file (e.g. `.github/workflows/deploy-prod.
 Release published
   → build-push job:
       Login to ACR (azure/docker-login action)
-      Docker build + push: nginx, frontend, backend → ACR
-      Tag with release version
+      Docker build + push: nginx, frontend, backend → ACR (tagged with release version)
   → deploy job (depends on build-push):
       Set AKS context (azure/aks-set-context action)
       kubectl set image: update each deployment to new image tag
@@ -260,11 +269,11 @@ Release published
 │  ┌──────────┐  ┌──────────┐  ┌──────────────────┐  │
 │  │ Frontend  │  │  Nginx   │  │     Strapi       │  │
 │  │ Next.js   │  │ Ingress  │  │  ┌────────────┐  │  │
-│  │ (1 pod)   │  │          │  │  │User Service │  │  │
+│  │ (HPA 1-N) │  │          │  │  │User Service │  │  │
 │  └──────────┘  └──────────┘  │  │Collab Service│  │  │
 │                              │  │Content Service│ │  │
 │                              │  └────────────┘  │  │
-│                              │  (1 pod)          │  │
+│                              │  (HPA 1-N)        │  │
 │                              └──────────────────┘  │
 └─────────────────────────────────────────────────────┘
         │                              │
@@ -276,7 +285,7 @@ Release published
 └──────────────────┘  └─────────────────────────────┘
 ```
 
-- Single replica per deployment on AKS (nginx, frontend, backend)
+- HPA configured from day one (min 1 replica per deployment — nginx, frontend, backend)
 - Managed PostgreSQL and Blob Storage external to the cluster
 - No real-time WebSockets
 - PostgreSQL full-text search (no dedicated search engine)
@@ -315,7 +324,7 @@ Since Phase 1 is already on AKS, scaling is incremental — increase replica cou
 ```
 
 **What changes from Phase 1:**
-- **Strapi horizontal scaling** — increase replica count in the deployment (or use Horizontal Pod Autoscaler). Strapi is stateless by design, so no code changes needed
+- **Strapi horizontal scaling** — raise HPA max replicas and adjust CPU/memory thresholds as load increases. Strapi is stateless by design, so no code changes needed
 - **Azure Cache for Redis** — API response caching and session cache, deployed as an Azure managed service
 - **Elasticsearch** — advanced search and filtering, async indexing via message queue. Can run in-cluster or use Elastic Cloud
 - **RabbitMQ / Azure Service Bus** — async processing: email dispatch, search indexing, notification fan-out

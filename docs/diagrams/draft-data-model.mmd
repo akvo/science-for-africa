@@ -7,7 +7,7 @@ erDiagram
     User ||--o{ Notification : "receives"
     User ||--o{ SavedPost : "bookmarks"
     User ||--o{ Follow : "follows"
-    User ||--o{ MentorshipRelation : "mentor_or_mentee"
+    User ||--o{ CollaborationMentor : "mentors"
     User ||--o{ EventRegistration : "registers"
     User ||--o{ Resource : "uploads"
     User }o--o{ Tag : "tagged_with"
@@ -40,7 +40,7 @@ erDiagram
     Post ||--o{ Report : "reported_in"
 
     CollaborationCall }o--|| Community : "within"
-    CollaborationCall }o--o| User : "mentor"
+    CollaborationCall ||--o{ CollaborationMentor : "has_mentors"
 
     Resource }o--|| Community : "belongs_to"
     Resource }o--|| User : "uploaded_by"
@@ -52,8 +52,8 @@ erDiagram
     EventRegistration }o--|| User : "registered_by"
     EventRegistration }o--|| Event : "for_event"
 
-    MentorshipRelation }o--|| User : "mentor"
-    MentorshipRelation }o--|| User : "mentee"
+    CollaborationMentor }o--|| CollaborationCall : "collaboration"
+    CollaborationMentor }o--|| User : "mentor"
 
     SavedPost }o--|| User : "saved_by"
     SavedPost }o--|| Post : "post"
@@ -64,7 +64,7 @@ erDiagram
     Report }o--|| User : "reported_by"
 
     User {
-        string documentId PK
+        string id PK
         string username UK
         string email UK
         string password
@@ -84,7 +84,7 @@ erDiagram
     }
 
     Institution {
-        string documentId PK
+        string id PK
         string name UK
         enum type "Academic|Research|NGO|Government|Private"
         string country
@@ -92,7 +92,7 @@ erDiagram
     }
 
     Community {
-        string documentId PK
+        string id PK
         string name UK
         string slug UK
         text description
@@ -105,20 +105,20 @@ erDiagram
     }
 
     CommunityMembership {
-        string documentId PK
+        string id PK
         enum role "admin|moderator|curator|member"
         datetime joinedAt
     }
 
     CommunityRule {
-        string documentId PK
+        string id PK
         string title
         text description
         integer sortOrder
     }
 
     ForumCategory {
-        string documentId PK
+        string id PK
         string name
         string slug UK
         text description
@@ -127,7 +127,7 @@ erDiagram
     }
 
     Thread {
-        string documentId PK
+        string id PK
         string title
         string slug UK
         richtext content
@@ -140,7 +140,7 @@ erDiagram
     }
 
     Post {
-        string documentId PK
+        string id PK
         richtext content
         enum status "pending|approved|declined"
         boolean isAcceptedAnswer
@@ -150,7 +150,7 @@ erDiagram
     }
 
     CollaborationCall {
-        string documentId PK
+        string id PK
         string title
         richtext description
         datetime startDate
@@ -160,7 +160,7 @@ erDiagram
     }
 
     Resource {
-        string documentId PK
+        string id PK
         string title
         string slug UK
         richtext description
@@ -172,7 +172,7 @@ erDiagram
     }
 
     Event {
-        string documentId PK
+        string id PK
         string title
         richtext description
         datetime startDatetime
@@ -185,22 +185,21 @@ erDiagram
     }
 
     EventRegistration {
-        string documentId PK
+        string id PK
         enum status "registered|waitlisted|attended"
         datetime registeredAt
         boolean certificateIssued
     }
 
-    MentorshipRelation {
-        string documentId PK
-        enum status "Requested|Active|Completed|Cancelled"
+    CollaborationMentor {
+        string id PK
+        enum status "Requested|Active|Completed|Declined"
         text goals
-        datetime startedAt
-        datetime endedAt
+        datetime assignedAt
     }
 
     Tag {
-        string documentId PK
+        string id PK
         string name UK
         string slug UK
         text description
@@ -209,7 +208,7 @@ erDiagram
     }
 
     Report {
-        string documentId PK
+        string id PK
         enum reason "Spam|Harassment|Misinformation|Other"
         text description
         enum status "Pending|Resolved|Dismissed"
@@ -218,8 +217,8 @@ erDiagram
     }
 
     Notification {
-        string documentId PK
-        enum type "email_verification|password_reset|moderation|invite|event_reminder|mentorship|new_member"
+        string id PK
+        enum type "email_verification|password_reset|moderation|invite|event_reminder|collaboration_mentor|new_member"
         string subject
         text message
         enum status "sent|failed"
@@ -228,11 +227,11 @@ erDiagram
     }
 
     SavedPost {
-        string documentId PK
+        string id PK
         datetime savedAt
     }
 
     Follow {
-        string documentId PK
+        string id PK
         datetime followedAt
     }

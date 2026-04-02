@@ -1,0 +1,251 @@
+erDiagram
+    User ||--o| Institution : "affiliated_with"
+    User ||--o{ CommunityMembership : "has"
+    User ||--o{ Thread : "creates"
+    User ||--o{ Post : "writes"
+    User ||--o{ Report : "submits"
+    User ||--o{ Notification : "receives"
+    User ||--o{ SavedPost : "bookmarks"
+    User ||--o{ Follow : "follows"
+    User ||--o{ CollaborationMentor : "mentors"
+    User ||--o{ EventRegistration : "registers"
+    User ||--o{ Resource : "uploads"
+    User }o--o{ Tag : "tagged_with"
+
+    Institution ||--o{ User : "has_members"
+
+    Community ||--o| Community : "parent"
+    Community ||--o{ CommunityMembership : "has_members"
+    Community ||--o{ CommunityRule : "has_rules"
+    Community ||--o{ ForumCategory : "has_categories"
+    Community ||--o{ CollaborationCall : "has_calls"
+    Community ||--o{ Resource : "has_resources"
+    Community ||--o{ Event : "hosts"
+    Community }o--o{ Tag : "tagged_with"
+
+    CommunityMembership }o--|| User : "user"
+    CommunityMembership }o--|| Community : "community"
+
+    ForumCategory ||--o| ForumCategory : "parent"
+    ForumCategory ||--o{ Thread : "contains"
+
+    Thread ||--o{ Post : "has_replies"
+    Thread }o--|| ForumCategory : "in_category"
+    Thread }o--|| User : "created_by"
+    Thread }o--o{ Tag : "tagged_with"
+
+    Post ||--o| Post : "reply_to"
+    Post }o--|| Thread : "belongs_to"
+    Post }o--|| User : "authored_by"
+    Post ||--o{ Report : "reported_in"
+
+    CollaborationCall }o--|| Community : "within"
+    CollaborationCall ||--o{ CollaborationMentor : "has_mentors"
+
+    Resource }o--|| Community : "belongs_to"
+    Resource }o--|| User : "uploaded_by"
+    Resource }o--o{ Tag : "tagged_with"
+
+    Event }o--|| Community : "hosted_by"
+    Event ||--o{ EventRegistration : "has_registrations"
+
+    EventRegistration }o--|| User : "registered_by"
+    EventRegistration }o--|| Event : "for_event"
+
+    CollaborationMentor }o--|| CollaborationCall : "collaboration"
+    CollaborationMentor }o--|| User : "mentor"
+
+    SavedPost }o--|| User : "saved_by"
+    SavedPost }o--|| Post : "post"
+
+    Follow }o--|| User : "follower"
+    Follow }o--|| User : "following"
+
+    Report }o--|| User : "reported_by"
+
+    User {
+        string id PK
+        string username UK
+        string email UK
+        string password
+        string fullName
+        text bio
+        string orcidId
+        enum careerStage "Early|Mid|Senior"
+        enum educationLevel
+        boolean mentorAvailability
+        json notificationPreferences
+        boolean confirmed
+        boolean blocked
+        boolean onboardingComplete
+        json socialLinks
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    Institution {
+        string id PK
+        string name UK
+        enum type "Academic|Research|NGO|Government|Private"
+        string country
+        boolean verified
+    }
+
+    Community {
+        string id PK
+        string name UK
+        string slug UK
+        text description
+        enum type "Community|SubCommunity"
+        enum privacy "Public|Private|Restricted"
+        enum status "Active|Archived"
+        media logo
+        media banner
+        integer memberCount
+    }
+
+    CommunityMembership {
+        string id PK
+        string user FK
+        string community FK
+        enum role "admin|moderator|curator|member"
+        datetime joinedAt
+    }
+
+    CommunityRule {
+        string id PK
+        string title
+        text description
+        integer sortOrder
+    }
+
+    ForumCategory {
+        string id PK
+        string name
+        string slug UK
+        text description
+        integer sortOrder
+        boolean isLocked
+    }
+
+    Thread {
+        string id PK
+        string title
+        string slug UK
+        richtext content
+        boolean isPinned
+        boolean isLocked
+        boolean isAnswered
+        integer viewCount
+        integer replyCount
+        datetime lastActivityAt
+    }
+
+    Post {
+        string id PK
+        richtext content
+        enum status "pending|approved|declined"
+        boolean isAcceptedAnswer
+        string moderationReason
+        integer upvoteCount
+        datetime editedAt
+    }
+
+    CollaborationCall {
+        string id PK
+        string title
+        richtext description
+        datetime startDate
+        datetime endDate
+        enum status "Active|Completed"
+        text goals
+    }
+
+    Resource {
+        string id PK
+        string title
+        string slug UK
+        richtext description
+        enum resourceType "Publication|Training|Toolkit|Dataset|Other"
+        media file
+        string externalUrl
+        integer downloadCount
+        date publicationDate
+    }
+
+    Event {
+        string id PK
+        string title
+        richtext description
+        datetime startDatetime
+        datetime endDatetime
+        enum eventType "Webinar|Workshop|InPerson"
+        string location
+        string virtualLink
+        integer maxParticipants
+        boolean issuesCertificate
+    }
+
+    EventRegistration {
+        string id PK
+        string user FK
+        string event FK
+        enum status "registered|waitlisted|attended"
+        datetime registeredAt
+        boolean certificateIssued
+    }
+
+    CollaborationMentor {
+        string id PK
+        string collaboration FK
+        string mentor FK
+        enum status "Requested|Active|Completed|Declined"
+        text goals
+        datetime assignedAt
+    }
+
+    Tag {
+        string id PK
+        string name UK
+        string slug UK
+        text description
+        string color
+        integer usageCount
+    }
+
+    Report {
+        string id PK
+        string reportedBy FK
+        string targetPost FK "nullable"
+        string targetThread FK "nullable"
+        enum reason "Spam|Harassment|Misinformation|Other"
+        text description
+        enum status "Pending|Resolved|Dismissed"
+        text moderatorNotes
+        datetime resolvedAt
+    }
+
+    Notification {
+        string id PK
+        string recipient FK
+        enum type "email_verification|password_reset|moderation|invite|event_reminder|collaboration_mentor|new_member"
+        string subject
+        text message
+        enum status "sent|failed"
+        json metadata
+        datetime sentAt
+    }
+
+    SavedPost {
+        string id PK
+        string user FK
+        string post FK
+        datetime savedAt
+    }
+
+    Follow {
+        string id PK
+        string follower FK
+        string following FK
+        datetime followedAt
+    }

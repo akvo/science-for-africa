@@ -98,12 +98,13 @@ The email verification flow: after registration, the user lands on a verificatio
 
 | Tool | Purpose |
 |---|---|
-| Docker & Docker Compose | Containerised development, mimic-prod, and self-hosted environments |
-| Nginx 1.26 (Alpine) | Reverse proxy in dev/staging — routes `/` → frontend:3000, `/cms/` → backend:1337 with path rewrite |
-| Google Cloud Storage | Production file uploads (swappable — falls back to local if `GCS_SERVICE_ACCOUNT` not set) |
-| GitHub Actions | CI/CD — build, push to GCR, Kubernetes rollout |
-| Mailpit | Dev email testing (SMTP mock + web inspector) |
-| PgAdmin 4 | Dev database inspection (port 5050) |
+| Docker & Docker Compose | Containerised development and mimic-prod environments |
+| Nginx 1.26 (Alpine) | Reverse proxy — routes `/` → frontend:3000, `/cms/` → backend:1337 with path rewrite |
+| GitHub Actions | CI/CD — build, push to container registry, Kubernetes rollout |
+| Mailpit | Dev-only email testing (SMTP mock on port 1025, web inspector on port 8025) |
+| PgAdmin 4 | Dev-only database inspection (port 5050) |
+
+**Dev environment defaults:** When cloud credentials are not set, the backend falls back to local alternatives automatically — Mailpit for email (no `SMTP_*` vars), and Strapi's default local upload provider (`public/uploads/`) for file storage (no `GCS_SERVICE_ACCOUNT`).
 
 ## 2. Data Model
 
@@ -169,10 +170,16 @@ Push to main
 - `GCLOUD_SERVICE_ACCOUNT_K8S` — Kubernetes rollout
 - `GH_PAT` — access to `akvo/composite-actions` repo
 
-**Three Kubernetes deployments:**
+**Kubernetes deployments:**
 1. **nginx** — reverse proxy, routes `/` and `/cms/`
 2. **frontend** — Next.js production build (Node 20 Alpine, port 3000)
 3. **backend** — Strapi production build (Node 22 Alpine, port 1337)
+
+**Data & storage:**
+- **PostgreSQL** — runs as a containerised pod within the cluster (not a managed service). Configured via `DATABASE_*` env vars on the backend deployment
+- **Google Cloud Storage** — file uploads via `@strapi-community/strapi-provider-upload-google-cloud-storage`, configured via `GCS_*` env vars on the backend deployment
+
+K8s manifests are managed within Akvo's infrastructure (via the `composite-actions` repo and cluster configuration), not stored in this application repo.
 
 ### 3.2 Azure Production (Kubernetes)
 

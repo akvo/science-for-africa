@@ -108,7 +108,261 @@ The email verification flow: after registration, the user lands on a verificatio
 
 ## 2. Data Model
 
-The full entity-relationship diagram is in [`docs/diagrams/data-model.mmd`](diagrams/data-model.mmd). This section describes the domain entities, their purpose, and key design decisions.
+```mermaid
+erDiagram
+    User ||--o| Institution : "affiliated_with"
+    User ||--o{ CommunityMembership : "has"
+    User ||--o{ Thread : "creates"
+    User ||--o{ Post : "writes"
+    User ||--o{ Report : "submits"
+    User ||--o{ Notification : "receives"
+    User ||--o{ SavedPost : "bookmarks"
+    User ||--o{ Follow : "follows"
+    User ||--o{ CollaborationMentor : "mentors"
+    User ||--o{ EventRegistration : "registers"
+    User ||--o{ Resource : "uploads"
+    User }o--o{ Tag : "tagged_with"
+
+    Institution ||--o{ User : "has_members"
+
+    Community ||--o| Community : "parent"
+    Community ||--o{ CommunityMembership : "has_members"
+    Community ||--o{ CommunityRule : "has_rules"
+    Community ||--o{ ForumCategory : "has_categories"
+    Community ||--o{ CollaborationCall : "has_calls"
+    Community ||--o{ Resource : "has_resources"
+    Community ||--o{ Event : "hosts"
+    Community }o--o{ Tag : "tagged_with"
+
+    CommunityMembership }o--|| User : "user"
+    CommunityMembership }o--|| Community : "community"
+
+    ForumCategory ||--o| ForumCategory : "parent"
+    ForumCategory ||--o{ Thread : "contains"
+
+    Thread ||--o{ Post : "has_replies"
+    Thread }o--|| ForumCategory : "in_category"
+    Thread }o--|| User : "created_by"
+    Thread }o--o{ Tag : "tagged_with"
+
+    Post ||--o| Post : "reply_to"
+    Post }o--|| Thread : "belongs_to"
+    Post }o--|| User : "authored_by"
+    Post ||--o{ Report : "reported_in"
+
+    CollaborationCall }o--|| Community : "within"
+    CollaborationCall ||--o{ CollaborationMentor : "has_mentors"
+
+    Resource }o--|| Community : "belongs_to"
+    Resource }o--|| User : "uploaded_by"
+    Resource }o--o{ Tag : "tagged_with"
+
+    Event }o--|| Community : "hosted_by"
+    Event ||--o{ EventRegistration : "has_registrations"
+
+    EventRegistration }o--|| User : "registered_by"
+    EventRegistration }o--|| Event : "for_event"
+
+    CollaborationMentor }o--|| CollaborationCall : "collaboration"
+    CollaborationMentor }o--|| User : "mentor"
+
+    SavedPost }o--|| User : "saved_by"
+    SavedPost }o--|| Post : "post"
+
+    Follow }o--|| User : "follower"
+    Follow }o--|| User : "following"
+
+    Report }o--|| User : "reported_by"
+
+    User {
+        string id PK
+        string username UK
+        string email UK
+        string password
+        string fullName
+        text bio
+        string orcidId
+        enum careerStage
+        enum educationLevel
+        boolean mentorAvailability
+        json notificationPreferences
+        boolean confirmed
+        boolean blocked
+        boolean onboardingComplete
+        json socialLinks
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    Institution {
+        string id PK
+        string name UK
+        enum type
+        string country
+        boolean verified
+    }
+
+    Community {
+        string id PK
+        string name UK
+        string slug UK
+        text description
+        enum type
+        enum privacy
+        enum status
+        media logo
+        media banner
+        integer memberCount
+    }
+
+    CommunityMembership {
+        string id PK
+        string user FK
+        string community FK
+        enum role
+        datetime joinedAt
+    }
+
+    CommunityRule {
+        string id PK
+        string title
+        text description
+        integer sortOrder
+    }
+
+    ForumCategory {
+        string id PK
+        string name
+        string slug UK
+        text description
+        integer sortOrder
+        boolean isLocked
+    }
+
+    Thread {
+        string id PK
+        string title
+        string slug UK
+        richtext content
+        boolean isPinned
+        boolean isLocked
+        boolean isAnswered
+        integer viewCount
+        integer replyCount
+        datetime lastActivityAt
+    }
+
+    Post {
+        string id PK
+        richtext content
+        enum status
+        boolean isAcceptedAnswer
+        string moderationReason
+        integer upvoteCount
+        datetime editedAt
+    }
+
+    CollaborationCall {
+        string id PK
+        string title
+        richtext description
+        datetime startDate
+        datetime endDate
+        enum status
+        text goals
+    }
+
+    Resource {
+        string id PK
+        string title
+        string slug UK
+        richtext description
+        enum resourceType
+        media file
+        string externalUrl
+        integer downloadCount
+        date publicationDate
+    }
+
+    Event {
+        string id PK
+        string title
+        richtext description
+        datetime startDatetime
+        datetime endDatetime
+        enum eventType
+        string location
+        string virtualLink
+        integer maxParticipants
+        boolean issuesCertificate
+    }
+
+    EventRegistration {
+        string id PK
+        string user FK
+        string event FK
+        enum status
+        datetime registeredAt
+        boolean certificateIssued
+    }
+
+    CollaborationMentor {
+        string id PK
+        string collaboration FK
+        string mentor FK
+        enum status
+        text goals
+        datetime assignedAt
+    }
+
+    Tag {
+        string id PK
+        string name UK
+        string slug UK
+        text description
+        string color
+        integer usageCount
+    }
+
+    Report {
+        string id PK
+        string reportedBy FK
+        string targetPost FK
+        string targetThread FK
+        enum reason
+        text description
+        enum status
+        text moderatorNotes
+        datetime resolvedAt
+    }
+
+    Notification {
+        string id PK
+        string recipient FK
+        enum type
+        string subject
+        text message
+        enum status
+        json metadata
+        datetime sentAt
+    }
+
+    SavedPost {
+        string id PK
+        string user FK
+        string post FK
+        datetime savedAt
+    }
+
+    Follow {
+        string id PK
+        string follower FK
+        string following FK
+        datetime followedAt
+    }
+```
+
+This section describes the domain entities, their purpose, and key design decisions.
 
 All entities use Strapi's `documentId` as primary key and include automatic `createdAt` / `updatedAt` timestamps.
 
@@ -270,26 +524,31 @@ Release published
 
 #### MVP — Phase 1 (current)
 
-```
-┌─ AKS Cluster ──────────────────────────────────────┐
-│                                                     │
-│  ┌──────────┐  ┌──────────┐  ┌──────────────────┐  │
-│  │ Frontend  │  │  Nginx   │  │     Strapi       │  │
-│  │ Next.js   │  │ Ingress  │  │  ┌────────────┐  │  │
-│  │ (HPA 1-N) │  │          │  │  │User Service │  │  │
-│  └──────────┘  └──────────┘  │  │Collab Service│  │  │
-│                              │  │Content Service│ │  │
-│                              │  └────────────┘  │  │
-│                              │  (HPA 1-N)        │  │
-│                              └──────────────────┘  │
-└─────────────────────────────────────────────────────┘
-        │                              │
-┌───────▼──────────┐  ┌───────────────▼─────────────┐
-│ Azure DB for     │  │ Azure Blob Storage          │
-│ PostgreSQL       │  │ (file uploads)              │
-│ (full-text       │  │                             │
-│  search)         │  │                             │
-└──────────────────┘  └─────────────────────────────┘
+```mermaid
+graph TB
+    subgraph AKS["AKS Cluster"]
+        Ingress["Nginx Ingress"]
+        Frontend["Frontend<br/>Next.js<br/>(HPA 1-N)"]
+        Backend["Strapi<br/>(HPA 1-N)"]
+
+        subgraph Strapi_Modules["Strapi Logical Modules"]
+            UserSvc["User Service"]
+            CollabSvc["Collaboration Service"]
+            EtcSvc["etc..."]
+        end
+
+        Ingress --> Frontend
+        Ingress --> Backend
+        Backend --- Strapi_Modules
+    end
+
+    PostgreSQL[("Azure DB for<br/>PostgreSQL<br/>(including full-text search)")]
+    Blob["Azure Blob Storage<br/>(file uploads)"]
+    Mailjet["Mailjet<br/>(email via SMTP)"]
+
+    Backend --> PostgreSQL
+    Backend --> Blob
+    Backend --> Mailjet
 ```
 
 - HPA configured from day one (min 1 replica per deployment — nginx, frontend, backend)
@@ -303,31 +562,36 @@ Release published
 
 Since Phase 1 is already on AKS, scaling is incremental — increase replica counts and deploy additional services into the same cluster.
 
-```
-┌─ AKS Cluster ─────────────────────────────────────────────┐
-│                                                           │
-│  ┌─────────────────────────────────────────────────────┐  │
-│  │  Strapi (N replicas, scaled via K8s HPA)            │  │
-│  │  Stateless — increase replicas as needed            │  │
-│  └─────────────────────────────────────────────────────┘  │
-│                                                           │
-│  ┌─────────────────┐  ┌────────────────────────────────┐  │
-│  │ Search Service  │  │ Notification/Chat              │  │
-│  │ Elasticsearch   │  │ Socket.io                      │  │
-│  └─────────────────┘  └────────────────────────────────┘  │
-│                                                           │
-│  ┌─────────────────┐  ┌────────────────────────────────┐  │
-│  │ Azure Cache for │  │ RabbitMQ (or Azure Service Bus)│  │
-│  │ Redis           │  │ async email, indexing, fan-out  │  │
-│  └─────────────────┘  └────────────────────────────────┘  │
-└───────────────────────────────────────────────────────────┘
-        │                       │
-┌───────▼──────────┐  ┌────────▼────────────────────────┐
-│ Azure DB for     │  │ Azure Blob Storage              │
-│ PostgreSQL       │  │                                 │
-└──────────────────┘  └─────────────────────────────────┘
-        │
-   CDN (Azure Front Door / Cloudflare)
+```mermaid
+graph TB
+    CDN["CDN<br/>Azure Front Door / Cloudflare"]
+
+    subgraph AKS["AKS Cluster"]
+        Ingress["Nginx Ingress"]
+        Frontend["Frontend<br/>Next.js<br/>(HPA)"]
+        Backend["Strapi<br/>(N replicas via HPA)"]
+        Search["Search Service<br/>Elasticsearch"]
+        Realtime["Notification / Chat<br/>Socket.io"]
+        Cache["Azure Cache<br/>for Redis"]
+        Queue["RabbitMQ /<br/>Azure Service Bus"]
+
+        Ingress --> Frontend
+        Ingress --> Backend
+        Backend --> Cache
+        Backend --> Queue
+        Queue --> Search
+        Queue --> Realtime
+    end
+
+    PostgreSQL[("Azure DB for<br/>PostgreSQL")]
+    Blob["Azure Blob Storage"]
+    Mailjet["Mailjet<br/>(email via SMTP)"]
+
+    CDN --> Ingress
+    Backend --> PostgreSQL
+    Backend --> Blob
+    Queue --> Mailjet
+    Search --> PostgreSQL
 ```
 
 **What changes from Phase 1:**

@@ -88,7 +88,7 @@ All notifications are email-only and dispatched synchronously via the Strapi ema
 | Email verification | New user | Clickable verification link AND a copyable OTP code (dual-path: user can click the link in email or paste OTP into verification page) |
 | Password reset | User | Reset link with token |
 | Post moderation result | Post author | Approval or decline with reason |
-| Collaboration invite | Invite | Link to collaboration call |
+| Collaboration invite | Invitee | Link to collaboration call |
 | Mentorship request | Potential mentor | Collaboration details with accept/decline link |
 | New member joined | Community admins | Member name and community |
 

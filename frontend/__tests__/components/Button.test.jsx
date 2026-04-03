@@ -15,11 +15,6 @@ const Button = ({
   onClick,
   disabled = false,
   variant = 'primary'
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  disabled?: boolean;
-  variant?: 'primary' | 'secondary';
 }) => (
   <button
     onClick={onClick}

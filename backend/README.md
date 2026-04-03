@@ -58,4 +58,23 @@ Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/
 
 ---
 
+## 🌱 Development Data Seeding
+
+The project includes an automated seeder to ensure a consistent development environment. It populates essential data for the onboarding flow.
+
+### How it works
+- **Automatic Execution**: Runs during the Strapi `bootstrap` phase on every server start.
+- **Environment Bound**: Only runs if `NODE_ENV=development`.
+- **Idempotent**: Checks if collections are empty before seeding to prevent duplicates.
+
+### Seeded Data
+- **Interests**: Scientific categories (Bioinformatics, Genetics, etc.) used in Step 2.
+- **Institutions**: A list of African universities and research centers used in Step 5.
+
+### Implementation Details
+- **Seeder Logic**: `src/utils/seeder.js`
+- **Hook Location**: `src/index.js` (inside `bootstrap`)
+
+---
+
 <sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>

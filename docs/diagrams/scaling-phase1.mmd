@@ -1,0 +1,24 @@
+graph TB
+    subgraph AKS["AKS Cluster"]
+        Ingress["Nginx Ingress"]
+        Frontend["Frontend<br/>Next.js<br/>(HPA 1-N)"]
+        Backend["Strapi<br/>(HPA 1-N)"]
+
+        subgraph Strapi_Modules["Strapi Logical Modules"]
+            UserSvc["User Service"]
+            CollabSvc["Collaboration Service"]
+            EtcSvc["etc..."]
+        end
+
+        Ingress --> Frontend
+        Ingress --> Backend
+        Backend --- Strapi_Modules
+    end
+
+    PostgreSQL[("Azure DB for<br/>PostgreSQL<br/>(including full-text search)")]
+    Blob["Azure Blob Storage<br/>(file uploads)"]
+    Mailjet["Mailjet<br/>(email via SMTP)"]
+
+    Backend --> PostgreSQL
+    Backend --> Blob
+    Backend --> Mailjet

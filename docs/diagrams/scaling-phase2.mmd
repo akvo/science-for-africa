@@ -1,0 +1,29 @@
+graph TB
+    CDN["CDN<br/>Azure Front Door / Cloudflare"]
+
+    subgraph AKS["AKS Cluster"]
+        Ingress["Nginx Ingress"]
+        Frontend["Frontend<br/>Next.js<br/>(HPA)"]
+        Backend["Strapi<br/>(N replicas via HPA)"]
+        Search["Search Service<br/>Elasticsearch"]
+        Realtime["Notification / Chat<br/>Socket.io"]
+        Cache["Azure Cache<br/>for Redis"]
+        Queue["RabbitMQ /<br/>Azure Service Bus"]
+
+        Ingress --> Frontend
+        Ingress --> Backend
+        Backend --> Cache
+        Backend --> Queue
+        Queue --> Search
+        Queue --> Realtime
+    end
+
+    PostgreSQL[("Azure DB for<br/>PostgreSQL")]
+    Blob["Azure Blob Storage"]
+    Mailjet["Mailjet<br/>(email via SMTP)"]
+
+    CDN --> Ingress
+    Backend --> PostgreSQL
+    Backend --> Blob
+    Queue --> Mailjet
+    Search --> PostgreSQL

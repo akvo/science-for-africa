@@ -15,10 +15,16 @@ To provide a secure, seamless, and professional entry point for researchers and 
     - **Google**: Bypasses email verification.
 3. **2FA Setup (Mandatory)**: Upon first successful login/verification, user setup TOTP via QR Code.
 4. **Onboarding Journey**:
-    - **Step 1: Institutional Affiliation**: Choose between "Individual" or "Institutional" tabs. Select Role Type and search for Institution. (Can be skipped).
-    - **Step 2: Expertise & Interests**: Select up to 5 interests from categories (Popular, Education, etc.).
-    - **Step 3: Education & Career**: Select Education level and enter Institution type. (Can be skipped).
-    - **Step 4: ORCID Integration**: Link 16-digit ORCID iD. (Can be skipped).
+    - **Step 1: Account Type**: Choose between "Individual" or "Institutional" tabs. Select Role Type and search for Institution.
+    - **Path A: Individual** (5 Steps):
+        - Step 2: Interests (Select up to 5)
+        - Step 3: Career (Position & Education level)
+        - Step 4: ORCID Integration
+        - Step 5: Affiliation (Final institutional link)
+    - **Path B: Institutional** (2 Steps):
+        - Step 1: Search and select Institution immediately.
+        - Step 2: Interests (Select up to 5)
+        - Step 6: Completion (Skips Steps 3, 4, 5).
 5. **Completion**: User is automatically logged in and redirected to the homepage.
 
 ---
@@ -45,9 +51,12 @@ graph TD
     E -->|Yes| G[2FA Challenge]
     F --> G
     G --> H{Onboarding Done?}
-    H -->|No| I[Onboarding: Inst -> Int -> Edu -> ORCID]
-    H -->|Yes| J[Dashboard]
-    I --> J
+    H -->|No| I{Account Type?}
+    I -->|Individual| K[Steps 2-5: Int -> Edu -> ORCID -> Aff]
+    I -->|Institution| L[Step 2: Int only]
+    K --> J[Dashboard]
+    L --> J
+    H -->|Yes| J
 ```
 
 ### Database Schema / Data Structure
@@ -70,27 +79,28 @@ graph TD
 ## 🔧 Implementation Details
 
 ### Phase 1: Foundation & Backend
-- [ ] Extend Strapi User schema with custom fields.
-- [ ] Implement case-insensitive uniqueness for name/email.
-- [ ] Configure Nodemailer for verification links.
-- [ ] Create 2FA TOTP service in Strapi.
+- [x] Extend Strapi User schema with custom fields.
+- [x] Implement case-insensitive uniqueness for name/email.
+- [x] Configure Nodemailer for verification links.
+- [x] Create 2FA TOTP service in Strapi.
 
 ### Phase 2: Frontend Scaffolding
-- [ ] Setup shadcn/ui and Tailwind 4 tokens.
-- [ ] Build reusable Auth Layout (Logo, Sidebar/Illustration).
-- [ ] Implement Form validation (Zod + React Hook Form).
+- [x] Setup shadcn/ui and Tailwind 4 tokens.
+- [x] Build reusable Auth Layout (Logo, Sidebar/Illustration).
+- [x] Implement Form validation (Zod + React Hook Form).
 
 ### Phase 3: Auth & Core Validation
-- [ ] **Sign Up/Login**: Email/Password + Google OAuth.
-- [ ] **Validation**: 8+ chars password, special char/number requirement, duplicate email check.
-- [ ] **Email Verification**: Handler for unique links + success redirect to Login.
+- [x] **Sign Up/Login**: Email/Password + Google OAuth.
+- [x] **Validation**: 8+ chars password, special char/number requirement, duplicate email check.
+- [x] **Email Verification**: Handler for unique links + success redirect to Login.
 - [ ] **2FA Setup**: QR Code generation + TOTP verification.
 
-### Phase 4: Onboarding Journey (Step-by-Step)
-- [ ] **Institutional Affiliation**: Tabs for Individual/Institutional, searchable dropdown, "Skip" logic.
-- [ ] **Expertise & Interests**: Category-based selection, visual highlights, max 5 limit check.
-- [ ] **Education & Career**: Education level dropdown, institution type field, "Skip" logic.
-- [ ] **ORCID Integration**: 16-digit regex validation, "Skip" logic.
+### Phase 4: Onboarding Journey (Step-by-Step) [SHIPPED]
+- [x] **Account Type & Institution**: Branching logic for Individual/Institutional, searchable dropdown.
+- [x] **Expertise & Interests**: Category-based selection, visual highlights, max 5 limit check.
+- [x] **Education & Career**: Education level dropdown, institution type field, "Skip" logic (Individual only).
+- [x] **ORCID Integration**: 16-digit regex validation, "Skip" logic (Individual only).
+- [x] **Affiliation**: Search and select institution manually (Individual only).
 
 ### Phase 5: Password Recovery
 - [ ] **Request**: Forgot password link -> 6-digit OTP sent to email.
@@ -175,6 +185,18 @@ graph TD
 
 ---
 
+### ADR-003: Environment-Driven Sign-Up Redirection
+- **Status**: Accepted
+- **Context**: Signup redirection failed when email confirmation was enabled because the JWT was null. Additionally, the confirmation URL was hardcoded, causing 404s in some environments.
+- **Decision**:
+    1. Update frontend to treat `result.user` as a success signal for redirection.
+    2. Use `PUBLIC_URL` from the environment to dynamically construct `EMAIL_CONFIRMATION_URL`.
+    3. Configure Strapi's `email_confirmation_redirection` in the `bootstrap` lifecycle to ensure consistency with the frontend host.
+- **Consequences**: Ensures portability across environments (local, staging, prod) and fixes the "stuck on signup" bug.
+
+---
+
 ## 🔮 Future Enhancements
 - Automated institutional verification via email domain.
 - Multi-institutional profiles.
+

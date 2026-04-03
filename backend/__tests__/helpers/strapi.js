@@ -8,6 +8,7 @@ const fs = require("fs");
 const path = require("path");
 
 let instance;
+let dbPath;
 
 /**
  * Starts Strapi instance for testing
@@ -21,7 +22,8 @@ async function setupStrapi() {
     });
 
     // Set configuration manually before loading to ensure it's available
-    const dbPath = path.join(__dirname, "../../.tmp/test.db");
+    const dbName = `test-${Date.now()}.db`;
+    dbPath = path.join(__dirname, `../../.tmp/${dbName}`);
     const tmpDir = path.join(__dirname, "../../.tmp");
 
     if (!fs.existsSync(tmpDir)) {
@@ -52,6 +54,18 @@ async function setupStrapi() {
     instance.config.set("server.app.keys", ["testKey1", "testKey2"]);
 
     await instance.server.mount();
+
+    // Mock the email service to ensure no real emails/network calls are made during tests
+    if (instance.plugins["email"]) {
+      instance.plugins["email"].services.email.send = jest
+        .fn()
+        .mockImplementation((options) => {
+          console.log(
+            `[MOCK EMAIL] Sent to: ${options.to}, Subject: ${options.subject}`,
+          );
+          return Promise.resolve(true);
+        });
+    }
   }
   return instance;
 }
@@ -64,12 +78,12 @@ async function teardownStrapi() {
     await instance.destroy();
 
     // Clean up test database
-    const dbPath = path.join(__dirname, "../../.tmp/test.db");
-    if (fs.existsSync(dbPath)) {
+    if (dbPath && fs.existsSync(dbPath)) {
       fs.unlinkSync(dbPath);
     }
 
     instance = null;
+    dbPath = null;
   }
 }
 
@@ -133,12 +147,26 @@ async function grantPermissions(roleType, permissions) {
 
   for (const [controller, actions] of Object.entries(permissions)) {
     for (const action of actions) {
-      await strapi.query("plugin::users-permissions.permission").create({
-        data: {
-          action: `api::auth.auth.${action}`,
-          role: role.id,
-        },
-      });
+      const actionString = `api::auth.auth.${action}`;
+
+      // Check if permission already exists for this role
+      const existingPermission = await strapi
+        .query("plugin::users-permissions.permission")
+        .findOne({
+          where: {
+            action: actionString,
+            role: role.id,
+          },
+        });
+
+      if (!existingPermission) {
+        await strapi.query("plugin::users-permissions.permission").create({
+          data: {
+            action: actionString,
+            role: role.id,
+          },
+        });
+      }
     }
   }
 }

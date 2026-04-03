@@ -1,0 +1,49 @@
+{
+  "documentId": "pcr6tcoe437zczj0ictkxmuz",
+  "name": "Authenticated",
+  "description": "Default role given to authenticated user.",
+  "type": "authenticated",
+  "locale": null,
+  "permissions": [
+    {
+      "documentId": "update-me-auth-per-id",
+      "action": "api::auth.auth.updateMe",
+      "locale": null
+    },
+    {
+      "documentId": "i1qzvw333tf14mccwmx1hb6d",
+      "action": "api::institution.institution.find",
+      "locale": null
+    },
+    {
+      "documentId": "bd9q4bkewm4kytmc32s3n0u1",
+      "action": "api::interest.interest.find",
+      "locale": null
+    },
+    {
+      "documentId": "sdnqlsk0zpm39e6hdxbenfm0",
+      "action": "plugin::users-permissions.auth.changePassword",
+      "locale": null
+    },
+    {
+      "documentId": "v5lzwl0dgvddzprqikk7b9t7",
+      "action": "plugin::users-permissions.auth.logout",
+      "locale": null
+    },
+    {
+      "documentId": "find-user-perm-id",
+      "action": "plugin::users-permissions.user.find",
+      "locale": null
+    },
+    {
+      "documentId": "vn2jwoo3kjeuhfb3toew45t4",
+      "action": "plugin::users-permissions.user.me",
+      "locale": null
+    },
+    {
+      "documentId": "update-user-perm-id",
+      "action": "plugin::users-permissions.user.update",
+      "locale": null
+    }
+  ]
+}

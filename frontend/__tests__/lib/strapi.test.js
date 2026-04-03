@@ -22,7 +22,7 @@ describe('Strapi API Utilities', () => {
         meta: { pagination: { page: 1, pageSize: 10, pageCount: 1, total: 1 } },
       };
 
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
+      global.fetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockData,
       });
@@ -36,9 +36,10 @@ describe('Strapi API Utilities', () => {
     });
 
     it('should return null on HTTP error', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
+      global.fetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
+        json: jest.fn().mockResolvedValue({}),
       });
 
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -51,7 +52,7 @@ describe('Strapi API Utilities', () => {
     });
 
     it('should return null on network error', async () => {
-      (global.fetch as jest.Mock).mockRejectedValueOnce(
+      global.fetch.mockRejectedValueOnce(
         new Error('Network error')
       );
 
@@ -71,7 +72,7 @@ describe('Strapi API Utilities', () => {
         data: { id: 1, attributes: { name: 'New Item' } },
       };
 
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
+      global.fetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockResponse,
       });
@@ -89,18 +90,84 @@ describe('Strapi API Utilities', () => {
       expect(result).toEqual(mockResponse);
     });
 
-    it('should return null on POST error', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
+    it('should return error object on POST error', async () => {
+      global.fetch.mockResolvedValueOnce({
         ok: false,
         status: 400,
+        json: jest.fn().mockResolvedValue({ error: { message: 'Bad Request' } }),
       });
 
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       const result = await postToStrapi('/articles', { invalid: 'data' });
 
-      expect(result).toBeNull();
+      expect(result).toEqual({ error: 'Bad Request', status: 400 });
 
       consoleSpy.mockRestore();
+    });
+
+    it('should return error object on network error', async () => {
+      global.fetch.mockRejectedValueOnce(new Error('Network error'));
+
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const result = await postToStrapi('/articles', { name: 'Test' });
+
+      expect(result).toEqual({ error: 'Network error' });
+      expect(consoleSpy).toHaveBeenCalled();
+
+      consoleSpy.mockRestore();
+    });
+  });
+
+  describe('verifyEmailToken', () => {
+    const { verifyEmailToken } = require('@/lib/strapi');
+
+    it('should handle opaqueredirect as success', async () => {
+      global.fetch.mockResolvedValueOnce({
+        type: 'opaqueredirect',
+        status: 0,
+        ok: false 
+      });
+
+      const result = await verifyEmailToken('test-token');
+      expect(result).toEqual({ success: true });
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('confirmation=test-token'),
+        expect.objectContaining({ redirect: 'manual' })
+      );
+    });
+
+    it('should handle 302 redirect as success', async () => {
+      global.fetch.mockResolvedValueOnce({
+        status: 302,
+        ok: false
+      });
+
+      const result = await verifyEmailToken('test-token');
+      expect(result).toEqual({ success: true });
+    });
+
+    it('should handle successful JSON response', async () => {
+      const mockResponse = { user: { id: 1 }, jwt: 'token' };
+      global.fetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: { get: () => 'application/json' },
+        json: async () => mockResponse
+      });
+
+      const result = await verifyEmailToken('test-token');
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('should handle error response', async () => {
+      global.fetch.mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        json: async () => ({ error: { message: 'Invalid token' } })
+      });
+
+      const result = await verifyEmailToken('test-token');
+      expect(result).toEqual({ error: 'Invalid token', status: 400 });
     });
   });
 });

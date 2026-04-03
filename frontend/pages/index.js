@@ -163,7 +163,7 @@ export default function StyleGuide() {
                   <p className="text-xs text-brand-gray-500">
                     Using{" "}
                     <code className="text-brand-teal-700">
-                      variant="social" size="social"
+                      variant=&quot;social&quot; size=&quot;social&quot;
                     </code>
                   </p>
                 </div>

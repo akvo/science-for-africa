@@ -96,7 +96,7 @@ graph TD
 ### Phase 5: Password Recovery
 - [ ] **Request**: Forgot password link -> 6-digit OTP sent to email.
 - [ ] **Verify**: 30s resend timer + OTP validation.
-- [ ] **Reset**: Password reuse prevention + mismatch validation.
+- [ ] **Reset**: Standard Strapi reset flow with mismatch validation.
 
 ---
 
@@ -146,7 +146,7 @@ graph TD
 | Scenario | Behavior |
 | :--- | :--- |
 | **Expired Code** | After 60 mins -> "Code expired. Please request a new code." |
-| **Password Reuse** | "New password cannot be the same as your old password." |
+| **Password Reuse** | Handled by standard Strapi (No default reuse prevention). |
 | **Email Spamming** | 5 clicks/min -> Disable link for 60 seconds. |
 | **Mismatched Fields** | Disable "Reset password" button + "Passwords do not match." |
 

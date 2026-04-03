@@ -70,8 +70,9 @@ jest.mock("@/lib/strapi", () => ({
 describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
   beforeEach(() => {
     // Reset store before each test
-    const { resetStore } = useOnboardingStore.getState();
-    resetStore();
+    act(() => {
+      useOnboardingStore.getState().resetStore();
+    });
     jest.clearAllMocks();
   });
 
@@ -88,8 +89,9 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
     render(<OnboardingPage />);
 
     // Step 1: Individual should be selected by default or clickable
-    const { setUserType, updateFormData } = useOnboardingStore.getState();
-    setUserType("individual");
+    act(() => {
+      useOnboardingStore.getState().setUserType("individual");
+    });
 
     // Should see role type selector
 
@@ -98,7 +100,9 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
 
     // In Radix Select, items are often in a portal
     // For now, let's just manually call the store update to simulate selection
-    updateFormData({ roleType: "Researcher" });
+    act(() => {
+      useOnboardingStore.getState().updateFormData({ roleType: "Researcher" });
+    });
 
     const confirmBtn = screen.getByRole("button", { name: /Confirm/i });
     await waitFor(() => {
@@ -126,8 +130,9 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
 
   it("enforces max 5 interests in Step 2", async () => {
     // Advance to Step 2
-    const { setStep } = useOnboardingStore.getState();
-    setStep(2);
+    act(() => {
+      useOnboardingStore.getState().setStep(2);
+    });
 
     render(<OnboardingPage />);
 
@@ -156,7 +161,9 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
   });
 
   it("enables 'Confirm' button in Step 2 only after at least 1 interest is selected", async () => {
-    useOnboardingStore.getState().setStep(2);
+    act(() => {
+      useOnboardingStore.getState().setStep(2);
+    });
     render(<OnboardingPage />);
 
     // Wait for dynamic data
@@ -172,8 +179,12 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
   });
 
   test("renders Step 3 (Education & Career) and handles input", async () => {
-    useOnboardingStore.getState().setStep(3);
-    useOnboardingStore.getState().updateFormData({ educationInstitution: "" });
+    act(() => {
+      useOnboardingStore.getState().setStep(3);
+      useOnboardingStore
+        .getState()
+        .updateFormData({ educationInstitution: "" });
+    });
 
     const { getByText, getByPlaceholderText, findByText } = render(
       <OnboardingStep3 />,
@@ -199,10 +210,12 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
   });
 
   test("enables 'Confirm' button in Step 3 only after required fields are filled", () => {
-    useOnboardingStore.getState().setStep(3);
-    useOnboardingStore.getState().updateFormData({
-      educationLevel: "",
-      educationInstitution: "",
+    act(() => {
+      useOnboardingStore.getState().setStep(3);
+      useOnboardingStore.getState().updateFormData({
+        educationLevel: "",
+        educationInstitution: "",
+      });
     });
 
     const { getByRole } = render(<OnboardingStep3 />);
@@ -223,7 +236,9 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
   });
 
   test("renders Step 4 (ORCID) and handles input", async () => {
-    useOnboardingStore.getState().setStep(4);
+    act(() => {
+      useOnboardingStore.getState().setStep(4);
+    });
     const { getByPlaceholderText, getByRole } = render(<OnboardingStep4 />);
 
     expect(
@@ -259,7 +274,9 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
   });
 
   test("renders Step 5 (Affiliation) and handles completion", async () => {
-    useOnboardingStore.getState().setStep(5);
+    act(() => {
+      useOnboardingStore.getState().setStep(5);
+    });
     const { getByPlaceholderText, getByRole, findByText } = render(
       <OnboardingStep5 />,
     );

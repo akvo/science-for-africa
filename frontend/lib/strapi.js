@@ -36,6 +36,31 @@ export async function registerUser(userData) {
 }
 
 /**
+ * Login a user
+ */
+export async function loginUser(credentials) {
+  return postToStrapi("/auth/local", credentials, false);
+}
+
+/**
+ * Send password reset email
+ */
+export async function forgotPassword(email) {
+  return postToStrapi("/auth/forgot-password", { email }, false);
+}
+
+/**
+ * Reset password with code
+ */
+export async function resetPassword({ code, password, passwordConfirmation }) {
+  return postToStrapi(
+    "/auth/reset-password",
+    { code, password, passwordConfirmation },
+    false,
+  );
+}
+
+/**
  * Resend email confirmation
  */
 export async function resendVerification(email) {
@@ -47,27 +72,14 @@ export async function resendVerification(email) {
  */
 export async function verifyEmailToken(token) {
   try {
-    // We use apiClient here. If it redirects, axios will follow.
-    // If it succeeds (200), we return the data or a success flag.
     const response = await apiClient.get(
       `/auth/email-confirmation?confirmation=${token}`,
     );
-
-    // Strapi might return a result or just redirect.
-    // If axios followed the redirect and got a 200, it's a success.
     return response.data || { success: true };
   } catch (error) {
-    // If it's a redirect that axios couldn't handle or a real error:
     console.error("Error verifying email:", error);
     return error;
   }
-}
-
-/**
- * Login a user
- */
-export async function loginUser(credentials) {
-  return postToStrapi("/auth/local", credentials, false);
 }
 
 /**

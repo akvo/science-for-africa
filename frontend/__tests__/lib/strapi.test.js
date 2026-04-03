@@ -4,7 +4,15 @@
  * Updated to use axios apiClient instead of fetch.
  */
 
-import { fetchFromStrapi, postToStrapi, verifyEmailToken } from "@/lib/strapi";
+import {
+  fetchFromStrapi,
+  postToStrapi,
+  verifyEmailToken,
+  registerUser,
+  loginUser,
+  forgotPassword,
+  resetPassword,
+} from "@/lib/strapi";
 import apiClient from "@/lib/api-client";
 
 // Mock the api-client
@@ -96,13 +104,53 @@ describe("Strapi API Utilities (Axios)", () => {
       const result = await verifyEmailToken("test-token");
       expect(result).toEqual({ success: true });
     });
+  });
 
-    it("should handle error response", async () => {
-      const mockError = { error: "Invalid token", status: 400 };
-      apiClient.get.mockRejectedValueOnce(mockError);
+  describe("Auth Core (Unified Paths)", () => {
+    it("registerUser should use /auth/local/register path", async () => {
+      const mockUser = { email: "test@test.com" };
+      apiClient.post.mockResolvedValueOnce({ data: { user: {} } });
 
-      const result = await verifyEmailToken("test-token");
-      expect(result).toEqual(mockError);
+      await registerUser(mockUser);
+      expect(apiClient.post).toHaveBeenCalledWith(
+        "/auth/local/register",
+        mockUser,
+      );
+    });
+
+    it("loginUser should use /auth/local path", async () => {
+      const credentials = { identifier: "test", password: "pwd" };
+      apiClient.post.mockResolvedValueOnce({ data: { jwt: "token" } });
+
+      await loginUser(credentials);
+      expect(apiClient.post).toHaveBeenCalledWith("/auth/local", credentials);
+    });
+  });
+
+  describe("Password Recovery (Unified Paths)", () => {
+    it("forgotPassword should call POST /auth/forgot-password", async () => {
+      const email = "test@test.com";
+      apiClient.post.mockResolvedValueOnce({ data: { ok: true } });
+
+      await forgotPassword(email);
+      expect(apiClient.post).toHaveBeenCalledWith("/auth/forgot-password", {
+        email,
+      });
+    });
+
+    it("resetPassword should call POST /auth/reset-password", async () => {
+      const payload = {
+        code: "token",
+        password: "new",
+        passwordConfirmation: "new",
+      };
+      apiClient.post.mockResolvedValueOnce({ data: { ok: true } });
+
+      await resetPassword(payload);
+      expect(apiClient.post).toHaveBeenCalledWith(
+        "/auth/reset-password",
+        payload,
+      );
     });
   });
 });

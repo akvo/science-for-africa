@@ -164,7 +164,7 @@ export const LoginForm = () => {
             </Label>
           </div>
           <Link
-            href="/forgot-password"
+            href="/auth/forgot-password"
             className="text-sm text-brand-teal-700 font-bold hover:text-brand-teal-900 transition-colors"
           >
             Forgot password

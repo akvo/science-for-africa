@@ -55,14 +55,6 @@ module.exports = {
           type: "boolean",
           default: false,
         },
-        twoFactorSecret: {
-          type: "string", // Changed from password to string to avoid hashing
-          private: true,
-        },
-        twoFactorEnabled: {
-          type: "boolean",
-          default: false,
-        },
         verificationStatus: {
           type: "enumeration",
           enum: ["unverified", "verified"],
@@ -302,4 +294,3 @@ module.exports = {
     await seed(strapi);
   },
 };
-

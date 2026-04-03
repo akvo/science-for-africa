@@ -315,34 +315,6 @@
           "sortable": true
         }
       },
-      "twoFactorSecret": {
-        "edit": {
-          "label": "twoFactorSecret",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "twoFactorSecret",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "twoFactorEnabled": {
-        "edit": {
-          "label": "twoFactorEnabled",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "twoFactorEnabled",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "verificationStatus": {
         "edit": {
           "label": "verificationStatus",
@@ -591,16 +563,6 @@
           },
           {
             "name": "onboardingComplete",
-            "size": 4
-          }
-        ],
-        [
-          {
-            "name": "twoFactorSecret",
-            "size": 6
-          },
-          {
-            "name": "twoFactorEnabled",
             "size": 4
           }
         ],

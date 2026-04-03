@@ -1,63 +1,46 @@
 /**
  * Strapi API Utility Tests
  *
- * Example tests for utility functions that interact with APIs.
- * Demonstrates mocking fetch and testing async functions.
+ * Updated to use axios apiClient instead of fetch.
  */
 
-import { fetchFromStrapi, postToStrapi } from '@/lib/strapi';
+import { fetchFromStrapi, postToStrapi, verifyEmailToken } from "@/lib/strapi";
+import apiClient from "@/lib/api-client";
 
-// Mock global fetch
-global.fetch = jest.fn();
+// Mock the api-client
+jest.mock("@/lib/api-client", () => ({
+  get: jest.fn(),
+  post: jest.fn(),
+  put: jest.fn(),
+}));
 
-describe('Strapi API Utilities', () => {
+describe("Strapi API Utilities (Axios)", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('fetchFromStrapi', () => {
-    it('should fetch data successfully', async () => {
+  describe("fetchFromStrapi", () => {
+    it("should fetch data successfully", async () => {
       const mockData = {
-        data: [{ id: 1, attributes: { name: 'Test' } }],
-        meta: { pagination: { page: 1, pageSize: 10, pageCount: 1, total: 1 } },
+        data: [{ id: 1, attributes: { name: "Test" } }],
       };
 
-      global.fetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockData,
-      });
+      apiClient.get.mockResolvedValueOnce({ data: mockData });
 
-      const result = await fetchFromStrapi('/articles');
+      const result = await fetchFromStrapi("/articles");
 
-      expect(fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/articles')
-      );
+      expect(apiClient.get).toHaveBeenCalledWith("/articles");
       expect(result).toEqual(mockData);
     });
 
-    it('should return null on HTTP error', async () => {
-      global.fetch.mockResolvedValueOnce({
-        ok: false,
+    it("should return null on API error", async () => {
+      apiClient.get.mockRejectedValueOnce({
+        error: "Not Found",
         status: 404,
-        json: jest.fn().mockResolvedValue({}),
       });
 
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      const result = await fetchFromStrapi('/nonexistent');
-
-      expect(result).toBeNull();
-      expect(consoleSpy).toHaveBeenCalled();
-
-      consoleSpy.mockRestore();
-    });
-
-    it('should return null on network error', async () => {
-      global.fetch.mockRejectedValueOnce(
-        new Error('Network error')
-      );
-
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      const result = await fetchFromStrapi('/articles');
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+      const result = await fetchFromStrapi("/nonexistent");
 
       expect(result).toBeNull();
       expect(consoleSpy).toHaveBeenCalled();
@@ -66,108 +49,60 @@ describe('Strapi API Utilities', () => {
     });
   });
 
-  describe('postToStrapi', () => {
-    it('should post data successfully', async () => {
+  describe("postToStrapi", () => {
+    it("should post data successfully", async () => {
       const mockResponse = {
-        data: { id: 1, attributes: { name: 'New Item' } },
+        data: { id: 1, attributes: { name: "New Item" } },
       };
 
-      global.fetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockResponse,
+      apiClient.post.mockResolvedValueOnce({ data: mockResponse });
+
+      const result = await postToStrapi("/articles", { name: "New Item" });
+
+      expect(apiClient.post).toHaveBeenCalledWith("/articles", {
+        data: { name: "New Item" },
       });
-
-      const result = await postToStrapi('/articles', { name: 'New Item' });
-
-      expect(fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/articles'),
-        expect.objectContaining({
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ data: { name: 'New Item' } }),
-        })
-      );
       expect(result).toEqual(mockResponse);
     });
 
-    it('should return error object on POST error', async () => {
-      global.fetch.mockResolvedValueOnce({
-        ok: false,
-        status: 400,
-        json: jest.fn().mockResolvedValue({ error: { message: 'Bad Request' } }),
-      });
+    it("should return error object on POST error", async () => {
+      const mockError = { error: "Bad Request", status: 400 };
+      apiClient.post.mockRejectedValueOnce(mockError);
 
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      const result = await postToStrapi('/articles', { invalid: 'data' });
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+      const result = await postToStrapi("/articles", { invalid: "data" });
 
-      expect(result).toEqual({ error: 'Bad Request', status: 400 });
-
-      consoleSpy.mockRestore();
-    });
-
-    it('should return error object on network error', async () => {
-      global.fetch.mockRejectedValueOnce(new Error('Network error'));
-
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      const result = await postToStrapi('/articles', { name: 'Test' });
-
-      expect(result).toEqual({ error: 'Network error' });
-      expect(consoleSpy).toHaveBeenCalled();
+      expect(result).toEqual(mockError);
 
       consoleSpy.mockRestore();
     });
   });
 
-  describe('verifyEmailToken', () => {
-    const { verifyEmailToken } = require('@/lib/strapi');
+  describe("verifyEmailToken", () => {
+    it("should handle successful confirmation", async () => {
+      const mockResponse = { user: { id: 1 }, jwt: "token" };
+      apiClient.get.mockResolvedValueOnce({ data: mockResponse });
 
-    it('should handle opaqueredirect as success', async () => {
-      global.fetch.mockResolvedValueOnce({
-        type: 'opaqueredirect',
-        status: 0,
-        ok: false 
-      });
-
-      const result = await verifyEmailToken('test-token');
-      expect(result).toEqual({ success: true });
-      expect(fetch).toHaveBeenCalledWith(
-        expect.stringContaining('confirmation=test-token'),
-        expect.objectContaining({ redirect: 'manual' })
+      const result = await verifyEmailToken("test-token");
+      expect(result).toEqual(mockResponse);
+      expect(apiClient.get).toHaveBeenCalledWith(
+        expect.stringContaining("confirmation=test-token"),
       );
     });
 
-    it('should handle 302 redirect as success', async () => {
-      global.fetch.mockResolvedValueOnce({
-        status: 302,
-        ok: false
-      });
+    it("should handle success with empty response data", async () => {
+      apiClient.get.mockResolvedValueOnce({ data: null });
 
-      const result = await verifyEmailToken('test-token');
+      const result = await verifyEmailToken("test-token");
       expect(result).toEqual({ success: true });
     });
 
-    it('should handle successful JSON response', async () => {
-      const mockResponse = { user: { id: 1 }, jwt: 'token' };
-      global.fetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        headers: { get: () => 'application/json' },
-        json: async () => mockResponse
-      });
+    it("should handle error response", async () => {
+      const mockError = { error: "Invalid token", status: 400 };
+      apiClient.get.mockRejectedValueOnce(mockError);
 
-      const result = await verifyEmailToken('test-token');
-      expect(result).toEqual(mockResponse);
-    });
-
-    it('should handle error response', async () => {
-      global.fetch.mockResolvedValueOnce({
-        ok: false,
-        status: 400,
-        json: async () => ({ error: { message: 'Invalid token' } })
-      });
-
-      const result = await verifyEmailToken('test-token');
-      expect(result).toEqual({ error: 'Invalid token', status: 400 });
+      const result = await verifyEmailToken("test-token");
+      expect(result).toEqual(mockError);
     });
   });
 });

@@ -196,6 +196,23 @@ module.exports = {
       }
     };
 
+    // Override the emailConfirmation controller to return JSON instead of a 302 redirect
+    // This supports API-driven verification from the frontend
+    const originalEmailConfirmation =
+      usersPermissionsPlugin.controller("auth").emailConfirmation;
+
+    usersPermissionsPlugin.controller("auth").emailConfirmation = async (
+      ctx,
+    ) => {
+      await originalEmailConfirmation(ctx);
+
+      // If the original logic set a redirect, we transform it into a JSON response
+      if (ctx.response.status === 302) {
+        ctx.body = { success: true };
+        ctx.status = 200;
+      }
+    };
+
     // 3. Update Swagger documentation for fullName
     try {
       if (strapi.plugin("documentation")) {
@@ -235,9 +252,14 @@ module.exports = {
     });
     const settings = await advancedStore.get();
 
-    const emailRedirectUrl =
+    const frontendVerifyUrl =
       process.env.EMAIL_CONFIRMATION_URL ||
       "http://localhost:3000/auth/verify-email";
+
+    // For API-driven verification from the frontend, we don't want the backend to redirect.
+    // If redirection is set, Axios calls from the frontend will fail due to CORS on the redirect target.
+    // Setting this to an empty string tells Strapi to return a JSON response instead of a 302 redirect.
+    const emailRedirectUrl = "";
 
     const isEmailEnabled = settings.email_confirmation;
     const isRedirectOk =
@@ -252,7 +274,7 @@ module.exports = {
         },
       });
       strapi.log.info(
-        `Email verification settings synchronized to ${emailRedirectUrl}`,
+        `Email verification settings synchronized (Redirection disabled for API-driven flow)`,
       );
     }
 
@@ -266,7 +288,7 @@ module.exports = {
     let emailUpdated = false;
 
     if (emailSettings && emailSettings.email_confirmation) {
-      const confirmationLink = `${emailRedirectUrl}?confirmation=<%= CODE %>`;
+      const confirmationLink = `${frontendVerifyUrl}?confirmation=<%= CODE %>`;
       const brandedBody = `
         <p>Hello <%= USER.username %>,</p>
         <p>Thank you for joining the Science for Africa platform. To complete your registration and active your account, please click the button below to verify your email address:</p>
@@ -289,7 +311,10 @@ module.exports = {
     }
 
     if (emailSettings && emailSettings.reset_password) {
-      const frontendUrl = emailRedirectUrl.replace(/\/auth\/verify-email$/, "");
+      const frontendUrl = frontendVerifyUrl.replace(
+        /\/auth\/verify-email$/,
+        "",
+      );
       const resetLink = `${frontendUrl}/auth/reset-password?code=<%= TOKEN %>`;
       const brandedResetBody = `
         <p>Hello <%= USER.username %>,</p>

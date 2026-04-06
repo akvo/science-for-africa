@@ -27,7 +27,7 @@ docker compose -f compose.mimic-prod.yml up --build
 ## 📁 Project Structure
 
 ```
-${PROJECT_DIR}/
+science-for-africa/
 ├── backend/                    # Strapi CMS
 │   ├── __tests__/             # Backend test files
 │   │   ├── helpers/           # Test utilities
@@ -88,7 +88,7 @@ ${PROJECT_DIR}/
 
 ### Database (PostgreSQL)
 - **Host**: localhost:5432
-- **Database**: ${PROJECT_DIR}
+- **Database**: science_of_africa
 - **Username**: akvo
 - **Password**: password
 - **Admin Interface**: http://localhost:5050
@@ -133,13 +133,13 @@ docker compose -f compose.mimic-prod.yml logs
 ### Database Operations
 ```bash
 # Access database directly
-docker compose exec db psql -U akvo -d ${PROJECT_DIR}
+docker compose exec db psql -U akvo -d science-for-africa
 
 # Backup database
-docker compose exec db pg_dump -U akvo ${PROJECT_DIR} > backup.sql
+docker compose exec db pg_dump -U akvo science_of_africa > backup.sql
 
 # Restore database
-cat backup.sql | docker compose exec -T db psql -U akvo -d ${PROJECT_DIR}
+cat backup.sql | docker compose exec -T db psql -U akvo -d science_of_africa
 ```
 
 ## 🛠️ Configuration
@@ -176,13 +176,13 @@ The setup includes Mailpit for email testing:
 ### Environment-Specific Builds
 ```bash
 # Build production images
-docker build -t ${PROJECT_DIR}-backend ./backend
-docker build -t ${PROJECT_DIR}-frontend ./frontend
-docker build -t ${PROJECT_DIR}-nginx ./nginx
+docker build -t science-for-africa-backend ./backend
+docker build -t science-for-africa-frontend ./frontend
+docker build -t science-for-africa-nginx ./nginx
 
 # Push to registry
-docker tag ${PROJECT_DIR}-backend your-registry/${PROJECT_DIR}-backend:latest
-docker push your-registry/${PROJECT_DIR}-backend:latest
+docker tag science-for-africa-backend your-registry/science-for-africa-backend:latest
+docker push your-registry/science-for-africa-backend:latest
 ```
 
 ## 🔐 Security Considerations
@@ -329,8 +329,8 @@ For detailed testing documentation, see [TESTING.md](TESTING.md).
 ## 📚 Documentation
 
 ### Key Technologies
-- [Strapi v4](https://docs.strapi.io/) - Headless CMS
-- [Next.js 14](https://nextjs.org/docs) - React Framework
+- [Strapi v5](https://docs.strapi.io/) - Headless CMS
+- [Next.js 16](https://nextjs.org/docs) - React Framework (Tailwind 4)
 - [PostgreSQL 16](https://www.postgresql.org/docs/) - Database
 - [Docker](https://docs.docker.com/) - Containerization
 - [Nginx](https://nginx.org/en/docs/) - Reverse Proxy
@@ -373,7 +373,17 @@ docker builder prune -f
 docker compose build --no-cache
 ```
 
-#### Permission Issues
+#### Permission Issues (EACCES)
+If the backend fails to start with `EACCES: permission denied` for the documentation plugin, run:
+```bash
+sudo chown -R 1000:1000 backend/src/extensions/documentation
+```
+Or delete the generated file on the host to let Docker recreate it:
+```bash
+rm backend/src/extensions/documentation/documentation/1.0.0/full_documentation.json
+```
+
+#### File Permissions (General)
 ```bash
 # Fix file permissions (if needed)
 sudo chown -R $USER:$USER .

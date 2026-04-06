@@ -1,48 +1,33 @@
 {
-  "documentId": "pcr6tcoe437zczj0ictkxmuz",
+  "documentId": "u67esi1zolbtgo8e9anvr6gi",
   "name": "Authenticated",
   "description": "Default role given to authenticated user.",
   "type": "authenticated",
   "locale": null,
   "permissions": [
     {
-      "documentId": "update-me-auth-per-id",
-      "action": "api::auth.auth.updateMe",
-      "locale": null
-    },
-    {
-      "documentId": "i1qzvw333tf14mccwmx1hb6d",
+      "documentId": "t98wfv4ar1wdd04yqdjduh6a",
       "action": "api::institution.institution.find",
       "locale": null
     },
     {
-      "documentId": "bd9q4bkewm4kytmc32s3n0u1",
+      "documentId": "wt0awwpc8bl6zktg1spucdgs",
       "action": "api::interest.interest.find",
       "locale": null
     },
     {
-      "documentId": "sdnqlsk0zpm39e6hdxbenfm0",
+      "documentId": "v3ysu49mekfo4et6pk0vy74p",
       "action": "plugin::users-permissions.auth.changePassword",
       "locale": null
     },
     {
-      "documentId": "v5lzwl0dgvddzprqikk7b9t7",
+      "documentId": "sqrs6u266ha31mrgs9ypbkwo",
       "action": "plugin::users-permissions.auth.logout",
       "locale": null
     },
     {
-      "documentId": "find-user-perm-id",
-      "action": "plugin::users-permissions.user.find",
-      "locale": null
-    },
-    {
-      "documentId": "vn2jwoo3kjeuhfb3toew45t4",
+      "documentId": "z2trbrdrd229wenzi8bv8dn6",
       "action": "plugin::users-permissions.user.me",
-      "locale": null
-    },
-    {
-      "documentId": "update-user-perm-id",
-      "action": "plugin::users-permissions.user.update",
       "locale": null
     }
   ]

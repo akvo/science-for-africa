@@ -86,7 +86,7 @@ graph TD
 - [x] **Validation**: 8+ chars password, special char/number requirement, duplicate email check.
 - [x] **Email Verification**: Handler for unique links + success redirect to Login.
 
-### Phase 4: Onboarding Journey (Step-by-Step) [SHIPPED]
+### Phase 4: Onboarding Journey (Step-by-Step)
 - [x] **Account Type & Institution**: Branching logic for Individual/Institutional, searchable dropdown.
 - [x] **Expertise & Interests**: Category-based selection, visual highlights, max 5 limit check.
 - [x] **Education & Career**: Education level dropdown, institution type field, "Skip" logic (Individual only).
@@ -94,9 +94,9 @@ graph TD
 - [x] **Affiliation**: Search and select institution manually (Individual only).
 
 ### Phase 5: Password Recovery
-- [ ] **Request**: Forgot password link -> 6-digit OTP sent to email.
-- [ ] **Verify**: 30s resend timer + OTP validation.
-- [ ] **Reset**: Standard Strapi reset flow with mismatch validation.
+- [x] **Request**: Forgot password link -> Strapi standard forgot password email with a secure reset link.
+- [x] **Verify**: User clicks the secure URL containing the reset code.
+- [x] **Reset**: Standard Strapi reset flow with mismatch validation on the frontend.
 
 ---
 
@@ -106,15 +106,10 @@ graph TD
 - **Method**: `POST`
 - **Path**: `/api/auth/local/register` (Strapi default, extended)
 
-### 2FA Setup
----
-
----
-
 ## ✅ Implementation Checklist
-- [ ] Email templates verified in multiple clients.
-- [ ] Zod schemas match Strapi constraints.
-- [ ] No secrets leaked in frontend bundles.
+- [x] Email templates verified in multiple clients.
+- [x] Zod schemas match Strapi constraints.
+- [x] No secrets leaked in frontend bundles.
 
 ---
 

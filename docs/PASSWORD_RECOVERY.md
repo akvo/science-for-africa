@@ -1,47 +1,94 @@
-# Feature Specification: Password Recovery Flow
+# Password Recovery — Implementation Specification
 
-## Overview
-Password recovery allows users to reset their forgotten passwords securely using an email-based flow. This implementation uses standard Strapi v5 authentication endpoints from the `users-permissions` plugin.
+## 📊 Overview
 
-## User Persona
-- **Registered User**: Has an account but cannot log in due to a forgotten password.
+### Purpose
+Password recovery allows users to reset their forgotten passwords securely using an email-based flow, ensuring they can seamlessly regain access to their account.
 
-## Flow & Requirements
+### Key Principle
+**Secure Standard Recovery**: This implementation relies on the well-tested, standard Strapi v5 authentication endpoints from the `users-permissions` plugin to ensure security and predictability.
 
-### 1. Forgot Password Request
-- **Route**: `/forgot-password`
-- **Backend Endpoint**: `POST /api/auth/forgot-password`
-- **UI**: Email input field, CSRF/Rate-limit protection (handled by Strapi).
-- **Process**:
-  - User submits email.
-  - Request is sent to Strapi's standard endpoint which generates a token and sends an email.
-  - Frontend displays a success state: "If an account exists for this email, you will receive a reset link shortly."
+### User Experience
+1. User navigates to `/forgot-password` and submits their email.
+2. User receives an email with a secure reset link.
+3. User clicks the link, heading to `/reset-password?code=...`.
+4. User enters a new password, validates it, and submits.
+5. User logs in with newly established credentials.
 
-### 2. Reset Password Submission
-- **Route**: `/reset-password?code=...`
-- **Backend Endpoint**: `POST /api/auth/reset-password`
-- **UI**: New Password, Confirm Password inputs.
-- **Process**:
-  - User follows link from email.
-  - Frontend extracts `code` from the URL.
-  - User enters new password.
-  - Frontend validates:
-    - Match: "Passwords do not match."
-    - Strength: (Shared project standard).
+---
 
-### Authentication Endpoints
-The application uses standard Strapi `users-permissions` plugin endpoints:
-- `POST /api/auth/local` (Login)
-- `POST /api/auth/local/register` (Registration)
-- `POST /api/auth/forgot-password` (Forgot Password)
-- `POST /api/auth/reset-password` (Reset Password)
-- `POST /api/auth/send-email-confirmation` (Email Verification)
+## 🎯 Design Principles
+- **Seamless Triage**: Provide immediate feedback if passwords do not match or lack strength.
+- **Unified Standard**: Leverage pre-built `users-permissions` logic without custom overriding for reliability.
 
-## UI Designs
-Refer to Figma node [101:24452](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=101-24452).
+---
 
-## Tech AC
-- Uses `apiClient` (Axios) for all HTTP calls.
-- `strapi.js` updated with unified `/auth/` paths.
-- Forms built with React Hook Form + Zod.
-- Full TDD coverage for the `strapi.js` library methods.
+## 📐 Architecture Design
+
+### Data Flow / Logic Flow
+```mermaid
+graph TD
+    A[Forgot Password Request] --> B[Strapi /forgot-password]
+    B --> C[Email sent to User]
+    C --> D[User clicks link]
+    D --> E[Reset Password Form frontend]
+    E --> F[Strapi /reset-password]
+    F -->|Success| G[Password Updated]
+    F -->|Failure| H[Error Handling]
+```
+
+### Database Schema / Data Structure
+No database schema changes required. Relies on standard Strapi user entity parameters.
+
+---
+
+## 🔧 Implementation Details
+
+### Phase 1: Forgot Password Request
+- [x] Create UI with email input field.
+- [x] Protect form with Strapi-handled CSRF/Rate-limits.
+- [x] Show success state: "If an account exists for this email, you will receive a reset link shortly."
+
+### Phase 2: Reset Password Submission
+- [x] Extract `code` URL parameter from the arriving link.
+- [x] Create UI for New Password and Confirm Password inputs.
+- [x] Validate password match and strength.
+
+---
+
+## 📡 API Reference
+
+### Forgot Password
+- **Method**: `POST`
+- **Path**: `/api/auth/forgot-password`
+- **Request Body**: `{"email": "user@example.com"}`
+- **Response**: `200 OK`
+
+### Reset Password
+- **Method**: `POST`
+- **Path**: `/api/auth/reset-password`
+- **Request Body**: `{"code": "...", "password": "...", "passwordConfirmation": "..."}`
+- **Response**: `200 OK`
+
+---
+
+## ✅ Implementation Checklist
+- [x] Forms built with React Hook Form + Zod.
+- [x] Uses `apiClient` (Axios) for all HTTP calls.
+- [x] `strapi.js` updated with unified `/auth/` paths.
+- [x] Full TDD coverage for the `strapi.js` library methods.
+
+---
+
+## 📊 Example Scenarios
+
+### Scenario 1: Expired Code Recovery
+1. User clicks link after 60 mins.
+2. Submits new password.
+3. Receives "Code expired. Please request a new code." error.
+
+---
+
+## 🔮 Future Enhancements
+- Password reuse prevention logic.
+- UI improvements for email spamming prevention (60s timer UX).

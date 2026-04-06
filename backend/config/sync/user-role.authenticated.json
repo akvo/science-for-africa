@@ -29,6 +29,26 @@
       "documentId": "z2trbrdrd229wenzi8bv8dn6",
       "action": "plugin::users-permissions.user.me",
       "locale": null
+    },
+    {
+      "action": "api::auth.auth.updateMe",
+      "locale": null
+    },
+    {
+      "action": "api::auth.auth.generate2FA",
+      "locale": null
+    },
+    {
+      "action": "api::auth.auth.verify2FA",
+      "locale": null
+    },
+    {
+      "action": "api::auth.auth.login2FA",
+      "locale": null
+    },
+    {
+      "action": "api::auth.auth.getStatus",
+      "locale": null
     }
   ]
 }

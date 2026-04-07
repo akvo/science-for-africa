@@ -83,11 +83,7 @@ module.exports = ({ env }) => {
         importOnBootstrap: false,
         customTypes: [],
         excludedTypes: [],
-        excludedConfig: [
-          "core-store.plugin_users-permissions_grant",
-          "core-store.plugin_users-permissions_advanced",
-          "core-store.plugin_users-permissions_email",
-        ],
+        excludedConfig: ["core-store.plugin_users-permissions_grant"],
       },
     },
     "users-permissions": {
@@ -98,7 +94,7 @@ module.exports = ({ env }) => {
         advanced: {
           email_confirmation_redirection:
             env("NEXT_PUBLIC_FRONTEND_URL", "http://localhost:3000") +
-            "/login?confirmed=true",
+            "/auth/verify-email",
         },
       },
     },

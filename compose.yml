@@ -29,7 +29,8 @@ services:
       - 1337:1337
       - 5173:5173
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       APP_KEYS: ${APP_KEYS:-mAzXoQi1qI3PzEhF1MNWPA==,dEkYXLPUuSlC26STB0ZyKA==}
       API_TOKEN_SALT: ${API_TOKEN_SALT:-Lniabeo/mh7ynqF/GTfpOw==}
@@ -62,6 +63,11 @@ services:
     restart: always
     volumes:
       - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME:-akvo} -d ${DATABASE_NAME:-science_of_africa}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
       - 5432:5432
     environment:

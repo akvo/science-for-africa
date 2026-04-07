@@ -1,54 +1,60 @@
-const isEmpty = value => {
+const isEmpty = (value) => {
   return (
-    value == null ||  // use `==` to check for null || undefined
-    (typeof value === 'object' && Object.keys(value).length === 0) ||
-    (typeof value === 'string' && value.trim().length === 0)
-  )
-}
+    value == null || // use `==` to check for null || undefined
+    (typeof value === "object" && Object.keys(value).length === 0) ||
+    (typeof value === "string" && value.trim().length === 0)
+  );
+};
 
 module.exports = ({ env }) => {
-  const emailConfig = (!isEmpty(env('SMTP_HOST')) && !isEmpty(env('SMTP_USERNAME')) && !isEmpty(env('SMTP_PASSWORD')))
-    ? {
-      provider: 'nodemailer',
-      providerOptions: {
-        host: env('SMTP_HOST'),
-        port: env('SMTP_PORT'),
-        auth: {
-          user: env('SMTP_USERNAME'),
-          pass: env('SMTP_PASSWORD'),
-        },
-      },
-    } : {
-      provider: 'nodemailer',
-      providerOptions: {
-        host: 'mailpit',
-        port: 1025,
-        ignoreTLS: true,
-        auth: false,
-      },
-    };
+  const emailConfig =
+    !isEmpty(env("SMTP_HOST")) &&
+    !isEmpty(env("SMTP_USERNAME")) &&
+    !isEmpty(env("SMTP_PASSWORD"))
+      ? {
+          provider: "nodemailer",
+          providerOptions: {
+            host: env("SMTP_HOST"),
+            port: env("SMTP_PORT"),
+            auth: {
+              user: env("SMTP_USERNAME"),
+              pass: env("SMTP_PASSWORD"),
+            },
+          },
+        }
+      : {
+          provider: "nodemailer",
+          providerOptions: {
+            host: "mailpit",
+            port: 1025,
+            ignoreTLS: true,
+            auth: false,
+          },
+        };
 
-  const uploadConfig = (!isEmpty(env.json('GCS_SERVICE_ACCOUNT')))
+  const uploadConfig = !isEmpty(env.json("GCS_SERVICE_ACCOUNT"))
     ? {
-      provider: '@strapi-community/strapi-provider-upload-google-cloud-storage',
-      providerOptions: {
-        serviceAccount: env.json('GCS_SERVICE_ACCOUNT'),
-        bucketName: env('GCS_BUCKET_NAME'),
-        basePath: env('GCS_BASE_PATH'),
-        baseUrl: env('GCS_BASE_URL'),
-        publicFiles: env('GCS_PUBLIC_FILES'),
-        uniform: env('GCS_UNIFORM'),
-        skipCheckBucket: true,
-      },
-    } : {};
+        provider:
+          "@strapi-community/strapi-provider-upload-google-cloud-storage",
+        providerOptions: {
+          serviceAccount: env.json("GCS_SERVICE_ACCOUNT"),
+          bucketName: env("GCS_BUCKET_NAME"),
+          basePath: env("GCS_BASE_PATH"),
+          baseUrl: env("GCS_BASE_URL"),
+          publicFiles: env("GCS_PUBLIC_FILES"),
+          uniform: env("GCS_UNIFORM"),
+          skipCheckBucket: true,
+        },
+      }
+    : {};
 
   return {
     email: {
       config: {
         ...emailConfig,
         settings: {
-          defaultFrom: env('SMTP_FROM'),
-          defaultReplyTo: env('SMTP_FROM'),
+          defaultFrom: env("SMTP_FROM"),
+          defaultReplyTo: env("SMTP_FROM"),
         },
       },
     },
@@ -61,35 +67,38 @@ module.exports = ({ env }) => {
     documentation: {
       enabled: true,
       config: {
-        openapi: '3.0.0',
+        openapi: "3.0.0",
         info: {
-          version: '1.0.0',
-          title: 'Science for Africa API',
-          description: 'Official API documentation for the Science for Africa platform.',
+          version: "1.0.0",
+          title: "Science for Africa API",
+          description:
+            "Official API documentation for the Science for Africa platform.",
         },
       },
     },
-    'config-sync': {
+    "config-sync": {
       enabled: true,
       config: {
-        syncDir: 'config/sync/',
+        syncDir: "config/sync/",
         importOnBootstrap: false,
         customTypes: [],
         excludedTypes: [],
         excludedConfig: [
-          'core-store.plugin_users-permissions_grant',
-          'core-store.plugin_users-permissions_advanced',
-          'core-store.plugin_users-permissions_email',
+          "core-store.plugin_users-permissions_grant",
+          "core-store.plugin_users-permissions_advanced",
+          "core-store.plugin_users-permissions_email",
         ],
       },
     },
-    'users-permissions': {
+    "users-permissions": {
       config: {
         register: {
-          allowedFields: ['fullName'],
+          allowedFields: ["fullName"],
         },
         advanced: {
-          email_confirmation_redirection: env('NEXT_PUBLIC_FRONTEND_URL', 'http://localhost:3000') + '/login?confirmed=true',
+          email_confirmation_redirection:
+            env("NEXT_PUBLIC_FRONTEND_URL", "http://localhost:3000") +
+            "/login?confirmed=true",
         },
       },
     },

@@ -8,5 +8,9 @@ if [ "$NODE_ENV" = "production" ]; then
     npm run start
 else
     echo "✅ Starting Strapi in development mode..."
+    # Give the database a few seconds to fully initialize
+    echo "⏳ Waiting for database..."
+    sleep 10
+    npm run config-sync -- import --yes
     npm run develop
 fi

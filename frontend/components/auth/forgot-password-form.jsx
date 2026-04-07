@@ -109,7 +109,7 @@ export const ForgotPasswordForm = () => {
           Reset password
         </h1>
         <p className="text-base text-brand-gray-500 leading-relaxed">
-          Enter your email address or username and we'll send you a link to
+          Enter your email address or username and we&apos;ll send you a link to
           reset your password.
         </p>
       </div>

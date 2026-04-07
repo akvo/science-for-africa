@@ -133,8 +133,8 @@ export const ResetPasswordForm = () => {
           Create new password
         </h1>
         <p className="text-base text-brand-gray-500 leading-relaxed">
-          Enter your email address or username and we'll send you a link to
-          reset your password.
+          Please enter and confirm your new password below to complete the reset
+          process.
         </p>
       </div>
 

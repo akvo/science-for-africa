@@ -414,7 +414,7 @@
       "locale": null
     },
     {
-      "documentId": "zvrjum3qsgcmmxzttdl3aopb",
+      "documentId": "wk77lqguj6z0tlwo9qaegbhh",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -441,8 +441,6 @@
           "affiliationStatus",
           "orcidId",
           "onboardingComplete",
-          "twoFactorSecret",
-          "twoFactorEnabled",
           "verificationStatus",
           "socialLinks",
           "userType",
@@ -473,7 +471,7 @@
       "locale": null
     },
     {
-      "documentId": "ikf43ykyoqqmuygzz9tyf7mo",
+      "documentId": "i2pqixzcnkc4vndabn7zbo3t",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -500,8 +498,6 @@
           "affiliationStatus",
           "orcidId",
           "onboardingComplete",
-          "twoFactorSecret",
-          "twoFactorEnabled",
           "verificationStatus",
           "socialLinks",
           "userType",
@@ -514,7 +510,7 @@
       "locale": null
     },
     {
-      "documentId": "g1z50qswho9jrbzaf7cg42rj",
+      "documentId": "wn1zjd6bij3z2wzk80it6mzj",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -541,8 +537,6 @@
           "affiliationStatus",
           "orcidId",
           "onboardingComplete",
-          "twoFactorSecret",
-          "twoFactorEnabled",
           "verificationStatus",
           "socialLinks",
           "userType",

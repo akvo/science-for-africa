@@ -29,20 +29,21 @@ services:
       - 1337:1337
       - 5173:5173
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
-      APP_KEYS: "mAzXoQi1qI3PzEhF1MNWPA==,dEkYXLPUuSlC26STB0ZyKA=="
-      API_TOKEN_SALT: Lniabeo/mh7ynqF/GTfpOw==
-      ADMIN_JWT_SECRET: Hr+r0OSOTgUzfce6q9/AvA==
-      TRANSFER_TOKEN_SALT: 95PYtBD/vlf9x0fB76N/sw==
-      JWT_SECRET: T+8DOhQmklZ+TH7ihClOKg==
-      DATABASE_CLIENT: postgres
-      DATABASE_HOST: db
-      DATABASE_PORT: 5432
-      DATABASE_NAME: science_of_africa
-      DATABASE_USERNAME: akvo
-      DATABASE_PASSWORD: password
-      DATABASE_SSL: false
+      APP_KEYS: ${APP_KEYS:-mAzXoQi1qI3PzEhF1MNWPA==,dEkYXLPUuSlC26STB0ZyKA==}
+      API_TOKEN_SALT: ${API_TOKEN_SALT:-Lniabeo/mh7ynqF/GTfpOw==}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:-Hr+r0OSOTgUzfce6q9/AvA==}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT:-95PYtBD/vlf9x0fB76N/sw==}
+      JWT_SECRET: ${JWT_SECRET:-T+8DOhQmklZ+TH7ihClOKg==}
+      DATABASE_CLIENT: ${DATABASE_CLIENT:-postgres}
+      DATABASE_HOST: ${DATABASE_HOST:-db}
+      DATABASE_PORT: ${DATABASE_PORT:-5432}
+      DATABASE_NAME: ${DATABASE_NAME:-science_of_africa}
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-akvo}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-password}
+      DATABASE_SSL: ${DATABASE_SSL:-false}
       EMAIL_CONFIRMATION_URL: ${EMAIL_CONFIRMATION_URL:-http://localhost:3000/auth/verify-email}
       PASSWORD_RESET_URL: ${PASSWORD_RESET_URL:-http://localhost:3000/auth/reset-password}
       SMTP_HOST: ${SMTP_HOST:-}
@@ -62,6 +63,11 @@ services:
     restart: always
     volumes:
       - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME:-akvo} -d ${DATABASE_NAME:-science_of_africa}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
       - 5432:5432
     environment:

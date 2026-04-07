@@ -3,6 +3,12 @@ set -eu
 
 echo "🚀 Starting Strapi server..."
 
+# Configuration Synchronization
+# We run this before the server starts to ensure permissions are restored
+# This is especially useful for fresh database environments (dev/mimic-prod)
+echo "🔄 Importing configuration..."
+npm run config-sync -- import --yes
+
 if [ "$NODE_ENV" = "production" ]; then
     echo "✅ Starting Strapi in production mode..."
     npm run start

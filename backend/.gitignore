@@ -112,3 +112,6 @@ exports
 dist
 build
 .strapi-updater.json
+
+# Strapi Documentation plugin generated files
+src/extensions/documentation/documentation/

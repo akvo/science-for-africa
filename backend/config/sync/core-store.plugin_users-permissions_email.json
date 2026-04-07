@@ -1,0 +1,34 @@
+{
+  "key": "plugin_users-permissions_email",
+  "value": {
+    "reset_password": {
+      "display": "Email.template.reset_password",
+      "icon": "sync",
+      "options": {
+        "from": {
+          "name": "Administration Panel",
+          "email": "no-reply@strapi.io"
+        },
+        "response_email": "",
+        "object": "Reset password",
+        "message": "<p>We heard that you lost your password. Sorry about that!</p>\n\n<p>But don’t worry! You can use the following link to reset your password:</p>\n<p><%= URL %>?code=<%= TOKEN %></p>\n\n<p>Thanks.</p>"
+      }
+    },
+    "email_confirmation": {
+      "display": "Email.template.email_confirmation",
+      "icon": "check-square",
+      "options": {
+        "from": {
+          "name": "Science for Africa",
+          "email": "no-reply@strapi.io"
+        },
+        "response_email": "",
+        "object": "Verify your Science for Africa account",
+        "message": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n</head>\n<body style=\"margin:0;padding:0;font-family:Arial,sans-serif;background-color:#f5f5f5;color:#313131;\">\n  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;\">\n    <tr>\n      <td align=\"center\" style=\"padding:40px 20px;\">\n        <table role=\"presentation\" style=\"width:100%;max-width:600px;border-collapse:collapse;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);\">\n          <!-- Header -->\n          <tr>\n            <td style=\"padding:30px 40px;text-align:center;background-color:#008080;\">\n              <h1 style=\"color:#ffffff;margin:0;font-size:24px;font-weight:bold;letter-spacing:-0.01em;\">Confirm Your Email</h1>\n            </td>\n          </tr>\n          <!-- Body -->\n          <tr>\n            <td style=\"padding:40px 40px;\">\n              <div style=\"font-size:16px;line-height:1.6;color:#313131;\">\n                \n        <p>Hello <%= USER.username %>,</p>\n        <p>Thank you for joining the Science for Africa platform. To complete your registration and active your account, please click the button below to verify your email address:</p>\n        <div style=\"text-align: center; margin: 32px 0;\">\n          <a href=\"http://localhost:3000/auth/verify-email?confirmation=<%= CODE %>\" style=\"background-color: #008080; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;\">Verify Email Address</a>\n        </div>\n        <p>If the button doesn't work, you can also copy and paste the following link into your browser:</p>\n        <p style=\"word-break: break-all; color: #008080;\">http://localhost:3000/auth/verify-email?confirmation=<%= CODE %></p>\n        <p>If you did not create an account, please ignore this email.</p>\n      \n              </div>\n            </td>\n          </tr>\n          <!-- Footer -->\n          <tr>\n            <td style=\"padding:20px 40px;background-color:#fafafa;text-align:center;border-top:1px solid #eeeeee;\">\n              <p style=\"margin:0;font-size:12px;color:#999999;font-weight:500;\">&copy; 2026 Science for Africa. All rights reserved.</p>\n              <p style=\"margin:8px 0 0;font-size:11px;color:#b5b5b5;\">This is an automated message from the Science for Africa platform.</p>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>"
+      }
+    }
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

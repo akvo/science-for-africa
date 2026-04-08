@@ -1,4 +1,4 @@
-# Science of Africa
+# Science for Africa
 
 ## 🚀 Quick Start
 
@@ -88,7 +88,7 @@ science-for-africa/
 
 ### Database (PostgreSQL)
 - **Host**: localhost:5432
-- **Database**: science_of_africa
+- **Database**: science_for_africa
 - **Username**: akvo
 - **Password**: password
 - **Admin Interface**: http://localhost:5050
@@ -133,13 +133,13 @@ docker compose -f compose.mimic-prod.yml logs
 ### Database Operations
 ```bash
 # Access database directly
-docker compose exec db psql -U akvo -d science-for-africa
+docker compose exec db psql -U akvo -d science_for_africa
 
 # Backup database
-docker compose exec db pg_dump -U akvo science_of_africa > backup.sql
+docker compose exec db pg_dump -U akvo science_for_africa > backup.sql
 
 # Restore database
-cat backup.sql | docker compose exec -T db psql -U akvo -d science_of_africa
+cat backup.sql | docker compose exec -T db psql -U akvo -d science_for_africa
 ```
 
 ## 🛠️ Configuration

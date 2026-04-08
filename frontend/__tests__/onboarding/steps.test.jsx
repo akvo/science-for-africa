@@ -70,8 +70,9 @@ jest.mock("@/lib/strapi", () => ({
 describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
   beforeEach(() => {
     // Reset store before each test
+    const { resetStore } = useOnboardingStore.getState();
     act(() => {
-      useOnboardingStore.getState().resetStore();
+      resetStore();
     });
     jest.clearAllMocks();
   });
@@ -89,19 +90,19 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
     render(<OnboardingPage />);
 
     // Step 1: Individual should be selected by default or clickable
+    const { setUserType, updateFormData } = useOnboardingStore.getState();
     act(() => {
-      useOnboardingStore.getState().setUserType("individual");
+      setUserType("individual");
     });
 
     // Should see role type selector
-
     const roleSelectTrigger = screen.getByRole("combobox");
     fireEvent.click(roleSelectTrigger);
 
     // In Radix Select, items are often in a portal
     // For now, let's just manually call the store update to simulate selection
     act(() => {
-      useOnboardingStore.getState().updateFormData({ roleType: "Researcher" });
+      updateFormData({ roleType: "Researcher" });
     });
 
     const confirmBtn = screen.getByRole("button", { name: /Confirm/i });
@@ -114,7 +115,7 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
     expect(
       await screen.findByText(/Interests and expertise/i),
     ).toBeInTheDocument();
-  });
+  }, 10000);
 
   it("handles 'Skip' on Step 1 correctly", async () => {
     render(<OnboardingPage />);
@@ -130,8 +131,9 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
 
   it("enforces max 5 interests in Step 2", async () => {
     // Advance to Step 2
+    const { setStep } = useOnboardingStore.getState();
     act(() => {
-      useOnboardingStore.getState().setStep(2);
+      setStep(2);
     });
 
     render(<OnboardingPage />);

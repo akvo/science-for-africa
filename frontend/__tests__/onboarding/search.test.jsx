@@ -1,5 +1,11 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@testing-library/react";
 import OnboardingStep1 from "@/components/onboarding/OnboardingStep1";
 import OnboardingStep5 from "@/components/onboarding/OnboardingStep5";
 import { useOnboardingStore } from "@/lib/onboarding-store";
@@ -27,13 +33,17 @@ jest.mock("@/lib/strapi", () => ({
 describe("Institution Search Optimization", () => {
   beforeEach(() => {
     const { resetStore } = useOnboardingStore.getState();
-    resetStore();
+    act(() => {
+      resetStore();
+    });
     jest.clearAllMocks();
   });
 
   describe("OnboardingStep1 - Institutional Path", () => {
     it("encodes search terms with spaces correctly", async () => {
-      useOnboardingStore.getState().setUserType("institution");
+      act(() => {
+        useOnboardingStore.getState().setUserType("institution");
+      });
       render(<OnboardingStep1 />);
 
       const input = screen.getByPlaceholderText(/Type your institution name/i);
@@ -50,7 +60,9 @@ describe("Institution Search Optimization", () => {
     });
 
     it("triggers search for 3-character substrings", async () => {
-      useOnboardingStore.getState().setUserType("institution");
+      act(() => {
+        useOnboardingStore.getState().setUserType("institution");
+      });
       render(<OnboardingStep1 />);
 
       const input = screen.getByPlaceholderText(/Type your institution name/i);

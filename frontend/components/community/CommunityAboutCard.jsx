@@ -4,6 +4,33 @@ import { ChevronDown } from "lucide-react";
  * Right-rail "About community" card.
  * Pure presentational — pass a `community` shaped object.
  */
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+function formatCreatedAt(value) {
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "";
+  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}
+
+function formatNumber(n) {
+  // Deterministic thousands separator (locale-independent) to avoid
+  // SSR/CSR hydration mismatches.
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function formatCount(n) {
   if (n == null) return "0";
   if (n >= 1000) return `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}K`;
@@ -23,11 +50,7 @@ export default function CommunityAboutCard({ community }) {
         <p className="mt-2 text-sm text-brand-gray-600">{community.about}</p>
         {community.createdAt ? (
           <p className="mt-3 text-xs text-brand-gray-500">
-            Created{" "}
-            {new Date(community.createdAt).toLocaleString("en-US", {
-              month: "long",
-              year: "numeric",
-            })}
+            Created {formatCreatedAt(community.createdAt)}
           </p>
         ) : null}
       </div>
@@ -38,13 +61,13 @@ export default function CommunityAboutCard({ community }) {
             Subscribers
           </div>
           <div className="text-base font-semibold text-brand-gray-900">
-            {stats.subscribers?.toLocaleString() ?? 0}
+            {stats.subscribers? formatNumber(stats.subscribers) : 0}
           </div>
         </div>
         <div>
           <div className="text-xs uppercase text-brand-gray-500">Posts</div>
           <div className="text-base font-semibold text-brand-gray-900">
-            {stats.posts?.toLocaleString() ?? 0}
+            {stats.posts ? formatNumber(stats.posts) : 0}
           </div>
         </div>
       </div>

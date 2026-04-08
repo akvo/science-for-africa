@@ -27,10 +27,10 @@ import {
  */
 export default function CommunityDetailPage() {
   const router = useRouter();
-  const initialTab =
-    typeof router.query.tab === "string"
-      ? router.query.tab
-      : "collaboration-calls";
+  // Keep the default stable between SSR and first client render to avoid
+  // hydration mismatches. `router.query` is empty during SSR and populated
+  // only after hydration.
+  const initialTab = "collaboration-calls";
 
   // TODO: fetch by slug from Strapi
   const community = MOCK_COMMUNITY;

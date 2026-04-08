@@ -24,10 +24,10 @@ Users will land on the site in English by default. A language switcher in the na
 
 ### Data Flow / Logic Flow
 ```mermaid
-graph TD
-    User([User]) -->|Visit /fr/communities| NextJS[Next.js App Router]
-    NextJS -->|Detect Locale: fr| Locales[public/locales/fr/common.json]
-    NextJS -->|Fetch with {locale: 'fr'}| Strapi[Strapi CMS]
+flowchart TD
+    User(["User"]) -->|Visit /fr/communities| NextJS["Next.js Page Router"]
+    NextJS -->|Detect Locale: fr| Locales["public/locales/fr/common.json"]
+    NextJS -->|Fetch with locale: fr| Strapi["Strapi CMS"]
     Strapi -->|Filter by Locale| DB[(PostgreSQL)]
     DB -->|Localized Content| Strapi
     Strapi -->|REST/GraphQL Response| NextJS

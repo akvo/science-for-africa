@@ -11,7 +11,7 @@ services:
     command: sh -c "npm install && npm run dev"
     environment:
       NEXT_TELEMETRY_DISABLED: 1
-      NEXT_PUBLIC_BACKEND_URL: http://localhost:1337/api
+      NEXT_PUBLIC_BACKEND_URL: ${BACKEND_URL:-http://localhost:1337}/api
 
   backend:
     build:
@@ -40,7 +40,7 @@ services:
       DATABASE_CLIENT: ${DATABASE_CLIENT:-postgres}
       DATABASE_HOST: ${DATABASE_HOST:-db}
       DATABASE_PORT: ${DATABASE_PORT:-5432}
-      DATABASE_NAME: ${DATABASE_NAME:-science_of_africa}
+      DATABASE_NAME: ${DATABASE_NAME:-science_for_africa}
       DATABASE_USERNAME: ${DATABASE_USERNAME:-akvo}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD:-password}
       DATABASE_SSL: ${DATABASE_SSL:-false}
@@ -64,7 +64,7 @@ services:
     volumes:
       - pg-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME:-akvo} -d ${DATABASE_NAME:-science_of_africa}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME:-akvo} -d ${DATABASE_NAME:-science_for_africa}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -73,7 +73,7 @@ services:
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: akvo
-      POSTGRES_DB: science_of_africa
+      POSTGRES_DB: ${DATABASE_NAME:-science_for_africa}
 
   pgadmin:
     image: dpage/pgadmin4:8

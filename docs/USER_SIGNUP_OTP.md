@@ -17,7 +17,7 @@ To modernize the user registration process by providing a low-friction "One-Time
 4. **Action**: 
     - The user can type the code directly into the browser.
     - **OR** if they are on mobile or check email first, they can click the link.
-5. **Onboarding**: Upon successful verification via either method, the user is automatically logged in and enters the onboarding flow.
+5. **Login Redirect**: Upon successful verification via either method, the user is redirected to the login page to sign in.
 
 ---
 
@@ -43,7 +43,7 @@ graph TD
     G --> I{Valid Token?}
     H -->|Yes| J[Mark User as Confirmed]
     I -->|Yes| J
-    J --> K[Grant JWT + Redirect to Onboarding]
+    J --> K[Redirect to Login]
     H -->|No| L[Show Error: Invalid/Expired]
 ```
 
@@ -59,8 +59,8 @@ graph TD
 ### User Acceptance Criteria (User AC)
 - [ ] After registration, I am shown a screen asking for a 6-digit verification code.
 - [ ] I receive an email containing both a numeric code and a verification button.
-- [ ] If I enter the correct code, I am successfully verified and logged in.
-- [ ] If I click the button in the email, my account is verified and I am logged in.
+- [ ] If I enter the correct code, I am successfully verified and redirected to the login page.
+- [ ] If I click the button in the email, my account is verified and I am redirected to the login page.
 - [ ] I receive a clear error if I enter an incorrect or expired code.
 
 ### Technical Acceptance Criteria (Tech AC)
@@ -104,7 +104,7 @@ graph TD
   }
   ```
 - **Response**:
-    - `200 OK`: `{ "jwt": "...", "user": { ... } }`
+    - `200 OK`: `{ "success": true, "message": "Email verified" }`
     - `400 Bad Request`: `{ "error": "Invalid or expired OTP" }`
 
 ---
@@ -123,7 +123,7 @@ graph TD
 1. User sign up -> `otpCode` "556221" is generated.
 2. User enters "556221" on the page.
 3. Backend marks user as `confirmed: true`, `otpCode: null`.
-4. User is redirected to `/onboarding`.
+4. User is redirected to `/auth/login`.
 
 ### Scenario 2: Verification Link Fallback
 1. User sign up.

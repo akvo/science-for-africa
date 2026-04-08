@@ -18,16 +18,10 @@ services:
       context: ./backend
       dockerfile: Dockerfile-dev
     volumes:
-      - ./backend/config:/opt/app/config
-      - ./backend/src:/opt/app/src
-      - ./backend/scripts:/opt/app/scripts
-      - ./backend/__tests__:/opt/app/__tests__
-      - ./backend/package.json:/opt/app/package.json
-      - ./backend/package-lock.json:/opt/app/package-lock.json
-      - ./backend/public/uploads:/opt/app/public/uploads
+      - ./backend:/opt/app
+      - backend-node-modules:/opt/app/node_modules
     ports:
       - 1337:1337
-      - 5173:5173
     depends_on:
       db:
         condition: service_healthy
@@ -103,3 +97,4 @@ services:
 volumes:
   pg-data:
   pgadmin-data:
+  backend-node-modules:

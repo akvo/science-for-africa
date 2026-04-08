@@ -1,6 +1,9 @@
 #!/bin/sh
 set -eu
 
+echo "📦 Installing dependencies..."
+npm install
+
 echo "🚀 Starting Strapi server..."
 
 # Configuration Synchronization
@@ -9,7 +12,7 @@ echo "🚀 Starting Strapi server..."
 echo "🔄 Importing configuration..."
 npm run config-sync -- import --yes
 
-if [ "$NODE_ENV" = "production" ]; then
+if [ "${NODE_ENV:-development}" = "production" ]; then
     echo "✅ Starting Strapi in production mode..."
     npm run start
 else

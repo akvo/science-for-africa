@@ -16,11 +16,18 @@ Provide a seamless, one-click authentication experience for users using their Go
 5. **New Users**: Redirected to `/onboarding` to complete their profile.
 6. **Existing Users**: Redirected directly to the Dashboard or Home page.
 
+### 📖 Official Reference
+This implementation follows the **[Strapi Users & Permissions Provider](https://docs.strapi.io/cms/configurations/users-and-permissions-providers/google)** documentation.
+
+> [!NOTE]
+> **Provider Differentiation**: We use the *Users & Permissions* provider (for frontend platform users) rather than the *SSO Provider* (which is for Strapi Admin Panel administrators). This ensures that researchers and external users can authenticate without requiring administrative access to the CMS.
+
 ---
 
 ## 🎯 Design Principles
 - **Stateless Integration**: Leverage Strapi's built-in `users-permissions` providers to keep the integration standard and maintainable.
 - **Environment Agnostic**: All callback URLs and secrets must be driven by environment variables.
+- **Branding Compliance**: The "Sign in with Google" button must strictly follow [Google's Branding Guidelines](https://developers.google.com/identity/branding-guidelines) regarding logo, colors, and typography.
 - **Session Persistence**: Automated 30-day persistence is handled via the [Authentication Persistence](AUTHENTICATION_PERSISTENCE.md) logic.
 
 ---
@@ -69,7 +76,8 @@ sequenceDiagram
 
 ### Technical Acceptance Criteria (Tech AC)
 - [ ] Strapi `users-permissions` plugin is configured to handle Google OAuth via `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
-- [ ] Redirect URIs are dynamically constructed based on `NEXT_PUBLIC_FRONTEND_URL` and `STRAPI_PUBLIC_URL`.
+- [ ] Redirect URIs are dynamically constructed based on `NEXT_PUBLIC_FRONTEND_URL` and `BACKEND_URL`.
+- [ ] Google Sign-In button adheres to official branding (Logo, White background with `#dadce0` border, "Sign in with Google" text).
 - [ ] Frontend handles the `id_token` or `access_token` exchange securely.
 
 ---
@@ -80,7 +88,9 @@ sequenceDiagram
 - [ ] Create a project in the [Google Cloud Console](https://console.cloud.google.com/).
 - [ ] Configure the **OAuth Consent Screen** (User type: External, App name: Science for Africa).
 - [ ] Create **OAuth 2.0 Client IDs** (Web application).
-- [ ] Add Authorized Redirect URIs for all environments (Local, Test, Prod).
+- [ ] Add Authorized Redirect URIs:
+    - **Development**: `http://localhost:1337/api/connect/google/callback`
+    - **Staging/Prod**: `https://api.yourdomain.com/api/connect/google/callback`
 - [ ] Obtain `CLIENT_ID` and `CLIENT_SECRET`.
 
 ### Phase 1: Backend Setup

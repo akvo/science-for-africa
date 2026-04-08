@@ -4,6 +4,12 @@ import { Button } from "@/components/ui/button";
 export const SocialButton = ({ provider, text, className, ...props }) => {
   const isGoogle = provider === "google";
 
+  const handleLogin = () => {
+    const apiBaseUrl =
+      process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api";
+    window.location.href = `${apiBaseUrl}/connect/${provider}`;
+  };
+
   const icon = isGoogle ? (
     <svg
       className="size-6"
@@ -47,7 +53,9 @@ export const SocialButton = ({ provider, text, className, ...props }) => {
     <Button
       variant="social"
       size="social"
+      shape={isGoogle ? "rectangle" : "pill"}
       className={`${appleStyles} ${className} w-full`}
+      onClick={handleLogin}
       {...props}
     >
       {icon}

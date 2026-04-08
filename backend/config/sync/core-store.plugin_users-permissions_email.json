@@ -6,7 +6,7 @@
       "icon": "sync",
       "options": {
         "from": {
-          "name": "Administration Panel",
+          "name": "Science for Africa",
           "email": "no-reply@strapi.io"
         },
         "response_email": "",

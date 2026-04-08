@@ -292,6 +292,14 @@ module.exports = {
       emailSettings.email_confirmation.options.object =
         "Verify your Science for Africa account";
       emailSettings.email_confirmation.options.from.name = "Science for Africa";
+      emailSettings.email_confirmation.options.from.email =
+        process.env.SMTP_FROM || "no-reply@strapi.io";
+
+      if (emailSettings.reset_password) {
+        emailSettings.reset_password.options.from.name = "Science for Africa";
+        emailSettings.reset_password.options.from.email =
+          process.env.SMTP_FROM || "no-reply@strapi.io";
+      }
 
       await emailStore.set({ value: emailSettings });
       strapi.log.info("Branded email confirmation template initialized.");
@@ -302,4 +310,3 @@ module.exports = {
     await seed(strapi);
   },
 };
-

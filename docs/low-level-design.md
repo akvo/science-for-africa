@@ -624,10 +624,10 @@ sequenceDiagram
     Google-->>User: Show Consent Screen
     User->>Google: Approve
     Google-->>Strapi: GET /api/connect/google/callback
-    Strapi->>Strapi: Generate/Retrieve User + JWT
     Strapi-->>Frontend: Redirect to /auth/google?access_token=...
-    Frontend->>Strapi: GET /api/users/me (with JWT)
-    Strapi-->>Frontend: User Object (onboardingComplete: bool)
+    Frontend->>Strapi: GET /api/auth/google/callback (SSR Handshake)
+    Note right of Frontend: Uses internal networking in Docker
+    Strapi-->>Frontend: { jwt, user }
     alt onboardingComplete is false
         Frontend->>User: Redirect to /onboarding
     else onboardingComplete is true
@@ -637,10 +637,10 @@ sequenceDiagram
 
 ### 5.2 Implementation Details
 
-- **Backend Configuration**: Automated via `src/index.js` bootstrap. The system synchronizes provider settings (Client ID, Secret, and Redirect URIs) from environment variables on startup.
+- **Backend Configuration**: Automated via `src/index.js` bootstrap. The system synchronizes provider settings (Client ID, Secret, and Redirect URIs) using `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `NEXT_PUBLIC_FRONTEND_URL`.
 - **Frontend Integration**:
     - `SocialButton`: Custom branded component following Google's identity guidelines.
-    - `pages/auth/google.js`: Dedicated callback handler that hydrares the Zustand `auth-store` and manages initial routing.
+    - `pages/auth/google.js`: Dedicated callback handler with "Smart Swap" logic for internal Docker networking via `NEXT_PUBLIC_BACKEND_URL`.
 - **Bypass Logic**: Social users are automatically marked as `confirmed: true`, bypassing the email verification step required for local registrations.
 - **Session Persistence**: Social login sessions are automatically persistent (30 days), matching the "Remember Me" behavior of local login.
 

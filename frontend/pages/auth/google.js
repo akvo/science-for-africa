@@ -17,7 +17,7 @@ const GoogleCallback = ({ jwt, user, error }) => {
     if (jwt && user) {
       console.log("[AUTH-DEBUG] Session established for:", user.email);
       setAuth(user, jwt, true);
-      
+
       // Redirect based on onboarding status
       if (user.onboardingComplete) {
         router.push("/");
@@ -34,7 +34,9 @@ const GoogleCallback = ({ jwt, user, error }) => {
           {error ? "Authentication Failed" : "Authenticating with Google..."}
         </h1>
         <p className="text-brand-gray-500 mt-2">
-          {error ? "Please try again." : "Please wait while we set up your session."}
+          {error
+            ? "Please try again."
+            : "Please wait while we set up your session."}
         </p>
       </div>
     </div>
@@ -52,14 +54,21 @@ export async function getServerSideProps(context) {
   }
 
   try {
-    // Inside Docker SSR, we MUST use the target service IP or name. 
-    // We've verified '172.18.0.6' works perfectly for container-to-container traffic.
-    const internalBackendUrl = "http://172.18.0.6:1337/api";
+    const publicBackendUrl =
+      process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api";
+
+    // Smart Swap for Docker SSR:
+    // getServerSideProps runs inside the container. If the backend URL points to 'localhost',
+    // it must be swapped to the internal service name 'backend' to be reachable.
+    const internalBackendUrl = publicBackendUrl.replace("localhost", "backend");
 
     // Exchange with Strapi
-    const response = await axios.get(`${internalBackendUrl}/auth/google/callback`, {
-      params: { access_token: tokenToExchange },
-    });
+    const response = await axios.get(
+      `${internalBackendUrl}/auth/google/callback`,
+      {
+        params: { access_token: tokenToExchange },
+      },
+    );
 
     const { jwt, user } = response.data;
 

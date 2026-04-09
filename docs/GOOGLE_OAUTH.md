@@ -44,15 +44,16 @@ sequenceDiagram
     participant Google
 
     User->>Browser: Click "Sign in with Google"
-    Browser->>NextServer: GET /auth/google (Initial hit)
-    NextServer->>Strapi: GET /api/connect/google
+    Browser->>Strapi: GET /api/connect/google
     Strapi->>Google: Redirect to OAuth Consent
     Google-->>User: Show Consent Screen
     User->>Google: Approve
-    Google-->>NextServer: GET /auth/google?access_token=...
+    Google-->>Strapi: Redirect to callback URL
+    Strapi-->>Browser: Redirect to /auth/google?access_token=...
+    Browser->>NextServer: GET /auth/google (Initial SSR hit)
     Note over NextServer: getServerSideProps triggers
     NextServer->>Strapi: GET /api/auth/google/callback (Internal Network)
-    Note right of NextServer: Uses internal IP: 172.18.0.6
+    Note right of NextServer: Uses Smart Swap logic for Docker
     Strapi-->>NextServer: { jwt, user }
     NextServer-->>Browser: Render page with { jwt, user }
     Browser->>Browser: setAuth(user, jwt)
@@ -126,13 +127,14 @@ sequenceDiagram
 ## 🛠️ Troubleshooting & Networking
 
 ### Docker Internal Handshake
-When running in Docker Compose, the Next.js server (SSR) cannot reach the backend via `localhost`. It must use the internal Docker bridge:
-- **Internal URL**: `http://172.18.0.6:1337/api` (or service name `http://backend:1337/api`)
-- **Reason**: `getServerSideProps` runs inside the containerized Node environment, not in the user's browser.
+When running in Docker Compose, the Next.js server (SSR) uses a "Smart Swap" logic to reach the backend:
+- **Variable**: `NEXT_PUBLIC_BACKEND_URL`
+- **Logic**: If the URL uses `localhost`, the server automatically swaps it to `backend` (the internal service name).
+- **Manual Override**: If you need to hit a specific IP, ensure your environment provides a reachable URL for both browser and server.
 
 ### Common Errors
 - **401 Unauthorized**: Usually means the `access_token` expired or the backend cannot reach Google's servers to verify.
-- **ECONNREFUSED**: Usually means the `internalBackendUrl` is incorrectly configured to `localhost`.
+- **ECONNREFUSED**: Usually means the backend service is down or unreachable from the frontend container.
 
 ---
 

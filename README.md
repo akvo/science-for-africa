@@ -154,8 +154,15 @@ cat backup.sql | docker compose exec -T db psql -U akvo -d science_for_africa
 - `GCS_*`: Google Cloud Storage (optional)
 
 #### Frontend Configuration
-- `NEXT_PUBLIC_BACKEND_URL`: API endpoint URL
+- `NEXT_PUBLIC_BACKEND_URL`: API endpoint URL (Used for both browser and SSR)
 - `NEXT_TELEMETRY_DISABLED`: Disable Next.js telemetry
+
+#### Authentication (Google OAuth)
+Required for Google Sign-In functionality:
+- `GOOGLE_CLIENT_ID`: OAuth 2.0 Client ID from Google Cloud Console
+- `GOOGLE_CLIENT_SECRET`: OAuth 2.0 Client Secret from Google Cloud Console
+- `NEXT_PUBLIC_FRONTEND_URL`: Public URL of the frontend (Backend env)
+- `EMAIL_CONFIRMATION_URL`: Public URL for email verification (Backend env)
 
 ### Email Configuration
 The setup includes Mailpit for email testing:

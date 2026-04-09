@@ -9,14 +9,16 @@ const GoogleCallback = () => {
 
   useEffect(() => {
     const handleCallback = async () => {
-      const { access_token } = router.query;
+      const { access_token, id_token, jwt: jwtParam } = router.query;
 
-      if (!access_token) return;
+      // Try different parameter names that Strapi might use
+      const jwt = access_token || id_token || jwtParam;
+
+      if (!jwt) {
+        return;
+      }
 
       try {
-        // In Strapi OAuth flow, the access_token in the redirect URL is the actual JWT
-        const jwt = access_token;
-
         // Fetch user info to verify and check onboarding status
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api"}/users/me`,

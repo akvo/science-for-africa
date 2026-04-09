@@ -7,7 +7,8 @@ export const SocialButton = ({ provider, text, className, ...props }) => {
   const handleLogin = () => {
     const apiBaseUrl =
       process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api";
-    window.location.href = `${apiBaseUrl}/connect/${provider}`;
+    const redirectUrl = `${window.location.origin}/auth/google`;
+    window.location.href = `${apiBaseUrl}/connect/${provider}?redirect=${redirectUrl}`;
   };
 
   const icon = isGoogle ? (
@@ -53,7 +54,7 @@ export const SocialButton = ({ provider, text, className, ...props }) => {
     <Button
       variant="social"
       size="social"
-      shape={isGoogle ? "rectangle" : "pill"}
+      shape="pill"
       className={`${appleStyles} ${className} w-full`}
       onClick={handleLogin}
       {...props}

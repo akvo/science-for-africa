@@ -111,9 +111,6 @@ module.exports = ({ env }) => {
             enabled: true,
             clientId: env("GOOGLE_CLIENT_ID"),
             clientSecret: env("GOOGLE_CLIENT_SECRET"),
-            callback:
-              env("BACKEND_URL", "http://localhost:1337") +
-              "/api/connect/google/callback",
           },
         },
       },

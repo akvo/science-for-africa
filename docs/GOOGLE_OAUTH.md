@@ -113,8 +113,8 @@ sequenceDiagram
 
 ### Auth Callback
 - **Method**: `GET`
-- **Path**: `/api/auth/google/callback`
-- **Description**: Endpoint Google redirects to, which then redirects to the Frontend with tokens.
+- **Path**: `/api/connect/google/callback`
+- **Description**: Endpoint Google redirects to (Backend), which then redirects to the Frontend with tokens.
 
 ---
 

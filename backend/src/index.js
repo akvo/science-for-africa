@@ -364,6 +364,14 @@ module.exports = {
       grants
     ) {
       const googleConfig = grants.google || {};
+      const frontendCallback =
+        (process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000") +
+        "/auth/google";
+
+      const backendCallback =
+        (process.env.BACKEND_URL || "http://localhost:1337") +
+        "/api/connect/google/callback";
+
       const updatedGoogleConfig = {
         ...googleConfig,
         enabled: true,
@@ -371,17 +379,16 @@ module.exports = {
         clientId: process.env.GOOGLE_CLIENT_ID,
         secret: process.env.GOOGLE_CLIENT_SECRET,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callback: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/google`,
-        callbackUrl: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/google`,
-        redirectUri: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/google`,
+        callback: frontendCallback,
       };
+
+      // Remove backend overrides to allow Strapi to use its official internal defaults
+      delete updatedGoogleConfig.callbackUrl;
+      delete updatedGoogleConfig.redirectUri;
 
       // Only update if changes are detected to avoid unnecessary writes
       const hasChanged =
         googleConfig.enabled !== updatedGoogleConfig.enabled ||
-        googleConfig.key !== updatedGoogleConfig.key ||
-        googleConfig.clientId !== updatedGoogleConfig.clientId ||
-        googleConfig.secret !== updatedGoogleConfig.secret ||
         googleConfig.clientSecret !== updatedGoogleConfig.clientSecret ||
         googleConfig.callback !== updatedGoogleConfig.callback ||
         googleConfig.callbackUrl !== updatedGoogleConfig.callbackUrl ||

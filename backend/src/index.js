@@ -368,8 +368,11 @@ module.exports = {
         ...googleConfig,
         enabled: true,
         key: process.env.GOOGLE_CLIENT_ID,
+        clientId: process.env.GOOGLE_CLIENT_ID,
         secret: process.env.GOOGLE_CLIENT_SECRET,
-        callback: `${process.env.NEXT_PUBLIC_BACKEND_URL}/connect/google/callback`,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callback: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/google`,
+        callbackUrl: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/google`,
         redirectUri: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/google`,
       };
 
@@ -377,8 +380,11 @@ module.exports = {
       const hasChanged =
         googleConfig.enabled !== updatedGoogleConfig.enabled ||
         googleConfig.key !== updatedGoogleConfig.key ||
+        googleConfig.clientId !== updatedGoogleConfig.clientId ||
         googleConfig.secret !== updatedGoogleConfig.secret ||
+        googleConfig.clientSecret !== updatedGoogleConfig.clientSecret ||
         googleConfig.callback !== updatedGoogleConfig.callback ||
+        googleConfig.callbackUrl !== updatedGoogleConfig.callbackUrl ||
         googleConfig.redirectUri !== updatedGoogleConfig.redirectUri;
 
       if (hasChanged) {

@@ -103,6 +103,9 @@ module.exports = ({ env }) => {
             env("NEXT_PUBLIC_FRONTEND_URL", "http://localhost:3000") +
             "/auth/verify-email",
         },
+        ratelimit: {
+          enabled: false,
+        },
         grant: {
           google: {
             enabled: true,

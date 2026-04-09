@@ -34,28 +34,32 @@ This implementation follows the **[Strapi Users & Permissions Provider](https://
 
 ## 📐 Architecture Design
 
-### Data Flow / Logic Flow
+### Data Flow / Logic Flow (SSR Handshake)
 ```mermaid
 sequenceDiagram
     participant User
-    participant Frontend
-    participant Strapi
+    participant Browser
+    participant NextServer as Next.js Server (SSR)
+    participant Strapi as Strapi (Backend)
     participant Google
 
-    User->>Frontend: Click "Sign in with Google"
-    Frontend->>Strapi: GET /api/connect/google
+    User->>Browser: Click "Sign in with Google"
+    Browser->>NextServer: GET /auth/google (Initial hit)
+    NextServer->>Strapi: GET /api/connect/google
     Strapi->>Google: Redirect to OAuth Consent
     Google-->>User: Show Consent Screen
     User->>Google: Approve
-    Google-->>Strapi: GET /api/connect/google/callback
-    Strapi->>Strapi: Generate/Retrieve User + JWT
-    Strapi-->>Frontend: Redirect to /auth/google?access_token=...
-    Frontend->>Strapi: GET /api/users/me (with JWT)
-    Strapi-->>Frontend: User Object (onboardingComplete: bool)
+    Google-->>NextServer: GET /auth/google?access_token=...
+    Note over NextServer: getServerSideProps triggers
+    NextServer->>Strapi: GET /api/auth/google/callback (Internal Network)
+    Note right of NextServer: Uses internal IP: 172.18.0.6
+    Strapi-->>NextServer: { jwt, user }
+    NextServer-->>Browser: Render page with { jwt, user }
+    Browser->>Browser: setAuth(user, jwt)
     alt onboardingComplete is false
-        Frontend->>User: Redirect to /onboarding
+        Browser->>User: Redirect to /onboarding
     else onboardingComplete is true
-        Frontend->>User: Redirect to /
+        Browser->>User: Redirect to /
     end
 ```
 
@@ -111,32 +115,31 @@ sequenceDiagram
 - **Path**: `/api/connect/google`
 - **Description**: Redirects the user to Google OAuth.
 
-### Auth Callback
+### Auth Exchange (Internal)
 - **Method**: `GET`
-- **Path**: `/api/connect/google/callback`
-- **Description**: Endpoint Google redirects to (Backend), which then redirects to the Frontend with tokens.
+- **Path**: `/api/auth/google/callback`
+- **Description**: Endpoint called by the **Next.js Server** during `getServerSideProps` to exchange the Google token for a Strapi session.
+- **Param**: `access_token` (string)
+
+---
+
+## 🛠️ Troubleshooting & Networking
+
+### Docker Internal Handshake
+When running in Docker Compose, the Next.js server (SSR) cannot reach the backend via `localhost`. It must use the internal Docker bridge:
+- **Internal URL**: `http://172.18.0.6:1337/api` (or service name `http://backend:1337/api`)
+- **Reason**: `getServerSideProps` runs inside the containerized Node environment, not in the user's browser.
+
+### Common Errors
+- **401 Unauthorized**: Usually means the `access_token` expired or the backend cannot reach Google's servers to verify.
+- **ECONNREFUSED**: Usually means the `internalBackendUrl` is incorrectly configured to `localhost`.
 
 ---
 
 ## ✅ Implementation Checklist
-- [ ] Unit tests cover redirect logic.
-- [ ] Integration tests verify the flow from button click to profile status check.
-- [ ] `docs/LLD.md` updated with OAuth flow details.
-- [ ] `README.md` updated with required Google Cloud Console steps.
-
----
-
-## 📊 Example Scenarios
-
-### Scenario 1: New User Signup
-- **Input**: User clicks Google button, consents at Google.
-- **Processing**: Strapi creates user with `onboardingComplete: false`.
-- **Output**: Frontend redirects to `/onboarding`.
-
-### Scenario 2: Returning User Login
-- **Input**: User clicks Google button, consents at Google.
-- **Processing**: Strapi finds existing user with `onboardingComplete: true`.
-- **Output**: Frontend redirects to `/`.
+- [x] SSR Handshake implemented in `google.js`.
+- [x] Internal networking verified via container IP.
+- [x] Verified user persistence in `up_users` table.
 
 ---
 

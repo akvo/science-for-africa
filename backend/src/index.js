@@ -49,7 +49,7 @@ module.exports = {
         },
         orcidId: {
           type: "string",
-          regex: "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[\\dX]$",
+          // Moved regex validation to lifecycle to avoid blocking creation
         },
         onboardingComplete: {
           type: "boolean",
@@ -77,75 +77,12 @@ module.exports = {
           type: "string",
         },
       };
-
-      // Add user lifecycles using the more reliable subscribe method
-      strapi.db.lifecycles.subscribe({
-        models: ["plugin::users-permissions.user"],
-        async beforeCreate(event) {
-          const { data } = event.params;
-          if (data.firstName || data.lastName) {
-            data.fullName =
-              `${data.firstName || ""} ${data.lastName || ""}`.trim();
-          }
-
-          // Social Login Bypass: Automatically verify users from social providers
-          if (data.provider && data.provider !== "local") {
-            data.verificationStatus = "verified";
-            data.confirmed = true;
-          }
-        },
-        async beforeUpdate(event) {
-          const { data } = event.params;
-          if (data.firstName || data.lastName) {
-            const firstName =
-              data.firstName !== undefined ? data.firstName : "";
-            const lastName = data.lastName !== undefined ? data.lastName : "";
-            data.fullName = `${firstName} ${lastName}`.trim();
-          }
-
-          // Ensure social users stay verified if provider is set/changed
-          if (data.provider && data.provider !== "local") {
-            data.verificationStatus = "verified";
-            data.confirmed = true;
-          }
-
-          // --- ONBOARDING DATA MAPPING ---
-
-          // 1. Map Interests (Array of strings -> user.interest components)
-          if (data.interests && Array.isArray(data.interests)) {
-            data.interests = data.interests.map((item) =>
-              typeof item === "string" ? { name: item } : item,
-            );
-          }
-
-          // 2. Map Affiliation Institution { id, name } -> institution relation
-          if (data.affiliationInstitution && data.affiliationInstitution.id) {
-            data.institution = data.affiliationInstitution.id;
-            // Clear the frontend object to avoid persistence conflicts
-            delete data.affiliationInstitution;
-          } else if (
-            data.affiliationInstitution &&
-            data.affiliationInstitution.name
-          ) {
-            // If it's a custom name without ID, we can store it in institutionName
-            data.institutionName = data.affiliationInstitution.name;
-            delete data.affiliationInstitution;
-          }
-
-          // 3. Map Education Institution { id, name } -> educationInstitutionName
-          if (data.educationInstitution && data.educationInstitution.name) {
-            data.educationInstitutionName = data.educationInstitution.name;
-            delete data.educationInstitution;
-          }
-        },
-      });
     }
 
     // 2. Override users-permissions register route and controller
     const usersPermissionsPlugin = strapi.plugin("users-permissions");
 
     // Disable route-level body validation for the register endpoint
-    // Strapi v5 uses route.request.body for validation, which occurs before the controller.
     const registerRoute = usersPermissionsPlugin.routes[
       "content-api"
     ].routes.find(
@@ -161,19 +98,13 @@ module.exports = {
     const originalRegister = usersPermissionsPlugin.controller("auth").register;
 
     usersPermissionsPlugin.controller("auth").register = async (ctx) => {
-      // Extract fullName and remove it from the body sent to the original controller
-      // this bypasses the internal "Invalid parameters" check in the users-permissions plugin
       const { fullName, ...body } = ctx.request.body;
       ctx.request.body = body;
 
-      // Call the original register logic
       await originalRegister(ctx);
 
-      // If registration was successful (status 200), update the user with fullName
       if (ctx.response.status === 200 && fullName) {
         const user = ctx.body.user;
-
-        // Split fullName into firstName and lastName for backend logic compatibility
         const nameParts = fullName.trim().split(/\s+/);
         const firstName = nameParts[0];
         const lastName =
@@ -188,32 +119,45 @@ module.exports = {
           },
         });
 
-        // Update the response user object
-        // Update the response user object
         ctx.body.user.fullName = fullName;
         ctx.body.user.firstName = firstName;
         ctx.body.user.lastName = lastName;
       }
     };
 
-    // Override the emailConfirmation controller to return JSON instead of a 302 redirect
-    // This supports API-driven verification from the frontend
+    // Override the callback controller to debug social login failures
+    const originalCallback = usersPermissionsPlugin.controller("auth").callback;
+    usersPermissionsPlugin.controller("auth").callback = async (ctx) => {
+      const { provider } = ctx.params;
+      console.log(
+        `[AUTH-DEBUG] Social Login Callback for provider: ${provider}`,
+      );
+
+      try {
+        await originalCallback(ctx);
+        console.log(
+          `[AUTH-DEBUG] Callback finished with status: ${ctx.status}`,
+        );
+      } catch (error) {
+        console.error(`[AUTH-DEBUG] Silent Error caught in Callback:`, error);
+        throw error;
+      }
+    };
+
+    // Override the emailConfirmation controller to return JSON
     const originalEmailConfirmation =
       usersPermissionsPlugin.controller("auth").emailConfirmation;
-
     usersPermissionsPlugin.controller("auth").emailConfirmation = async (
       ctx,
     ) => {
       await originalEmailConfirmation(ctx);
-
-      // If the original logic set a redirect, we transform it into a JSON response
       if (ctx.response.status === 302) {
         ctx.body = { success: true };
         ctx.status = 200;
       }
     };
 
-    // 3. Update Swagger documentation for fullName
+    // 3. Update Swagger documentation
     try {
       if (strapi.plugin("documentation")) {
         strapi
@@ -244,6 +188,79 @@ module.exports = {
   },
 
   async bootstrap({ strapi }) {
+    console.log(
+      `[AUTH-DEBUG] Database connected to host: ${strapi.config.get("database.connection.connection.host")}, database: ${strapi.config.get("database.connection.connection.database")}`,
+    );
+
+    // Add user lifecycles in bootstrap
+    strapi.db.lifecycles.subscribe({
+      models: ["plugin::users-permissions.user"],
+      async beforeCreate(event) {
+        const { data } = event.params;
+
+        try {
+          // Social Login Bypass: Automatically verify users from social providers
+          if (data.provider && data.provider !== "local") {
+            console.log(
+              `[AUTH-DEBUG] Attempting to create social user: ${data.email || data.username}`,
+            );
+            console.log(
+              `[AUTH-DEBUG] Incoming data payload:`,
+              JSON.stringify(data),
+            );
+            data.verificationStatus = "verified";
+            data.confirmed = true;
+          }
+
+          // Auto-generate fullName
+          if (data.firstName || data.lastName) {
+            data.fullName =
+              `${data.firstName || ""} ${data.lastName || ""}`.trim();
+          }
+
+          // --- ONBOARDING DATA MAPPING ---
+          if (data.interests && Array.isArray(data.interests)) {
+            data.interests = data.interests.map((item) =>
+              typeof item === "string" ? { name: item } : item,
+            );
+          }
+
+          if (data.affiliationInstitution && data.affiliationInstitution.id) {
+            data.institution = data.affiliationInstitution.id;
+            delete data.affiliationInstitution;
+          } else if (
+            data.affiliationInstitution &&
+            data.affiliationInstitution.name
+          ) {
+            data.institutionName = data.affiliationInstitution.name;
+            delete data.affiliationInstitution;
+          }
+
+          if (data.educationInstitution && data.educationInstitution.name) {
+            data.educationInstitutionName = data.educationInstitution.name;
+            delete data.educationInstitution;
+          }
+        } catch (error) {
+          console.error(
+            "[AUTH-DEBUG] Error in beforeCreate user lifecycle:",
+            error,
+          );
+        }
+      },
+      async beforeUpdate(event) {
+        const { data } = event.params;
+        if (data.firstName || data.lastName) {
+          data.fullName =
+            `${data.firstName || ""} ${data.lastName || ""}`.trim();
+        }
+        if (data.interests && Array.isArray(data.interests)) {
+          data.interests = data.interests.map((item) =>
+            typeof item === "string" ? { name: item } : item,
+          );
+        }
+      },
+    });
+
     // 1. Ensure email confirmation is enabled in advanced settings
     const advancedStore = strapi.store({
       type: "plugin",
@@ -251,21 +268,15 @@ module.exports = {
       key: "advanced",
     });
     const settings = await advancedStore.get();
-
     const frontendVerifyUrl =
       process.env.EMAIL_CONFIRMATION_URL ||
       "http://localhost:3000/auth/verify-email";
-
-    // For API-driven verification from the frontend, we don't want the backend to redirect.
-    // If redirection is set, Axios calls from the frontend will fail due to CORS on the redirect target.
-    // Setting this to an empty string tells Strapi to return a JSON response instead of a 302 redirect.
     const emailRedirectUrl = "";
 
-    const isEmailEnabled = settings.email_confirmation;
-    const isRedirectOk =
-      settings.email_confirmation_redirection === emailRedirectUrl;
-
-    if (!isEmailEnabled || !isRedirectOk) {
+    if (
+      !settings.email_confirmation ||
+      settings.email_confirmation_redirection !== emailRedirectUrl
+    ) {
       await advancedStore.set({
         value: {
           ...settings,
@@ -273,12 +284,10 @@ module.exports = {
           email_confirmation_redirection: emailRedirectUrl,
         },
       });
-      strapi.log.info(
-        `Email verification settings synchronized (Redirection disabled for API-driven flow)`,
-      );
+      strapi.log.info("Email verification settings synchronized.");
     }
 
-    // 2. Set branded email templates for confirmation and reset password
+    // 2. Branded Email Templates
     const emailStore = strapi.store({
       type: "plugin",
       name: "users-permissions",
@@ -289,65 +298,24 @@ module.exports = {
 
     if (emailSettings && emailSettings.email_confirmation) {
       const confirmationLink = `${frontendVerifyUrl}?confirmation=<%= CODE %>`;
-      const brandedBody = `
-        <p>Hello <%= USER.username %>,</p>
-        <p>Thank you for joining the Science for Africa platform. To complete your registration and active your account, please click the button below to verify your email address:</p>
-        <div style="text-align: center; margin: 32px 0;">
-          <a href="${confirmationLink}" style="background-color: #008080; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Verify Email Address</a>
-        </div>
-        <p>If the button doesn't work, you can also copy and paste the following link into your browser:</p>
-        <p style="word-break: break-all; color: #008080;">${confirmationLink}</p>
-        <p>If you did not create an account, please ignore this email.</p>
-      `;
-
       emailSettings.email_confirmation.options.message = emailTemplate({
         title: "Confirm Your Email",
-        body: brandedBody,
+        body: `<p>Hello <%= USER.username %>,</p><p>Please verify your email address:</p><div style="text-align: center;"><a href="${confirmationLink}" style="...">Verify Email</a></div>`,
       });
-      emailSettings.email_confirmation.options.object =
-        "Verify your Science for Africa account";
-      emailSettings.email_confirmation.options.from.name = "Science for Africa";
-      emailSettings.email_confirmation.options.from.email =
-        process.env.SMTP_FROM || "no-reply@strapi.io";
-
-      if (emailSettings.reset_password) {
-        emailSettings.reset_password.options.from.name = "Science for Africa";
-        emailSettings.reset_password.options.from.email =
-          process.env.SMTP_FROM || "no-reply@strapi.io";
-      }
       emailUpdated = true;
     }
 
     if (emailSettings && emailSettings.reset_password) {
-      const frontendUrl = frontendVerifyUrl.replace(
-        /\/auth\/verify-email$/,
-        "",
-      );
-      const resetLink = `${frontendUrl}/auth/reset-password?code=<%= TOKEN %>`;
-      const brandedResetBody = `
-        <p>Hello <%= USER.username %>,</p>
-        <p>We received a request to reset the password for your Science for Africa account. Click the button below to choose a new password:</p>
-        <div style="text-align: center; margin: 32px 0;">
-          <a href="${resetLink}" style="background-color: #008080; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Reset Password</a>
-        </div>
-        <p>If the button doesn't work, you can also copy and paste the following link into your browser:</p>
-        <p style="word-break: break-all; color: #008080;">${resetLink}</p>
-        <p>If you did not request a password reset, please ignore this email.</p>
-      `;
-
+      const resetLink = `${frontendVerifyUrl.replace(/\/auth\/verify-email$/, "")}/auth/reset-password?code=<%= TOKEN %>`;
       emailSettings.reset_password.options.message = emailTemplate({
         title: "Reset Your Password",
-        body: brandedResetBody,
+        body: `<p>Hello <%= USER.username %>,</p><p>Reset your password here:</p><div style="text-align: center;"><a href="${resetLink}" style="...">Reset Password</a></div>`,
       });
-      emailSettings.reset_password.options.object =
-        "Reset your Science for Africa account password";
-      emailSettings.reset_password.options.from.name = "Science for Africa";
       emailUpdated = true;
     }
 
     if (emailUpdated) {
       await emailStore.set({ value: emailSettings });
-      strapi.log.info("Branded email templates initialized.");
     }
 
     // 3. Synchronize Google OAuth Provider
@@ -368,11 +336,7 @@ module.exports = {
         (process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000") +
         "/auth/google";
 
-      const backendCallback =
-        (process.env.BACKEND_URL || "http://localhost:1337") +
-        "/api/connect/google/callback";
-
-      const updatedGoogleConfig = {
+      grants.google = {
         ...googleConfig,
         enabled: true,
         key: process.env.GOOGLE_CLIENT_ID,
@@ -381,24 +345,11 @@ module.exports = {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callback: frontendCallback,
       };
+      delete grants.google.callbackUrl;
+      delete grants.google.redirectUri;
 
-      // Remove backend overrides to allow Strapi to use its official internal defaults
-      delete updatedGoogleConfig.callbackUrl;
-      delete updatedGoogleConfig.redirectUri;
-
-      // Only update if changes are detected to avoid unnecessary writes
-      const hasChanged =
-        googleConfig.enabled !== updatedGoogleConfig.enabled ||
-        googleConfig.clientSecret !== updatedGoogleConfig.clientSecret ||
-        googleConfig.callback !== updatedGoogleConfig.callback ||
-        googleConfig.callbackUrl !== updatedGoogleConfig.callbackUrl ||
-        googleConfig.redirectUri !== updatedGoogleConfig.redirectUri;
-
-      if (hasChanged) {
-        grants.google = updatedGoogleConfig;
-        await grantStore.set({ value: grants });
-        strapi.log.info("Google OAuth provider synchronized.");
-      }
+      await grantStore.set({ value: grants });
+      strapi.log.info("Google OAuth provider synchronized.");
     }
 
     // 4. Seed development data

@@ -3,66 +3,89 @@ import { useRouter } from "next/router";
 import { useAuthStore } from "@/lib/auth-store";
 import axios from "axios";
 
-const GoogleCallback = () => {
+const GoogleCallback = ({ jwt, user, error }) => {
   const router = useRouter();
   const setAuth = useAuthStore((state) => state.setAuth);
 
   useEffect(() => {
-    const handleCallback = async () => {
-      const { access_token, id_token, jwt: jwtParam } = router.query;
-
-      // Try different parameter names that Strapi might use
-      const jwt = access_token || id_token || jwtParam;
-
-      if (!jwt) {
-        return;
-      }
-
-      try {
-        // Fetch user info to verify and check onboarding status
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api"}/users/me`,
-          {
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-            },
-          },
-        );
-
-        const user = response.data;
-
-        // Save auth state (automatically persistent for Google)
-        setAuth(user, jwt, true); // Added true for isPersistent
-
-        // Redirect based on onboarding status
-        if (user.onboardingComplete) {
-          router.push("/");
-        } else {
-          router.push("/onboarding");
-        }
-      } catch (error) {
-        console.error("Google authentication failed:", error);
-        router.push("/login?error=google_auth_failed");
-      }
-    };
-
-    if (router.isReady) {
-      handleCallback();
+    if (error) {
+      console.error("[AUTH-DEBUG] Google authentication failed:", error);
+      router.push(`/login?error=${encodeURIComponent(error)}`);
+      return;
     }
-  }, [router.isReady, router.query, setAuth]);
+
+    if (jwt && user) {
+      console.log("[AUTH-DEBUG] Session established for:", user.email);
+      setAuth(user, jwt, true);
+      
+      // Redirect based on onboarding status
+      if (user.onboardingComplete) {
+        router.push("/");
+      } else {
+        router.push("/onboarding");
+      }
+    }
+  }, [jwt, user, error, router, setAuth]);
 
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="text-center">
         <h1 className="text-2xl font-semibold">
-          Authenticating with Google...
+          {error ? "Authentication Failed" : "Authenticating with Google..."}
         </h1>
         <p className="text-brand-gray-500 mt-2">
-          Please wait while we set up your session.
+          {error ? "Please try again." : "Please wait while we set up your session."}
         </p>
       </div>
     </div>
   );
 };
+
+export async function getServerSideProps(context) {
+  const { query } = context;
+  const { access_token, id_token, code } = query;
+
+  const tokenToExchange = access_token || id_token || code;
+
+  if (!tokenToExchange) {
+    return { props: { error: null } };
+  }
+
+  try {
+    // Inside Docker SSR, we MUST use the target service IP or name. 
+    // We've verified '172.18.0.6' works perfectly for container-to-container traffic.
+    const internalBackendUrl = "http://172.18.0.6:1337/api";
+
+    // Exchange with Strapi
+    const response = await axios.get(`${internalBackendUrl}/auth/google/callback`, {
+      params: { access_token: tokenToExchange },
+    });
+
+    const { jwt, user } = response.data;
+
+    return {
+      props: {
+        jwt,
+        user: user || null,
+        error: null,
+      },
+    };
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error?.message ||
+      error.message;
+
+    console.error("[SSR-AUTH-DEBUG] Handshake failed:", errorMessage);
+
+    return {
+      props: {
+        error: errorMessage,
+        jwt: null,
+        user: null,
+      },
+    };
+  }
+}
 
 export default GoogleCallback;

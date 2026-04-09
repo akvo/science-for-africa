@@ -150,10 +150,31 @@ module.exports = {
     usersPermissionsPlugin.controller("auth").emailConfirmation = async (
       ctx,
     ) => {
-      await originalEmailConfirmation(ctx);
-      if (ctx.response.status === 302) {
-        ctx.body = { success: true };
-        ctx.status = 200;
+      console.log("[AUTH-DEBUG] emailConfirmation started", ctx.query);
+      try {
+        if (typeof originalEmailConfirmation !== "function") {
+          console.error(
+            "[AUTH-DEBUG] originalEmailConfirmation is NOT a function!",
+            typeof originalEmailConfirmation,
+          );
+          ctx.status = 500;
+          ctx.body = { error: "Internal Server Error: Missing controller" };
+          return;
+        }
+        await originalEmailConfirmation(ctx);
+        console.log(
+          `[AUTH-DEBUG] emailConfirmation original called, status: ${ctx.status}`,
+        );
+        if (ctx.response.status === 302) {
+          ctx.body = { success: true };
+          ctx.status = 200;
+        }
+      } catch (error) {
+        console.error(
+          "[AUTH-DEBUG] Error in emailConfirmation override:",
+          error,
+        );
+        throw error;
       }
     };
 
@@ -188,9 +209,11 @@ module.exports = {
   },
 
   async bootstrap({ strapi }) {
-    console.log(
-      `[AUTH-DEBUG] Database connected to host: ${strapi.config.get("database.connection.connection.host")}, database: ${strapi.config.get("database.connection.connection.database")}`,
-    );
+    if (strapi.config && typeof strapi.config.get === "function") {
+      console.log(
+        `[AUTH-DEBUG] Database connected to host: ${strapi.config.get("database.connection.connection.host")}, database: ${strapi.config.get("database.connection.connection.database")}`,
+      );
+    }
 
     // Add user lifecycles in bootstrap
     strapi.db.lifecycles.subscribe({
@@ -271,7 +294,10 @@ module.exports = {
     const frontendVerifyUrl =
       process.env.EMAIL_CONFIRMATION_URL ||
       "http://localhost:3000/auth/verify-email";
-    const emailRedirectUrl = "";
+    const emailRedirectUrl = frontendVerifyUrl.replace(
+      /\/auth\/verify-email$/,
+      "/login",
+    );
 
     if (
       !settings.email_confirmation ||

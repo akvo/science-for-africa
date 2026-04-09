@@ -487,6 +487,7 @@ Namespace: science-of-africa-namespace
 
 > **Note:** Set `NODE_OPTIONS=--max-old-space-size=768` on both frontend and backend deployments to align V8 heap limits with container memory limits and prevent OOMKills.
 
+
 The three-deployment pattern (nginx, frontend, backend) matches GCP staging exactly. The only differences are infrastructure-level: managed database instead of a container, Azure Blob instead of GCS, and cert-manager for TLS.
 
 **TLS:** Use the [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) with [cert-manager](https://cert-manager.io/) for automatic Let's Encrypt certificates.
@@ -603,3 +604,43 @@ graph TB
 - **Socket.io** — real-time events (notifications, chat — future), deployed as a new service in the cluster
 
 **Key architectural property:** Since Phase 1 is already on K8s, Phase 2 only requires deploying additional services and scaling existing ones. No substantial migration or application code changes are needed but we still get significant scalability improvements.
+
+## 5. Google OAuth Authentication
+
+The platform supports seamless authentication via Google OAuth 2.0, integrated into the Strapi `users-permissions` plugin.
+
+### 5.1 Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant Strapi
+    participant Google
+
+    User->>Frontend: Click "Sign in with Google"
+    Frontend->>Strapi: GET /api/connect/google
+    Strapi->>Google: Redirect to OAuth Consent
+    Google-->>User: Show Consent Screen
+    User->>Google: Approve
+    Google-->>Strapi: GET /api/connect/google/callback
+    Strapi->>Strapi: Generate/Retrieve User + JWT
+    Strapi-->>Frontend: Redirect to /auth/google?access_token=...
+    Frontend->>Strapi: GET /api/users/me (with JWT)
+    Strapi-->>Frontend: User Object (onboardingComplete: bool)
+    alt onboardingComplete is false
+        Frontend->>User: Redirect to /onboarding
+    else onboardingComplete is true
+        Frontend->>User: Redirect to /
+    end
+```
+
+### 5.2 Implementation Details
+
+- **Backend Configuration**: Automated via `src/index.js` bootstrap. The system synchronizes provider settings (Client ID, Secret, and Redirect URIs) from environment variables on startup.
+- **Frontend Integration**:
+    - `SocialButton`: Custom branded component following Google's identity guidelines.
+    - `pages/auth/google.js`: Dedicated callback handler that hydrares the Zustand `auth-store` and manages initial routing.
+- **Bypass Logic**: Social users are automatically marked as `confirmed: true`, bypassing the email verification step required for local registrations.
+- **Session Persistence**: Social login sessions are automatically persistent (30 days), matching the "Remember Me" behavior of local login.
+

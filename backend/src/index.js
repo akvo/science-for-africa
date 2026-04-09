@@ -350,7 +350,45 @@ module.exports = {
       strapi.log.info("Branded email templates initialized.");
     }
 
-    // 3. Seed development data
+    // 3. Synchronize Google OAuth Provider
+    const grantStore = strapi.store({
+      type: "plugin",
+      name: "users-permissions",
+      key: "grant",
+    });
+    const grants = await grantStore.get();
+
+    if (
+      process.env.GOOGLE_CLIENT_ID &&
+      process.env.GOOGLE_CLIENT_SECRET &&
+      grants
+    ) {
+      const googleConfig = grants.google || {};
+      const updatedGoogleConfig = {
+        ...googleConfig,
+        enabled: true,
+        key: process.env.GOOGLE_CLIENT_ID,
+        secret: process.env.GOOGLE_CLIENT_SECRET,
+        callback: `${process.env.NEXT_PUBLIC_BACKEND_URL}/connect/google/callback`,
+        redirectUri: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/auth/google`,
+      };
+
+      // Only update if changes are detected to avoid unnecessary writes
+      const hasChanged =
+        googleConfig.enabled !== updatedGoogleConfig.enabled ||
+        googleConfig.key !== updatedGoogleConfig.key ||
+        googleConfig.secret !== updatedGoogleConfig.secret ||
+        googleConfig.callback !== updatedGoogleConfig.callback ||
+        googleConfig.redirectUri !== updatedGoogleConfig.redirectUri;
+
+      if (hasChanged) {
+        grants.google = updatedGoogleConfig;
+        await grantStore.set({ value: grants });
+        strapi.log.info("Google OAuth provider synchronized.");
+      }
+    }
+
+    // 4. Seed development data
     const { seed } = require("./utils/seeder");
     await seed(strapi);
   },

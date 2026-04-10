@@ -13,6 +13,20 @@ jest.mock("@/lib/strapi", () => ({
   resetPassword: jest.fn(),
 }));
 
+// Mock next-i18next
+jest.mock("next-i18next", () => ({
+  useTranslation: () => ({
+    t: (key, options) => (options?.email ? options.email : key),
+  }),
+}));
+
+// Mock react-i18next
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key, options) => (options?.email ? options.email : key),
+  }),
+}));
+
 describe("ResetPasswordForm", () => {
   const mockPush = jest.fn();
   const mockUseRouter = useRouter;
@@ -27,12 +41,10 @@ describe("ResetPasswordForm", () => {
 
   it("renders correctly with initial state", () => {
     render(<ResetPasswordForm />);
-    // Title update from "Set new" to "Create new"
-    expect(screen.getByText(/Create new password/i)).toBeInTheDocument();
+    expect(screen.getByText(/reset_password\.title/i)).toBeInTheDocument();
 
-    // Check initial button state (Submit text update to "Reset password")
     const submitButton = screen.getByRole("button", {
-      name: /Reset password/i,
+      name: /reset_password\.button/i,
     });
     expect(submitButton).toBeDisabled();
     expect(submitButton).toHaveClass("bg-primary-50");
@@ -40,9 +52,11 @@ describe("ResetPasswordForm", () => {
 
   it("button remains disabled when only one field is filled", async () => {
     render(<ResetPasswordForm />);
-    const passwordInput = screen.getByLabelText(/New password/i);
+    const passwordInput = screen.getByLabelText(
+      /reset_password\.password_label/i,
+    );
     const submitButton = screen.getByRole("button", {
-      name: /Reset password/i,
+      name: /reset_password\.button/i,
     });
 
     fireEvent.change(passwordInput, { target: { value: "Password123!" } });
@@ -51,10 +65,14 @@ describe("ResetPasswordForm", () => {
 
   it("enables the button when both fields are present", async () => {
     render(<ResetPasswordForm />);
-    const passwordInput = screen.getByLabelText(/New password/i);
-    const confirmInput = screen.getByLabelText(/Confirm password/i);
+    const passwordInput = screen.getByLabelText(
+      /reset_password\.password_label/i,
+    );
+    const confirmInput = screen.getByLabelText(
+      /reset_password\.confirm_password_label/i,
+    );
     const submitButton = screen.getByRole("button", {
-      name: /Reset password/i,
+      name: /reset_password\.button/i,
     });
 
     fireEvent.change(passwordInput, { target: { value: "Password123!" } });
@@ -69,10 +87,14 @@ describe("ResetPasswordForm", () => {
     resetPassword.mockResolvedValue({ id: 1 });
 
     render(<ResetPasswordForm />);
-    const passwordInput = screen.getByLabelText(/New password/i);
-    const confirmInput = screen.getByLabelText(/Confirm password/i);
+    const passwordInput = screen.getByLabelText(
+      /reset_password\.password_label/i,
+    );
+    const confirmInput = screen.getByLabelText(
+      /reset_password\.confirm_password_label/i,
+    );
     const submitButton = screen.getByRole("button", {
-      name: /Reset password/i,
+      name: /reset_password\.button/i,
     });
 
     fireEvent.change(passwordInput, { target: { value: "Password123!" } });
@@ -81,8 +103,9 @@ describe("ResetPasswordForm", () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      // Current implementation shows "Password updated"
-      expect(screen.getByText(/Password updated/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/reset_password\.success_title/i),
+      ).toBeInTheDocument();
     });
   });
 });

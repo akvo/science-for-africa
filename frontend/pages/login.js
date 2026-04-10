@@ -1,4 +1,5 @@
 import React from "react";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { LoginForm } from "@/components/auth/login-form";
 
 const LoginPage = () => {
@@ -8,5 +9,13 @@ const LoginPage = () => {
     </div>
   );
 };
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common", "auth"])),
+    },
+  };
+}
 
 export default LoginPage;

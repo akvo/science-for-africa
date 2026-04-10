@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { SignUpForm } from "@/components/auth/signup-form";
 import { SocialButton } from "@/components/auth/social-auth";
 
@@ -39,5 +40,13 @@ const SignupPage = () => {
     </div>
   );
 };
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common", "auth"])),
+    },
+  };
+}
 
 export default SignupPage;

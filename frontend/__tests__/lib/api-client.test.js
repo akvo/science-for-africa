@@ -1,11 +1,15 @@
 jest.mock("axios", () => {
-  const instance = {
-    interceptors: {
-      request: { use: jest.fn() },
-      response: { use: jest.fn() },
-    },
-    defaults: { headers: { common: {} } },
+  const instance = jest.fn(() =>
+    Promise.resolve({
+      data: { data: ["stub-data"] },
+      config: { params: {} },
+    }),
+  );
+  instance.interceptors = {
+    request: { use: jest.fn() },
+    response: { use: jest.fn() },
   };
+  instance.defaults = { headers: { common: {} } };
   return {
     create: jest.fn(() => instance),
   };
@@ -62,12 +66,12 @@ describe("apiClient", () => {
   });
 
   describe("Response Interceptor", () => {
-    it("should pass through successful responses", () => {
+    it("should pass through successful responses", async () => {
       const response = { data: { success: true } };
       const interceptor =
         mockInstance.interceptors.response.use.mock.calls[0][0];
 
-      const result = interceptor(response);
+      const result = await interceptor(response);
       expect(result).toBe(response);
     });
 

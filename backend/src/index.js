@@ -25,17 +25,7 @@ module.exports = {
           max: 5,
         },
         educationTopic: { type: "string" },
-        educationLevel: {
-          type: "enumeration",
-          enum: [
-            "High School",
-            "Bachelor's Degree",
-            "Master's Degree",
-            "Doctorate (PhD)",
-            "Post-Doctorate",
-            "Professional Certificate",
-          ],
-        },
+        educationLevel: { type: "string" },
         institution: {
           type: "relation",
           relation: "manyToOne",
@@ -67,9 +57,7 @@ module.exports = {
           type: "enumeration",
           enum: ["individual", "institution"],
         },
-        roleType: {
-          type: "string",
-        },
+        roleType: { type: "string" },
         educationInstitutionName: {
           type: "string",
         },
@@ -283,6 +271,27 @@ module.exports = {
         }
       },
     });
+
+    // --- GLOBAL LOCALE SAFETY ---
+    // Ensure all localized models default to 'en' if no locale is provided.
+    // This catches low-level db.query calls (like seeders) that bypass standard Document Service logic.
+    if (strapi.contentTypes) {
+      const localizedModels = Object.entries(strapi.contentTypes)
+        .filter(([uid, model]) => model.pluginOptions?.i18n?.localized === true)
+        .map(([uid]) => uid);
+
+      if (localizedModels.length > 0) {
+        strapi.db.lifecycles.subscribe({
+          models: localizedModels,
+          async beforeCreate(event) {
+            const { data } = event.params;
+            if (!data.locale) {
+              data.locale = "en";
+            }
+          },
+        });
+      }
+    }
 
     // 1. Ensure email confirmation is enabled in advanced settings
     const advancedStore = strapi.store({

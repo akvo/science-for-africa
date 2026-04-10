@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { useOnboardingStore } from "@/lib/onboarding-store";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -11,12 +11,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Building2, Search, Loader2 } from "lucide-react";
-import { fetchFromStrapi } from "@/lib/strapi";
+import { ArrowLeft, Search, Loader2 } from "lucide-react";
+import { fetchFromStrapi, fetchLocalized } from "@/lib/strapi";
+import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import { ROLE_OPTIONS } from "@/lib/onboarding-constants";
 
 const OnboardingStep1 = () => {
+  const { t } = useTranslation("onboarding");
+  const router = useRouter();
+  const { locale } = router;
   const {
     userType,
     setUserType,
@@ -27,12 +32,12 @@ const OnboardingStep1 = () => {
     skipStep,
   } = useOnboardingStore();
 
-  const [institutions, setInstitutions] = React.useState([]);
-  const [searchTerm, setSearchTerm] = React.useState(
+  const [institutions, setInstitutions] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(
     formData.affiliationInstitution?.name || formData.institutionName || "",
   );
-  const [showDropdown, setShowDropdown] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleTabChange = (value) => {
     setUserType(value);
@@ -42,11 +47,10 @@ const OnboardingStep1 = () => {
     updateFormData({ roleType: value });
   };
 
-  const searchTimeoutRef = React.useRef(null);
+  const searchTimeoutRef = useRef(null);
 
   const handleInstitutionSearch = async (val) => {
     setSearchTerm(val);
-    // Update both fields for consistency
     updateFormData({
       institutionName: val,
       affiliationInstitution: { id: null, name: val },
@@ -62,8 +66,9 @@ const OnboardingStep1 = () => {
 
       searchTimeoutRef.current = setTimeout(async () => {
         const encodedVal = encodeURIComponent(val);
-        const response = await fetchFromStrapi(
+        const response = await fetchLocalized(
           `/institutions?filters[name][$containsi]=${encodedVal}`,
+          locale,
         );
         if (response?.data) {
           setInstitutions(
@@ -106,23 +111,23 @@ const OnboardingStep1 = () => {
           className="flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors"
         >
           <ArrowLeft size={18} />
-          <span>Back</span>
+          <span>{t("steps.back")}</span>
         </button>
         <button
           onClick={skipStep}
           className="text-brand-gray-500 hover:text-brand-teal-700 transition-colors"
         >
-          Skip
+          {t("steps.skip")}
         </button>
       </div>
 
       {/* Header Section */}
       <div className="space-y-3 mb-32">
         <h1 className="text-3xl font-bold text-brand-teal-900 leading-tight">
-          What kind of account you&apos;d like to create?
+          {t("step1.title")}
         </h1>
         <p className="text-md text-brand-gray-800 leading-relaxed">
-          Select your account type to personalize your experience.
+          {t("step1.description")}
         </p>
       </div>
 
@@ -140,13 +145,13 @@ const OnboardingStep1 = () => {
               value="individual"
               className="px-2 py-3 text-md font-medium"
             >
-              Individual
+              {t("step1.individual_tab")}
             </TabsTrigger>
             <TabsTrigger
               value="institution"
               className="px-2 py-3 text-md font-medium"
             >
-              Institution
+              {t("step1.institution_tab")}
             </TabsTrigger>
           </TabsList>
         </div>
@@ -154,8 +159,7 @@ const OnboardingStep1 = () => {
         <TabsContent value="individual" className="space-y-6 mb-12">
           <div className="my-16">
             <p className="text-md text-brand-gray-800 leading-relaxed">
-              Lorem ipsum dolor sit amet consectetur. Rhoncus quis nunc ipsum
-              pellentesque praesent facilisis tempor.
+              {t("step1.individual_desc")}
             </p>
           </div>
           <div className="space-y-1.5">
@@ -163,19 +167,19 @@ const OnboardingStep1 = () => {
               htmlFor="role-type"
               className="text-md font-medium text-black"
             >
-              Role
+              {t("step1.role_label")}
             </Label>
             <Select onValueChange={handleRoleChange} value={formData.roleType}>
               <SelectTrigger
                 id="role-type"
                 className="w-full h-11 px-3.5 py-2.5 bg-white border-brand-gray-100 rounded-8 focus:ring-1 focus:ring-brand-teal-500 shadow-xs text-md"
               >
-                <SelectValue placeholder="Select role" />
+                <SelectValue placeholder={t("step1.role_placeholder")} />
               </SelectTrigger>
               <SelectContent>
                 {ROLE_OPTIONS.map((role) => (
                   <SelectItem key={role} value={role} className="text-md">
-                    {role}
+                    {t(`roles.${role}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -186,8 +190,7 @@ const OnboardingStep1 = () => {
         <TabsContent value="institution" className="space-y-6 mb-12">
           <div className="my-16">
             <p className="text-md text-brand-gray-800 leading-relaxed">
-              Lorem ipsum dolor sit amet consectetur. Rhoncus quis nunc ipsum
-              pellentesque praesent facilisis tempor.
+              {t("step1.institution_desc")}
             </p>
           </div>
           <div className="space-y-1.5">
@@ -195,19 +198,19 @@ const OnboardingStep1 = () => {
               htmlFor="inst-role-type"
               className="text-md font-medium text-black"
             >
-              Role
+              {t("step1.role_label")}
             </Label>
             <Select onValueChange={handleRoleChange} value={formData.roleType}>
               <SelectTrigger
                 id="inst-role-type"
                 className="w-full h-11 px-3.5 py-2.5 bg-white border-brand-gray-100 rounded-8 focus:ring-1 focus:ring-brand-teal-500 shadow-xs text-md"
               >
-                <SelectValue placeholder="Select role" />
+                <SelectValue placeholder={t("step1.role_placeholder")} />
               </SelectTrigger>
               <SelectContent>
                 {ROLE_OPTIONS.map((role) => (
                   <SelectItem key={role} value={role} className="text-md">
-                    {role}
+                    {t(`roles.${role}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -219,7 +222,7 @@ const OnboardingStep1 = () => {
               htmlFor="institution-name"
               className="text-md font-medium text-black"
             >
-              Institution
+              {t("step1.institution_label")}
             </Label>
             <div className="relative group">
               <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-gray-400 group-focus-within:text-brand-teal-500 transition-colors pointer-events-none">
@@ -227,7 +230,7 @@ const OnboardingStep1 = () => {
               </div>
               <Input
                 id="institution-name"
-                placeholder="Type your institution name"
+                placeholder={t("step1.institution_placeholder")}
                 className="w-full h-11 pl-10.5 pr-10.5 py-2.5 bg-white border-brand-gray-100 rounded-8 focus:ring-1 focus:ring-brand-teal-500 shadow-xs placeholder:text-[#667085] text-md"
                 value={searchTerm}
                 onChange={(e) => handleInstitutionSearch(e.target.value)}
@@ -261,14 +264,14 @@ const OnboardingStep1 = () => {
               searchTerm.length > 2 && (
                 <div className="absolute z-50 w-full mt-1 bg-white border border-brand-gray-100 rounded-8 shadow-xl p-4 text-center animate-in fade-in slide-in-from-top-2">
                   <p className="text-sm text-brand-gray-500">
-                    No institutions found. You can continue with what you typed.
+                    {t("step1.no_institutions_found")}
                   </p>
                   <button
                     type="button"
                     onClick={() => setShowDropdown(false)}
                     className="mt-2 text-sm font-medium text-brand-teal-600 hover:underline"
                   >
-                    Dismiss
+                    {t("step1.dismiss")}
                   </button>
                 </div>
               )}
@@ -282,7 +285,7 @@ const OnboardingStep1 = () => {
           disabled={!isFormValid()}
           className="w-full h-11 rounded-full text-md font-medium transition-all duration-300 hover:shadow-lg disabled:bg-brand-teal-100 disabled:text-white"
         >
-          Confirm
+          {t("steps.confirm")}
         </Button>
       </div>
     </div>

@@ -39,7 +39,7 @@ function DropdownMenuContent({
   return (
     <MenuPrimitive.Portal>
       <MenuPrimitive.Positioner
-        className="isolate z-50 outline-none"
+        className="isolate z-[1001] outline-none"
         align={align}
         alignOffset={alignOffset}
         side={side}
@@ -48,7 +48,7 @@ function DropdownMenuContent({
         <MenuPrimitive.Popup
           data-slot="dropdown-menu-content"
           className={cn(
-            "z-50 max-h-(--available-height) w-(--anchor-width) min-w-40 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-lg bg-white p-1 text-popover-foreground shadow-lg border border-brand-gray-100 duration-100 outline-none",
+            "z-[1001] max-h-(--available-height) w-(--anchor-width) min-w-40 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-lg bg-white p-1 text-popover-foreground shadow-lg border border-brand-gray-100 duration-100 outline-none",
             className,
           )}
           {...props}

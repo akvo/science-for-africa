@@ -324,24 +324,65 @@ module.exports = {
 
     if (emailSettings && emailSettings.email_confirmation) {
       const confirmationLink = `${frontendVerifyUrl}?confirmation=<%= CODE %>`;
+      const brandedBody = `
+        <p>Hello <%= USER.username %>,</p>
+        <p>Thank you for joining the Science for Africa platform. To complete your registration and active your account, please click the button below to verify your email address:</p>
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${confirmationLink}" style="background-color: #008080; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Verify Email Address</a>
+        </div>
+        <p>If the button doesn't work, you can also copy and paste the following link into your browser:</p>
+        <p style="word-break: break-all; color: #008080;">${confirmationLink}</p>
+        <p>If you did not create an account, please ignore this email.</p>
+      `;
+
       emailSettings.email_confirmation.options.message = emailTemplate({
         title: "Confirm Your Email",
-        body: `<p>Hello <%= USER.username %>,</p><p>Please verify your email address:</p><div style="text-align: center;"><a href="${confirmationLink}" style="...">Verify Email</a></div>`,
+        body: brandedBody,
       });
+      emailSettings.email_confirmation.options.object =
+        "Verify your Science for Africa account";
+      emailSettings.email_confirmation.options.from.name = "Science for Africa";
+      emailSettings.email_confirmation.options.from.email =
+        process.env.SMTP_FROM || "no-reply@strapi.io";
+
+      if (emailSettings.reset_password) {
+        emailSettings.reset_password.options.from.name = "Science for Africa";
+        emailSettings.reset_password.options.from.email =
+          process.env.SMTP_FROM || "no-reply@strapi.io";
+      }
       emailUpdated = true;
     }
 
     if (emailSettings && emailSettings.reset_password) {
-      const resetLink = `${frontendVerifyUrl.replace(/\/auth\/verify-email$/, "")}/auth/reset-password?code=<%= TOKEN %>`;
+      const frontendUrl = frontendVerifyUrl.replace(
+        /\/auth\/verify-email$/,
+        "",
+      );
+      const resetLink = `${frontendUrl}/auth/reset-password?code=<%= TOKEN %>`;
+      const brandedResetBody = `
+        <p>Hello <%= USER.username %>,</p>
+        <p>We received a request to reset the password for your Science for Africa account. Click the button below to choose a new password:</p>
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${resetLink}" style="background-color: #008080; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Reset Password</a>
+        </div>
+        <p>If the button doesn't work, you can also copy and paste the following link into your browser:</p>
+        <p style="word-break: break-all; color: #008080;">${resetLink}</p>
+        <p>If you did not request a password reset, please ignore this email.</p>
+      `;
+
       emailSettings.reset_password.options.message = emailTemplate({
         title: "Reset Your Password",
-        body: `<p>Hello <%= USER.username %>,</p><p>Reset your password here:</p><div style="text-align: center;"><a href="${resetLink}" style="...">Reset Password</a></div>`,
+        body: brandedResetBody,
       });
+      emailSettings.reset_password.options.object =
+        "Reset your Science for Africa account password";
+      emailSettings.reset_password.options.from.name = "Science for Africa";
       emailUpdated = true;
     }
 
     if (emailUpdated) {
       await emailStore.set({ value: emailSettings });
+      strapi.log.info("Branded email templates initialized.");
     }
 
     // 3. Synchronize Google OAuth Provider

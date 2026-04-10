@@ -45,8 +45,42 @@ const GoogleCallback = ({ jwt, user, error }) => {
 
 export async function getServerSideProps(context) {
   const { query } = context;
-  const { access_token, id_token, code } = query;
+  const { jwt, access_token, id_token, code } = query;
 
+  const publicBackendUrl =
+    process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api";
+
+  // Smart Swap for Docker SSR:
+  // getServerSideProps runs inside the container. If the backend URL points to 'localhost',
+  // it must be swapped to the internal service name 'backend' to be reachable.
+  const internalBackendUrl = publicBackendUrl.replace("localhost", "backend");
+
+  // FLOW A: We already have a JWT from a direct backend redirect (Native Strapi Handshake)
+  if (jwt) {
+    try {
+      const response = await axios.get(`${internalBackendUrl}/users/me`, {
+        headers: { Authorization: `Bearer ${jwt}` },
+      });
+
+      return {
+        props: {
+          jwt,
+          user: response.data || null,
+          error: null,
+        },
+      };
+    } catch (error) {
+      return {
+        props: {
+          error: "Failed to establish session: " + error.message,
+          jwt: null,
+          user: null,
+        },
+      };
+    }
+  }
+
+  // FLOW B: Token Exchange (Legacy or Handshake-less flow)
   const tokenToExchange = access_token || id_token || code;
 
   if (!tokenToExchange) {
@@ -54,14 +88,6 @@ export async function getServerSideProps(context) {
   }
 
   try {
-    const publicBackendUrl =
-      process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api";
-
-    // Smart Swap for Docker SSR:
-    // getServerSideProps runs inside the container. If the backend URL points to 'localhost',
-    // it must be swapped to the internal service name 'backend' to be reachable.
-    const internalBackendUrl = publicBackendUrl.replace("localhost", "backend");
-
     // Exchange with Strapi
     const response = await axios.get(
       `${internalBackendUrl}/auth/google/callback`,
@@ -70,11 +96,11 @@ export async function getServerSideProps(context) {
       },
     );
 
-    const { jwt, user } = response.data;
+    const { jwt: exchangedJwt, user } = response.data;
 
     return {
       props: {
-        jwt,
+        jwt: exchangedJwt,
         user: user || null,
         error: null,
       },

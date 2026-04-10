@@ -6,7 +6,7 @@
   "locale": null,
   "permissions": [
     {
-      "documentId": "ig7xacjnm7sn9kou4i4k1mq8",
+      "documentId": "ks61ivjf37270in5ri6exb3r",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "api::institution.institution",
@@ -19,40 +19,43 @@
           "users"
         ],
         "locales": [
-          "en"
+          "en",
+          "fr"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "awuzd8v2nbaxa2nalz9s9nzb",
+      "documentId": "y7r9p8skysrtp5yh4734koq6",
       "action": "plugin::content-manager.explorer.delete",
       "actionParameters": {},
       "subject": "api::institution.institution",
       "properties": {
         "locales": [
-          "en"
+          "en",
+          "fr"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "qluwh8huryh330e5grjzgtay",
+      "documentId": "qvihm0zku95c6hs6a97zcwqz",
       "action": "plugin::content-manager.explorer.publish",
       "actionParameters": {},
       "subject": "api::institution.institution",
       "properties": {
         "locales": [
-          "en"
+          "en",
+          "fr"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "ygbqvagkg8cmijm3vm7it3xv",
+      "documentId": "vau3lmgm5tp3ybv18ioynhh8",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "api::institution.institution",
@@ -65,14 +68,15 @@
           "users"
         ],
         "locales": [
-          "en"
+          "en",
+          "fr"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "mvml0ey81nh4kjl2eyvn4pnb",
+      "documentId": "znkarobn09ll4g2nqno0w67y",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "api::institution.institution",
@@ -85,14 +89,15 @@
           "users"
         ],
         "locales": [
-          "en"
+          "en",
+          "fr"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "f7thj64inc55o7khkitqwerx",
+      "documentId": "c9ynr1xpp5ym8znao39hskpj",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "api::interest.interest",
@@ -102,40 +107,43 @@
           "category"
         ],
         "locales": [
-          "en"
+          "en",
+          "fr"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "ryqdycl4gvu5sas4ul74mlz1",
+      "documentId": "r4erwg9b5975ie504cdstsrl",
       "action": "plugin::content-manager.explorer.delete",
       "actionParameters": {},
       "subject": "api::interest.interest",
       "properties": {
         "locales": [
-          "en"
+          "en",
+          "fr"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "pstssazg4ytd3osbl0bigo74",
+      "documentId": "u6u57vbp3oszabsur54u9mqw",
       "action": "plugin::content-manager.explorer.publish",
       "actionParameters": {},
       "subject": "api::interest.interest",
       "properties": {
         "locales": [
-          "en"
+          "en",
+          "fr"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "a9jd1kjwixewff67cg9nt3lp",
+      "documentId": "bqdbbnhkproxb0k0su72stba",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "api::interest.interest",
@@ -145,14 +153,15 @@
           "category"
         ],
         "locales": [
-          "en"
+          "en",
+          "fr"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "nobt92iddh94j226fefd2kre",
+      "documentId": "vjm96mwnuqh5yhp4mh33l1he",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "api::interest.interest",
@@ -162,7 +171,8 @@
           "category"
         ],
         "locales": [
-          "en"
+          "en",
+          "fr"
         ]
       },
       "conditions": [],

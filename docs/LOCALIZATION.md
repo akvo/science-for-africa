@@ -102,10 +102,10 @@ config.params = { ...config.params, locale: currentLocale };
 ## 🔧 Implementation Details
 
 ### Phase 1: Backend Foundation
-- [ ] Enable `@strapi/plugin-i18n` in `plugins.js`
-- [ ] Add Locales: `English (en)`, `French (fr)` via Strapi Settings
-- [ ] Enable localization in `schema.json` for: `Community`, `ForumCategory`, `Resource`, `Tag`
-- [ ] Export configuration to `config/sync/`
+- [x] Enable `@strapi/plugin-i18n` (Installed as core dependency)
+- [x] Add Locales: `English (en)`, `French (fr)` via Strapi Settings
+- [ ] Enable localization in `schema.json` for: `Community`, `ForumCategory`, `Resource`, `Tag` (Pending entity creation)
+- [x] Export configuration to `config/sync/`
 
 ### Phase 2: Frontend Foundation
 - [x] Install `next-i18next` and `i18next`

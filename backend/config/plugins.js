@@ -83,7 +83,11 @@ module.exports = ({ env }) => {
         importOnBootstrap: false,
         customTypes: [],
         excludedTypes: [],
-        excludedConfig: ["core-store.plugin_users-permissions_grant"],
+        excludedConfig: [
+          "core-store.plugin_users-permissions_grant",
+          "core-store.plugin_users-permissions_advanced",
+          "core-store.plugin_users-permissions_email",
+        ],
       },
     },
     "users-permissions": {

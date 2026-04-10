@@ -103,30 +103,6 @@ describe("LoginForm", () => {
     });
   });
 
-  it("handles 2FA redirection", async () => {
-    loginUser.mockResolvedValue({
-      requires2FA: true,
-      email: "test@example.com",
-    });
-
-    render(<LoginForm />);
-
-    fireEvent.change(screen.getByLabelText(/Email/i), {
-      target: { value: "test@example.com" },
-    });
-    fireEvent.change(screen.getByLabelText(/Password/i), {
-      target: { value: "Password123!" },
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: /Login/i }));
-
-    await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith(
-        "/auth/verify-2fa?email=test%40example.com",
-      );
-    });
-  });
-
   it("shows error message on failure", async () => {
     loginUser.mockResolvedValue({
       error: "Invalid identifier or password",

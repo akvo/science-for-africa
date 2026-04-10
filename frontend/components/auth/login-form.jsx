@@ -52,14 +52,6 @@ export const LoginForm = () => {
         return;
       }
 
-      // Handle 2FA signal
-      if (result && result.requires2FA) {
-        router.push(
-          `/auth/verify-2fa?email=${encodeURIComponent(result.email)}`,
-        );
-        return;
-      }
-
       if (result && result.jwt) {
         // Success! Persist auth state
         const { setAuth } = useAuthStore.getState();
@@ -172,7 +164,7 @@ export const LoginForm = () => {
             </Label>
           </div>
           <Link
-            href="/forgot-password"
+            href="/auth/forgot-password"
             className="text-sm text-brand-teal-700 font-bold hover:text-brand-teal-900 transition-colors"
           >
             Forgot password

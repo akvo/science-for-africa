@@ -70,7 +70,7 @@ All core content entities now include localization support:
 For curated collections like **Interests** and **Institutions**, the platform utilizes a hybrid approach:
 1. **Frontend Request**: Components call `fetchLocalized(endpoint, locale)`.
 2. **Preference**: It attempts to fetch content for the requested locale.
-3. **Fallback**: If the result set is empty and the locale is not English, it automatically executes a second request for the English (`en`) version. 
+3. **Fallback**: If the result set is empty and the locale is not English, it automatically executes a second request for the English (`en`) version.
 4. **Resilience**: This ensures that as we scale translations, the UI remains populated with the best available data.
 
 ### 🏗️ Automated Data Synchronization
@@ -108,10 +108,10 @@ config.params = { ...config.params, locale: currentLocale };
 - [ ] Export configuration to `config/sync/`
 
 ### Phase 2: Frontend Foundation
-- [ ] Install `next-i18next` and `i18next`
-- [ ] Configure `next.config.mjs` with `i18n` settings
-- [ ] Create directory structure for `public/locales/`
-- [ ] Implement `appWithTranslation` in `_app.jsx`
+- [x] Install `next-i18next` and `i18next`
+- [x] Configure `next.config.mjs` with `i18n` settings
+- [x] Create directory structure for `public/locales/`
+- [x] Implement `appWithTranslation` in `_app.jsx`
 
 ### Phase 3: Premium UI Switcher
 - [x] Design `LocaleSwitcher` component using shadcn/ui and Radix.
@@ -121,8 +121,8 @@ config.params = { ...config.params, locale: currentLocale };
 - [x] Refine seeder for automated draft synchronization and ID parity.
 
 ### Phase 4: Data Fetching Overhaul
-- [ ] Update `axios` interceptor/wrapper to include `locale` query param.
-- [ ] Update GraphQL queries to include `locale` variable.
+- [x] Update `axios` interceptor/wrapper to include `locale` query param.
+- [x] Update GraphQL queries to include `locale` variable.
 
 ---
 
@@ -137,11 +137,11 @@ All content fetches should append the `locale` parameter.
 ---
 
 ## ✅ Implementation Checklist
-- [ ] Subpath routing works for all pages (e.g., `/fr/reset-password`)
-- [ ] UI strings correctly load from `common.json`
-- [ ] Strapi content filters correctly by locale
-- [ ] SEO tags (`hreflang`) are automatically injected by Next.js
-- [ ] Verification email links preserve the user's selected locale
+- [x] Subpath routing works for all pages (e.g., `/fr/reset-password`)
+- [x] UI strings correctly load from `common.json`
+- [x] Strapi content filters correctly by locale
+- [x] SEO tags (`hreflang`) are automatically injected by Next.js
+- [x] Verification email links preserve the user's selected locale
 
 ---
 

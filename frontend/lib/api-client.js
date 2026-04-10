@@ -55,9 +55,37 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// Response Interceptor: Centralized error handling
+// Response Interceptor: Centralized error handling and Locale Fallback
 apiClient.interceptors.response.use(
-  (response) => response,
+  async (response) => {
+    const config = response.config;
+
+    // --- CONTENT FALLBACK LOGIC ---
+    // If a GET request for a non-default locale (fr) returns zero results,
+    // automatically retry once with the default locale (en).
+    if (
+      config.method === "get" &&
+      config.params?.locale === "fr" &&
+      !config._isFallbackRetry
+    ) {
+      // For Strapi list queries: response.data.data is []
+      // For Strapi single item queries: response.data.data is null
+      const hasNoContent =
+        !response.data.data ||
+        (Array.isArray(response.data.data) && response.data.data.length === 0);
+
+      if (hasNoContent) {
+        console.log(`[API] Content missing for FR, falling back to EN...`);
+        return apiClient({
+          ...config,
+          params: { ...config.params, locale: "en" },
+          _isFallbackRetry: true,
+        });
+      }
+    }
+
+    return response;
+  },
   (error) => {
     // Transform axios error into consistent Strapi-like error format
     const transformedError = {

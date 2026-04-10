@@ -34,6 +34,22 @@ apiClient.interceptors.request.use(
     if (jwt && !isPublicAuthEndpoint) {
       config.headers.Authorization = `Bearer ${jwt}`;
     }
+
+    // Inject locale parameter from window/url if on client
+    if (typeof window !== "undefined") {
+      const pathParts = window.location.pathname.split("/");
+      // Check if first part of path is a supported locale (e.g. 'fr')
+      const supportedLocales = ["en", "fr"];
+      const currentLocale = supportedLocales.includes(pathParts[1])
+        ? pathParts[1]
+        : "en";
+
+      config.params = {
+        ...config.params,
+        locale: currentLocale,
+      };
+    }
+
     return config;
   },
   (error) => Promise.reject(error),

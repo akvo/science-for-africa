@@ -23,24 +23,6 @@
       "locale": null
     },
     {
-      "documentId": "yved79h02adgtlsm6nunrc8l",
-      "action": "plugin::content-manager.explorer.delete",
-      "actionParameters": {},
-      "subject": "api::institution.institution",
-      "properties": {},
-      "conditions": [],
-      "locale": null
-    },
-    {
-      "documentId": "kzkla81vh0lduujsodo017tj",
-      "action": "plugin::content-manager.explorer.publish",
-      "actionParameters": {},
-      "subject": "api::institution.institution",
-      "properties": {},
-      "conditions": [],
-      "locale": null
-    },
-    {
       "documentId": "nt8juiovnpo96ovn5pcj97dw",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
@@ -85,24 +67,6 @@
           "category"
         ]
       },
-      "conditions": [],
-      "locale": null
-    },
-    {
-      "documentId": "g0bg3d70dcv55k1sf7vdqkqx",
-      "action": "plugin::content-manager.explorer.delete",
-      "actionParameters": {},
-      "subject": "api::interest.interest",
-      "properties": {},
-      "conditions": [],
-      "locale": null
-    },
-    {
-      "documentId": "xdcdj64pzgctlau2zrhw28bd",
-      "action": "plugin::content-manager.explorer.publish",
-      "actionParameters": {},
-      "subject": "api::interest.interest",
-      "properties": {},
       "conditions": [],
       "locale": null
     },

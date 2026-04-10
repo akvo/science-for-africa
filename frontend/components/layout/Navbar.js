@@ -1,18 +1,25 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import { Button } from "@/components/ui/button";
+import LocaleSwitcher from "./LocaleSwitcher";
 
 const Navbar = ({ isLoggedIn = false }) => {
+  const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   const navLinks = [
-    { name: "About", href: "/about" },
-    { name: "Community", href: "/community", hasDropdown: true },
-    { name: "Opportunities", href: "/opportunities" },
-    { name: "Learning", href: "/learning" },
-    { name: "Resources", href: "/resources" },
+    { name: t("navbar.about"), href: "/about" },
+    {
+      name: t("navbar.community"),
+      href: "/community",
+      hasDropdown: true,
+    },
+    { name: t("navbar.opportunities"), href: "/opportunities" },
+    { name: t("navbar.learning"), href: "/learning" },
+    { name: t("navbar.resources"), href: "/resources" },
   ];
 
   return (
@@ -20,44 +27,16 @@ const Navbar = ({ isLoggedIn = false }) => {
       {/* Top Banner - 34px */}
       <div className="h-8.5 bg-brand-gray-50 border-b border-brand-gray-100 flex items-center">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex justify-between items-center text-sm font-medium text-primary-500">
-          <div className="flex items-center gap-1 cursor-pointer hover:opacity-80">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="1.5"
-                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <span>ENG</span>
-            <svg
-              className="w-3 h-3 ml-0.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </div>
+          <LocaleSwitcher />
           <div className="flex items-center gap-6">
             <Link href="/news" className="hover:opacity-80 transition-opacity">
-              News and insights
+              {t("navbar.news")}
             </Link>
             <Link
               href="/contact"
               className="hover:opacity-80 transition-opacity"
             >
-              Contact
+              {t("navbar.contact")}
             </Link>
           </div>
         </div>
@@ -159,12 +138,12 @@ const Navbar = ({ isLoggedIn = false }) => {
               <div className="flex items-center gap-3">
                 <Button variant="outline" size="xl" asChild>
                   <Link href="/login" className="font-medium">
-                    Login
+                    {t("navbar.login")}
                   </Link>
                 </Button>
                 <Button variant="primary" size="xl" asChild>
                   <Link href="/signup" className="font-medium">
-                    Sign up
+                    {t("navbar.signup")}
                   </Link>
                 </Button>
               </div>
@@ -211,12 +190,12 @@ const Navbar = ({ isLoggedIn = false }) => {
             <div className="flex flex-col gap-3 pt-4">
               <Button variant="outline" size="xl" className="w-full" asChild>
                 <Link href="/login" className="font-medium">
-                  Login
+                  {t("navbar.login")}
                 </Link>
               </Button>
               <Button variant="primary" size="xl" className="w-full" asChild>
                 <Link href="/signup" className="font-medium">
-                  Sign up
+                  {t("navbar.signup")}
                 </Link>
               </Button>
             </div>

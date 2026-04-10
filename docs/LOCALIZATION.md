@@ -47,8 +47,29 @@ flowchart TD
 - [ ] User can switch between English and French via a navbar dropdown.
 - [ ] Switching language updates the URL subpath (e.g., from `/` to `/fr`).
 - [ ] All primary UI elements (Navbar, Footer, Buttons) update to the selected language.
-- [ ] Content from Strapi (Communities, Resources) is displayed in the selected language if a translation exists.
+- [ ] Content from Strapi is displayed in the selected language if a translation exists.
 - [ ] Site-wide search returns results relevant to the current locale.
+
+### Content Strategy
+All core content entities now include localization support:
+- **Interests**: `name` and `category` localized (for expertise filtering).
+- **Institutions**: `name` and `country` localized.
+
+### UI Strategy
+- **Navbar**: All links and login/signup flows translated.
+- **Footer**: Company info and links translated.
+- **Search**: Auto-filters based on current locale.
+
+---
+
+## Technical Appendix
+
+### API Locale Injection
+The `apiClient` automatically extracts the locale from the frontend subpath (e.g., `/fr`) and appends it to all Strapi requests:
+```javascript
+// Example: /fr/onboarding -> sends ?locale=fr
+config.params = { ...config.params, locale: currentLocale };
+```
 
 ### Technical Acceptance Criteria (Tech AC)
 - [ ] Next.js handles routing for `/` and `/fr` prefixes automatically.

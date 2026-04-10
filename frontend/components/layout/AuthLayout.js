@@ -6,6 +6,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import LocaleSwitcher from "./LocaleSwitcher";
 
 const carouselData = [
   {
@@ -69,24 +70,7 @@ const AuthLayout = ({ children, activeStep }) => {
           <p className="text-xs md:text-sm text-brand-gray-500 font-medium">
             © Science for Africa 2026
           </p>
-          <div className="flex items-center gap-1.5 cursor-pointer group transition-all duration-200">
-            <span className="text-xs md:text-sm font-bold text-brand-gray-500 group-hover:text-brand-gray-900 transition-colors uppercase tracking-wider">
-              ENG
-            </span>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-brand-gray-400 group-hover:text-brand-gray-900 transition-colors"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </div>
+          <LocaleSwitcher />
         </div>
       </div>
 

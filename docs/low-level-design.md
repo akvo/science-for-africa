@@ -15,6 +15,8 @@ Please note that this document outlines parts of the solution beyond the MVP del
 | Zustand | 5 | Lightweight client state management |
 | react-hook-form + Zod | 4.x / 4.3 | Form handling and schema validation |
 | axios | - | HTTP client for API calls |
+| next-i18next | 15.4 | Internationalization framework for Next.js |
+| i18next / react-i18next | 24 / 15 | i18n core and React bindings |
 | Embla Carousel | - | Content carousels |
 | Sonner | 2 | Toast notifications |
 | Jest + React Testing Library | 30 / - | Unit and integration testing |
@@ -643,3 +645,29 @@ sequenceDiagram
 - **Bypass Logic**: Social users are automatically marked as `confirmed: true`, bypassing the email verification step required for local registrations.
 - **Session Persistence**: Social login sessions are automatically persistent (30 days), matching the "Remember Me" behavior of local login.
 
+
+## 6. Globalization & Localization
+
+The platform supports multi-language content (English as default, French for launch) using a full-stack localization strategy.
+
+### 6.1 Architecture
+
+- **Backend (Strapi)**: Uses the `@strapi/plugin-i18n` to enable localized fields and entries. Localized content is fetched via the `locale` query parameter.
+- **Frontend (Next.js)**: Uses `next-i18next` for subpath routing (`/` for English, `/fr` for French) and translation management.
+
+### 6.2 Data Model Changes
+
+Specific content types have localization enabled:
+- **Interest**, **Institution**: Enabled for name/title and description fields. No new models were created; localization was strictly applied to the existing implementation.
+
+### 6.3 Locale Awareness
+
+- **API Client**: The `api-client.js` includes a request interceptor that automatically extracts the current locale from the URL subpath and appends it as a `locale` query parameter to all Strapi requests.
+- **UI Switcher**: A premium `LocaleSwitcher` component in the `Navbar` allows users to toggle languages. This triggers a client-side route change via `next/router` with the new locale.
+
+### 6.4 SEO
+
+The platform follows Google's best practices for localized sites:
+- **Subpath routing**: Distinct URLs for each language.
+- **HTML lang attribute**: Automatically updated by `next-i18next`.
+- **SSR support**: Translations are loaded server-side using `getStaticProps` or `getServerSideProps`.

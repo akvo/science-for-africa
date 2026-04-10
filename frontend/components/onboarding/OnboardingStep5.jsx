@@ -4,13 +4,18 @@ import { useAuthStore } from "@/lib/auth-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Loader2, Search } from "lucide-react";
-import { fetchFromStrapi, updateUserProfile } from "@/lib/strapi";
+import {
+  fetchFromStrapi,
+  fetchLocalized,
+  updateUserProfile,
+} from "@/lib/strapi";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 
 const OnboardingStep5 = () => {
   const { t } = useTranslation("onboarding");
   const router = useRouter();
+  const { locale } = router;
   const { formData, updateFormData, prevStep, userType, resetStore } =
     useOnboardingStore();
   const { jwt, updateUser } = useAuthStore();
@@ -38,8 +43,9 @@ const OnboardingStep5 = () => {
 
       searchTimeoutRef.current = setTimeout(async () => {
         const encodedVal = encodeURIComponent(val);
-        const response = await fetchFromStrapi(
+        const response = await fetchLocalized(
           `/institutions?filters[name][$containsi]=${encodedVal}`,
+          locale,
         );
         if (response?.data) {
           setInstitutions(

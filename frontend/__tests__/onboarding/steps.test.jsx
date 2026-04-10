@@ -79,6 +79,26 @@ jest.mock("@/lib/strapi", () => ({
     }
     return Promise.resolve({ data: [] });
   }),
+  fetchLocalized: jest.fn().mockImplementation((endpoint) => {
+    if (endpoint.includes("/interests")) {
+      return Promise.resolve({
+        data: [
+          { name: "Bioinformatics", category: "Popular" },
+          { name: "Genetics", category: "Popular" },
+          { name: "Virology", category: "Popular" },
+          { name: "Ecology", category: "Popular" },
+          { name: "Immunology", category: "Popular" },
+          { name: "Sustainability", category: "Popular" },
+        ],
+      });
+    }
+    if (endpoint.includes("/institutions")) {
+      return Promise.resolve({
+        data: [{ id: 51, name: "Science Foundation" }],
+      });
+    }
+    return Promise.resolve({ data: [] });
+  }),
 }));
 
 describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {

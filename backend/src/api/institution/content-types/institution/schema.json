@@ -18,7 +18,6 @@
   "attributes": {
     "name": {
       "type": "string",
-      "unique": true,
       "required": true,
       "pluginOptions": {
         "i18n": {
@@ -28,13 +27,7 @@
     },
     "type": {
       "type": "enumeration",
-      "enum": [
-        "Academic",
-        "Research",
-        "NGO",
-        "Government",
-        "Private"
-      ],
+      "enum": ["Academic", "Research", "NGO", "Government", "Private"],
       "required": true
     },
     "country": {

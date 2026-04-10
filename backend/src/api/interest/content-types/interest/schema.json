@@ -18,7 +18,6 @@
   "attributes": {
     "name": {
       "type": "string",
-      "unique": true,
       "required": true,
       "pluginOptions": {
         "i18n": {

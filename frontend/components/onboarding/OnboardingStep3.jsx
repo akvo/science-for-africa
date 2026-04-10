@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeft, Loader2, Search } from "lucide-react";
-import { fetchFromStrapi } from "@/lib/strapi";
+import { fetchFromStrapi, fetchLocalized } from "@/lib/strapi";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
@@ -18,6 +18,8 @@ import { EDUCATION_LEVEL_OPTIONS } from "@/lib/onboarding-constants";
 
 const OnboardingStep3 = () => {
   const { t } = useTranslation("onboarding");
+  const router = useRouter();
+  const { locale } = router;
   const { formData, updateFormData, nextStep, prevStep, skipStep } =
     useOnboardingStore();
 
@@ -44,8 +46,9 @@ const OnboardingStep3 = () => {
 
       searchTimeoutRef.current = setTimeout(async () => {
         const encodedVal = encodeURIComponent(val);
-        const response = await fetchFromStrapi(
+        const response = await fetchLocalized(
           `/institutions?filters[name][$containsi]=${encodedVal}`,
+          locale,
         );
         if (response?.data) {
           setInstitutions(

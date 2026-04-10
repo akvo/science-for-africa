@@ -5,7 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
-import { fetchFromStrapi, updateUserProfile } from "@/lib/strapi";
+import {
+  fetchFromStrapi,
+  fetchLocalized,
+  updateUserProfile,
+} from "@/lib/strapi";
 import { useAuthStore } from "@/lib/auth-store";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
@@ -33,7 +37,7 @@ const OnboardingStep2 = () => {
     const loadInterests = async () => {
       setLoading(true);
       try {
-        const response = await fetchFromStrapi(`/interests?locale=${locale}`);
+        const response = await fetchLocalized("/interests", locale);
         if (response?.data) {
           // Group by category
           const grouped = response.data.reduce((acc, item) => {

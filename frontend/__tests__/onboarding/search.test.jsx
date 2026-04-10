@@ -9,7 +9,7 @@ import {
 import OnboardingStep1 from "@/components/onboarding/OnboardingStep1";
 import OnboardingStep5 from "@/components/onboarding/OnboardingStep5";
 import { useOnboardingStore } from "@/lib/onboarding-store";
-import { fetchFromStrapi } from "@/lib/strapi";
+import { fetchFromStrapi, fetchLocalized } from "@/lib/strapi";
 
 // Mock next-i18next
 jest.mock("next-i18next", () => ({
@@ -46,11 +46,13 @@ jest.mock("@/lib/auth-store", () => ({
 jest.mock("next/router", () => ({
   useRouter: jest.fn(() => ({
     push: jest.fn(),
+    locale: "en",
   })),
 }));
 
 jest.mock("@/lib/strapi", () => ({
   fetchFromStrapi: jest.fn().mockResolvedValue({ data: [] }),
+  fetchLocalized: jest.fn().mockResolvedValue({ data: [] }),
   updateUserProfile: jest.fn().mockResolvedValue({ success: true }),
 }));
 
@@ -81,8 +83,9 @@ describe("Institution Search Optimization", () => {
       fireEvent.change(input, { target: { value: "Univ of Nairobi" } });
 
       await waitFor(() => {
-        expect(fetchFromStrapi).toHaveBeenCalledWith(
+        expect(fetchLocalized).toHaveBeenCalledWith(
           expect.stringContaining("Univ%20of%20Nairobi"),
+          expect.anything(),
         );
       });
     });
@@ -107,8 +110,9 @@ describe("Institution Search Optimization", () => {
       fireEvent.change(input, { target: { value: "nai" } });
 
       await waitFor(() => {
-        expect(fetchFromStrapi).toHaveBeenCalledWith(
+        expect(fetchLocalized).toHaveBeenCalledWith(
           expect.stringContaining("filters[name][$containsi]=nai"),
+          expect.anything(),
         );
       });
     });
@@ -131,8 +135,9 @@ describe("Institution Search Optimization", () => {
       fireEvent.change(input, { target: { value: "Oxford Uni" } });
 
       await waitFor(() => {
-        expect(fetchFromStrapi).toHaveBeenCalledWith(
+        expect(fetchLocalized).toHaveBeenCalledWith(
           expect.stringContaining("Oxford%20Uni"),
+          expect.anything(),
         );
       });
     });

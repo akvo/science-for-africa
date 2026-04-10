@@ -1,0 +1,1459 @@
+
+> temp-nextjs@0.1.0 test
+> NODE_OPTIONS='--max-old-space-size=4096' jest --runInBand
+
+FAIL __tests__/onboarding/steps.test.jsx (7.854 s)
+  ● Console
+
+    console.error
+      Failed to load interests: TypeError: (0 , _strapi.fetchLocalized) is not a function
+          at loadInterests (/app/components/onboarding/OnboardingStep2.jsx:40:46)
+          at loadInterests (/app/components/onboarding/OnboardingStep2.jsx:58:5)
+          at Object.react_stack_bottom_frame (/app/node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+          at runWithFiberInDEV (/app/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+          at commitHookEffectListMount (/app/node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+          at commitHookPassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+          at recursivelyTraversePassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+          at recursivelyTraversePassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+          at recursivelyTraversePassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+          at flushPassiveEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+          at flushPendingEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:18358:14)
+          at flushSpawnedWork (/app/node_modules/react-dom/cjs/react-dom-client.development.js:18323:44)
+          at commitRoot (/app/node_modules/react-dom/cjs/react-dom-client.development.js:17955:9)
+          at performWorkOnRoot (/app/node_modules/react-dom/cjs/react-dom-client.development.js:16667:15)
+          at performSyncWorkOnRoot (/app/node_modules/react-dom/cjs/react-dom-client.development.js:18972:7)
+          at flushSyncWorkAcrossRoots_impl (/app/node_modules/react-dom/cjs/react-dom-client.development.js:18814:21)
+          at processRootScheduleInMicrotask (/app/node_modules/react-dom/cjs/react-dom-client.development.js:18853:9)
+          at /app/node_modules/react-dom/cjs/react-dom-client.development.js:18982:11
+          at flushActQueue (/app/node_modules/react/cjs/react.development.js:590:34)
+          at process.env.NODE_ENV.exports.act (/app/node_modules/react/cjs/react.development.js:884:10)
+          at /app/node_modules/@testing-library/react/dist/act-compat.js:46:25
+          at Object.eventWrapper (/app/node_modules/@testing-library/react/dist/pure.js:106:28)
+          at fireEvent (/app/node_modules/@testing-library/dom/dist/events.js:12:35)
+          at Function.fireEvent.<computed> [as click] (/app/node_modules/@testing-library/dom/dist/events.js:110:36)
+          at Function.fireEvent.<computed> [as click] (/app/node_modules/@testing-library/react/dist/fire-event.js:15:52)
+          at Object.click (/app/__tests__/onboarding/steps.test.jsx:126:15)
+
+      50 |         }
+      51 |       } catch (error) {
+    > 52 |         console.error("Failed to load interests:", error);
+         |                 ^
+      53 |       } finally {
+      54 |         setLoading(false);
+      55 |       }
+
+      at error (components/onboarding/OnboardingStep2.jsx:52:17)
+      at loadInterests (components/onboarding/OnboardingStep2.jsx:58:5)
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at flushPendingEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18358:14)
+      at flushSpawnedWork (node_modules/react-dom/cjs/react-dom-client.development.js:18323:44)
+      at commitRoot (node_modules/react-dom/cjs/react-dom-client.development.js:17955:9)
+      at performWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:16667:15)
+      at performSyncWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:18972:7)
+      at flushSyncWorkAcrossRoots_impl (node_modules/react-dom/cjs/react-dom-client.development.js:18814:21)
+      at processRootScheduleInMicrotask (node_modules/react-dom/cjs/react-dom-client.development.js:18853:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18982:11
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at Object.eventWrapper (node_modules/@testing-library/react/dist/pure.js:106:28)
+      at fireEvent (node_modules/@testing-library/dom/dist/events.js:12:35)
+      at Function.fireEvent.<computed> [as click] (node_modules/@testing-library/dom/dist/events.js:110:36)
+      at Function.fireEvent.<computed> [as click] (node_modules/@testing-library/react/dist/fire-event.js:15:52)
+      at Object.click (__tests__/onboarding/steps.test.jsx:126:15)
+
+    console.error
+      Failed to load interests: TypeError: (0 , _strapi.fetchLocalized) is not a function
+          at loadInterests (/app/components/onboarding/OnboardingStep2.jsx:40:46)
+          at loadInterests (/app/components/onboarding/OnboardingStep2.jsx:58:5)
+          at Object.react_stack_bottom_frame (/app/node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+          at runWithFiberInDEV (/app/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+          at commitHookEffectListMount (/app/node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+          at commitHookPassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+          at recursivelyTraversePassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+          at recursivelyTraversePassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+          at recursivelyTraversePassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+          at flushPassiveEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+          at flushPendingEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:18358:14)
+          at flushSpawnedWork (/app/node_modules/react-dom/cjs/react-dom-client.development.js:18323:44)
+          at commitRoot (/app/node_modules/react-dom/cjs/react-dom-client.development.js:17955:9)
+          at performWorkOnRoot (/app/node_modules/react-dom/cjs/react-dom-client.development.js:16667:15)
+          at performSyncWorkOnRoot (/app/node_modules/react-dom/cjs/react-dom-client.development.js:18972:7)
+          at flushSyncWorkAcrossRoots_impl (/app/node_modules/react-dom/cjs/react-dom-client.development.js:18814:21)
+          at processRootScheduleInMicrotask (/app/node_modules/react-dom/cjs/react-dom-client.development.js:18853:9)
+          at /app/node_modules/react-dom/cjs/react-dom-client.development.js:18982:11
+          at flushActQueue (/app/node_modules/react/cjs/react.development.js:590:34)
+          at process.env.NODE_ENV.exports.act (/app/node_modules/react/cjs/react.development.js:884:10)
+          at /app/node_modules/@testing-library/react/dist/act-compat.js:46:25
+          at Object.eventWrapper (/app/node_modules/@testing-library/react/dist/pure.js:106:28)
+          at fireEvent (/app/node_modules/@testing-library/dom/dist/events.js:12:35)
+          at Function.fireEvent.<computed> [as click] (/app/node_modules/@testing-library/dom/dist/events.js:110:36)
+          at Function.fireEvent.<computed> [as click] (/app/node_modules/@testing-library/react/dist/fire-event.js:15:52)
+          at Object.click (/app/__tests__/onboarding/steps.test.jsx:136:15)
+          at Promise.finally.completed (/app/node_modules/jest-circus/build/jestAdapterInit.js:1557:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/app/node_modules/jest-circus/build/jestAdapterInit.js:1497:10)
+          at _callCircusTest (/app/node_modules/jest-circus/build/jestAdapterInit.js:1007:40)
+          at _runTest (/app/node_modules/jest-circus/build/jestAdapterInit.js:947:3)
+          at /app/node_modules/jest-circus/build/jestAdapterInit.js:849:7
+          at _runTestsForDescribeBlock (/app/node_modules/jest-circus/build/jestAdapterInit.js:862:11)
+          at _runTestsForDescribeBlock (/app/node_modules/jest-circus/build/jestAdapterInit.js:857:11)
+          at run (/app/node_modules/jest-circus/build/jestAdapterInit.js:761:3)
+          at runAndTransformResultsToJestFormat (/app/node_modules/jest-circus/build/jestAdapterInit.js:1918:21)
+          at jestAdapter (/app/node_modules/jest-circus/build/runner.js:101:19)
+          at runTestInternal (/app/node_modules/jest-runner/build/index.js:275:16)
+          at runTest (/app/node_modules/jest-runner/build/index.js:343:7)
+
+      50 |         }
+      51 |       } catch (error) {
+    > 52 |         console.error("Failed to load interests:", error);
+         |                 ^
+      53 |       } finally {
+      54 |         setLoading(false);
+      55 |       }
+
+      at error (components/onboarding/OnboardingStep2.jsx:52:17)
+      at loadInterests (components/onboarding/OnboardingStep2.jsx:58:5)
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at flushPendingEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18358:14)
+      at flushSpawnedWork (node_modules/react-dom/cjs/react-dom-client.development.js:18323:44)
+      at commitRoot (node_modules/react-dom/cjs/react-dom-client.development.js:17955:9)
+      at performWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:16667:15)
+      at performSyncWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:18972:7)
+      at flushSyncWorkAcrossRoots_impl (node_modules/react-dom/cjs/react-dom-client.development.js:18814:21)
+      at processRootScheduleInMicrotask (node_modules/react-dom/cjs/react-dom-client.development.js:18853:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18982:11
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at Object.eventWrapper (node_modules/@testing-library/react/dist/pure.js:106:28)
+      at fireEvent (node_modules/@testing-library/dom/dist/events.js:12:35)
+      at Function.fireEvent.<computed> [as click] (node_modules/@testing-library/dom/dist/events.js:110:36)
+      at Function.fireEvent.<computed> [as click] (node_modules/@testing-library/react/dist/fire-event.js:15:52)
+      at Object.click (__tests__/onboarding/steps.test.jsx:136:15)
+
+    console.error
+      Failed to load interests: TypeError: (0 , _strapi.fetchLocalized) is not a function
+          at loadInterests (/app/components/onboarding/OnboardingStep2.jsx:40:46)
+          at loadInterests (/app/components/onboarding/OnboardingStep2.jsx:58:5)
+          at Object.react_stack_bottom_frame (/app/node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+          at runWithFiberInDEV (/app/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+          at commitHookEffectListMount (/app/node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+          at commitHookPassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+          at recursivelyTraversePassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+          at recursivelyTraversePassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+          at recursivelyTraversePassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+          at flushPassiveEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+          at /app/node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+          at flushActQueue (/app/node_modules/react/cjs/react.development.js:590:34)
+          at process.env.NODE_ENV.exports.act (/app/node_modules/react/cjs/react.development.js:884:10)
+          at /app/node_modules/@testing-library/react/dist/act-compat.js:46:25
+          at renderRoot (/app/node_modules/@testing-library/react/dist/pure.js:189:26)
+          at render (/app/node_modules/@testing-library/react/dist/pure.js:291:10)
+          at Object.<anonymous> (/app/__tests__/onboarding/steps.test.jsx:149:11)
+          at Promise.finally.completed (/app/node_modules/jest-circus/build/jestAdapterInit.js:1557:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/app/node_modules/jest-circus/build/jestAdapterInit.js:1497:10)
+          at _callCircusTest (/app/node_modules/jest-circus/build/jestAdapterInit.js:1007:40)
+          at _runTest (/app/node_modules/jest-circus/build/jestAdapterInit.js:947:3)
+          at /app/node_modules/jest-circus/build/jestAdapterInit.js:849:7
+          at _runTestsForDescribeBlock (/app/node_modules/jest-circus/build/jestAdapterInit.js:862:11)
+          at _runTestsForDescribeBlock (/app/node_modules/jest-circus/build/jestAdapterInit.js:857:11)
+          at run (/app/node_modules/jest-circus/build/jestAdapterInit.js:761:3)
+          at runAndTransformResultsToJestFormat (/app/node_modules/jest-circus/build/jestAdapterInit.js:1918:21)
+          at jestAdapter (/app/node_modules/jest-circus/build/runner.js:101:19)
+          at runTestInternal (/app/node_modules/jest-runner/build/index.js:275:16)
+          at runTest (/app/node_modules/jest-runner/build/index.js:343:7)
+
+      50 |         }
+      51 |       } catch (error) {
+    > 52 |         console.error("Failed to load interests:", error);
+         |                 ^
+      53 |       } finally {
+      54 |         setLoading(false);
+      55 |       }
+
+      at error (components/onboarding/OnboardingStep2.jsx:52:17)
+      at loadInterests (components/onboarding/OnboardingStep2.jsx:58:5)
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:189:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:291:10)
+      at Object.<anonymous> (__tests__/onboarding/steps.test.jsx:149:11)
+
+    console.error
+      Failed to load interests: TypeError: (0 , _strapi.fetchLocalized) is not a function
+          at loadInterests (/app/components/onboarding/OnboardingStep2.jsx:40:46)
+          at loadInterests (/app/components/onboarding/OnboardingStep2.jsx:58:5)
+          at Object.react_stack_bottom_frame (/app/node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+          at runWithFiberInDEV (/app/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+          at commitHookEffectListMount (/app/node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+          at commitHookPassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+          at recursivelyTraversePassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+          at recursivelyTraversePassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+          at recursivelyTraversePassiveMountEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+          at commitPassiveMountOnFiber (/app/node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+          at flushPassiveEffects (/app/node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+          at /app/node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+          at flushActQueue (/app/node_modules/react/cjs/react.development.js:590:34)
+          at process.env.NODE_ENV.exports.act (/app/node_modules/react/cjs/react.development.js:884:10)
+          at /app/node_modules/@testing-library/react/dist/act-compat.js:46:25
+          at renderRoot (/app/node_modules/@testing-library/react/dist/pure.js:189:26)
+          at render (/app/node_modules/@testing-library/react/dist/pure.js:291:10)
+          at Object.<anonymous> (/app/__tests__/onboarding/steps.test.jsx:179:11)
+          at Promise.finally.completed (/app/node_modules/jest-circus/build/jestAdapterInit.js:1557:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/app/node_modules/jest-circus/build/jestAdapterInit.js:1497:10)
+          at _callCircusTest (/app/node_modules/jest-circus/build/jestAdapterInit.js:1007:40)
+          at _runTest (/app/node_modules/jest-circus/build/jestAdapterInit.js:947:3)
+          at /app/node_modules/jest-circus/build/jestAdapterInit.js:849:7
+          at _runTestsForDescribeBlock (/app/node_modules/jest-circus/build/jestAdapterInit.js:862:11)
+          at _runTestsForDescribeBlock (/app/node_modules/jest-circus/build/jestAdapterInit.js:857:11)
+          at run (/app/node_modules/jest-circus/build/jestAdapterInit.js:761:3)
+          at runAndTransformResultsToJestFormat (/app/node_modules/jest-circus/build/jestAdapterInit.js:1918:21)
+          at jestAdapter (/app/node_modules/jest-circus/build/runner.js:101:19)
+          at runTestInternal (/app/node_modules/jest-runner/build/index.js:275:16)
+          at runTest (/app/node_modules/jest-runner/build/index.js:343:7)
+
+      50 |         }
+      51 |       } catch (error) {
+    > 52 |         console.error("Failed to load interests:", error);
+         |                 ^
+      53 |       } finally {
+      54 |         setLoading(false);
+      55 |       }
+
+      at error (components/onboarding/OnboardingStep2.jsx:52:17)
+      at loadInterests (components/onboarding/OnboardingStep2.jsx:58:5)
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:189:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:291:10)
+      at Object.<anonymous> (__tests__/onboarding/steps.test.jsx:179:11)
+
+  ● Onboarding Flow - Steps 1, 2, 3, 4 & 5 › enforces max 5 interests in Step 2
+
+    Unable to find an element with the text: Bioinformatics. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: hidden;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-90 mx-auto"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center justify-between mb-24"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-arrow-left"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"18"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"18"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m12 19-7-7 7-7"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M19 12H5"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<span>[39m
+                  [0msteps.back[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"[39m
+              [36m>[39m
+                [0msteps.skip[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-3 mb-32"[39m
+            [36m>[39m
+              [36m<h1[39m
+                [33mclass[39m=[32m"text-display-sm font-bold text-brand-teal-900 leading-tight"[39m
+              [36m>[39m
+                [0mstep2.title[0m
+              [36m</h1>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-md text-brand-gray-800 leading-relaxed"[39m
+              [36m>[39m
+                [0mstep2.description[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 overflow-y-auto pr-2 -mr-2 min-h-75 max-h-110 scrollbar-thin scrollbar-thumb-brand-gray-200 scrollbar-track-transparent"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"space-y-6 py-2 pb-12"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex flex-col gap-4"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 bg-primary-500 text-white hover:bg-primary-600 px-[16px] w-full h-11 rounded-full text-md font-medium transition-all duration-300 hover:shadow-lg disabled:bg-brand-teal-100 disabled:text-white"[39m
+                [33mdata-disabled[39m=[32m""[39m
+                [33mdata-slot[39m=[32m"button"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtabindex[39m=[32m"0"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0msteps.confirm[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      150 |
+      151 |     // Wait for dynamic data
+    > 152 |     await screen.findByText("Bioinformatics");
+          |                  ^
+      153 |
+      154 |     // Find tags
+      155 |     const tags = [
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+      at Object.findByText (__tests__/onboarding/steps.test.jsx:152:18)
+
+  ● Onboarding Flow - Steps 1, 2, 3, 4 & 5 › enables 'Confirm' button in Step 2 only after at least 1 interest is selected
+
+    Unable to find an element with the text: Bioinformatics. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: hidden;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-90 mx-auto"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center justify-between mb-24"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-arrow-left"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"18"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"18"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m12 19-7-7 7-7"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M19 12H5"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<span>[39m
+                  [0msteps.back[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"[39m
+              [36m>[39m
+                [0msteps.skip[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-3 mb-32"[39m
+            [36m>[39m
+              [36m<h1[39m
+                [33mclass[39m=[32m"text-display-sm font-bold text-brand-teal-900 leading-tight"[39m
+              [36m>[39m
+                [0mstep2.title[0m
+              [36m</h1>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-md text-brand-gray-800 leading-relaxed"[39m
+              [36m>[39m
+                [0mstep2.description[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 overflow-y-auto pr-2 -mr-2 min-h-75 max-h-110 scrollbar-thin scrollbar-thumb-brand-gray-200 scrollbar-track-transparent"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"space-y-6 py-2 pb-12"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex flex-col gap-4"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 bg-primary-500 text-white hover:bg-primary-600 px-[16px] w-full h-11 rounded-full text-md font-medium transition-all duration-300 hover:shadow-lg disabled:bg-brand-teal-100 disabled:text-white"[39m
+                [33mdata-disabled[39m=[32m""[39m
+                [33mdata-slot[39m=[32m"button"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtabindex[39m=[32m"0"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0msteps.confirm[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      180 |
+      181 |     // Wait for dynamic data
+    > 182 |     await screen.findByText("Bioinformatics");
+          |                  ^
+      183 |
+      184 |     const confirmBtn = screen.getByText(
+      185 |       /steps\.confirm|step5\.complete_button/i,
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+      at Object.findByText (__tests__/onboarding/steps.test.jsx:182:18)
+
+  ● Onboarding Flow - Steps 1, 2, 3, 4 & 5 › renders Step 3 (Education & Career) and handles input
+
+    Unable to find an element with the text: Science Foundation. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: hidden;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-90 mx-auto"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center justify-between mb-24"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"lucide lucide-arrow-left"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"18"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"18"[39m
+                [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"m12 19-7-7 7-7"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M19 12H5"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0msteps.back[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"[39m
+            [36m>[39m
+              [0msteps.skip[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"space-y-3 mb-32"[39m
+          [36m>[39m
+            [36m<h1[39m
+              [33mclass[39m=[32m"text-display-sm font-bold text-brand-teal-900 leading-tight"[39m
+            [36m>[39m
+              [0mstep3.title[0m
+            [36m</h1>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-md text-brand-gray-800 leading-relaxed"[39m
+            [36m>[39m
+              [0mstep3.description[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"space-y-6 mb-10"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-2"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-md font-medium text-black"[39m
+              [36m>[39m
+                [0mstep3.level_label[0m
+              [36m</label>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"listbox"[39m
+                [33mclass[39m=[32m"flex items-center justify-between gap-1.5 rounded-8 border bg-white font-heading font-medium tracking-wider whitespace-nowrap transition-all focus:outline-none focus:ring-2 focus:border-primary-500 disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:text-brand-gray-400 data-[size=default]:h-12 data-[size=sm]:h-10 w-full h-11 px-3.5 py-2.5 border-brand-gray-100 rounded-8 text-md focus:ring-brand-teal-500"[39m
+                [33mdata-placeholder[39m=[32m""[39m
+                [33mdata-size[39m=[32m"default"[39m
+                [33mdata-slot[39m=[32m"select-trigger"[39m
+                [33mid[39m=[32m"base-ui-_r_n_"[39m
+                [33mrole[39m=[32m"combobox"[39m
+                [33mtabindex[39m=[32m"0"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"flex flex-1 text-left"[39m
+                  [33mdata-placeholder[39m=[32m""[39m
+                  [33mdata-slot[39m=[32m"select-value"[39m
+                [36m>[39m
+                  [0mstep3.level_placeholder[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-chevron-down pointer-events-none size-4 text-muted-foreground"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"24"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"24"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m6 9 6 6 6-6"[39m
+                  [36m/>[39m
+                  [0m▼[0m
+                [36m</svg>[39m
+              [36m</button>[39m
+              [36m<input[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mid[39m=[32m"base-ui-_r_n_-hidden-input"[39m
+                [33mstyle[39m=[32m"clip-path: inset(50%); overflow: hidden; white-space: nowrap; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px; position: fixed; top: 0px; left: 0px;"[39m
+                [33mtabindex[39m=[32m"-1"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-2 relative"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-md font-medium text-black"[39m
+              [36m>[39m
+                [0mstep3.institution_label[0m
+              [36m</label>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"relative"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"absolute left-3 top-1/2 -translate-y-1/2 text-brand-gray-400"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"lucide lucide-search w-4 h-4"[39m
+                    [33mfill[39m=[32m"none"[39m
+                    [33mheight[39m=[32m"24"[39m
+                    [33mstroke[39m=[32m"currentColor"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                    [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [33mwidth[39m=[32m"24"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"m21 21-4.34-4.34"[39m
+                    [36m/>[39m
+                    [36m<circle[39m
+                      [33mcx[39m=[32m"11"[39m
+                      [33mcy[39m=[32m"11"[39m
+                      [33mr[39m=[32m"8"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</div>[39m
+                [36m<input[39m
+                  [33mclass[39m=[32m"min-w-0 rounded-8 border bg-white px-4 transition-all outline-none placeholder:text-brand-gray-400 focus:bg-white focus:ring-2 focus:border-primary-500 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-brand-gray-900/10 dark:border-brand-gray-800 dark:text-brand-gray-100 w-full h-11 pl-10 py-2.5 border-brand-gray-100 rounded-8 text-md focus:ring-brand-teal-500"[39m
+                  [33mdata-slot[39m=[32m"input"[39m
+                  [33mid[39m=[32m"base-ui-_r_q_"[39m
+                  [33mplaceholder[39m=[32m"step3.institution_placeholder"[39m
+                  [33mvalue[39m=[32m"Scien"[39m
+                [36m/>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"absolute right-3 top-1/2 -translate-y-1/2"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"lucide lucide-loader-circle w-4 h-4 animate-spin text-brand-teal-600"[39m
+                    [33mfill[39m=[32m"none"[39m
+                    [33mheight[39m=[32m"24"[39m
+                    [33mstroke[39m=[32m"currentColor"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                    [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [33mwidth[39m=[32m"24"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M21 12a9 9 0 1 1-6.219-8.56"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 bg-primary-500 text-white hover:bg-primary-600 px-[16px] w-full h-11 rounded-full text-md font-medium transition-all duration-300 hover:shadow-lg disabled:bg-brand-teal-100 disabled:text-white"[39m
+              [33mdata-disabled[39m=[32m""[39m
+              [33mdata-slot[39m=[32m"button"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtabindex[39m=[32m"0"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0msteps.confirm[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      213 |
+      214 |     // Wait for dropdown result
+    > 215 |     const option = await findByText("Science Foundation");
+          |                          ^
+      216 |     fireEvent.click(option);
+      217 |
+      218 |     expect(useOnboardingStore.getState().formData.educationInstitution).toEqual(
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+      at Object.findByText (__tests__/onboarding/steps.test.jsx:215:26)
+
+  ● Onboarding Flow - Steps 1, 2, 3, 4 & 5 › renders Step 3 (Education & Career) and handles input
+
+    TypeError: (0 , _strapi.fetchLocalized) is not a function
+
+      47 |       searchTimeoutRef.current = setTimeout(async () => {
+      48 |         const encodedVal = encodeURIComponent(val);
+    > 49 |         const response = await fetchLocalized(
+         |                                              ^
+      50 |           `/institutions?filters[name][$containsi]=${encodedVal}`,
+      51 |           locale,
+      52 |         );
+
+      at components/onboarding/OnboardingStep3.jsx:49:46
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● Onboarding Flow - Steps 1, 2, 3, 4 & 5 › renders Step 3 (Education & Career) and handles input
+
+    TypeError: (0 , _strapi.fetchLocalized) is not a function
+
+      47 |       searchTimeoutRef.current = setTimeout(async () => {
+      48 |         const encodedVal = encodeURIComponent(val);
+    > 49 |         const response = await fetchLocalized(
+         |                                              ^
+      50 |           `/institutions?filters[name][$containsi]=${encodedVal}`,
+      51 |           locale,
+      52 |         );
+
+      at components/onboarding/OnboardingStep3.jsx:49:46
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● Onboarding Flow - Steps 1, 2, 3, 4 & 5 › renders Step 5 (Affiliation) and handles completion
+
+    Unable to find an element with the text: Science Foundation. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: hidden;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-90 mx-auto"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center justify-between mb-24"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"lucide lucide-arrow-left"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"18"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"18"[39m
+                [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"m12 19-7-7 7-7"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M19 12H5"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0msteps.back[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"space-y-3 mb-32"[39m
+          [36m>[39m
+            [36m<h1[39m
+              [33mclass[39m=[32m"text-display-sm font-bold text-brand-teal-900 leading-tight"[39m
+            [36m>[39m
+              [0mstep5.title[0m
+            [36m</h1>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-md text-brand-gray-800 leading-relaxed"[39m
+            [36m>[39m
+              [0mstep5.description[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"space-y-6 mb-12"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-2 relative"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-md font-medium text-black"[39m
+              [36m>[39m
+                [0mstep5.search_label[0m
+              [36m</label>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"relative"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"absolute left-3 top-1/2 -translate-y-1/2 text-brand-gray-400"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"lucide lucide-search w-4 h-4"[39m
+                    [33mfill[39m=[32m"none"[39m
+                    [33mheight[39m=[32m"24"[39m
+                    [33mstroke[39m=[32m"currentColor"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                    [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [33mwidth[39m=[32m"24"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"m21 21-4.34-4.34"[39m
+                    [36m/>[39m
+                    [36m<circle[39m
+                      [33mcx[39m=[32m"11"[39m
+                      [33mcy[39m=[32m"11"[39m
+                      [33mr[39m=[32m"8"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</div>[39m
+                [36m<input[39m
+                  [33mclass[39m=[32m"min-w-0 rounded-8 border bg-white px-4 transition-all outline-none placeholder:text-brand-gray-400 focus:bg-white focus:ring-2 focus:border-primary-500 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-brand-gray-900/10 dark:border-brand-gray-800 dark:text-brand-gray-100 w-full h-11 pl-10 pr-10 py-2.5 border-brand-gray-100 rounded-8 text-md focus:ring-brand-teal-500"[39m
+                  [33mdata-slot[39m=[32m"input"[39m
+                  [33mid[39m=[32m"base-ui-_r_16_"[39m
+                  [33mplaceholder[39m=[32m"step5.search_placeholder"[39m
+                  [33mvalue[39m=[32m"Scien"[39m
+                [36m/>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"absolute right-3 top-1/2 -translate-y-1/2"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"lucide lucide-loader-circle w-4 h-4 animate-spin text-brand-teal-600"[39m
+                    [33mfill[39m=[32m"none"[39m
+                    [33mheight[39m=[32m"24"[39m
+                    [33mstroke[39m=[32m"currentColor"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                    [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [33mwidth[39m=[32m"24"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M21 12a9 9 0 1 1-6.219-8.56"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 bg-primary-500 text-white hover:bg-primary-600 px-[16px] w-full h-11 rounded-full text-md font-medium transition-all duration-300 hover:shadow-lg disabled:bg-brand-teal-50 disabled:text-white"[39m
+              [33mdata-slot[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mstep5.complete_button[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      302 |
+      303 |     // Wait for dropdown result
+    > 304 |     const option = await findByText("Science Foundation");
+          |                          ^
+      305 |     fireEvent.click(option);
+      306 |
+      307 |     expect(
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+      at Object.findByText (__tests__/onboarding/steps.test.jsx:304:26)
+
+  ● Onboarding Flow - Steps 1, 2, 3, 4 & 5 › renders Step 5 (Affiliation) and handles completion
+
+    TypeError: (0 , _strapi.fetchLocalized) is not a function
+
+      44 |       searchTimeoutRef.current = setTimeout(async () => {
+      45 |         const encodedVal = encodeURIComponent(val);
+    > 46 |         const response = await fetchLocalized(
+         |                                              ^
+      47 |           `/institutions?filters[name][$containsi]=${encodedVal}`,
+      48 |           locale,
+      49 |         );
+
+      at components/onboarding/OnboardingStep5.jsx:46:46
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● Onboarding Flow - Steps 1, 2, 3, 4 & 5 › renders Step 5 (Affiliation) and handles completion
+
+    TypeError: (0 , _strapi.fetchLocalized) is not a function
+
+      44 |       searchTimeoutRef.current = setTimeout(async () => {
+      45 |         const encodedVal = encodeURIComponent(val);
+    > 46 |         const response = await fetchLocalized(
+         |                                              ^
+      47 |           `/institutions?filters[name][$containsi]=${encodedVal}`,
+      48 |           locale,
+      49 |         );
+
+      at components/onboarding/OnboardingStep5.jsx:46:46
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+FAIL __tests__/onboarding/search.test.jsx
+  ● Institution Search Optimization › OnboardingStep1 - Institutional Path › encodes search terms with spaces correctly
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: StringContaining "Univ%20of%20Nairobi"
+
+    Number of calls: 0
+
+    Ignored nodes: comments, script, style
+    [36m<html>[39m
+      [36m<head />[39m
+      [36m<body>[39m
+        [36m<div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-90 mx-auto"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center justify-between mb-24"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-arrow-left"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"18"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"18"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m12 19-7-7 7-7"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M19 12H5"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<span>[39m
+                  [0msteps.back[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"text-brand-gray-500 hover:text-brand-teal-700 transition-colors"[39m
+              [36m>[39m
+                [0msteps.skip[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-3 mb-32"[39m
+            [36m>[39m
+              [36m<h1[39m
+                [33mclass[39m=[32m"text-3xl font-bold text-brand-teal-900 leading-tight"[39m
+              [36m>[39m
+                [0mstep1.title[0m
+              [36m</h1>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-md text-brand-gray-800 leading-relaxed"[39m
+              [36m>[39m
+                [0mstep1.description[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"group/tabs flex gap-2 data-horizontal:flex-col w-full"[39m
+              [33mdata-activation-direction[39m=[32m"none"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-slot[39m=[32m"tabs"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"relative mb-8"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"group/tabs-list items-center justify-center p-[3px] text-muted-foreground group-data-horizontal/tabs:h-8 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col data-[variant=line]:rounded-none flex w-full bg-transparent rounded-none h-auto px-0 py-2.5 gap-4 border-b border-brand-gray-100 pb-6"[39m
+                  [33mdata-activation-direction[39m=[32m"none"[39m
+                  [33mdata-orientation[39m=[32m"horizontal"[39m
+                  [33mdata-slot[39m=[32m"tabs-list"[39m
+                  [33mdata-variant[39m=[32m"line"[39m
+                  [33mrole[39m=[32m"tablist"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-disabled[39m=[32m"false"[39m
+                    [33maria-selected[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"relative inline-flex h-auto flex-1 items-center justify-center gap-1.5 rounded-none border border-transparent whitespace-nowrap text-brand-gray-500 transition-all hover:text-brand-teal-600 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent group-data-[variant=line]/tabs-list:data-active:text-brand-teal-600 group-data-[variant=line]/tabs-list:data-active:shadow-none data-active:text-brand-teal-600 dark:data-active:text-brand-teal-400 after:absolute after:bg-brand-teal-500 after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:-bottom-0.5 group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100 group-data-[variant=line]/tabs-list:-mb-px px-2 py-3 text-md font-medium"[39m
+                    [33mdata-orientation[39m=[32m"horizontal"[39m
+                    [33mdata-slot[39m=[32m"tabs-trigger"[39m
+                    [33mid[39m=[32m"base-ui-_r_0_"[39m
+                    [33mrole[39m=[32m"tab"[39m
+                    [33mtabindex[39m=[32m"-1"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [0mstep1.individual_tab[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-controls[39m=[32m"base-ui-_r_3_"[39m
+                    [33maria-disabled[39m=[32m"false"[39m
+                    [33maria-selected[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"relative inline-flex h-auto flex-1 items-center justify-center gap-1.5 rounded-none border border-transparent whitespace-nowrap text-brand-gray-500 transition-all hover:text-brand-teal-600 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent group-data-[variant=line]/tabs-list:data-active:text-brand-teal-600 group-data-[variant=line]/tabs-list:data-active:shadow-none data-active:text-brand-teal-600 dark:data-active:text-brand-teal-400 after:absolute after:bg-brand-teal-500 after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:-bottom-0.5 group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100 group-data-[variant=line]/tabs-list:-mb-px px-2 py-3 text-md font-medium"[39m
+                    [33mdata-active[39m=[32m""[39m
+                    [33mdata-composite-item-active[39m=[32m""[39m
+                    [33mdata-orientation[39m=[32m"horizontal"[39m
+                    [33mdata-slot[39m=[32m"tabs-trigger"[39m
+                    [33mid[39m=[32m"base-ui-_r_1_"[39m
+                    [33mrole[39m=[32m"tab"[39m
+          ...
+
+      82 |
+      83 |       await waitFor(() => {
+    > 84 |         expect(fetchFromStrapi).toHaveBeenCalledWith(
+         |                                 ^
+      85 |           expect.stringContaining("Univ%20of%20Nairobi"),
+      86 |         );
+      87 |       });
+
+      at toHaveBeenCalledWith (__tests__/onboarding/search.test.jsx:84:33)
+      at runWithExpensiveErrorDiagnosticsDisabled (node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at checkRealTimersCallback (node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● Institution Search Optimization › OnboardingStep1 - Institutional Path › encodes search terms with spaces correctly
+
+    TypeError: (0 , _strapi.fetchLocalized) is not a function
+
+      67 |       searchTimeoutRef.current = setTimeout(async () => {
+      68 |         const encodedVal = encodeURIComponent(val);
+    > 69 |         const response = await fetchLocalized(
+         |                                              ^
+      70 |           `/institutions?filters[name][$containsi]=${encodedVal}`,
+      71 |           locale,
+      72 |         );
+
+      at components/onboarding/OnboardingStep1.jsx:69:46
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● Institution Search Optimization › OnboardingStep1 - Institutional Path › encodes search terms with spaces correctly
+
+    TypeError: (0 , _strapi.fetchLocalized) is not a function
+
+      67 |       searchTimeoutRef.current = setTimeout(async () => {
+      68 |         const encodedVal = encodeURIComponent(val);
+    > 69 |         const response = await fetchLocalized(
+         |                                              ^
+      70 |           `/institutions?filters[name][$containsi]=${encodedVal}`,
+      71 |           locale,
+      72 |         );
+
+      at components/onboarding/OnboardingStep1.jsx:69:46
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● Institution Search Optimization › OnboardingStep1 - Institutional Path › triggers search for 3-character substrings
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: StringContaining "filters[name][$containsi]=nai"
+
+    Number of calls: 0
+
+    Ignored nodes: comments, script, style
+    [36m<html>[39m
+      [36m<head />[39m
+      [36m<body>[39m
+        [36m<div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-90 mx-auto"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center justify-between mb-24"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-arrow-left"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"18"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"18"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m12 19-7-7 7-7"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M19 12H5"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<span>[39m
+                  [0msteps.back[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"text-brand-gray-500 hover:text-brand-teal-700 transition-colors"[39m
+              [36m>[39m
+                [0msteps.skip[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-3 mb-32"[39m
+            [36m>[39m
+              [36m<h1[39m
+                [33mclass[39m=[32m"text-3xl font-bold text-brand-teal-900 leading-tight"[39m
+              [36m>[39m
+                [0mstep1.title[0m
+              [36m</h1>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-md text-brand-gray-800 leading-relaxed"[39m
+              [36m>[39m
+                [0mstep1.description[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"group/tabs flex gap-2 data-horizontal:flex-col w-full"[39m
+              [33mdata-activation-direction[39m=[32m"none"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-slot[39m=[32m"tabs"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"relative mb-8"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"group/tabs-list items-center justify-center p-[3px] text-muted-foreground group-data-horizontal/tabs:h-8 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col data-[variant=line]:rounded-none flex w-full bg-transparent rounded-none h-auto px-0 py-2.5 gap-4 border-b border-brand-gray-100 pb-6"[39m
+                  [33mdata-activation-direction[39m=[32m"none"[39m
+                  [33mdata-orientation[39m=[32m"horizontal"[39m
+                  [33mdata-slot[39m=[32m"tabs-list"[39m
+                  [33mdata-variant[39m=[32m"line"[39m
+                  [33mrole[39m=[32m"tablist"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-disabled[39m=[32m"false"[39m
+                    [33maria-selected[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"relative inline-flex h-auto flex-1 items-center justify-center gap-1.5 rounded-none border border-transparent whitespace-nowrap text-brand-gray-500 transition-all hover:text-brand-teal-600 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent group-data-[variant=line]/tabs-list:data-active:text-brand-teal-600 group-data-[variant=line]/tabs-list:data-active:shadow-none data-active:text-brand-teal-600 dark:data-active:text-brand-teal-400 after:absolute after:bg-brand-teal-500 after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:-bottom-0.5 group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100 group-data-[variant=line]/tabs-list:-mb-px px-2 py-3 text-md font-medium"[39m
+                    [33mdata-orientation[39m=[32m"horizontal"[39m
+                    [33mdata-slot[39m=[32m"tabs-trigger"[39m
+                    [33mid[39m=[32m"base-ui-_r_8_"[39m
+                    [33mrole[39m=[32m"tab"[39m
+                    [33mtabindex[39m=[32m"-1"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [0mstep1.individual_tab[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-controls[39m=[32m"base-ui-_r_b_"[39m
+                    [33maria-disabled[39m=[32m"false"[39m
+                    [33maria-selected[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"relative inline-flex h-auto flex-1 items-center justify-center gap-1.5 rounded-none border border-transparent whitespace-nowrap text-brand-gray-500 transition-all hover:text-brand-teal-600 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent group-data-[variant=line]/tabs-list:data-active:text-brand-teal-600 group-data-[variant=line]/tabs-list:data-active:shadow-none data-active:text-brand-teal-600 dark:data-active:text-brand-teal-400 after:absolute after:bg-brand-teal-500 after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:-bottom-0.5 group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100 group-data-[variant=line]/tabs-list:-mb-px px-2 py-3 text-md font-medium"[39m
+                    [33mdata-active[39m=[32m""[39m
+                    [33mdata-composite-item-active[39m=[32m""[39m
+                    [33mdata-orientation[39m=[32m"horizontal"[39m
+                    [33mdata-slot[39m=[32m"tabs-trigger"[39m
+                    [33mid[39m=[32m"base-ui-_r_9_"[39m
+                    [33mrole[39m=[32m"tab"[39m
+          ...
+
+      108 |
+      109 |       await waitFor(() => {
+    > 110 |         expect(fetchFromStrapi).toHaveBeenCalledWith(
+          |                                 ^
+      111 |           expect.stringContaining("filters[name][$containsi]=nai"),
+      112 |         );
+      113 |       });
+
+      at toHaveBeenCalledWith (__tests__/onboarding/search.test.jsx:110:33)
+      at runWithExpensiveErrorDiagnosticsDisabled (node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at checkRealTimersCallback (node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● Institution Search Optimization › OnboardingStep1 - Institutional Path › triggers search for 3-character substrings
+
+    TypeError: (0 , _strapi.fetchLocalized) is not a function
+
+      67 |       searchTimeoutRef.current = setTimeout(async () => {
+      68 |         const encodedVal = encodeURIComponent(val);
+    > 69 |         const response = await fetchLocalized(
+         |                                              ^
+      70 |           `/institutions?filters[name][$containsi]=${encodedVal}`,
+      71 |           locale,
+      72 |         );
+
+      at components/onboarding/OnboardingStep1.jsx:69:46
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● Institution Search Optimization › OnboardingStep1 - Institutional Path › triggers search for 3-character substrings
+
+    TypeError: (0 , _strapi.fetchLocalized) is not a function
+
+      67 |       searchTimeoutRef.current = setTimeout(async () => {
+      68 |         const encodedVal = encodeURIComponent(val);
+    > 69 |         const response = await fetchLocalized(
+         |                                              ^
+      70 |           `/institutions?filters[name][$containsi]=${encodedVal}`,
+      71 |           locale,
+      72 |         );
+
+      at components/onboarding/OnboardingStep1.jsx:69:46
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● Institution Search Optimization › OnboardingStep5 - Individual Path (Affiliation) › encodes search terms with spaces correctly in Step 5
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: StringContaining "Oxford%20Uni"
+
+    Number of calls: 0
+
+    Ignored nodes: comments, script, style
+    [36m<html>[39m
+      [36m<head />[39m
+      [36m<body>[39m
+        [36m<div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-90 mx-auto"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center justify-between mb-24"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-arrow-left"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"18"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"18"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m12 19-7-7 7-7"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M19 12H5"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<span>[39m
+                  [0msteps.back[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-3 mb-32"[39m
+            [36m>[39m
+              [36m<h1[39m
+                [33mclass[39m=[32m"text-display-sm font-bold text-brand-teal-900 leading-tight"[39m
+              [36m>[39m
+                [0mstep5.title[0m
+              [36m</h1>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-md text-brand-gray-800 leading-relaxed"[39m
+              [36m>[39m
+                [0mstep5.description[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-6 mb-12"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"space-y-2 relative"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"text-md font-medium text-black"[39m
+                [36m>[39m
+                  [0mstep5.search_label[0m
+                [36m</label>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"relative"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"absolute left-3 top-1/2 -translate-y-1/2 text-brand-gray-400"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"lucide lucide-search w-4 h-4"[39m
+                      [33mfill[39m=[32m"none"[39m
+                      [33mheight[39m=[32m"24"[39m
+                      [33mstroke[39m=[32m"currentColor"[39m
+                      [33mstroke-linecap[39m=[32m"round"[39m
+                      [33mstroke-linejoin[39m=[32m"round"[39m
+                      [33mstroke-width[39m=[32m"2"[39m
+                      [33mviewBox[39m=[32m"0 0 24 24"[39m
+                      [33mwidth[39m=[32m"24"[39m
+                      [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                    [36m>[39m
+                      [36m<path[39m
+                        [33md[39m=[32m"m21 21-4.34-4.34"[39m
+                      [36m/>[39m
+                      [36m<circle[39m
+                        [33mcx[39m=[32m"11"[39m
+                        [33mcy[39m=[32m"11"[39m
+                        [33mr[39m=[32m"8"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</div>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"min-w-0 rounded-8 border bg-white px-4 transition-all outline-none placeholder:text-brand-gray-400 focus:bg-white focus:ring-2 focus:border-primary-500 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-brand-gray-900/10 dark:border-brand-gray-800 dark:text-brand-gray-100 w-full h-11 pl-10 pr-10 py-2.5 border-brand-gray-100 rounded-8 text-md focus:ring-brand-teal-500"[39m
+                    [33mdata-slot[39m=[32m"input"[39m
+                    [33mid[39m=[32m"base-ui-_r_g_"[39m
+                    [33mplaceholder[39m=[32m"step5.search_placeholder"[39m
+                    [33mvalue[39m=[32m"Oxford Uni"[39m
+                  [36m/>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"absolute right-3 top-1/2 -translate-y-1/2"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"lucide lucide-loader-circle w-4 h-4 animate-spin text-brand-teal-600"[39m
+                      [33mfill[39m=[32m"none"[39m
+                      [33mheight[39m=[32m"24"[39m
+                      [33mstroke[39m=[32m"currentColor"[39m
+                      [33mstroke-linecap[39m=[32m"round"[39m
+                      [33mstroke-linejoin[39m=[32m"round"[39m
+                      [33mstroke-width[39m=[32m"2"[39m
+                      [33mviewBox[39m=[32m"0 0 24 24"[39m
+                      [33mwidth[39m=[32m"24"[39m
+                      [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                    [36m>[39m
+                      [36m<path[39m
+                        [33md[39m=[32m"M21 12a9 9 0 1 1-6.219-8.56"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex flex-col"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 bg-primary-500 text-white hover:bg-primary-600 px-[16px] w-full h-11 rounded-full text-md font-medium transition-all duration-300 hover:shadow-lg disabled:bg-brand-teal-50 disabled:text-white"[39m
+                [33mdata-disabled[39m=[32m""[39m
+                [33mdata-slot[39m=[32m"button"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtabindex[39m=[32m"0"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mstep5.complete_button[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</body>[39m
+    [36m</html>[39m
+
+      132 |
+      133 |       await waitFor(() => {
+    > 134 |         expect(fetchFromStrapi).toHaveBeenCalledWith(
+          |                                 ^
+      135 |           expect.stringContaining("Oxford%20Uni"),
+      136 |         );
+      137 |       });
+
+      at toHaveBeenCalledWith (__tests__/onboarding/search.test.jsx:134:33)
+      at runWithExpensiveErrorDiagnosticsDisabled (node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at checkRealTimersCallback (node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● Institution Search Optimization › OnboardingStep5 - Individual Path (Affiliation) › encodes search terms with spaces correctly in Step 5
+
+    TypeError: (0 , _strapi.fetchLocalized) is not a function
+
+      44 |       searchTimeoutRef.current = setTimeout(async () => {
+      45 |         const encodedVal = encodeURIComponent(val);
+    > 46 |         const response = await fetchLocalized(
+         |                                              ^
+      47 |           `/institutions?filters[name][$containsi]=${encodedVal}`,
+      48 |           locale,
+      49 |         );
+
+      at components/onboarding/OnboardingStep5.jsx:46:46
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● Institution Search Optimization › OnboardingStep5 - Individual Path (Affiliation) › encodes search terms with spaces correctly in Step 5
+
+    TypeError: (0 , _strapi.fetchLocalized) is not a function
+
+      44 |       searchTimeoutRef.current = setTimeout(async () => {
+      45 |         const encodedVal = encodeURIComponent(val);
+    > 46 |         const response = await fetchLocalized(
+         |                                              ^
+      47 |           `/institutions?filters[name][$containsi]=${encodedVal}`,
+      48 |           locale,
+      49 |         );
+
+      at components/onboarding/OnboardingStep5.jsx:46:46
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+PASS __tests__/components/forgot-password-form.test.jsx
+PASS __tests__/components/login-form.test.jsx
+PASS __tests__/components/Form.interaction.test.jsx
+PASS __tests__/components/signup-form.test.jsx
+PASS __tests__/components/verify-email-content.test.jsx
+PASS __tests__/components/reset-password-form.test.jsx
+PASS __tests__/components/Button.test.jsx
+PASS __tests__/pages/Home.test.jsx
+PASS __tests__/components/Card.snapshot.test.jsx
+PASS __tests__/hooks/use-api.test.js
+PASS __tests__/lib/strapi.test.js
+PASS __tests__/lib/validation.test.js
+PASS __tests__/lib/api-client.test.js
+PASS __tests__/lib/onboarding-contract.test.js
+
+Test Suites: 2 failed, 14 passed, 16 total
+Tests:       7 failed, 84 passed, 91 total
+Snapshots:   4 passed, 4 total
+Time:        22.629 s, estimated 30 s
+Ran all test suites.

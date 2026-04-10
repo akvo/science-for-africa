@@ -1,5 +1,11 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@testing-library/react";
 import OnboardingStep1 from "@/components/onboarding/OnboardingStep1";
 import OnboardingStep5 from "@/components/onboarding/OnboardingStep5";
 import { useOnboardingStore } from "@/lib/onboarding-store";
@@ -67,7 +73,9 @@ describe("Institution Search Optimization", () => {
 
       render(<OnboardingStep1 />);
 
-      const input = screen.getByPlaceholderText(/step1\.institution_placeholder/i);
+      const input = screen.getByPlaceholderText(
+        /step1\.institution_placeholder/i,
+      );
 
       // Simulate typing a name with spaces
       fireEvent.change(input, { target: { value: "Univ of Nairobi" } });
@@ -92,7 +100,9 @@ describe("Institution Search Optimization", () => {
 
       render(<OnboardingStep1 />);
 
-      const input = screen.getByPlaceholderText(/step1\.institution_placeholder/i);
+      const input = screen.getByPlaceholderText(
+        /step1\.institution_placeholder/i,
+      );
 
       fireEvent.change(input, { target: { value: "nai" } });
 
@@ -113,7 +123,7 @@ describe("Institution Search Optimization", () => {
         userType: "individual",
         resetStore: mockResetStore,
       });
-      
+
       render(<OnboardingStep5 />);
 
       const input = screen.getByPlaceholderText(/step5\.search_placeholder/i);

@@ -83,7 +83,9 @@ describe("VerifyEmailContent", () => {
       ).toBeInTheDocument();
     });
 
-    expect(screen.getByText(/verify_email\.resend_countdown/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/verify_email\.resend_countdown/i),
+    ).toBeInTheDocument();
     expect(resendBtn).toBeDisabled();
 
     // Fast-forward 10 seconds (1s at a time to allow useEffect to reschedule)
@@ -92,7 +94,9 @@ describe("VerifyEmailContent", () => {
         jest.advanceTimersByTime(1000);
       });
     }
-    expect(screen.getByText(/verify_email\.resend_countdown/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/verify_email\.resend_countdown/i),
+    ).toBeInTheDocument();
 
     // Fast-forward to end (20 more seconds)
     for (let i = 0; i < 20; i++) {

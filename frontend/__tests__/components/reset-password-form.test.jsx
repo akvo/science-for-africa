@@ -52,7 +52,9 @@ describe("ResetPasswordForm", () => {
 
   it("button remains disabled when only one field is filled", async () => {
     render(<ResetPasswordForm />);
-    const passwordInput = screen.getByLabelText(/reset_password\.password_label/i);
+    const passwordInput = screen.getByLabelText(
+      /reset_password\.password_label/i,
+    );
     const submitButton = screen.getByRole("button", {
       name: /reset_password\.button/i,
     });
@@ -63,7 +65,9 @@ describe("ResetPasswordForm", () => {
 
   it("enables the button when both fields are present", async () => {
     render(<ResetPasswordForm />);
-    const passwordInput = screen.getByLabelText(/reset_password\.password_label/i);
+    const passwordInput = screen.getByLabelText(
+      /reset_password\.password_label/i,
+    );
     const confirmInput = screen.getByLabelText(
       /reset_password\.confirm_password_label/i,
     );
@@ -83,7 +87,9 @@ describe("ResetPasswordForm", () => {
     resetPassword.mockResolvedValue({ id: 1 });
 
     render(<ResetPasswordForm />);
-    const passwordInput = screen.getByLabelText(/reset_password\.password_label/i);
+    const passwordInput = screen.getByLabelText(
+      /reset_password\.password_label/i,
+    );
     const confirmInput = screen.getByLabelText(
       /reset_password\.confirm_password_label/i,
     );

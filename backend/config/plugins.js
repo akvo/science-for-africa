@@ -95,10 +95,23 @@ module.exports = ({ env }) => {
         register: {
           allowedFields: ["fullName"],
         },
+        jwt: {
+          expiresIn: "30d",
+        },
         advanced: {
           email_confirmation_redirection:
             env("NEXT_PUBLIC_FRONTEND_URL", "http://localhost:3000") +
             "/auth/verify-email",
+        },
+        ratelimit: {
+          enabled: false,
+        },
+        grant: {
+          google: {
+            enabled: true,
+            clientId: env("GOOGLE_CLIENT_ID"),
+            clientSecret: env("GOOGLE_CLIENT_SECRET"),
+          },
         },
       },
     },

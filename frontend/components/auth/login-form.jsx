@@ -55,7 +55,7 @@ export const LoginForm = () => {
       if (result && result.jwt) {
         // Success! Persist auth state
         const { setAuth } = useAuthStore.getState();
-        setAuth(result.user, result.jwt);
+        setAuth(result.user, result.jwt, values.rememberMe);
 
         // Redirect based on onboarding status
         if (result.user?.onboardingComplete) {
@@ -188,7 +188,7 @@ export const LoginForm = () => {
 
           <SocialButton
             provider="google"
-            className="rounded-full h-11 border-brand-gray-200"
+            className="h-11 border-brand-gray-200"
           />
         </div>
       </form>

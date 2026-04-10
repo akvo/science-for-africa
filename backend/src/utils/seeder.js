@@ -143,7 +143,7 @@ const seed = async (strapi) => {
     for (const [category, items] of Object.entries(INTEREST_CATEGORIES)) {
       for (const name of items) {
         await strapi.db.query("api::interest.interest").create({
-          data: { name, category },
+          data: { name, category, locale: "en" },
         });
       }
     }
@@ -160,7 +160,7 @@ const seed = async (strapi) => {
     strapi.log.info("Seeding Institutions...");
     for (const data of INSTITUTIONS) {
       await strapi.db.query("api::institution.institution").create({
-        data,
+        data: { ...data, locale: "en" },
       });
     }
     strapi.log.info(`Seeded ${INSTITUTIONS.length} Institutions.`);

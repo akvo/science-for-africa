@@ -44,16 +44,15 @@ sequenceDiagram
     participant Google
 
     User->>Browser: Click "Sign in with Google"
-    Browser->>Strapi: GET /api/connect/google
+    Browser->>Strapi: GET /api/connect/google?redirect=...
     Strapi->>Google: Redirect to OAuth Consent
     Google-->>User: Show Consent Screen
     User->>Google: Approve
-    Google-->>Strapi: Redirect to callback URL
-    Strapi-->>Browser: Redirect to /auth/google?access_token=...
+    Google-->>Browser: Redirect to /auth/google?code=...
     Browser->>NextServer: GET /auth/google (Initial SSR hit)
     Note over NextServer: getServerSideProps triggers
     NextServer->>Strapi: GET /api/auth/google/callback (Internal Network)
-    Note right of NextServer: Uses Smart Swap logic for Docker
+    Note right of NextServer: Sends { access_token: CODE }
     Strapi-->>NextServer: { jwt, user }
     NextServer-->>Browser: Render page with { jwt, user }
     Browser->>Browser: setAuth(user, jwt)

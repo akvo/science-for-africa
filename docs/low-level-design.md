@@ -619,14 +619,13 @@ sequenceDiagram
     participant Google
 
     User->>Frontend: Click "Sign in with Google"
-    Frontend->>Strapi: GET /api/connect/google
+    Frontend->>Strapi: GET /api/connect/google?redirect=...
     Strapi->>Google: Redirect to OAuth Consent
     Google-->>User: Show Consent Screen
     User->>Google: Approve
-    Google-->>Strapi: GET /api/connect/google/callback
-    Strapi-->>Frontend: Redirect to /auth/google?access_token=...
+    Google-->>Frontend: Redirect to /auth/google?code=...
     Frontend->>Strapi: GET /api/auth/google/callback (SSR Handshake)
-    Note right of Frontend: Uses internal networking in Docker
+    Note right of Frontend: NextServer sends { access_token: CODE }
     Strapi-->>Frontend: { jwt, user }
     alt onboardingComplete is false
         Frontend->>User: Redirect to /onboarding
@@ -640,7 +639,7 @@ sequenceDiagram
 - **Backend Configuration**: Automated via `src/index.js` bootstrap. The system synchronizes provider settings (Client ID, Secret, and Redirect URIs) using `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `NEXT_PUBLIC_FRONTEND_URL`.
 - **Frontend Integration**:
     - `SocialButton`: Custom branded component following Google's identity guidelines.
-    - `pages/auth/google.js`: Dedicated callback handler with "Smart Swap" logic for internal Docker networking via `NEXT_PUBLIC_BACKEND_URL`.
+    - `pages/auth/google.js`: Dedicated callback handler with "Smart Swap" logic for internal Docker networking via `NEXT_PUBLIC_BACKEND_URL`. Implements a **Frontend-Intercept** pattern where Google redirects to the app for more environment-agnostic redirection handling.
 - **Bypass Logic**: Social users are automatically marked as `confirmed: true`, bypassing the email verification step required for local registrations.
 - **Session Persistence**: Social login sessions are automatically persistent (30 days), matching the "Remember Me" behavior of local login.
 

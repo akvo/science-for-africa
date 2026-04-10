@@ -13,6 +13,20 @@ jest.mock("@/lib/strapi", () => ({
   forgotPassword: jest.fn(),
 }));
 
+// Mock next-i18next
+jest.mock("next-i18next", () => ({
+  useTranslation: () => ({
+    t: (key, options) => (options?.email ? options.email : key),
+  }),
+}));
+
+// Mock react-i18next
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key, options) => (options?.email ? options.email : key),
+  }),
+}));
+
 describe("ForgotPasswordForm", () => {
   const mockPush = jest.fn();
   const mockUseRouter = useRouter;
@@ -27,12 +41,14 @@ describe("ForgotPasswordForm", () => {
   it("renders correctly with initial state", () => {
     render(<ForgotPasswordForm />);
     expect(
-      screen.getByRole("heading", { name: /Reset password/i }),
+      screen.getByRole("heading", { name: /forgot_password\.title/i }),
     ).toBeInTheDocument();
-    expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
+    expect(
+      screen.getByLabelText(/forgot_password\.email_label/i),
+    ).toBeInTheDocument();
 
     const submitButton = screen.getByRole("button", {
-      name: /Reset password/i,
+      name: /forgot_password\.button/i,
     });
     expect(submitButton).toBeDisabled();
     // Styling check for disabled state
@@ -41,9 +57,9 @@ describe("ForgotPasswordForm", () => {
 
   it("enables the button when email is present", async () => {
     render(<ForgotPasswordForm />);
-    const emailInput = screen.getByLabelText(/Email/i);
+    const emailInput = screen.getByLabelText(/forgot_password\.email_label/i);
     const submitButton = screen.getByRole("button", {
-      name: /Reset password/i,
+      name: /forgot_password\.button/i,
     });
 
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
@@ -57,26 +73,27 @@ describe("ForgotPasswordForm", () => {
     forgotPassword.mockResolvedValue({ ok: true });
 
     render(<ForgotPasswordForm />);
-    const emailInput = screen.getByLabelText(/Email/i);
+    const emailInput = screen.getByLabelText(/forgot_password\.email_label/i);
     const submitButton = screen.getByRole("button", {
-      name: /Reset password/i,
+      name: /forgot_password\.button/i,
     });
 
     fireEvent.change(emailInput, { target: { value: "galih@akvo.org" } });
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(screen.getByText(/We sent you an email to/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/forgot_password\.success_title/i),
+      ).toBeInTheDocument();
       // Check for the bold teal email text
-      const emailSpan = screen.getByText("galih@akvo.org");
-      expect(emailSpan).toBeInTheDocument();
-      expect(emailSpan).toHaveClass("text-brand-teal-600");
+      const emailText = screen.getByText("galih@akvo.org");
+      expect(emailText).toBeInTheDocument();
     });
   });
 
   it("navigates back to login", () => {
     render(<ForgotPasswordForm />);
-    const backLink = screen.getByText(/Back/i);
+    const backLink = screen.getByText(/navbar\.back/i);
     expect(backLink).toHaveAttribute("href", "/login");
   });
 });

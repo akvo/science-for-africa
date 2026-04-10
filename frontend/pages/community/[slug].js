@@ -73,7 +73,7 @@ export default function CommunityDetailPage() {
             >
               <TabsList
                 variant="line"
-                className="!h-auto w-full justify-start gap-8 border-y border-brand-gray-100 bg-transparent px-0 py-1 lg:pl-6"
+                className="h-auto! w-full justify-start gap-8 border-y border-brand-gray-100 bg-transparent px-0 py-1 lg:pl-6"
               >
                 {COMMUNITY_TABS.map((t) => {
                   const Icon = t.icon;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useOnboardingStore } from "@/lib/onboarding-store";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,9 +8,12 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 import { fetchFromStrapi, updateUserProfile } from "@/lib/strapi";
 import { useAuthStore } from "@/lib/auth-store";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 
 const OnboardingStep2 = () => {
+  const { t } = useTranslation("onboarding");
   const router = useRouter();
+  const { locale } = router;
   const {
     formData,
     toggleInterest,
@@ -22,28 +25,34 @@ const OnboardingStep2 = () => {
   } = useOnboardingStore();
   const { jwt, updateUser } = useAuthStore();
 
-  const [categories, setCategories] = React.useState({});
-  const [loading, setLoading] = React.useState(true);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [categories, setCategories] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const loadInterests = async () => {
-      const response = await fetchFromStrapi("/interests");
-      if (response?.data) {
-        // Group by category
-        const grouped = response.data.reduce((acc, item) => {
-          const { category, name } = item;
-          if (!acc[category]) acc[category] = [];
-          acc[category].push(name);
-          return acc;
-        }, {});
-        setCategories(grouped);
+      setLoading(true);
+      try {
+        const response = await fetchFromStrapi(`/interests?locale=${locale}`);
+        if (response?.data) {
+          // Group by category
+          const grouped = response.data.reduce((acc, item) => {
+            const { category, name } = item;
+            if (!acc[category]) acc[category] = [];
+            acc[category].push(name);
+            return acc;
+          }, {});
+          setCategories(grouped);
+        }
+      } catch (error) {
+        console.error("Failed to load interests:", error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     loadInterests();
-  }, []);
+  }, [locale]);
 
   const isSelected = (interest) => formData.interests.includes(interest);
   const isLimitReached = formData.interests.length >= 5;
@@ -83,14 +92,14 @@ const OnboardingStep2 = () => {
           className="flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"
         >
           <ArrowLeft size={18} />
-          <span>Back</span>
+          <span>{t("steps.back")}</span>
         </button>
         {!isInstitution && (
           <button
             onClick={skipStep}
             className="text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"
           >
-            Skip
+            {t("steps.skip")}
           </button>
         )}
       </div>
@@ -98,11 +107,10 @@ const OnboardingStep2 = () => {
       {/* Header Section */}
       <div className="space-y-3 mb-32">
         <h1 className="text-display-sm font-bold text-brand-teal-900 leading-tight">
-          Interests and expertise
+          {t("step2.title")}
         </h1>
         <p className="text-md text-brand-gray-800 leading-relaxed">
-          Select what you are passioned about the most. Please select up to 5
-          interests.
+          {t("step2.description")}
         </p>
       </div>
 
@@ -110,7 +118,11 @@ const OnboardingStep2 = () => {
         {loading ? (
           <div className="flex flex-col items-center justify-center h-64 space-y-4">
             <Loader2 className="w-12 h-12 animate-spin text-brand-teal-600" />
-            <p className="text-sm text-brand-gray-500">Loading interests...</p>
+            <p className="text-sm text-brand-gray-500">
+              {t("step2.loading_interests", {
+                defaultValue: "Loading interests...",
+              })}
+            </p>
           </div>
         ) : (
           <div className="space-y-6 py-2 pb-12">
@@ -159,19 +171,21 @@ const OnboardingStep2 = () => {
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Finishing...
+              {t("step5.finishing")}
             </>
           ) : isInstitution ? (
-            "Complete Setup"
+            t("step5.complete_button")
           ) : (
-            "Confirm"
+            t("steps.confirm")
           )}
         </Button>
       </div>
 
       {isLimitReached && (
         <p className="fixed bottom-8 left-1/2 -translate-x-1/2 px-4 py-2 bg-brand-teal-900 text-white text-xs rounded-full shadow-xl animate-in fade-in slide-in-from-bottom-2">
-          Maximum 5 interests allowed
+          {t("step2.limit_reached", {
+            defaultValue: "Maximum 5 interests allowed",
+          })}
         </p>
       )}
     </div>

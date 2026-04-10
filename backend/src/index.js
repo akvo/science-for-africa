@@ -25,17 +25,7 @@ module.exports = {
           max: 5,
         },
         educationTopic: { type: "string" },
-        educationLevel: {
-          type: "enumeration",
-          enum: [
-            "High School",
-            "Bachelor's Degree",
-            "Master's Degree",
-            "Doctorate (PhD)",
-            "Post-Doctorate",
-            "Professional Certificate",
-          ],
-        },
+        educationLevel: { type: "string" },
         institution: {
           type: "relation",
           relation: "manyToOne",
@@ -67,9 +57,7 @@ module.exports = {
           type: "enumeration",
           enum: ["individual", "institution"],
         },
-        roleType: {
-          type: "string",
-        },
+        roleType: { type: "string" },
         educationInstitutionName: {
           type: "string",
         },

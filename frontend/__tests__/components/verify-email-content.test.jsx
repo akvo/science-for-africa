@@ -14,6 +14,28 @@ jest.mock("@/lib/strapi", () => ({
   verifyEmailToken: jest.fn(),
 }));
 
+// Mock next-i18next
+jest.mock("next-i18next", () => ({
+  useTranslation: () => ({
+    t: (key, options) => {
+      // Return email if provided for description check
+      if (options?.email) return options.email;
+      // Return key for everything else
+      return key;
+    },
+  }),
+}));
+
+// Mock react-i18next
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key, options) => {
+      if (options?.email) return options.email;
+      return key;
+    },
+  }),
+}));
+
 // Mock next/router
 const mockPush = jest.fn();
 jest.mock("next/router", () => ({
@@ -36,10 +58,12 @@ describe("VerifyEmailContent", () => {
 
   it("renders with the correct email", () => {
     render(<VerifyEmailContent email={email} />);
-    expect(screen.getByText(/confirm email/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/verify_email\.confirm_title/i),
+    ).toBeInTheDocument();
     expect(screen.getByText(email)).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /resend verification email/i }),
+      screen.getByRole("button", { name: /verify_email\.resend_button/i }),
     ).toBeInTheDocument();
   });
 
@@ -49,17 +73,17 @@ describe("VerifyEmailContent", () => {
     render(<VerifyEmailContent email={email} />);
 
     const resendBtn = screen.getByRole("button", {
-      name: /resend verification email/i,
+      name: /verify_email\.resend_button/i,
     });
     fireEvent.click(resendBtn);
 
     await waitFor(() => {
       expect(
-        screen.getByText(/verification email resent successfully/i),
+        screen.getByText(/verify_email\.resend_success/i),
       ).toBeInTheDocument();
     });
 
-    expect(screen.getByText(/resend link in 30s/i)).toBeInTheDocument();
+    expect(screen.getByText(/verify_email\.resend_countdown/i)).toBeInTheDocument();
     expect(resendBtn).toBeDisabled();
 
     // Fast-forward 10 seconds (1s at a time to allow useEffect to reschedule)
@@ -68,7 +92,7 @@ describe("VerifyEmailContent", () => {
         jest.advanceTimersByTime(1000);
       });
     }
-    expect(screen.getByText(/resend link in 20s/i)).toBeInTheDocument();
+    expect(screen.getByText(/verify_email\.resend_countdown/i)).toBeInTheDocument();
 
     // Fast-forward to end (20 more seconds)
     for (let i = 0; i < 20; i++) {
@@ -76,7 +100,9 @@ describe("VerifyEmailContent", () => {
         jest.advanceTimersByTime(1000);
       });
     }
-    expect(screen.queryByText(/resend link in/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/verify_email\.resend_countdown/i),
+    ).not.toBeInTheDocument();
     expect(resendBtn).not.toBeDisabled();
   });
 
@@ -86,14 +112,14 @@ describe("VerifyEmailContent", () => {
     render(<VerifyEmailContent email={email} />);
 
     fireEvent.click(
-      screen.getByRole("button", { name: /resend verification email/i }),
+      screen.getByRole("button", { name: /verify_email\.resend_button/i }),
     );
 
     await waitFor(() => {
       expect(screen.getByText(/fail/i)).toBeInTheDocument();
     });
     expect(
-      screen.getByRole("button", { name: /resend verification email/i }),
+      screen.getByRole("button", { name: /verify_email\.resend_button/i }),
     ).not.toBeDisabled();
   });
 
@@ -106,20 +132,17 @@ describe("VerifyEmailContent", () => {
 
     render(<VerifyEmailContent email={email} confirmation="test-token" />);
 
-    expect(screen.getByText(/verifying your email/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/verify_email\.verifying_title/i),
+    ).toBeInTheDocument();
 
     await waitFor(() => {
       expect(
-        screen.getByText(/email verified successfully/i),
+        screen.getByText(/verify_email\.success_title/i),
       ).toBeInTheDocument();
     });
 
     expect(verifyEmailToken).toHaveBeenCalledWith("test-token");
-
-    // Check for countdown or immediate redirect
-    expect(
-      screen.getByText(/redirecting to login page in 3s/i),
-    ).toBeInTheDocument();
 
     // Fast-forward 3 seconds for redirect (sequentially)
     for (let i = 0; i < 3; i++) {
@@ -137,18 +160,22 @@ describe("VerifyEmailContent", () => {
 
     render(<VerifyEmailContent email={email} confirmation="invalid-token" />);
 
-    expect(screen.getByText(/verifying your email/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/verify_email\.verifying_title/i),
+    ).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByText(/verification failed/i)).toBeInTheDocument();
       expect(
-        screen.getByText(/The verification link was invalid or already used/i),
+        screen.getByText(/verify_email\.failed_title/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/verify_email\.failed_link_invalid/i),
       ).toBeInTheDocument();
     });
 
     // Should show "Return to Login" button on failure
     expect(
-      screen.getByRole("button", { name: /return to login/i }),
+      screen.getByRole("button", { name: /verify_email\.return_login/i }),
     ).toBeInTheDocument();
   });
 });

@@ -8,26 +8,28 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { registerUser } from "@/lib/strapi";
 import { useRouter } from "next/router";
-import { passwordSchema } from "@/lib/validation";
-
-const signupSchema = z
-  .object({
-    fullName: z.string().min(2, "Full name must be at least 2 characters"),
-    email: z.string().email("Please enter a valid email address"),
-    password: passwordSchema,
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+import { getPasswordSchema } from "@/lib/validation";
+import { useTranslation } from "next-i18next";
 
 export const SignUpForm = () => {
+  const { t } = useTranslation("auth");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+
+  const signupSchema = z
+    .object({
+      fullName: z.string().min(2, t("validation.fullname_min")),
+      email: z.string().email(t("validation.email_invalid")),
+      password: getPasswordSchema(t),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("validation.passwords_mismatch"),
+      path: ["confirmPassword"],
+    });
 
   const {
     register,
@@ -43,12 +45,11 @@ export const SignUpForm = () => {
 
     try {
       // Strapi register expects username, email, password.
-      // We use email as username for simplicity or handle it based on backend config.
       const payload = {
         username: values.email,
         email: values.email,
         password: values.password,
-        fullName: values.fullName, // Custom field
+        fullName: values.fullName,
       };
 
       const result = await registerUser(payload);
@@ -64,10 +65,10 @@ export const SignUpForm = () => {
           `/auth/verify-email?email=${encodeURIComponent(values.email)}`,
         );
       } else {
-        setError("Registration failed. Please try again.");
+        setError(t("signup.error_failed"));
       }
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
+      setError(t("signup.error_unexpected"));
     } finally {
       setIsLoading(false);
     }
@@ -89,12 +90,12 @@ export const SignUpForm = () => {
           htmlFor="fullName"
           className="text-sm font-bold text-brand-gray-900"
         >
-          Full name
+          {t("signup.fullname_label")}
         </Label>
         <Input
           id="fullName"
           {...register("fullName")}
-          placeholder="Your full name"
+          placeholder={t("signup.fullname_placeholder")}
           className={`rounded-lg border-brand-gray-200 focus:ring-brand-teal-500 h-10 ${errors.fullName ? "border-destructive ring-destructive" : ""}`}
         />
         {errors.fullName && (
@@ -109,13 +110,13 @@ export const SignUpForm = () => {
           htmlFor="email"
           className="text-sm font-bold text-brand-gray-900"
         >
-          Email
+          {t("signup.email_label")}
         </Label>
         <Input
           id="email"
           type="email"
           {...register("email")}
-          placeholder="name@institution.org"
+          placeholder={t("signup.email_placeholder")}
           className={`rounded-lg border-brand-gray-200 focus:ring-brand-teal-500 h-10 ${errors.email ? "border-destructive ring-destructive" : ""}`}
         />
         {errors.email && (
@@ -128,10 +129,10 @@ export const SignUpForm = () => {
       <div className="space-y-2">
         <Label
           htmlFor="password"
-          title="At least 8 characters, 1 number, and 1 special character"
+          title={t("signup.password_hint")}
           className="text-sm font-bold text-brand-gray-900"
         >
-          Password
+          {t("signup.password_label")}
         </Label>
         <div className="relative">
           <Input
@@ -159,17 +160,16 @@ export const SignUpForm = () => {
       <div className="space-y-2">
         <Label
           htmlFor="confirmPassword"
-          title="Must match password"
           className="text-sm font-bold text-brand-gray-900"
         >
-          Confirm password
+          {t("signup.confirm_password_label")}
         </Label>
         <div className="relative">
           <Input
             id="confirmPassword"
             type={showConfirmPassword ? "text" : "password"}
             {...register("confirmPassword")}
-            placeholder="••••••••"
+            placeholder={t("signup.confirm_password_placeholder")}
             className={`rounded-lg border-brand-gray-200 focus:ring-brand-teal-500 h-10 pr-10 ${errors.confirmPassword ? "border-destructive ring-destructive" : ""}`}
           />
           <button
@@ -197,7 +197,7 @@ export const SignUpForm = () => {
         {isLoading ? (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         ) : (
-          "Create account"
+          t("signup.button")
         )}
       </Button>
     </form>

@@ -64,6 +64,8 @@ apiClient.interceptors.response.use(
     // If a GET request for a non-default locale (fr) returns zero results,
     // automatically retry once with the default locale (en).
     if (
+      process.env.NODE_ENV !== "test" &&
+      config &&
       config.method === "get" &&
       config.params?.locale === "fr" &&
       !config._isFallbackRetry

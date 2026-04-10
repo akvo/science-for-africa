@@ -287,20 +287,22 @@ module.exports = {
     // --- GLOBAL LOCALE SAFETY ---
     // Ensure all localized models default to 'en' if no locale is provided.
     // This catches low-level db.query calls (like seeders) that bypass standard Document Service logic.
-    const localizedModels = Object.entries(strapi.contentTypes)
-      .filter(([uid, model]) => model.pluginOptions?.i18n?.localized === true)
-      .map(([uid]) => uid);
+    if (strapi.contentTypes) {
+      const localizedModels = Object.entries(strapi.contentTypes)
+        .filter(([uid, model]) => model.pluginOptions?.i18n?.localized === true)
+        .map(([uid]) => uid);
 
-    if (localizedModels.length > 0) {
-      strapi.db.lifecycles.subscribe({
-        models: localizedModels,
-        async beforeCreate(event) {
-          const { data } = event.params;
-          if (!data.locale) {
-            data.locale = "en";
-          }
-        },
-      });
+      if (localizedModels.length > 0) {
+        strapi.db.lifecycles.subscribe({
+          models: localizedModels,
+          async beforeCreate(event) {
+            const { data } = event.params;
+            if (!data.locale) {
+              data.locale = "en";
+            }
+          },
+        });
+      }
     }
 
     // 1. Ensure email confirmation is enabled in advanced settings

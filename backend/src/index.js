@@ -318,7 +318,6 @@ module.exports = {
     }
 
     // 2. Set branded email templates for confirmation and reset password
-
     const emailStore = strapi.store({
       type: "plugin",
       name: "users-permissions",

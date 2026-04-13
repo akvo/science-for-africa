@@ -54,7 +54,7 @@ export default function CommunityDetailPage() {
       </aside>
 
       <div className="flex flex-1 flex-col gap-6 min-w-0">
-        <CommunityHeader community={community} />
+        <CommunityHeader community={community} onCreatePost={openCollaboration} />
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
           <div className="flex flex-col gap-5 min-w-0 lg:border-r lg:border-brand-gray-100">

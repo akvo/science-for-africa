@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Loader2, UserRound } from "lucide-react";
-import { fetchFromStrapi, createCollaborationCall } from "@/lib/strapi";
+import { fetchFromStrapi } from "@/lib/strapi";
 
 export default function StepAssignMentor() {
   const { formData, addMentor, removeMentorById, prevStep, nextStep } =
@@ -20,8 +20,6 @@ export default function StepAssignMentor() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedUserId, setSelectedUserId] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     const loadUsers = async () => {
@@ -52,44 +50,12 @@ export default function StepAssignMentor() {
       addMentor({
         id: user.id,
         email: user.email,
-        fullName: user.fullName || `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+        fullName:
+          user.fullName ||
+          `${user.firstName || ""} ${user.lastName || ""}`.trim(),
         position: user.position || user.roleType || "",
-        institutionName: user.institution?.name || user.institutionName || "",
       });
       setSelectedUserId("");
-    }
-  };
-
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-    setError("");
-
-    try {
-      const mentorEmails = formData.mentors.map((m) => m.email);
-      const allEmails = [
-        ...new Set([...formData.inviteEmails, ...mentorEmails]),
-      ];
-
-      const result = await createCollaborationCall({
-        title: formData.title,
-        description: formData.description,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
-        topics: formData.topics,
-        communityName: formData.communityName,
-        inviteEmails: allEmails,
-        mentorEmails: mentorEmails,
-      });
-
-      if (result && !result.error) {
-        nextStep();
-      } else {
-        setError(result?.error || "Failed to create collaboration call");
-      }
-    } catch (err) {
-      setError(err.error || "An unexpected error occurred");
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -113,10 +79,7 @@ export default function StepAssignMentor() {
             Loading users...
           </div>
         ) : (
-          <Select
-            value={selectedUserId}
-            onValueChange={handleAddMentor}
-          >
+          <Select value={selectedUserId} onValueChange={handleAddMentor}>
             <SelectTrigger className="gap-2">
               <UserRound className="size-4 text-brand-gray-400 shrink-0" />
               <SelectValue placeholder="Select a mentor" />
@@ -155,11 +118,7 @@ export default function StepAssignMentor() {
                   <span className="text-sm font-semibold text-brand-gray-900 truncate">
                     {mentor.fullName}
                   </span>
-                  <Badge
-                    variant="secondary"
-                    size="sm"
-                    className="shrink-0"
-                  >
+                  <Badge variant="secondary" size="sm" className="shrink-0">
                     Mentor
                   </Badge>
                 </div>
@@ -181,25 +140,12 @@ export default function StepAssignMentor() {
         </div>
       )}
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
-
       <div className="flex justify-end gap-2 pt-2">
         <Button variant="outline" onClick={prevStep} className="rounded-full">
           Back
         </Button>
-        <Button
-          onClick={handleSubmit}
-          disabled={isSubmitting}
-          className="rounded-full"
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Creating...
-            </>
-          ) : (
-            "Next"
-          )}
+        <Button onClick={nextStep} className="rounded-full">
+          Next
         </Button>
       </div>
     </div>

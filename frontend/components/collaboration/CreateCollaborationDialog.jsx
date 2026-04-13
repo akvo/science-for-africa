@@ -10,6 +10,7 @@ import StepSelectTopics from "./StepSelectTopics";
 import StepCreateSpace from "./StepCreateSpace";
 import StepSelectDueDate from "./StepSelectDueDate";
 import StepAssignMentor from "./StepAssignMentor";
+import StepInviteUsers from "./StepInviteUsers";
 import StepSuccess from "./StepSuccess";
 
 const STEPS = {
@@ -17,7 +18,8 @@ const STEPS = {
   2: { component: StepCreateSpace, title: "Create Collaboration Space" },
   3: { component: StepSelectDueDate, title: "Select a due date", subtitle: "The following date will terminate the collaboration space." },
   4: { component: StepAssignMentor, title: "Assign a mentor", subtitle: "The following users have access to this project:" },
-  5: { component: StepSuccess, title: null },
+  5: { component: StepInviteUsers, title: "Invite users and collaborators", subtitle: "Your new collaboration has been created. Invite colleagues to collaborate on this project." },
+  6: { component: StepSuccess, title: null },
 };
 
 export default function CreateCollaborationDialog() {

@@ -9,7 +9,11 @@
     "signup": "S'inscrire",
     "search": "Rechercher",
     "news": "Actualités et perspectives",
-    "contact": "Contact"
+    "contact": "Contact",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "logout": "Se déconnecter",
+    "publish": "Publier"
   },
   "common": {
     "loading": "Chargement...",

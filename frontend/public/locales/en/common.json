@@ -9,7 +9,11 @@
     "signup": "Sign up",
     "search": "Search",
     "news": "News and insights",
-    "contact": "Contact"
+    "contact": "Contact",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Sign out",
+    "publish": "Publish"
   },
   "common": {
     "loading": "Loading...",

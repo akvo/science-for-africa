@@ -67,11 +67,20 @@ async function setupStrapi() {
 
     // 2. Mock the email service to ensure no real emails/network calls are made during tests
     if (instance.plugins["email"]) {
-      instance.plugins["email"].services.email.send = jest
+      const emailService = instance.plugins["email"].services.email;
+
+      emailService.send = jest.fn().mockImplementation((options) => {
+        console.log(
+          `[MOCK EMAIL] Sent to: ${options.to}, Subject: ${options.subject}`,
+        );
+        return Promise.resolve(true);
+      });
+
+      emailService.sendTemplatedEmail = jest
         .fn()
-        .mockImplementation((options) => {
+        .mockImplementation((options, template, data) => {
           console.log(
-            `[MOCK EMAIL] Sent to: ${options.to}, Subject: ${options.subject}`,
+            `[MOCK EMAIL TEMPLATED] Sent to: ${options.to}, Subject: ${template.subject || "Templated Email"}`,
           );
           return Promise.resolve(true);
         });

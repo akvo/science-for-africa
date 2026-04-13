@@ -62,6 +62,7 @@ describe("Strapi Bootstrap - Email Templates TDD", () => {
           subscribe: jest.fn(),
         },
       },
+
       log: { info: jest.fn() },
     };
   });

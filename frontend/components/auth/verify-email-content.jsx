@@ -218,7 +218,7 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
         <div className="w-12 h-12 bg-brand-teal-50 rounded-xl flex items-center justify-center mb-4">
           <Mail className="text-brand-teal-600" size={24} />
         </div>
-        <h1 className="text-[30px] font-bold text-brand-teal-900 leading-tight">
+        <h1 className="text-display-sm font-bold text-brand-teal-900 leading-tight">
           {t("verify_email.confirm_title")}
         </h1>
         <div className="space-y-6">

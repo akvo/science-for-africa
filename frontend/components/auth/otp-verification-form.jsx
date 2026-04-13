@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,16 +12,18 @@ import {
 } from "@/components/ui/card";
 import { verifyOtp, resendOtp } from "@/lib/strapi";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 /**
  * OTPVerificationForm component
  * Handles 6-digit numeric OTP entry with auto-focus and resend cooldown logic.
  */
 export const OTPVerificationForm = ({ email }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("auth");
   const router = useRouter();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [resending, setResending] = useState(false);
   const [timer, setTimer] = useState(0);
   const inputs = useRef([]);
@@ -115,19 +117,23 @@ export const OTPVerificationForm = ({ email }) => {
     if (fullOtp.length < 6) return;
 
     setLoading(true);
+    setError("");
     try {
       const res = await verifyOtp(email, fullOtp);
+      console.log("OTP Verification Response:", res);
       if (res.success) {
-        toast.success(t("auth.otp_verified_success"));
-        // Redirect to onboarding or dashboard
-        router.push("/onboarding/step-1");
+        toast.success(t("otp.verified_success"));
+        // Redirect to onboarding
+        router.push("/onboarding");
       } else {
         const errorMsg =
-          res.message || res.error?.message || t("auth.otp_invalid_error");
+          res.message || res.error?.message || t("otp.invalid_error");
+        setError(errorMsg);
         toast.error(errorMsg);
       }
     } catch (err) {
-      toast.error(t("auth.otp_verify_failed"));
+      setError(t("otp.verify_failed"));
+      toast.error(t("otp.verify_failed"));
     } finally {
       setLoading(false);
     }
@@ -137,21 +143,24 @@ export const OTPVerificationForm = ({ email }) => {
     if (timer > 0 || resending) return;
 
     setResending(true);
+    setError("");
     try {
       const res = await resendOtp(email);
       if (res.success) {
-        toast.success(t("auth.otp_resent_success"));
+        toast.success(t("otp.resent_success"));
         const cooldownSeconds = 60;
         const endTime = Date.now() + cooldownSeconds * 1000;
         setTimer(cooldownSeconds);
         localStorage.setItem(`otp_timer_end_${email}`, endTime.toString());
       } else {
         const errorMsg =
-          res.message || res.error?.message || t("auth.otp_resend_error");
+          res.message || res.error?.message || t("otp.resend_error");
+        setError(errorMsg);
         toast.error(errorMsg);
       }
     } catch (err) {
-      toast.error(t("auth.otp_resend_failed"));
+      setError(t("otp.resend_failed"));
+      toast.error(t("otp.resend_failed"));
     } finally {
       setResending(false);
     }
@@ -159,7 +168,7 @@ export const OTPVerificationForm = ({ email }) => {
 
   const checkVerificationStatus = () => {
     // Manual refresh to check if verified via link in another tab
-    toast.info(t("auth.checking_status"));
+    toast.info(t("otp.checking_status"));
     router.reload();
   };
 
@@ -167,15 +176,23 @@ export const OTPVerificationForm = ({ email }) => {
     <Card className="w-full max-w-md mx-auto border-none shadow-none md:border md:shadow-sm">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center">
-          {t("auth.otp_verify_title")}
+          {t("otp.verify_title")}
         </CardTitle>
         <CardDescription className="text-center">
-          {t("auth.otp_verify_desc")} <br />
+          {t("otp.verify_desc")} <br />
           <span className="font-semibold text-primary-700">{email}</span>
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="flex gap-2 justify-center" onPaste={handlePaste}>
+      <CardContent className="space-y-6 pt-4">
+        {error && (
+          <div className="p-3 text-sm font-medium text-destructive bg-destructive/10 rounded-lg border border-destructive/20 text-center animate-in fade-in duration-300">
+            {error}
+          </div>
+        )}
+        <div
+          className="flex justify-between max-w-75 mx-auto gap-2"
+          onPaste={handlePaste}
+        >
           {otp.map((digit, idx) => (
             <input
               key={idx}
@@ -194,16 +211,23 @@ export const OTPVerificationForm = ({ email }) => {
         </div>
 
         <Button
-          className="w-full rounded-full bg-primary-500 hover:bg-primary-700 h-12 text-lg font-semibold"
+          type="submit"
+          variant="primary"
+          size="lg"
+          className="w-full rounded-full h-11 shadow-sm transition-all active:scale-[0.98] group"
           onClick={handleSubmit}
           disabled={loading || otp.join("").length < 6}
         >
-          {loading ? t("common.loading") : t("auth.verify_button")}
+          {loading ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            t("otp.verify_button")
+          )}
         </Button>
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         <div className="text-sm text-gray-500 text-center">
-          {t("auth.no_code")}
+          {t("otp.no_code")}
           <button
             onClick={handleResend}
             disabled={timer > 0 || resending}
@@ -214,8 +238,8 @@ export const OTPVerificationForm = ({ email }) => {
             }`}
           >
             {timer > 0
-              ? t("auth.resend_in", { seconds: timer })
-              : t("auth.resend_button")}
+              ? t("otp.resend_in", { seconds: timer })
+              : t("otp.resend_button")}
           </button>
         </div>
 
@@ -224,7 +248,7 @@ export const OTPVerificationForm = ({ email }) => {
             onClick={checkVerificationStatus}
             className="text-sm w-full text-center text-gray-500 hover:text-primary-500 transition-colors"
           >
-            {t("auth.already_verified_check")}
+            {t("otp.already_verified_check")}
           </button>
         </div>
       </CardFooter>

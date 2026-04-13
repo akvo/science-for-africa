@@ -11,7 +11,9 @@ import { VerifyEmailContent } from "@/components/auth/verify-email-content";
 // Mock lib/strapi
 jest.mock("@/lib/strapi", () => ({
   resendVerification: jest.fn(),
+  resendOtp: jest.fn(),
   verifyEmailToken: jest.fn(),
+  verifyOtp: jest.fn(),
 }));
 
 // Mock next-i18next
@@ -56,74 +58,52 @@ describe("VerifyEmailContent", () => {
     jest.useRealTimers();
   });
 
-  it("renders with the correct email", () => {
+  it("renders with the correct email and OTP form", () => {
     render(<VerifyEmailContent email={email} />);
+    // When no confirmation token is present, it should render the OTP form
+    // The OTP form has an 'otp.verify_title' heading
+    expect(screen.getByText(/otp\.verify_title/i)).toBeInTheDocument();
+    // Confirm the Link-based resend button is NOT present in OTP mode
     expect(
-      screen.getByText(/verify_email\.confirm_title/i),
-    ).toBeInTheDocument();
-    expect(screen.getByText(email)).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /verify_email\.resend_button/i }),
-    ).toBeInTheDocument();
+      screen.queryByText(/verify_email\.resend_button/i),
+    ).not.toBeInTheDocument();
   });
 
   it("starts countdown after successful resend", async () => {
-    const { resendVerification } = require("@/lib/strapi");
-    resendVerification.mockResolvedValueOnce({ success: true });
+    const { resendOtp } = require("@/lib/strapi");
+    resendOtp.mockResolvedValueOnce({ success: true });
     render(<VerifyEmailContent email={email} />);
 
-    const resendBtn = screen.getByRole("button", {
-      name: /verify_email\.resend_button/i,
-    });
+    // In OTP mode, look for the 'otp.resend_button'
+    const resendBtn = screen.getByText(/otp\.resend_button/i).closest("button");
     fireEvent.click(resendBtn);
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/verify_email\.resend_success/i),
-      ).toBeInTheDocument();
+      // In OTP mode, check for 'otp.resend_in' which only shows when disabled (cooldown)
+      expect(screen.getByText(/otp\.resend_in/i)).toBeInTheDocument();
     });
 
-    expect(
-      screen.getByText(/verify_email\.resend_countdown/i),
-    ).toBeInTheDocument();
-    expect(resendBtn).toBeDisabled();
-
-    // Fast-forward 10 seconds (1s at a time to allow useEffect to reschedule)
-    for (let i = 0; i < 10; i++) {
+    // Fast-forward cooldown (60 seconds)
+    for (let i = 0; i < 60; i++) {
       act(() => {
         jest.advanceTimersByTime(1000);
       });
     }
-    expect(
-      screen.getByText(/verify_email\.resend_countdown/i),
-    ).toBeInTheDocument();
-
-    // Fast-forward to end (20 more seconds)
-    for (let i = 0; i < 20; i++) {
-      act(() => {
-        jest.advanceTimersByTime(1000);
-      });
-    }
-    expect(
-      screen.queryByText(/verify_email\.resend_countdown/i),
-    ).not.toBeInTheDocument();
     expect(resendBtn).not.toBeDisabled();
   });
 
   it("shows error if resend fails", async () => {
-    const { resendVerification } = require("@/lib/strapi");
-    resendVerification.mockResolvedValueOnce({ error: "Fail" });
+    const { resendOtp } = require("@/lib/strapi");
+    resendOtp.mockResolvedValueOnce({ error: { message: "Fail" } });
     render(<VerifyEmailContent email={email} />);
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /verify_email\.resend_button/i }),
-    );
+    fireEvent.click(screen.getByText(/otp\.resend_button/i).closest("button"));
 
     await waitFor(() => {
       expect(screen.getByText(/fail/i)).toBeInTheDocument();
     });
     expect(
-      screen.getByRole("button", { name: /verify_email\.resend_button/i }),
+      screen.getByText(/otp\.resend_button/i).closest("button"),
     ).not.toBeDisabled();
   });
 

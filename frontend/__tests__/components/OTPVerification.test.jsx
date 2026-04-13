@@ -85,11 +85,13 @@ describe("OTPVerificationForm", () => {
     }
 
     // Usually auto-submits or user clicks button
-    fireEvent.click(screen.getByRole("button", { name: /verify/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /otp\.verify_button/i }),
+    );
 
     await waitFor(() => {
       expect(verifyOtp).toHaveBeenCalledWith(testEmail, "123456");
-      expect(mockPush).toHaveBeenCalledWith("/onboarding/step-1");
+      expect(mockPush).toHaveBeenCalledWith("/onboarding");
     });
   });
 
@@ -106,7 +108,9 @@ describe("OTPVerificationForm", () => {
       fireEvent.change(inputs[i], { target: { value: "0" } });
     }
 
-    fireEvent.click(screen.getByRole("button", { name: /verify/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /otp\.verify_button/i }),
+    );
 
     const { toast } = require("sonner");
     await waitFor(() => {

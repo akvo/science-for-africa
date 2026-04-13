@@ -9,10 +9,10 @@ To handle user sessions and "Remember Me" functionality securely while balancing
 **Context-Aware Session Persistence**: Dynamically target either `sessionStorage` or `localStorage` based on the user's explicit preference during login, or automatically for social providers.
 
 ### User Experience
-- **Email/Password Login**: 
+- **Email/Password Login**:
     - If "Remember Me" is selected, the login persists for 30 days via `localStorage`.
     - If not selected, the session expires upon closing the tab/window (`sessionStorage`).
-- **Google OAuth Login**: 
+- **Google OAuth Login**:
     - The session **automatically** persists for 30 days (equivalent to a "Remember Me" state) without requiring manual selection.
 
 ---
@@ -94,4 +94,3 @@ graph TD
 - **HttpOnly Cookies**: Moving the "Remember Me" token to a server-side cookie to eliminate XSS-based token theft (Planned for Phase 2).
 - **Short-lived Access Tokens**: Reducing the JWT lifespan from 30 days to 24 hours (Planned for Sprint 6).
 - **Refresh Token Rotation**: Implementing a rotation policy to invalidate old persistent sessions automatically.
-

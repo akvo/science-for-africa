@@ -165,6 +165,7 @@ module.exports = {
         console.log(
           `[AUTH-DEBUG] emailConfirmation original called, status: ${ctx.status}`,
         );
+        // If the original logic set a redirect, we transform it into a JSON response
         if (ctx.response.status === 302) {
           ctx.body = { success: true };
           ctx.status = 200;
@@ -178,7 +179,6 @@ module.exports = {
       }
     };
 
-    // 3. Update Swagger documentation
     try {
       if (strapi.plugin("documentation")) {
         strapi
@@ -291,18 +291,20 @@ module.exports = {
       key: "advanced",
     });
     const settings = await advancedStore.get();
+    // For API-driven verification from the frontend, we don't want the backend to redirect.
+    // If redirection is set, Axios calls from the frontend will fail due to CORS on the redirect target.
+    // Setting this to an empty string tells Strapi to return a JSON response instead of a 302 redirect.
+    const emailRedirectUrl = "";
+
+    const isEmailEnabled = settings.email_confirmation;
+    const isRedirectOk =
+      settings.email_confirmation_redirection === emailRedirectUrl;
+
     const frontendVerifyUrl =
       process.env.EMAIL_CONFIRMATION_URL ||
       "http://localhost:3000/auth/verify-email";
-    const emailRedirectUrl = frontendVerifyUrl.replace(
-      /\/auth\/verify-email$/,
-      "/login",
-    );
 
-    if (
-      !settings.email_confirmation ||
-      settings.email_confirmation_redirection !== emailRedirectUrl
-    ) {
+    if (!isEmailEnabled || !isRedirectOk) {
       await advancedStore.set({
         value: {
           ...settings,
@@ -310,10 +312,13 @@ module.exports = {
           email_confirmation_redirection: emailRedirectUrl,
         },
       });
-      strapi.log.info("Email verification settings synchronized.");
+      strapi.log.info(
+        `Email verification settings synchronized (Redirection disabled for API-driven flow)`,
+      );
     }
 
-    // 2. Branded Email Templates
+    // 2. Set branded email templates for confirmation and reset password
+
     const emailStore = strapi.store({
       type: "plugin",
       name: "users-permissions",
@@ -354,10 +359,8 @@ module.exports = {
     }
 
     if (emailSettings && emailSettings.reset_password) {
-      const frontendUrl = frontendVerifyUrl.replace(
-        /\/auth\/verify-email$/,
-        "",
-      );
+      const frontendUrl =
+        process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000";
       const resetLink = `${frontendUrl}/auth/reset-password?code=<%= TOKEN %>`;
       const brandedResetBody = `
         <p>Hello <%= USER.username %>,</p>

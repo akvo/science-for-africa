@@ -72,6 +72,7 @@ module.exports = ({ strapi }) => ({
       where: { id: user.id },
       data: {
         confirmed: true,
+        verificationStatus: "verified",
         confirmationToken: null,
         otpCode: null,
         otpExpiration: null,

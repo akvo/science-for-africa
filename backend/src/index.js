@@ -291,6 +291,14 @@ module.exports = {
       },
       async beforeUpdate(event) {
         const { data } = event.params;
+
+        // Synchronize verificationStatus with confirmed status
+        if (data.confirmed === true) {
+          data.verificationStatus = "verified";
+        } else if (data.confirmed === false) {
+          data.verificationStatus = "unverified";
+        }
+
         if (data.firstName || data.lastName) {
           data.fullName =
             `${data.firstName || ""} ${data.lastName || ""}`.trim();

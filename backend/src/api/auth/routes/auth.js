@@ -35,5 +35,15 @@ module.exports = {
         prefix: "",
       },
     },
+    {
+      method: "GET",
+      path: "/auth/registration-status",
+      handler: "auth.registrationStatus",
+      config: {
+        auth: false,
+        description: "Check if an email is already verified",
+        prefix: "",
+      },
+    },
   ],
 };

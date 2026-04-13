@@ -209,4 +209,30 @@ module.exports = ({ strapi }) => ({
       message: "A new verification code has been sent to your email.",
     };
   },
+
+  /**
+   * Checks the registration/verification status of an email
+   */
+  async registrationStatus(ctx) {
+    const { email } = ctx.query;
+
+    if (!email) {
+      return ctx.badRequest("Email is required.");
+    }
+
+    const user = await strapi.db
+      .query("plugin::users-permissions.user")
+      .findOne({
+        where: { email: email.toLowerCase() },
+      });
+
+    if (!user) {
+      return ctx.notFound("User not found.");
+    }
+
+    return {
+      email: user.email,
+      confirmed: user.confirmed,
+    };
+  },
 });

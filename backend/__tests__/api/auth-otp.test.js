@@ -232,4 +232,58 @@ describe("OTP Verification API", () => {
       expect(message).toMatch(/already verified/i);
     });
   });
+
+  describe("GET /api/auth/registration-status", () => {
+    it("should return confirmed: false for unconfirmed user", async () => {
+      const email = `status-unconf-${Date.now()}@example.com`;
+      await request(strapi.server.httpServer)
+        .post("/api/auth/local/register")
+        .send({
+          username: `suser-${Date.now()}`,
+          email,
+          password: "Password123!",
+          fullName: "Status User",
+        });
+
+      const response = await request(strapi.server.httpServer).get(
+        `/api/auth/registration-status?email=${email}`,
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("confirmed", false);
+    });
+
+    it("should return confirmed: true for confirmed user", async () => {
+      const email = `status-conf-${Date.now()}@example.com`;
+      await request(strapi.server.httpServer)
+        .post("/api/auth/local/register")
+        .send({
+          username: `scuser-${Date.now()}`,
+          email,
+          password: "Password123!",
+          fullName: "Status Confirmed User",
+        });
+
+      // Confirm manually
+      await strapi.db.query("plugin::users-permissions.user").update({
+        where: { email },
+        data: { confirmed: true },
+      });
+
+      const response = await request(strapi.server.httpServer).get(
+        `/api/auth/registration-status?email=${email}`,
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("confirmed", true);
+    });
+
+    it("should return 404 for non-existent user", async () => {
+      const response = await request(strapi.server.httpServer).get(
+        "/api/auth/registration-status?email=nonexistent@example.com",
+      );
+
+      expect(response.status).toBe(404);
+    });
+  });
 });

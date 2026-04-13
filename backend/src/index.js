@@ -372,7 +372,7 @@ module.exports = {
         <p>Hello <%= USER.username %>,</p>
         <p>Thank you for joining the Science for Africa platform. To complete your registration and active your account, please use the following verification code:</p>
         <div style="text-align: center; margin: 32px 0;">
-          <span style="font-size: 32px; letter-spacing: 8px; font-weight: bold; color: #008080;"><%= OTP_CODE %></span>
+          <span style="font-size: 32px; letter-spacing: 8px; font-weight: bold; color: #008080;"><%= USER.otpCode %></span>
         </div>
         <p>Alternatively, you can click the button below to verify your email address:</p>
         <div style="text-align: center; margin: 32px 0;">

@@ -43,6 +43,10 @@ module.exports = ({ strapi }) => ({
       return ctx.badRequest("Email and OTP code are required.");
     }
 
+    strapi.log.debug(
+      `Attempting OTP verification for: ${email} with code: ${otpCode}`,
+    );
+
     const user = await strapi.db
       .query("plugin::users-permissions.user")
       .findOne({
@@ -54,8 +58,15 @@ module.exports = ({ strapi }) => ({
       });
 
     if (!user) {
+      strapi.log.warn(
+        `OTP verification failed for: ${email}. User not found or code invalid/expired.`,
+      );
       return ctx.badRequest("Invalid or expired OTP code.");
     }
+
+    strapi.log.info(
+      `OTP verification success for: ${email}. Confirming user...`,
+    );
 
     await strapi.db.query("plugin::users-permissions.user").update({
       where: { id: user.id },
@@ -112,7 +123,9 @@ module.exports = ({ strapi }) => ({
 
     if (user.lastOtpSentAt) {
       const lastSent = new Date(user.lastOtpSentAt);
-      const diffSeconds = Math.floor((now - lastSent) / 1000);
+      const diffSeconds = Math.floor(
+        (now.getTime() - lastSent.getTime()) / 1000,
+      );
       if (diffSeconds < 60) {
         return ctx.send(
           {
@@ -128,12 +141,13 @@ module.exports = ({ strapi }) => ({
       ? new Date(user.otpResendWindowStart)
       : now;
 
-    if (now - windowStart > 60 * 60 * 1000) {
+    if (now.getTime() - windowStart.getTime() > 60 * 60 * 1000) {
       resendCount = 0;
       windowStart = now;
     }
 
     if (resendCount >= 3) {
+      strapi.log.warn(`Resend limit reached for: ${email}`);
       return ctx.send(
         { error: "Maximum resend attempts reached. Try again in 1 hour." },
         429,
@@ -159,20 +173,33 @@ module.exports = ({ strapi }) => ({
         .store({ type: "plugin", name: "users-permissions", key: "email" })
         .get();
 
+      strapi.log.debug(
+        `Sending resend-otp email to: ${user.email} with code: ${newOtpCode}`,
+      );
       const confirmationTemplate = settings.email_confirmation;
 
-      await strapi.plugin("email").service("email").sendTemplatedEmail(
-        {
-          to: user.email,
-          from: confirmationTemplate.options.from.email,
-        },
-        confirmationTemplate.options,
-        {
-          USER: user,
-          CODE: user.confirmationToken,
-          OTP_CODE: newOtpCode,
-        },
-      );
+      await strapi
+        .plugin("email")
+        .service("email")
+        .sendTemplatedEmail(
+          {
+            to: user.email,
+            from: confirmationTemplate.options.from.email,
+          },
+          {
+            subject: confirmationTemplate.options.object,
+            html: confirmationTemplate.options.message,
+            text: confirmationTemplate.options.message.replace(
+              /<[^>]*>?/gm,
+              "",
+            ),
+          },
+          {
+            USER: user,
+            CODE: user.confirmationToken,
+            OTP_CODE: newOtpCode,
+          },
+        );
     } catch (err) {
       strapi.log.error("Failed to send resend-otp email: " + err.message);
     }

@@ -178,6 +178,17 @@ const seed = async (strapi) => {
       await grantPermission(strapi, role, action);
     }
   }
+
+  // 4. Collaboration Call permissions (Authenticated only)
+  const collaborationActions = [
+    "api::collaboration-call.collaboration-call.createWithInvites",
+    "api::collaboration-call.collaboration-call.find",
+    "plugin::users-permissions.user.find",
+  ];
+
+  for (const action of collaborationActions) {
+    await grantPermission(strapi, "authenticated", action);
+  }
 };
 
 module.exports = { seed };

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { ArrowLeft, ChevronDown } from "lucide-react";
+import { ArrowLeft, ChevronDown, Plus } from "lucide-react";
 import {
   Tabs,
   TabsList,
@@ -11,6 +11,8 @@ import CommunityLeftNav from "@/components/community/CommunityLeftNav";
 import CommunityHeader from "@/components/community/CommunityHeader";
 import CommunityAboutCard from "@/components/community/CommunityAboutCard";
 import CollaborationCallsList from "@/components/community/CollaborationCallsList";
+import CreateCollaborationDialog from "@/components/collaboration/CreateCollaborationDialog";
+import { useCollaborationStore } from "@/lib/collaboration-store";
 import {
   COMMUNITY_TABS,
   MOCK_COLLABORATION_CALLS,
@@ -27,6 +29,7 @@ import {
  */
 export default function CommunityDetailPage() {
   const router = useRouter();
+  const openCollaboration = useCollaborationStore((s) => s.open);
   // Keep the default stable between SSR and first client render to avoid
   // hydration mismatches. `router.query` is empty during SSR and populated
   // only after hydration.
@@ -64,10 +67,20 @@ export default function CommunityDetailPage() {
               >
                 <ArrowLeft className="size-4" />
               </button>
-              <Button variant="outline" size="md" className="gap-2">
-                <ChevronDown className="size-4" />
-                Sort by
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  size="md"
+                  className="gap-2 rounded-full"
+                  onClick={openCollaboration}
+                >
+                  <Plus className="size-4" />
+                  Create post
+                </Button>
+                <Button variant="outline" size="md" className="gap-2">
+                  <ChevronDown className="size-4" />
+                  Sort by
+                </Button>
+              </div>
             </div>
 
             <Tabs
@@ -117,6 +130,8 @@ export default function CommunityDetailPage() {
           </aside>
         </div>
       </div>
+
+      <CreateCollaborationDialog />
     </div>
   );
 }

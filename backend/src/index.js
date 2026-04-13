@@ -55,14 +55,6 @@ module.exports = {
           type: "boolean",
           default: false,
         },
-        twoFactorSecret: {
-          type: "string", // Changed from password to string to avoid hashing
-          private: true,
-        },
-        twoFactorEnabled: {
-          type: "boolean",
-          default: false,
-        },
         verificationStatus: {
           type: "enumeration",
           enum: ["unverified", "verified"],
@@ -204,6 +196,23 @@ module.exports = {
       }
     };
 
+    // Override the emailConfirmation controller to return JSON instead of a 302 redirect
+    // This supports API-driven verification from the frontend
+    const originalEmailConfirmation =
+      usersPermissionsPlugin.controller("auth").emailConfirmation;
+
+    usersPermissionsPlugin.controller("auth").emailConfirmation = async (
+      ctx,
+    ) => {
+      await originalEmailConfirmation(ctx);
+
+      // If the original logic set a redirect, we transform it into a JSON response
+      if (ctx.response.status === 302) {
+        ctx.body = { success: true };
+        ctx.status = 200;
+      }
+    };
+
     // 3. Update Swagger documentation for fullName
     try {
       if (strapi.plugin("documentation")) {
@@ -243,9 +252,14 @@ module.exports = {
     });
     const settings = await advancedStore.get();
 
-    const emailRedirectUrl =
+    const frontendVerifyUrl =
       process.env.EMAIL_CONFIRMATION_URL ||
       "http://localhost:3000/auth/verify-email";
+
+    // For API-driven verification from the frontend, we don't want the backend to redirect.
+    // If redirection is set, Axios calls from the frontend will fail due to CORS on the redirect target.
+    // Setting this to an empty string tells Strapi to return a JSON response instead of a 302 redirect.
+    const emailRedirectUrl = "";
 
     const isEmailEnabled = settings.email_confirmation;
     const isRedirectOk =
@@ -260,20 +274,21 @@ module.exports = {
         },
       });
       strapi.log.info(
-        `Email verification settings synchronized to ${emailRedirectUrl}`,
+        `Email verification settings synchronized (Redirection disabled for API-driven flow)`,
       );
     }
 
-    // 2. Set branded email template for confirmation
+    // 2. Set branded email templates for confirmation and reset password
     const emailStore = strapi.store({
       type: "plugin",
       name: "users-permissions",
       key: "email",
     });
     const emailSettings = await emailStore.get();
+    let emailUpdated = false;
 
     if (emailSettings && emailSettings.email_confirmation) {
-      const confirmationLink = `${emailRedirectUrl}?confirmation=<%= CODE %>`;
+      const confirmationLink = `${frontendVerifyUrl}?confirmation=<%= CODE %>`;
       const brandedBody = `
         <p>Hello <%= USER.username %>,</p>
         <p>Thank you for joining the Science for Africa platform. To complete your registration and active your account, please click the button below to verify your email address:</p>
@@ -300,9 +315,39 @@ module.exports = {
         emailSettings.reset_password.options.from.email =
           process.env.SMTP_FROM || "no-reply@strapi.io";
       }
+      emailUpdated = true;
+    }
 
+    if (emailSettings && emailSettings.reset_password) {
+      const frontendUrl = frontendVerifyUrl.replace(
+        /\/auth\/verify-email$/,
+        "",
+      );
+      const resetLink = `${frontendUrl}/auth/reset-password?code=<%= TOKEN %>`;
+      const brandedResetBody = `
+        <p>Hello <%= USER.username %>,</p>
+        <p>We received a request to reset the password for your Science for Africa account. Click the button below to choose a new password:</p>
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${resetLink}" style="background-color: #008080; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Reset Password</a>
+        </div>
+        <p>If the button doesn't work, you can also copy and paste the following link into your browser:</p>
+        <p style="word-break: break-all; color: #008080;">${resetLink}</p>
+        <p>If you did not request a password reset, please ignore this email.</p>
+      `;
+
+      emailSettings.reset_password.options.message = emailTemplate({
+        title: "Reset Your Password",
+        body: brandedResetBody,
+      });
+      emailSettings.reset_password.options.object =
+        "Reset your Science for Africa account password";
+      emailSettings.reset_password.options.from.name = "Science for Africa";
+      emailUpdated = true;
+    }
+
+    if (emailUpdated) {
       await emailStore.set({ value: emailSettings });
-      strapi.log.info("Branded email confirmation template initialized.");
+      strapi.log.info("Branded email templates initialized.");
     }
 
     // 3. Seed development data

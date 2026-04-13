@@ -37,7 +37,7 @@ Please note that this document outlines parts of the solution beyond the MVP del
 Strapi can auto-generate both REST and GraphQL APIs from content-type schemas. The frontend will use a mix:
 
 - **GraphQL API** — primary data fetching for content pages when nested queries are required (communities, threads, resources, events)
-- **REST API** — authentication flows and simple single entity fetches (`/api/auth/local`, `/api/auth/local/register`, `/api/auth/forgot-password`, `/api/auth/reset-password`, `/api/auth/email-confirmation`) and admin operations
+- **REST API** — authentication flows and simple single entity fetches (`/api/auth/local`, `/api/auth/local/register`, `/api/auth/forgot-password`, `/api/auth/reset-password`, `/api/auth/send-email-confirmation`, `/api/auth/email-confirmation`) and admin operations
 
 #### Custom REST Endpoints
 
@@ -45,7 +45,7 @@ Beyond Strapi's auto-generated CRUD, we will create custom endpoints with hand-w
 
 | Endpoint | Method | Justification |
 |---|---|---|
-| `/api/auth/me` | `PUT` | Profile update with custom fields (bio, orcidId, careerStage, socialLinks, notificationPreferences) beyond the standard user schema |
+| `/api/auth/me` | `PUT` | **Custom Extension**: Profile update with custom fields (bio, orcidId, careerStage, socialLinks, notificationPreferences) beyond the standard user schema. Provided because Strapi lacks a standard "update self" endpoint. |
 | `/api/posts/:id/moderate` | `PUT` | Moderation action (approve/decline) — wraps status update + notification trigger to post author |
 | `/api/communities/:id/join` | `POST` | Join community — side effects: increment memberCount, create CommunityMembership with `member` role, notify community admins |
 | `/api/communities/:id/leave` | `DELETE` | Leave community — decrement memberCount, remove CommunityMembership |

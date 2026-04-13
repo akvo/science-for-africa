@@ -55,7 +55,17 @@ async function setupStrapi() {
 
     await instance.server.mount();
 
-    // Mock the email service to ensure no real emails/network calls are made during tests
+    // 1. Run bootstrap function from src/index.js
+    try {
+      const { bootstrap } = require("../../src/index");
+      if (bootstrap && typeof bootstrap === "function") {
+        await bootstrap({ strapi: instance });
+      }
+    } catch (e) {
+      console.warn("Could not run project bootstrap:", e.message);
+    }
+
+    // 2. Mock the email service to ensure no real emails/network calls are made during tests
     if (instance.plugins["email"]) {
       instance.plugins["email"].services.email.send = jest
         .fn()

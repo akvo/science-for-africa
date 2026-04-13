@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { verifyOtp, resendOtp } from "@/lib/strapi";
+import { verifyOtp, resendOtp, getRegistrationStatus } from "@/lib/strapi";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
@@ -166,10 +166,20 @@ export const OTPVerificationForm = ({ email }) => {
     }
   };
 
-  const checkVerificationStatus = () => {
-    // Manual refresh to check if verified via link in another tab
+  const checkVerificationStatus = async () => {
+    // Manual check to see if verified via link in another tab
     toast.info(t("otp.checking_status"));
-    router.reload();
+    try {
+      const res = await getRegistrationStatus(email);
+      if (res && res.confirmed) {
+        toast.success(t("otp.verified_success"));
+        router.push("/login?verified=true");
+      } else {
+        toast.error(t("otp.invalid_error")); // "Invalid or expired code" as generic "not verified"
+      }
+    } catch (err) {
+      router.reload(); // Fallback to reload if check fails
+    }
   };
 
   return (

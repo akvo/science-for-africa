@@ -113,6 +113,21 @@ export async function resendOtp(email) {
 }
 
 /**
+ * Check registration/verification status
+ */
+export async function getRegistrationStatus(email) {
+  try {
+    const response = await apiClient.get(
+      `/auth/registration-status?email=${encodeURIComponent(email)}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error checking registration status:", error);
+    return error;
+  }
+}
+
+/**
  * Verify email with token (link-based)
  */
 export async function verifyEmailToken(token) {

@@ -15,5 +15,25 @@ module.exports = {
         prefix: "",
       },
     },
+    {
+      method: "POST",
+      path: "/auth/verify-otp",
+      handler: "auth.verifyOtp",
+      config: {
+        auth: false,
+        description: "Verify user email via OTP",
+        prefix: "",
+      },
+    },
+    {
+      method: "POST",
+      path: "/auth/resend-otp",
+      handler: "auth.resendOtp",
+      config: {
+        auth: false,
+        description: "Resend email verification OTP",
+        prefix: "",
+      },
+    },
   ],
 };

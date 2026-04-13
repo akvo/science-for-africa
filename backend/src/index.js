@@ -64,6 +64,22 @@ module.exports = {
         institutionName: {
           type: "string",
         },
+        otpCode: {
+          type: "string",
+        },
+        otpExpiration: {
+          type: "datetime",
+        },
+        lastOtpSentAt: {
+          type: "datetime",
+        },
+        otpResendCount: {
+          type: "integer",
+          default: 0,
+        },
+        otpResendWindowStart: {
+          type: "datetime",
+        },
       };
     }
 
@@ -229,6 +245,21 @@ module.exports = {
               `${data.firstName || ""} ${data.lastName || ""}`.trim();
           }
 
+          // OTP Generation for local providers
+          if (!data.provider || data.provider === "local") {
+            const otpCode = Math.floor(
+              100000 + Math.random() * 900000,
+            ).toString();
+            const now = new Date();
+            const expiration = new Date(now.getTime() + 60 * 60 * 1000); // 1 hour
+
+            data.otpCode = otpCode;
+            data.otpExpiration = expiration;
+            data.lastOtpSentAt = now;
+            data.otpResendWindowStart = now;
+            data.otpResendCount = 0;
+          }
+
           // --- ONBOARDING DATA MAPPING ---
           if (data.interests && Array.isArray(data.interests)) {
             data.interests = data.interests.map((item) =>
@@ -339,9 +370,13 @@ module.exports = {
       const confirmationLink = `${frontendVerifyUrl}?confirmation=<%= CODE %>`;
       const brandedBody = `
         <p>Hello <%= USER.username %>,</p>
-        <p>Thank you for joining the Science for Africa platform. To complete your registration and active your account, please click the button below to verify your email address:</p>
+        <p>Thank you for joining the Science for Africa platform. To complete your registration and active your account, please use the following verification code:</p>
         <div style="text-align: center; margin: 32px 0;">
-          <a href="${confirmationLink}" style="background-color: #008080; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Verify Email Address</a>
+          <span style="font-size: 32px; letter-spacing: 8px; font-weight: bold; color: #008080;"><%= OTP_CODE %></span>
+        </div>
+        <p>Alternatively, you can click the button below to verify your email address:</p>
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${confirmationLink}" style="background-color: #12b76a; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Verify Email Address</a>
         </div>
         <p>If the button doesn't work, you can also copy and paste the following link into your browser:</p>
         <p style="word-break: break-all; color: #008080;">${confirmationLink}</p>

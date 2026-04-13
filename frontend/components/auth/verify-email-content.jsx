@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { resendVerification, verifyEmailToken } from "@/lib/strapi";
 import { useTranslation } from "next-i18next";
+import { OTPVerificationForm } from "./otp-verification-form";
 
 export const VerifyEmailContent = ({ email, confirmation }) => {
   const { t } = useTranslation("auth");
@@ -193,7 +194,12 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
     );
   }
 
-  // 4. Default State (Pending Verification)
+  // 4. OTP Entry State (Default when no confirmation token or error/success/verifying)
+  if (!confirmation) {
+    return <OTPVerificationForm email={email} />;
+  }
+
+  // 5. Default State (Pending Verification via Link)
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-sm">
       {/* Back Button */}

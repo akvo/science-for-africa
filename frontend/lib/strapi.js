@@ -99,7 +99,21 @@ export async function resendVerification(email) {
 }
 
 /**
- * Verify email with token
+ * Verify email with OTP code
+ */
+export async function verifyOtp(email, otpCode) {
+  return postToStrapi("/auth/verify-otp", { email, otpCode }, false);
+}
+
+/**
+ * Resend email verification OTP
+ */
+export async function resendOtp(email) {
+  return postToStrapi("/auth/resend-otp", { email }, false);
+}
+
+/**
+ * Verify email with token (link-based)
  */
 export async function verifyEmailToken(token) {
   try {

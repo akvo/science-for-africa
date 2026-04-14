@@ -24,9 +24,7 @@ export default function StepAssignMentor() {
   useEffect(() => {
     const loadUsers = async () => {
       try {
-        const response = await fetchFromStrapi(
-          "/users?populate=institution&pagination[pageSize]=100",
-        );
+        const response = await fetchFromStrapi("/auth/users");
         if (Array.isArray(response)) {
           setUsers(response);
         } else if (response?.data) {
@@ -84,7 +82,7 @@ export default function StepAssignMentor() {
               <UserRound className="size-4 text-brand-gray-400 shrink-0" />
               <SelectValue placeholder="Select a mentor" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent alignItemWithTrigger={false}>
               {availableUsers.length === 0 ? (
                 <div className="px-3 py-2 text-sm text-brand-gray-400">
                   No users available

@@ -38,7 +38,7 @@ export default function CreateCollaborationDialog() {
       <DialogContent
         size={step === 3 ? "xl" : "lg"}
         showCloseButton={false}
-        className="max-h-[90vh] overflow-visible"
+        className="max-h-[90vh] overflow-y-auto"
       >
         {currentStep?.title && (
           <div className="flex items-start justify-between gap-4">

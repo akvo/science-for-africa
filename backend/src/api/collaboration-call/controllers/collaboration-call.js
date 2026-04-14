@@ -96,7 +96,7 @@ module.exports = createCoreController(
           const roleLabel = role === "Mentor" ? "a Mentor" : "a Collaborator";
 
           try {
-            await strapi.plugins["email"].services.email.send({
+            await strapi.plugin("email").service("email").send({
               to: email,
               subject: `You're invited to collaborate: ${title}`,
               html: emailTemplate({

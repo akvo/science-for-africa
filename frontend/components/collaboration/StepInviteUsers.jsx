@@ -7,7 +7,7 @@ import { Plus, Mail, Info, Loader2 } from "lucide-react";
 import { createCollaborationCall } from "@/lib/strapi";
 
 export default function StepInviteUsers() {
-  const { formData, addInviteEmail, removeInviteEmail, nextStep } =
+  const { formData, addInviteEmail, removeInviteEmail, nextStep, prevStep } =
     useCollaborationStore();
 
   const [emailInputs, setEmailInputs] = useState(() => {
@@ -142,20 +142,28 @@ export default function StepInviteUsers() {
 
       {error && <p className="text-sm text-red-500 w-full">{error}</p>}
 
-      <div className="flex w-full gap-3">
+      <div className="flex w-full items-center gap-3">
         <Button
           variant="outline"
-          onClick={handleSkip}
-          disabled={isSubmitting}
-          className="flex-1 rounded-full"
+          onClick={prevStep}
+          className="rounded-full"
         >
-          Skip
+          Back
         </Button>
-        <Button
-          onClick={handleSendInvites}
-          disabled={isSubmitting}
-          className="flex-1 rounded-full"
-        >
+        <div className="flex flex-1 gap-3">
+          <Button
+            variant="outline"
+            onClick={handleSkip}
+            disabled={isSubmitting}
+            className="flex-1 rounded-full"
+          >
+            Skip
+          </Button>
+          <Button
+            onClick={handleSendInvites}
+            disabled={isSubmitting}
+            className="flex-1 rounded-full"
+          >
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -165,6 +173,7 @@ export default function StepInviteUsers() {
             "Send invites"
           )}
         </Button>
+        </div>
       </div>
     </div>
   );

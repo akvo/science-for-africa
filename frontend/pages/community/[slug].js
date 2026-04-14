@@ -13,6 +13,7 @@ import CommunityAboutCard from "@/components/community/CommunityAboutCard";
 import CollaborationCallsList from "@/components/community/CollaborationCallsList";
 import CreateCollaborationDialog from "@/components/collaboration/CreateCollaborationDialog";
 import { useCollaborationStore } from "@/lib/collaboration-store";
+import { useAuthStore } from "@/lib/auth-store";
 import {
   COMMUNITY_TABS,
   MOCK_COLLABORATION_CALLS,
@@ -29,7 +30,16 @@ import {
  */
 export default function CommunityDetailPage() {
   const router = useRouter();
-  const openCollaboration = useCollaborationStore((s) => s.open);
+  const openCollaborationDialog = useCollaborationStore((s) => s.open);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
+  const openCollaboration = () => {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+    openCollaborationDialog();
+  };
   // Keep the default stable between SSR and first client render to avoid
   // hydration mismatches. `router.query` is empty during SSR and populated
   // only after hydration.

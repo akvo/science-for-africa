@@ -15,5 +15,14 @@ module.exports = {
         prefix: "",
       },
     },
+    {
+      method: "GET",
+      path: "/auth/users",
+      handler: "auth.findUsers",
+      config: {
+        description: "List users for mentor assignment",
+        prefix: "",
+      },
+    },
   ],
 };

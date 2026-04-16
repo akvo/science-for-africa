@@ -28,7 +28,7 @@ export default function CollaborationCallsList({
   }, [calls, filter]);
 
   return (
-    <section className={cn("flex flex-col gap-4", className)}>
+    <section className={cn("flex flex-col", className)}>
       <div className="flex items-center gap-2 border-b border-brand-gray-100 pb-4 lg:pl-6">
         {FILTERS.map((f) => {
           const isActive = filter === f.key;
@@ -56,7 +56,7 @@ export default function CollaborationCallsList({
           No collaboration calls to show.
         </div>
       ) : (
-        <div className="flex flex-col divide-y divide-brand-gray-100">
+        <div className="flex flex-col divide-y divide-brand-gray-100 border-b border-brand-gray-100">
           {visibleCalls.map((call) => (
             <CollaborationCallCard
               key={call.id}

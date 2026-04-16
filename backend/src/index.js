@@ -305,13 +305,20 @@ module.exports = {
     // Setting this to an empty string tells Strapi to return a JSON response instead of a 302 redirect.
     const emailRedirectUrl = "";
 
+    const frontendUrl =
+      process.env.FRONTEND_URL ||
+      process.env.PUBLIC_URL ||
+      process.env.NEXT_PUBLIC_FRONTEND_URL ||
+      "http://localhost:3000";
+
+    strapi.log.info(`Resolved Frontend URL for bootstrap: ${frontendUrl}`);
+
     const isEmailEnabled = settings.email_confirmation;
     const isRedirectOk =
       settings.email_confirmation_redirection === emailRedirectUrl;
 
     const frontendVerifyUrl =
-      process.env.EMAIL_CONFIRMATION_URL ||
-      "http://localhost:3000/auth/verify-email";
+      process.env.EMAIL_CONFIRMATION_URL || `${frontendUrl}/auth/verify-email`;
 
     if (!isEmailEnabled || !isRedirectOk) {
       await advancedStore.set({
@@ -367,8 +374,6 @@ module.exports = {
     }
 
     if (emailSettings && emailSettings.reset_password) {
-      const frontendUrl =
-        process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000";
       const resetLink = `${frontendUrl}/auth/reset-password?code=<%= TOKEN %>`;
       const brandedResetBody = `
         <p>Hello <%= USER.username %>,</p>
@@ -396,39 +401,8 @@ module.exports = {
       strapi.log.info("Branded email templates initialized.");
     }
 
-    // 3. Synchronize Google OAuth Provider
-    const grantStore = strapi.store({
-      type: "plugin",
-      name: "users-permissions",
-      key: "grant",
-    });
-    const grants = await grantStore.get();
-
-    if (
-      process.env.GOOGLE_CLIENT_ID &&
-      process.env.GOOGLE_CLIENT_SECRET &&
-      grants
-    ) {
-      const googleConfig = grants.google || {};
-      const frontendCallback =
-        (process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000") +
-        "/auth/google";
-
-      grants.google = {
-        ...googleConfig,
-        enabled: true,
-        key: process.env.GOOGLE_CLIENT_ID,
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        secret: process.env.GOOGLE_CLIENT_SECRET,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callback: frontendCallback,
-      };
-      delete grants.google.callbackUrl;
-      delete grants.google.redirectUri;
-
-      await grantStore.set({ value: grants });
-      strapi.log.info("Google OAuth provider synchronized.");
-    }
+    // 3. Google OAuth is now handled declaratively in config/plugins.js
+    // No manual synchronization needed here anymore.
 
     // 4. Seed development data
     const { seed } = require("./utils/seeder");

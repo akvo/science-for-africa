@@ -137,36 +137,36 @@ const COMMUNITIES = [
     tags: ["Research", "Science", "Health", "Technology"],
     subscribers: 63716,
     posts: 323,
-    rules: [
+    subCommunities: [
       {
-        label: "No Feature stories",
+        name: "Health and Wellness",
+        slug: "health-and-wellness",
+        initials: "HW",
         description:
-          "Posts must focus on research and discussion. Promotional or feature-style stories will be removed by moderators.",
+          "Explore the latest trends in health, fitness, and mental well-being.",
+        subscribers: 150000,
+        posts: 89,
+        tags: ["Health", "Wellness", "Fitness"],
       },
       {
-        label: "Engagement Rate",
+        name: "Travel and Adventure",
+        slug: "travel-and-adventure",
+        initials: "TA",
         description:
-          "Members are expected to engage constructively. Low-effort or repetitive comments may be flagged.",
+          "Discover breathtaking destinations and tips for your next journey.",
+        subscribers: 95000,
+        posts: 56,
+        tags: ["Travel", "Adventure", "Photography"],
       },
       {
-        label: "No editorials",
+        name: "Arts and Culture",
+        slug: "arts-and-culture",
+        initials: "AC",
         description:
-          "Opinion pieces and editorials are not permitted. Share data, findings, or peer-reviewed sources instead.",
-      },
-      {
-        label: "Likes",
-        description:
-          "Use likes to acknowledge useful contributions. Like-farming or reciprocal liking is discouraged.",
-      },
-      {
-        label: "Shares",
-        description:
-          "When sharing external content, always credit the original author and include a source link.",
-      },
-      {
-        label: "Comments",
-        description:
-          "Keep comments respectful and on-topic. Personal attacks will result in removal from the community.",
+          "Dive into the world of creativity, from art history to modern expression.",
+        subscribers: 75000,
+        posts: 41,
+        tags: ["Art", "Culture", "Creativity"],
       },
     ],
   },
@@ -180,21 +180,16 @@ const COMMUNITIES = [
     tags: ["Innovation", "Technology", "Startups", "AI"],
     subscribers: 218000,
     posts: 198,
-    rules: [
+    subCommunities: [
       {
-        label: "Original ideas only",
+        name: "Science and Technology",
+        slug: "science-and-technology",
+        initials: "ST",
         description:
-          "All posts must present original ideas or novel applications. Reposting without attribution is not allowed.",
-      },
-      {
-        label: "Constructive feedback",
-        description:
-          "When critiquing ideas, provide actionable suggestions rather than dismissive comments.",
-      },
-      {
-        label: "No spam",
-        description:
-          "Promotional content or self-promotion without community value will be removed.",
+          "Lorem ipsum dolor sit amet consectetur. Eu dis pellentesque in elit auctor.",
+        subscribers: 218000,
+        posts: 112,
+        tags: ["Science", "Technology"],
       },
     ],
   },
@@ -208,21 +203,16 @@ const COMMUNITIES = [
     tags: ["Education", "Teaching", "Curriculum", "STEM"],
     subscribers: 41500,
     posts: 87,
-    rules: [
+    subCommunities: [
       {
-        label: "Cite sources",
+        name: "Science and Technology",
+        slug: "educators-science-and-technology",
+        initials: "ST",
         description:
-          "Always reference academic papers, curricula, or institutional reports when making claims.",
-      },
-      {
-        label: "Respect diversity",
-        description:
-          "Embrace diverse teaching methods and educational philosophies from across the continent.",
-      },
-      {
-        label: "Student privacy",
-        description:
-          "Never share identifiable student information. Use anonymized data in discussions.",
+          "Lorem ipsum dolor sit amet consectetur. Eu dis pellentesque in elit auctor.",
+        subscribers: 218000,
+        posts: 75,
+        tags: ["Science", "Technology", "Education"],
       },
     ],
   },
@@ -357,9 +347,22 @@ const seed = async (strapi) => {
   if (communityCount === 0) {
     strapi.log.info("Seeding Communities...");
     for (const data of COMMUNITIES) {
-      await strapi.db.query("api::community.community").create({ data });
+      const { subCommunities, ...parentData } = data;
+      const parent = await strapi.db
+        .query("api::community.community")
+        .create({ data: parentData });
+
+      if (subCommunities && subCommunities.length) {
+        for (const sub of subCommunities) {
+          await strapi.db.query("api::community.community").create({
+            data: { ...sub, parent: parent.id },
+          });
+        }
+      }
     }
-    strapi.log.info(`Seeded ${COMMUNITIES.length} communities.`);
+    strapi.log.info(
+      `Seeded ${COMMUNITIES.length} parent communities with sub-communities.`,
+    );
   }
 
   // 3b. Synchronize French Translations for critical collections

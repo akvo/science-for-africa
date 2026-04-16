@@ -4,7 +4,7 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center rounded-full border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -21,7 +21,7 @@ const buttonVariants = cva(
         destructive: "bg-destructive text-white hover:bg-destructive/90",
         link: "text-primary underline-offset-4 hover:underline",
         social:
-          "bg-white border-[#d0d5dd] text-brand-gray-900 hover:bg-brand-gray-50 shadow-sm transition-all",
+          "bg-white border-[#dadce0] text-brand-gray-900 hover:bg-brand-gray-50 shadow-sm transition-all",
       },
       size: {
         sm: "h-[34px] px-[14px] text-sm",
@@ -37,10 +37,15 @@ const buttonVariants = cva(
         "icon-xl": "size-12",
         "icon-2xl": "size-14",
       },
+      shape: {
+        pill: "rounded-full",
+        rectangle: "rounded-md",
+      },
     },
     defaultVariants: {
       variant: "default",
       size: "md",
+      shape: "pill",
     },
   },
 );
@@ -49,6 +54,7 @@ function Button({
   className,
   variant = "default",
   size = "md",
+  shape = "pill",
   asChild = false,
   ...props
 }) {
@@ -56,7 +62,7 @@ function Button({
     return (
       <ButtonPrimitive
         data-slot="button"
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size, shape, className }))}
         render={props.children}
         {...(({ children, ...rest }) => rest)(props)}
       />
@@ -66,7 +72,7 @@ function Button({
   return (
     <ButtonPrimitive
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, shape, className }))}
       {...props}
     />
   );

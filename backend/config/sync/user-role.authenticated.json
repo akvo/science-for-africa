@@ -41,6 +41,11 @@
       "locale": null
     },
     {
+      "documentId": "isp2lpb2tcrwn3vvesdagsbm",
+      "action": "plugin::users-permissions.auth.emailConfirmation",
+      "locale": null
+    },
+    {
       "documentId": "sqrs6u266ha31mrgs9ypbkwo",
       "action": "plugin::users-permissions.auth.logout",
       "locale": null

@@ -51,6 +51,18 @@ describe("Strapi Bootstrap - Email Templates TDD", () => {
           return mockEmailStore;
         return { get: jest.fn(), set: jest.fn() };
       }),
+      config: {
+        get: jest.fn().mockImplementation((key) => {
+          if (key.includes("database")) return "test-value";
+          return null;
+        }),
+      },
+      db: {
+        lifecycles: {
+          subscribe: jest.fn(),
+        },
+      },
+
       log: { info: jest.fn() },
     };
   });

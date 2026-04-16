@@ -25,6 +25,7 @@ apiClient.interceptors.request.use(
       "/auth/send-email-confirmation",
       "/auth/forgot-password",
       "/auth/reset-password",
+      "/auth/email-confirmation",
     ];
     const isPublicAuthEndpoint = publicAuthEndpoints.some((endpoint) =>
       config.url?.includes(endpoint),

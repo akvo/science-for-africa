@@ -134,41 +134,7 @@ const COMMUNITIES = [
     initials: "CR",
     description:
       "Explore the latest trends in health, fitness, and mental well-being.",
-    subscribers: 63716,
-    posts: 323,
     tags: ["Research", "Science", "Health", "Technology"],
-    rules: [
-      {
-        label: "No Feature stories",
-        description:
-          "Posts must focus on research and discussion. Promotional or feature-style stories will be removed by moderators.",
-      },
-      {
-        label: "Engagement Rate",
-        description:
-          "Members are expected to engage constructively. Low-effort or repetitive comments may be flagged.",
-      },
-      {
-        label: "No editorials",
-        description:
-          "Opinion pieces and editorials are not permitted. Share data, findings, or peer-reviewed sources instead.",
-      },
-      {
-        label: "Likes",
-        description:
-          "Use likes to acknowledge useful contributions. Like-farming or reciprocal liking is discouraged.",
-      },
-      {
-        label: "Shares",
-        description:
-          "When sharing external content, always credit the original author and include a source link.",
-      },
-      {
-        label: "Comments",
-        description:
-          "Keep comments respectful and on-topic. Personal attacks will result in removal from the community.",
-      },
-    ],
   },
   {
     name: "Community of Innovators",
@@ -177,26 +143,7 @@ const COMMUNITIES = [
     initials: "CI",
     description:
       "Lorem ipsum dolor sit amet consectetur. Eu dis pellentesque in elit auctor.",
-    subscribers: 218000,
-    posts: 198,
     tags: ["Innovation", "Technology", "Startups", "AI"],
-    rules: [
-      {
-        label: "Original ideas only",
-        description:
-          "All posts must present original ideas or novel applications. Reposting without attribution is not allowed.",
-      },
-      {
-        label: "Constructive feedback",
-        description:
-          "When critiquing ideas, provide actionable suggestions rather than dismissive comments.",
-      },
-      {
-        label: "No spam",
-        description:
-          "Promotional content or self-promotion without community value will be removed.",
-      },
-    ],
   },
   {
     name: "Community of Educators",
@@ -205,26 +152,7 @@ const COMMUNITIES = [
     initials: "CE",
     description:
       "Lorem ipsum dolor sit amet consectetur. Nunc et posuere cras bibendum cras. Diam felis sagittis suspendisse scelerisque quam.",
-    subscribers: 41500,
-    posts: 87,
     tags: ["Education", "Teaching", "Curriculum", "STEM"],
-    rules: [
-      {
-        label: "Cite sources",
-        description:
-          "Always reference academic papers, curricula, or institutional reports when making claims.",
-      },
-      {
-        label: "Respect diversity",
-        description:
-          "Embrace diverse teaching methods and educational philosophies from across the continent.",
-      },
-      {
-        label: "Student privacy",
-        description:
-          "Never share identifiable student information. Use anonymized data in discussions.",
-      },
-    ],
   },
 ];
 

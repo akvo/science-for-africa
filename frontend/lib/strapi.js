@@ -99,7 +99,36 @@ export async function resendVerification(email) {
 }
 
 /**
- * Verify email with token
+ * Verify email with OTP code
+ */
+export async function verifyOtp(email, otpCode) {
+  return postToStrapi("/auth/verify-otp", { email, otpCode }, false);
+}
+
+/**
+ * Resend email verification OTP
+ */
+export async function resendOtp(email) {
+  return postToStrapi("/auth/resend-otp", { email }, false);
+}
+
+/**
+ * Check registration/verification status
+ */
+export async function getRegistrationStatus(email) {
+  try {
+    const response = await apiClient.get(
+      `/auth/registration-status?email=${encodeURIComponent(email)}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error checking registration status:", error);
+    return error;
+  }
+}
+
+/**
+ * Verify email with token (link-based)
  */
 export async function verifyEmailToken(token) {
   try {

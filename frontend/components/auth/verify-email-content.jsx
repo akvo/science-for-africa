@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { resendVerification, verifyEmailToken } from "@/lib/strapi";
 import { useTranslation } from "next-i18next";
+import { OTPVerificationForm } from "./otp-verification-form";
 
 export const VerifyEmailContent = ({ email, confirmation }) => {
   const { t } = useTranslation("auth");
@@ -193,7 +194,12 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
     );
   }
 
-  // 4. Default State (Pending Verification)
+  // 4. OTP Entry State (Default when no confirmation token or error/success/verifying)
+  if (!confirmation) {
+    return <OTPVerificationForm email={email} />;
+  }
+
+  // 5. Default State (Pending Verification via Link)
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-sm">
       {/* Back Button */}
@@ -212,7 +218,7 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
         <div className="w-12 h-12 bg-brand-teal-50 rounded-xl flex items-center justify-center mb-4">
           <Mail className="text-brand-teal-600" size={24} />
         </div>
-        <h1 className="text-[30px] font-bold text-brand-teal-900 leading-tight">
+        <h1 className="text-display-sm font-bold text-brand-teal-900 leading-tight">
           {t("verify_email.confirm_title")}
         </h1>
         <div className="space-y-6">

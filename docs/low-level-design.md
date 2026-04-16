@@ -48,6 +48,8 @@ Beyond Strapi's auto-generated CRUD, we will create custom endpoints with hand-w
 | Endpoint | Method | Justification |
 |---|---|---|
 | `/api/auth/me` | `PUT` | **Custom Extension**: Profile update with custom fields (bio, orcidId, careerStage, socialLinks, notificationPreferences) beyond the standard user schema. Provided because Strapi lacks a standard "update self" endpoint. |
+| `/api/auth/verify-otp` | `POST` | **Custom Extension**: Verifies email using a 6-digit number. Confirms user and returns JWT. |
+| `/api/auth/resend-otp` | `POST` | **Custom Extension**: Enforced 60s cooldown and 3/hr limit. Generates new code and sends dual-path email (Link + Code). |
 | `/api/posts/:id/moderate` | `PUT` | Moderation action (approve/decline) — wraps status update + notification trigger to post author |
 | `/api/communities/:id/join` | `POST` | Join community — side effects: increment memberCount, create CommunityMembership with `member` role, notify community admins |
 | `/api/communities/:id/leave` | `DELETE` | Leave community — decrement memberCount, remove CommunityMembership |
@@ -191,6 +193,11 @@ erDiagram
         boolean confirmed
         boolean blocked
         boolean onboardingComplete
+        string otpCode
+        datetime otpExpiration
+        datetime lastOtpSentAt
+        integer otpResendCount
+        datetime otpResendWindowStart
         json socialLinks
         datetime createdAt
         datetime updatedAt
@@ -686,4 +693,3 @@ The platform follows Google's best practices for localized sites:
 - **Subpath routing**: Distinct URLs for each language.
 - **HTML lang attribute**: Automatically updated by `next-i18next`.
 - **SSR support**: Translations are loaded server-side using `getStaticProps` or `getServerSideProps`.
-

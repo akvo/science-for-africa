@@ -611,7 +611,7 @@
       "locale": null
     },
     {
-      "documentId": "wk77lqguj6z0tlwo9qaegbhh",
+      "documentId": "xxqb3lphjjufpbseo61th6wj",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -643,7 +643,12 @@
           "userType",
           "roleType",
           "educationInstitutionName",
-          "institutionName"
+          "institutionName",
+          "otpCode",
+          "otpExpiration",
+          "lastOtpSentAt",
+          "otpResendCount",
+          "otpResendWindowStart"
         ]
       },
       "conditions": [],
@@ -668,7 +673,7 @@
       "locale": null
     },
     {
-      "documentId": "i2pqixzcnkc4vndabn7zbo3t",
+      "documentId": "e86i5caj3tudduuoipdbzecx",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -700,14 +705,19 @@
           "userType",
           "roleType",
           "educationInstitutionName",
-          "institutionName"
+          "institutionName",
+          "otpCode",
+          "otpExpiration",
+          "lastOtpSentAt",
+          "otpResendCount",
+          "otpResendWindowStart"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "wn1zjd6bij3z2wzk80it6mzj",
+      "documentId": "it3ry0ker0mk2xjjol6vxfs5",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -739,7 +749,12 @@
           "userType",
           "roleType",
           "educationInstitutionName",
-          "institutionName"
+          "institutionName",
+          "otpCode",
+          "otpExpiration",
+          "lastOtpSentAt",
+          "otpResendCount",
+          "otpResendWindowStart"
         ]
       },
       "conditions": [],

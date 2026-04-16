@@ -110,7 +110,7 @@ module.exports = ({ env }) => {
           expiresIn: "30d",
         },
         advanced: {
-          email_confirmation_redirection: frontendUrl + "/auth/verify-email",
+          email_confirmation_redirection: frontendUrl + "/login?verified=true",
         },
         ratelimit: {
           enabled: false,

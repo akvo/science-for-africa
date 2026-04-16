@@ -6,6 +6,21 @@
   "locale": null,
   "permissions": [
     {
+      "documentId": "cawemq5m9jecvmlsuu8f9va0",
+      "action": "api::auth.auth.registrationStatus",
+      "locale": null
+    },
+    {
+      "documentId": "du5maowuam5ka4p8kcf9225d",
+      "action": "api::auth.auth.resendOtp",
+      "locale": null
+    },
+    {
+      "documentId": "fepno3wgr2s81gbte6m844nj",
+      "action": "api::auth.auth.verifyOtp",
+      "locale": null
+    },
+    {
       "documentId": "d2kupfblkd5ybfc6hdjidhjo",
       "action": "api::institution.institution.find",
       "locale": null

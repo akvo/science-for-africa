@@ -6,63 +6,206 @@
 
 module.exports = ({ strapi }) => ({
   /**
-   * Updates the profile of the currently authenticated user
-   * Expects a payload that already matches the backend schema (Flattened DTO)
+   * Verifies the user's email using a 6-digit OTP code
    */
-  async findUsers(ctx) {
-    const user = ctx.state.user;
-    if (!user) {
-      return ctx.unauthorized();
+  async verifyOtp(ctx) {
+    const { email, otpCode } = ctx.request.body;
+
+    if (!email || !otpCode) {
+      return ctx.badRequest("Email and OTP code are required.");
     }
 
-    try {
-      const users = await strapi.entityService.findMany(
-        "plugin::users-permissions.user",
-        {
-          fields: [
-            "id",
-            "email",
-            "fullName",
-            "firstName",
-            "lastName",
-            "position",
-            "roleType",
-          ],
-          populate: ["institution"],
-          pagination: { pageSize: 100 },
+    strapi.log.debug(
+      `Attempting OTP verification for: ${email} with code: ${otpCode}`,
+    );
+
+    const user = await strapi.db
+      .query("plugin::users-permissions.user")
+      .findOne({
+        where: {
+          email: email.toLowerCase(),
+          otpCode,
+          otpExpiration: { $gt: new Date() },
         },
-      );
+      });
 
-      return users;
-    } catch (error) {
-      strapi.log.error("FindUsers Error: " + error.message);
-      return ctx.internalServerError(error.message);
+    if (!user) {
+      strapi.log.warn(
+        `OTP verification failed for: ${email}. User not found or code invalid/expired.`,
+      );
+      return ctx.badRequest("Invalid or expired OTP code.");
     }
+
+    strapi.log.info(
+      `OTP verification success for: ${email}. Confirming user...`,
+    );
+
+    await strapi.db.query("plugin::users-permissions.user").update({
+      where: { id: user.id },
+      data: {
+        confirmed: true,
+        verificationStatus: "verified",
+        confirmationToken: null,
+        otpCode: null,
+        otpExpiration: null,
+      },
+    });
+
+    const jwt = strapi.plugins["users-permissions"].services.jwt.issue({
+      id: user.id,
+    });
+
+    return {
+      success: true,
+      message: "Email verified successfully.",
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        confirmed: true,
+      },
+      jwt,
+    };
   },
 
-  async updateMe(ctx) {
-    const user = ctx.state.user;
-    const body = ctx.request.body;
+  /**
+   * Resends the OTP verification code with rate limiting
+   */
+  async resendOtp(ctx) {
+    const { email } = ctx.request.body;
+
+    if (!email) {
+      return ctx.badRequest("Email is required.");
+    }
+
+    const user = await strapi.db
+      .query("plugin::users-permissions.user")
+      .findOne({
+        where: { email: email.toLowerCase() },
+      });
 
     if (!user) {
-      return ctx.unauthorized();
+      return ctx.badRequest("User not found.");
     }
 
-    // Update the user using the entityService.
-    try {
-      const updatedUser = await strapi.entityService.update(
-        "plugin::users-permissions.user",
-        user.id,
-        {
-          data: body,
-          populate: ["institution", "interests"],
-        },
+    if (user.confirmed) {
+      return ctx.badRequest("This account is already verified.");
+    }
+
+    const now = new Date();
+
+    if (user.lastOtpSentAt) {
+      const lastSent = new Date(user.lastOtpSentAt);
+      const diffSeconds = Math.floor(
+        (now.getTime() - lastSent.getTime()) / 1000,
       );
-
-      return updatedUser;
-    } catch (error) {
-      strapi.log.error("UpdateMe Error: " + error.message);
-      return ctx.internalServerError(error.message);
+      if (diffSeconds < 60) {
+        return ctx.send(
+          {
+            error: `Please wait ${60 - diffSeconds} seconds before resending.`,
+          },
+          429,
+        );
+      }
     }
+
+    let resendCount = user.otpResendCount || 0;
+    let windowStart = user.otpResendWindowStart
+      ? new Date(user.otpResendWindowStart)
+      : now;
+
+    if (now.getTime() - windowStart.getTime() > 60 * 60 * 1000) {
+      resendCount = 0;
+      windowStart = now;
+    }
+
+    if (resendCount >= 3) {
+      strapi.log.warn(`Resend limit reached for: ${email}`);
+      return ctx.send(
+        { error: "Maximum resend attempts reached. Try again in 1 hour." },
+        429,
+      );
+    }
+
+    const newOtpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiration = new Date(now.getTime() + 60 * 60 * 1000);
+
+    await strapi.db.query("plugin::users-permissions.user").update({
+      where: { id: user.id },
+      data: {
+        otpCode: newOtpCode,
+        otpExpiration: expiration,
+        lastOtpSentAt: now,
+        otpResendCount: resendCount + 1,
+        otpResendWindowStart: windowStart,
+      },
+    });
+
+    try {
+      const settings = await strapi
+        .store({ type: "plugin", name: "users-permissions", key: "email" })
+        .get();
+
+      strapi.log.debug(
+        `Sending resend-otp email to: ${user.email} with code: ${newOtpCode}`,
+      );
+      const confirmationTemplate = settings.email_confirmation;
+
+      await strapi
+        .plugin("email")
+        .service("email")
+        .sendTemplatedEmail(
+          {
+            to: user.email,
+            from: confirmationTemplate.options.from.email,
+          },
+          {
+            subject: confirmationTemplate.options.object,
+            html: confirmationTemplate.options.message,
+            text: confirmationTemplate.options.message.replace(
+              /<[^>]*>?/gm,
+              "",
+            ),
+          },
+          {
+            USER: user,
+            CODE: user.confirmationToken,
+            OTP_CODE: newOtpCode,
+          },
+        );
+    } catch (err) {
+      strapi.log.error("Failed to send resend-otp email: " + err.message);
+    }
+
+    return {
+      success: true,
+      message: "A new verification code has been sent to your email.",
+    };
+  },
+
+  /**
+   * Checks the registration/verification status of an email
+   */
+  async registrationStatus(ctx) {
+    const { email } = ctx.query;
+
+    if (!email) {
+      return ctx.badRequest("Email is required.");
+    }
+
+    const user = await strapi.db
+      .query("plugin::users-permissions.user")
+      .findOne({
+        where: { email: email.toLowerCase() },
+      });
+
+    if (!user) {
+      return ctx.notFound("User not found.");
+    }
+
+    return {
+      email: user.email,
+      confirmed: user.confirmed,
+    };
   },
 });

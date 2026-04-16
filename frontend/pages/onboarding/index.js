@@ -1,4 +1,5 @@
 import React from "react";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import AuthLayout from "@/components/layout/AuthLayout";
 import { useOnboardingStore } from "@/lib/onboarding-store";
 import OnboardingStep1 from "@/components/onboarding/OnboardingStep1";
@@ -29,5 +30,13 @@ const OnboardingPage = () => {
 
   return <div className="w-full">{renderStep()}</div>;
 };
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common", "onboarding"])),
+    },
+  };
+}
 
 export default OnboardingPage;

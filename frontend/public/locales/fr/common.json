@@ -1,0 +1,18 @@
+{
+  "navbar": {
+    "about": "À propos",
+    "community": "Communauté",
+    "opportunities": "Opportunités",
+    "learning": "Apprentissage",
+    "resources": "Ressources",
+    "login": "Connexion",
+    "signup": "S'inscrire",
+    "search": "Rechercher",
+    "news": "Actualités et perspectives",
+    "contact": "Contact"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "back": "Retour"
+  }
+}

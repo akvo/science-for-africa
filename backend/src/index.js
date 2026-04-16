@@ -25,17 +25,7 @@ module.exports = {
           max: 5,
         },
         educationTopic: { type: "string" },
-        educationLevel: {
-          type: "enumeration",
-          enum: [
-            "High School",
-            "Bachelor's Degree",
-            "Master's Degree",
-            "Doctorate (PhD)",
-            "Post-Doctorate",
-            "Professional Certificate",
-          ],
-        },
+        educationLevel: { type: "string" },
         institution: {
           type: "relation",
           relation: "manyToOne",
@@ -67,9 +57,7 @@ module.exports = {
           type: "enumeration",
           enum: ["individual", "institution"],
         },
-        roleType: {
-          type: "string",
-        },
+        roleType: { type: "string" },
         educationInstitutionName: {
           type: "string",
         },
@@ -284,6 +272,27 @@ module.exports = {
       },
     });
 
+    // --- GLOBAL LOCALE SAFETY ---
+    // Ensure all localized models default to 'en' if no locale is provided.
+    // This catches low-level db.query calls (like seeders) that bypass standard Document Service logic.
+    if (strapi.contentTypes) {
+      const localizedModels = Object.entries(strapi.contentTypes)
+        .filter(([uid, model]) => model.pluginOptions?.i18n?.localized === true)
+        .map(([uid]) => uid);
+
+      if (localizedModels.length > 0) {
+        strapi.db.lifecycles.subscribe({
+          models: localizedModels,
+          async beforeCreate(event) {
+            const { data } = event.params;
+            if (!data.locale) {
+              data.locale = "en";
+            }
+          },
+        });
+      }
+    }
+
     // 1. Ensure email confirmation is enabled in advanced settings
     const advancedStore = strapi.store({
       type: "plugin",
@@ -296,13 +305,20 @@ module.exports = {
     // Setting this to an empty string tells Strapi to return a JSON response instead of a 302 redirect.
     const emailRedirectUrl = "";
 
+    const frontendUrl =
+      process.env.FRONTEND_URL ||
+      process.env.PUBLIC_URL ||
+      process.env.NEXT_PUBLIC_FRONTEND_URL ||
+      "http://localhost:3000";
+
+    strapi.log.info(`Resolved Frontend URL for bootstrap: ${frontendUrl}`);
+
     const isEmailEnabled = settings.email_confirmation;
     const isRedirectOk =
       settings.email_confirmation_redirection === emailRedirectUrl;
 
     const frontendVerifyUrl =
-      process.env.EMAIL_CONFIRMATION_URL ||
-      "http://localhost:3000/auth/verify-email";
+      process.env.EMAIL_CONFIRMATION_URL || `${frontendUrl}/auth/verify-email`;
 
     if (!isEmailEnabled || !isRedirectOk) {
       await advancedStore.set({
@@ -358,8 +374,6 @@ module.exports = {
     }
 
     if (emailSettings && emailSettings.reset_password) {
-      const frontendUrl =
-        process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000";
       const resetLink = `${frontendUrl}/auth/reset-password?code=<%= TOKEN %>`;
       const brandedResetBody = `
         <p>Hello <%= USER.username %>,</p>
@@ -387,39 +401,8 @@ module.exports = {
       strapi.log.info("Branded email templates initialized.");
     }
 
-    // 3. Synchronize Google OAuth Provider
-    const grantStore = strapi.store({
-      type: "plugin",
-      name: "users-permissions",
-      key: "grant",
-    });
-    const grants = await grantStore.get();
-
-    if (
-      process.env.GOOGLE_CLIENT_ID &&
-      process.env.GOOGLE_CLIENT_SECRET &&
-      grants
-    ) {
-      const googleConfig = grants.google || {};
-      const frontendCallback =
-        (process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000") +
-        "/auth/google";
-
-      grants.google = {
-        ...googleConfig,
-        enabled: true,
-        key: process.env.GOOGLE_CLIENT_ID,
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        secret: process.env.GOOGLE_CLIENT_SECRET,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callback: frontendCallback,
-      };
-      delete grants.google.callbackUrl;
-      delete grants.google.redirectUri;
-
-      await grantStore.set({ value: grants });
-      strapi.log.info("Google OAuth provider synchronized.");
-    }
+    // 3. Google OAuth is now handled declaratively in config/plugins.js
+    // No manual synchronization needed here anymore.
 
     // 4. Seed development data
     const { seed } = require("./utils/seeder");

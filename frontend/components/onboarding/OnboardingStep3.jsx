@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useOnboardingStore } from "@/lib/onboarding-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,11 +10,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeft, Loader2, Search } from "lucide-react";
-import { fetchFromStrapi } from "@/lib/strapi";
+import { fetchFromStrapi, fetchLocalized } from "@/lib/strapi";
+import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import { EDUCATION_LEVEL_OPTIONS } from "@/lib/onboarding-constants";
 
 const OnboardingStep3 = () => {
+  const { t } = useTranslation("onboarding");
+  const router = useRouter();
+  const { locale } = router;
   const { formData, updateFormData, nextStep, prevStep, skipStep } =
     useOnboardingStore();
 
@@ -25,26 +30,36 @@ const OnboardingStep3 = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const searchTimeoutRef = useRef(null);
+
   const handleSearch = async (val) => {
     setSearchTerm(val);
-    // If user is just typing, we store it with null ID (for "Other" cases)
     updateFormData({ educationInstitution: { id: null, name: val } });
+
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
 
     if (val.length > 2) {
       setLoading(true);
       setShowDropdown(true);
-      const response = await fetchFromStrapi(
-        `/institutions?filters[name][$containsi]=${val}`,
-      );
-      if (response?.data) {
-        // Store full objects: { id, name }
-        setInstitutions(
-          response.data.map((item) => ({ id: item.id, name: item.name })),
+
+      searchTimeoutRef.current = setTimeout(async () => {
+        const encodedVal = encodeURIComponent(val);
+        const response = await fetchLocalized(
+          `/institutions?filters[name][$containsi]=${encodedVal}`,
+          locale,
         );
-      }
-      setLoading(false);
+        if (response?.data) {
+          setInstitutions(
+            response.data.map((item) => ({ id: item.id, name: item.name })),
+          );
+        }
+        setLoading(false);
+      }, 300);
     } else {
       setShowDropdown(false);
+      setLoading(false);
     }
   };
 
@@ -71,24 +86,23 @@ const OnboardingStep3 = () => {
           className="flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"
         >
           <ArrowLeft size={18} />
-          <span>Back</span>
+          <span>{t("steps.back")}</span>
         </button>
         <button
           onClick={skipStep}
           className="text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"
         >
-          Skip
+          {t("steps.skip")}
         </button>
       </div>
 
       {/* Header Section */}
       <div className="space-y-3 mb-32">
         <h1 className="text-display-sm font-bold text-brand-teal-900 leading-tight">
-          Education and career
+          {t("step3.title")}
         </h1>
         <p className="text-md text-brand-gray-800 leading-relaxed">
-          Help us understand your background to provide more relevant scientific
-          opportunities.
+          {t("step3.description")}
         </p>
       </div>
 
@@ -97,19 +111,19 @@ const OnboardingStep3 = () => {
         {/* Education Level */}
         <div className="space-y-2">
           <label className="text-md font-medium text-black">
-            Education level
+            {t("step3.level_label")}
           </label>
           <Select
             value={formData.educationLevel}
             onValueChange={(val) => updateFormData({ educationLevel: val })}
           >
             <SelectTrigger className="w-full h-11 px-3.5 py-2.5 border-brand-gray-100 rounded-8 text-md focus:ring-brand-teal-500">
-              <SelectValue placeholder="Select education level" />
+              <SelectValue placeholder={t("step3.level_placeholder")} />
             </SelectTrigger>
             <SelectContent>
               {EDUCATION_LEVEL_OPTIONS.map((level) => (
                 <SelectItem key={level} value={level} className="text-md">
-                  {level}
+                  {t(`education_levels.${level}`)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -119,7 +133,7 @@ const OnboardingStep3 = () => {
         {/* Institution Name */}
         <div className="space-y-2 relative">
           <label className="text-md font-medium text-black">
-            Educational institution (where you studied)
+            {t("step3.institution_label")}
           </label>
           <div className="relative">
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-gray-400">
@@ -129,7 +143,7 @@ const OnboardingStep3 = () => {
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
               onFocus={() => searchTerm.length > 2 && setShowDropdown(true)}
-              placeholder="Search or type your university"
+              placeholder={t("step3.institution_placeholder")}
               className="w-full h-11 pl-10 py-2.5 border-brand-gray-100 rounded-8 text-md focus:ring-brand-teal-500"
             />
             {loading && (
@@ -162,7 +176,7 @@ const OnboardingStep3 = () => {
           disabled={!isFormValid}
           className="w-full h-11 rounded-full text-md font-medium transition-all duration-300 hover:shadow-lg disabled:bg-brand-teal-100 disabled:text-white"
         >
-          Confirm
+          {t("steps.confirm")}
         </Button>
       </div>
     </div>

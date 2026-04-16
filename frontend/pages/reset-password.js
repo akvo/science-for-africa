@@ -1,4 +1,5 @@
 import React from "react";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { ResetPasswordForm } from "@/components/auth/reset-password-form";
 
 const ResetPasswordPage = () => {
@@ -8,5 +9,13 @@ const ResetPasswordPage = () => {
     </div>
   );
 };
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+    },
+  };
+}
 
 export default ResetPasswordPage;

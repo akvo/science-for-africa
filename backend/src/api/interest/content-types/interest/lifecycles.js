@@ -1,18 +1,18 @@
 "use strict";
 
 /**
- * Lifecycle callbacks for the `institution` model.
+ * Lifecycle callbacks for the `interest` model.
  */
 
 module.exports = {
   /**
-   * Enforce case-insensitive uniqueness on name.
+   * Enforce locale-scoped uniqueness on name.
    */
   async beforeCreate(event) {
     const { data } = event.params;
     if (data.name) {
       const existing = await global.strapi.db
-        .query("api::institution.institution")
+        .query("api::interest.interest")
         .findOne({
           where: {
             name: {
@@ -24,7 +24,7 @@ module.exports = {
 
       if (existing) {
         throw new Error(
-          "An institution with this name already exists in this locale (case-insensitive).",
+          "An interest with this name already exists in this locale (case-insensitive).",
         );
       }
     }
@@ -34,7 +34,7 @@ module.exports = {
     const { data, where } = event.params;
     if (data.name) {
       const existing = await global.strapi.db
-        .query("api::institution.institution")
+        .query("api::interest.interest")
         .findOne({
           where: {
             name: {
@@ -49,7 +49,7 @@ module.exports = {
 
       if (existing) {
         throw new Error(
-          "An institution with this name already exists in this locale (case-insensitive).",
+          "An interest with this name already exists in this locale (case-insensitive).",
         );
       }
     }

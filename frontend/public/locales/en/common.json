@@ -1,0 +1,18 @@
+{
+  "navbar": {
+    "about": "About",
+    "community": "Community",
+    "opportunities": "Opportunities",
+    "learning": "Learning",
+    "resources": "Resources",
+    "login": "Login",
+    "signup": "Sign up",
+    "search": "Search",
+    "news": "News and insights",
+    "contact": "Contact"
+  },
+  "common": {
+    "loading": "Loading...",
+    "back": "Back"
+  }
+}

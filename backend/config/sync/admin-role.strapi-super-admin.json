@@ -6,7 +6,160 @@
   "locale": null,
   "permissions": [
     {
-      "documentId": "xj4sn97dvffswzd9e5r8rccb",
+      "documentId": "qlr560gmump06qbsek0tzkkn",
+      "action": "plugin::content-manager.explorer.create",
+      "actionParameters": {},
+      "subject": "api::collaboration-call.collaboration-call",
+      "properties": {
+        "fields": [
+          "title",
+          "description",
+          "startDate",
+          "endDate",
+          "status",
+          "topics",
+          "communityName",
+          "createdByUser",
+          "invites"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "n2gu3ddn21zv4v02wbgk79oo",
+      "action": "plugin::content-manager.explorer.delete",
+      "actionParameters": {},
+      "subject": "api::collaboration-call.collaboration-call",
+      "properties": {},
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "zislfhvmw17a7bb8gd761akx",
+      "action": "plugin::content-manager.explorer.publish",
+      "actionParameters": {},
+      "subject": "api::collaboration-call.collaboration-call",
+      "properties": {},
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "lwnkkxuogu5l6zvvlnx8y5di",
+      "action": "plugin::content-manager.explorer.read",
+      "actionParameters": {},
+      "subject": "api::collaboration-call.collaboration-call",
+      "properties": {
+        "fields": [
+          "title",
+          "description",
+          "startDate",
+          "endDate",
+          "status",
+          "topics",
+          "communityName",
+          "createdByUser",
+          "invites"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "ware6tg5bv524cn7c0a58dlp",
+      "action": "plugin::content-manager.explorer.update",
+      "actionParameters": {},
+      "subject": "api::collaboration-call.collaboration-call",
+      "properties": {
+        "fields": [
+          "title",
+          "description",
+          "startDate",
+          "endDate",
+          "status",
+          "topics",
+          "communityName",
+          "createdByUser",
+          "invites"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "oh743lhh8m01fp18jbr4fzo3",
+      "action": "plugin::content-manager.explorer.create",
+      "actionParameters": {},
+      "subject": "api::collaboration-invite.collaboration-invite",
+      "properties": {
+        "fields": [
+          "email",
+          "status",
+          "role",
+          "invitedUser",
+          "collaborationCall",
+          "invitedAt"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "tir39g0wiznxjib0rxc7hkai",
+      "action": "plugin::content-manager.explorer.delete",
+      "actionParameters": {},
+      "subject": "api::collaboration-invite.collaboration-invite",
+      "properties": {},
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "qaprbp21twqrgbb3d303660q",
+      "action": "plugin::content-manager.explorer.publish",
+      "actionParameters": {},
+      "subject": "api::collaboration-invite.collaboration-invite",
+      "properties": {},
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "dnrbn16tneiikq04rnynb9cm",
+      "action": "plugin::content-manager.explorer.read",
+      "actionParameters": {},
+      "subject": "api::collaboration-invite.collaboration-invite",
+      "properties": {
+        "fields": [
+          "email",
+          "status",
+          "role",
+          "invitedUser",
+          "collaborationCall",
+          "invitedAt"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "tfvknbs5f2qj74g20rmwuxln",
+      "action": "plugin::content-manager.explorer.update",
+      "actionParameters": {},
+      "subject": "api::collaboration-invite.collaboration-invite",
+      "properties": {
+        "fields": [
+          "email",
+          "status",
+          "role",
+          "invitedUser",
+          "collaborationCall",
+          "invitedAt"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "ngnencszwej1wh61wb3kys1l",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "api::institution.institution",
@@ -17,31 +170,45 @@
           "country",
           "verified",
           "users"
+        ],
+        "locales": [
+          "en",
+          "fr"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "fzsm1omw95jlgr4logoqcy85",
+      "documentId": "gpgm4ja98z1e7w0bdote0p9n",
       "action": "plugin::content-manager.explorer.delete",
       "actionParameters": {},
       "subject": "api::institution.institution",
-      "properties": {},
+      "properties": {
+        "locales": [
+          "en",
+          "fr"
+        ]
+      },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "r90pnqtd8lldzayero85dxfz",
+      "documentId": "el0kf6zabuj7khjzp5vue5xe",
       "action": "plugin::content-manager.explorer.publish",
       "actionParameters": {},
       "subject": "api::institution.institution",
-      "properties": {},
+      "properties": {
+        "locales": [
+          "en",
+          "fr"
+        ]
+      },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "gveivpkqct9jepmpdy8zgxpx",
+      "documentId": "ifalr6t3jlj1ocf7a1jgy5gj",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "api::institution.institution",
@@ -52,13 +219,17 @@
           "country",
           "verified",
           "users"
+        ],
+        "locales": [
+          "en",
+          "fr"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "tcne2yifcfh0lbdub3i3dbsc",
+      "documentId": "hudvk0zzitk5dyw0sgy6dq3n",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "api::institution.institution",
@@ -69,13 +240,17 @@
           "country",
           "verified",
           "users"
+        ],
+        "locales": [
+          "en",
+          "fr"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "phxl5mxj36t50gbk9knh83ow",
+      "documentId": "c9ynr1xpp5ym8znao39hskpj",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "api::interest.interest",
@@ -83,31 +258,45 @@
         "fields": [
           "name",
           "category"
+        ],
+        "locales": [
+          "en",
+          "fr"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "o5m3nzqiz8p8ssiyp5jro6z4",
+      "documentId": "bztmk489tqx99jbvm5azvrnh",
       "action": "plugin::content-manager.explorer.delete",
       "actionParameters": {},
       "subject": "api::interest.interest",
-      "properties": {},
+      "properties": {
+        "locales": [
+          "en",
+          "fr"
+        ]
+      },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "pvtnj1fcmtxctknff62uwy80",
+      "documentId": "f32ptg61g94u768y50i6kuph",
       "action": "plugin::content-manager.explorer.publish",
       "actionParameters": {},
       "subject": "api::interest.interest",
-      "properties": {},
+      "properties": {
+        "locales": [
+          "en",
+          "fr"
+        ]
+      },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "nxq2f8i9u54943my2ud41gg8",
+      "documentId": "l1ebdhcq21qharejzbde3v0x",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "api::interest.interest",
@@ -115,13 +304,17 @@
         "fields": [
           "name",
           "category"
+        ],
+        "locales": [
+          "en",
+          "fr"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "vl9uooi1vkxja6bjq7k2dvws",
+      "documentId": "mz4h2eu5catjp2mp2kh573g5",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "api::interest.interest",
@@ -129,6 +322,10 @@
         "fields": [
           "name",
           "category"
+        ],
+        "locales": [
+          "en",
+          "fr"
         ]
       },
       "conditions": [],

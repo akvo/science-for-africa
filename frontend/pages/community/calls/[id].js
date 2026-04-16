@@ -21,7 +21,12 @@ import {
 } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { fetchCollaborationCall, fetchCommunityByName } from "@/lib/strapi";
+import {
+  fetchChatMessages,
+  fetchCollaborationCall,
+  fetchCommunityByName,
+  postChatMessage,
+} from "@/lib/strapi";
 import { useAuthStore } from "@/lib/auth-store";
 
 const TEXT_STYLES = [
@@ -34,10 +39,26 @@ const TEXT_STYLES = [
 ];
 
 /**
- * localStorage key for chat messages of a single collaboration call.
- * Messages persist client-side until a real chat backend is wired up.
+ * Map a raw Strapi chat-message row into the shape the ChatThread expects.
+ * `self` is computed by comparing the message's author id to the current
+ * user's id so bubbles render on the correct side.
  */
-const chatStorageKey = (callId) => `sfa-chat-${callId}`;
+function mapChatMessage(row, currentUserId) {
+  const author = row?.author || {};
+  const authorName =
+    author.fullName ||
+    [author.firstName, author.lastName].filter(Boolean).join(" ") ||
+    author.username ||
+    author.email?.split("@")[0] ||
+    "Member";
+  return {
+    id: row.id,
+    self: currentUserId != null && author.id === currentUserId,
+    author: authorName,
+    time: formatChatTime(row.createdAt),
+    text: row.text,
+  };
+}
 
 /**
  * Collaboration call detail page.
@@ -46,9 +67,8 @@ const chatStorageKey = (callId) => `sfa-chat-${callId}`;
  * [ Community details sidebar ] [ Chat area ]
  *
  * The sidebar shows details for the community this call belongs to (fetched
- * by `call.communityName`). The chat thread is interactive but persisted in
- * localStorage only — replace `messages` state with a real backend feed
- * once messaging APIs exist.
+ * by `call.communityName`). Chat messages are backed by the Strapi
+ * `api::chat-message` content type.
  */
 export default function CollaborationCallDetailPage() {
   const router = useRouter();
@@ -58,6 +78,7 @@ export default function CollaborationCallDetailPage() {
   const [community, setCommunity] = useState(null);
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([]);
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -66,46 +87,33 @@ export default function CollaborationCallDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  // Hydrate messages from localStorage when the call id changes.
+  // Load chat messages whenever the call id or current user changes.
   useEffect(() => {
-    if (!id || typeof window === "undefined") return;
-    try {
-      const raw = window.localStorage.getItem(chatStorageKey(id));
-      setMessages(raw ? JSON.parse(raw) : []);
-    } catch {
-      setMessages([]);
-    }
-  }, [id]);
+    if (!id) return;
+    let cancelled = false;
+    fetchChatMessages(id).then((res) => {
+      if (cancelled) return;
+      const rows = Array.isArray(res?.data) ? res.data : [];
+      setMessages(rows.map((row) => mapChatMessage(row, user?.id)));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [id, user?.id]);
 
-  // Persist messages whenever they change.
-  useEffect(() => {
-    if (!id || typeof window === "undefined") return;
-    try {
-      window.localStorage.setItem(chatStorageKey(id), JSON.stringify(messages));
-    } catch {
-      // ignore quota errors
-    }
-  }, [id, messages]);
-
-  const handleSendMessage = (text) => {
+  const handleSendMessage = async (text) => {
     const trimmed = (text || "").trim();
-    if (!trimmed) return;
-    const authorName =
-      user?.fullName ||
-      [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
-      user?.username ||
-      user?.email?.split("@")[0] ||
-      "You";
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-        self: true,
-        author: authorName,
-        time: formatChatTime(new Date()),
-        text: trimmed,
-      },
-    ]);
+    if (!trimmed || !id || sending) return;
+    setSending(true);
+    try {
+      const res = await postChatMessage(id, trimmed);
+      const row = res?.data;
+      if (row) {
+        setMessages((prev) => [...prev, mapChatMessage(row, user?.id)]);
+      }
+    } finally {
+      setSending(false);
+    }
   };
 
   useEffect(() => {
@@ -164,7 +172,7 @@ export default function CollaborationCallDetailPage() {
           onBack={() => router.back()}
         />
         <ChatThread messages={messages} />
-        <ChatComposer onSend={handleSendMessage} />
+        <ChatComposer onSend={handleSendMessage} disabled={sending} />
       </section>
     </div>
   );
@@ -459,15 +467,13 @@ function ChatThread({ messages = [] }) {
   );
 }
 
-function ChatComposer({ onSend }) {
+function ChatComposer({ onSend, disabled = false }) {
   const [value, setValue] = useState("");
   const [textStyle, setTextStyle] = useState("normal");
-  const activeStyle =
-    TEXT_STYLES.find((s) => s.value === textStyle) || TEXT_STYLES[0];
 
   const submit = () => {
     const trimmed = value.trim();
-    if (!trimmed) return;
+    if (!trimmed || disabled) return;
     onSend?.(trimmed);
     setValue("");
   };
@@ -480,7 +486,7 @@ function ChatComposer({ onSend }) {
     }
   };
 
-  const canSend = value.trim().length > 0;
+  const canSend = value.trim().length > 0 && !disabled;
 
   return (
     <div className="border-t border-brand-gray-100 px-6 py-4">

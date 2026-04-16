@@ -16,7 +16,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User, LogOut, Settings, Plus } from "lucide-react";
 
 const Navbar = () => {
-
   const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -324,7 +323,6 @@ const Navbar = () => {
                   </Button>
                 </>
               )}
-
             </div>
           </nav>
         </div>

@@ -693,7 +693,3 @@ The platform follows Google's best practices for localized sites:
 - **Subpath routing**: Distinct URLs for each language.
 - **HTML lang attribute**: Automatically updated by `next-i18next`.
 - **SSR support**: Translations are loaded server-side using `getStaticProps` or `getServerSideProps`.
-<<<<<<< HEAD
-=======
-
->>>>>>> main

@@ -89,7 +89,6 @@ describe("VerifyEmailContent", () => {
     expect(
       screen.queryByText(/verify_email\.resend_button/i),
     ).not.toBeInTheDocument();
-
   });
 
   it("starts countdown after successful resend", async () => {
@@ -108,7 +107,6 @@ describe("VerifyEmailContent", () => {
 
     // Fast-forward cooldown (60 seconds)
     for (let i = 0; i < 60; i++) {
-
       act(() => {
         jest.advanceTimersByTime(1000);
       });
@@ -124,13 +122,11 @@ describe("VerifyEmailContent", () => {
 
     fireEvent.click(screen.getByText(/otp\.resend_button/i).closest("button"));
 
-
     await waitFor(() => {
       expect(screen.getByText(/fail/i)).toBeInTheDocument();
     });
     expect(
       screen.getByText(/otp\.resend_button/i).closest("button"),
-
     ).not.toBeDisabled();
   });
 

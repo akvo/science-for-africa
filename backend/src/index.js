@@ -358,7 +358,6 @@ module.exports = {
     const frontendVerifyUrl =
       process.env.EMAIL_CONFIRMATION_URL || `${frontendUrl}/auth/verify-email`;
 
-
     if (!isEmailEnabled || !isRedirectOk) {
       await advancedStore.set({
         value: {
@@ -417,7 +416,6 @@ module.exports = {
     }
 
     if (emailSettings && emailSettings.reset_password) {
-
       const resetLink = `${frontendUrl}/auth/reset-password?code=<%= TOKEN %>`;
       const brandedResetBody = `
         <p>Hello <%= USER.username %>,</p>
@@ -447,7 +445,6 @@ module.exports = {
 
     // 3. Google OAuth is now handled declaratively in config/plugins.js
     // No manual synchronization needed here anymore.
-
 
     // 4. Seed development data
     const { seed } = require("./utils/seeder");

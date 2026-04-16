@@ -14,7 +14,6 @@ import { resendVerification, verifyEmailToken } from "@/lib/strapi";
 import { useTranslation } from "next-i18next";
 import { OTPVerificationForm } from "./otp-verification-form";
 
-
 export const VerifyEmailContent = ({ email, confirmation }) => {
   const { t } = useTranslation("auth");
   const [countdown, setCountdown] = useState(0);
@@ -220,7 +219,6 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
           <Mail className="text-brand-teal-600" size={24} />
         </div>
         <h1 className="text-display-sm font-bold text-brand-teal-900 leading-tight">
-
           {t("verify_email.confirm_title")}
         </h1>
         <div className="space-y-6">

@@ -213,6 +213,35 @@ export async function fetchCollaborationCall(documentId) {
 }
 
 /**
+ * Fetch chat messages for a collaboration call (oldest-first).
+ * Requires auth — backend filters by the call's documentId and populates
+ * a safe subset of author fields.
+ */
+export async function fetchChatMessages(callDocumentId) {
+  return fetchFromStrapi(
+    `/chat-messages?filters[collaborationCall][documentId][$eq]=${encodeURIComponent(
+      callDocumentId,
+    )}`,
+  );
+}
+
+/**
+ * Post a chat message to a collaboration call. Author is derived from the
+ * authenticated user server-side — never trusted from the request body.
+ */
+export async function postChatMessage(callDocumentId, text) {
+  try {
+    const response = await apiClient.post("/chat-messages", {
+      data: { text, collaborationCall: callDocumentId },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error posting chat message:", error);
+    return error;
+  }
+}
+
+/**
  * Update authenticated user profile
  */
 export async function updateUserProfile(userData) {

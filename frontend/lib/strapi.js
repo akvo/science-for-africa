@@ -224,6 +224,18 @@ export async function fetchCommunity(slug) {
 }
 
 /**
+ * Fetch a single community by name (exact match, relations populated).
+ * Useful when we only have the community name (e.g. stored on a
+ * collaboration call as a free-text `communityName`) and need the full
+ * community record.
+ */
+export async function fetchCommunityByName(name) {
+  return fetchFromStrapi(
+    `/communities?filters[name][$eq]=${encodeURIComponent(name)}&populate[subCommunities]=true&populate[parent]=true&populate[moderators]=true&populate[createdByUser]=true`,
+  );
+}
+
+/**
  * Fetch collaboration calls for a given community (by community name).
  * Returns them newest-first.
  */
@@ -232,6 +244,32 @@ export async function fetchCollaborationCalls(communityName) {
     ? `?filters[communityName][$eq]=${encodeURIComponent(communityName)}&sort=createdAt:desc`
     : `?sort=createdAt:desc`;
   return fetchFromStrapi(`/collaboration-calls${qs}`);
+}
+
+/**
+ * Accept a collaboration invite by its numeric id.
+ */
+export async function acceptCollaborationInvite(id) {
+  try {
+    const response = await apiClient.post(
+      `/collaboration-invites/${id}/accept`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error accepting collaboration invite:", error);
+    return error;
+  }
+}
+
+/**
+ * Fetch a single collaboration call by its documentId (Strapi v5).
+ * Populates createdByUser and accepted invites so the detail page can
+ * render the mentor/collaborator sidebar.
+ */
+export async function fetchCollaborationCall(documentId) {
+  return fetchFromStrapi(
+    `/collaboration-calls/${documentId}?populate[createdByUser]=true&populate[invites][populate][invitedUser]=true`,
+  );
 }
 
 /**

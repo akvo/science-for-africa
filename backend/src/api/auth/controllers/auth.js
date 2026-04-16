@@ -8,6 +8,37 @@ module.exports = ({ strapi }) => ({
   /**
    * Updates the profile of the currently authenticated user
    */
+  async findUsers(ctx) {
+    const user = ctx.state.user;
+    if (!user) {
+      return ctx.unauthorized();
+    }
+
+    try {
+      const users = await strapi.entityService.findMany(
+        "plugin::users-permissions.user",
+        {
+          fields: [
+            "id",
+            "email",
+            "fullName",
+            "firstName",
+            "lastName",
+            "position",
+            "roleType",
+          ],
+          populate: ["institution"],
+          pagination: { pageSize: 100 },
+        },
+      );
+
+      return users;
+    } catch (error) {
+      strapi.log.error("FindUsers Error: " + error.message);
+      return ctx.internalServerError(error.message);
+    }
+  },
+
   async updateMe(ctx) {
     const user = ctx.state.user;
     const body = ctx.request.body;

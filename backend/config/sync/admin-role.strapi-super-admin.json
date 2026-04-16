@@ -6,7 +6,160 @@
   "locale": null,
   "permissions": [
     {
-      "documentId": "l616bz57yih1n2otgthlahxv",
+      "documentId": "qlr560gmump06qbsek0tzkkn",
+      "action": "plugin::content-manager.explorer.create",
+      "actionParameters": {},
+      "subject": "api::collaboration-call.collaboration-call",
+      "properties": {
+        "fields": [
+          "title",
+          "description",
+          "startDate",
+          "endDate",
+          "status",
+          "topics",
+          "communityName",
+          "createdByUser",
+          "invites"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "n2gu3ddn21zv4v02wbgk79oo",
+      "action": "plugin::content-manager.explorer.delete",
+      "actionParameters": {},
+      "subject": "api::collaboration-call.collaboration-call",
+      "properties": {},
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "zislfhvmw17a7bb8gd761akx",
+      "action": "plugin::content-manager.explorer.publish",
+      "actionParameters": {},
+      "subject": "api::collaboration-call.collaboration-call",
+      "properties": {},
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "lwnkkxuogu5l6zvvlnx8y5di",
+      "action": "plugin::content-manager.explorer.read",
+      "actionParameters": {},
+      "subject": "api::collaboration-call.collaboration-call",
+      "properties": {
+        "fields": [
+          "title",
+          "description",
+          "startDate",
+          "endDate",
+          "status",
+          "topics",
+          "communityName",
+          "createdByUser",
+          "invites"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "ware6tg5bv524cn7c0a58dlp",
+      "action": "plugin::content-manager.explorer.update",
+      "actionParameters": {},
+      "subject": "api::collaboration-call.collaboration-call",
+      "properties": {
+        "fields": [
+          "title",
+          "description",
+          "startDate",
+          "endDate",
+          "status",
+          "topics",
+          "communityName",
+          "createdByUser",
+          "invites"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "oh743lhh8m01fp18jbr4fzo3",
+      "action": "plugin::content-manager.explorer.create",
+      "actionParameters": {},
+      "subject": "api::collaboration-invite.collaboration-invite",
+      "properties": {
+        "fields": [
+          "email",
+          "status",
+          "role",
+          "invitedUser",
+          "collaborationCall",
+          "invitedAt"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "tir39g0wiznxjib0rxc7hkai",
+      "action": "plugin::content-manager.explorer.delete",
+      "actionParameters": {},
+      "subject": "api::collaboration-invite.collaboration-invite",
+      "properties": {},
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "qaprbp21twqrgbb3d303660q",
+      "action": "plugin::content-manager.explorer.publish",
+      "actionParameters": {},
+      "subject": "api::collaboration-invite.collaboration-invite",
+      "properties": {},
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "dnrbn16tneiikq04rnynb9cm",
+      "action": "plugin::content-manager.explorer.read",
+      "actionParameters": {},
+      "subject": "api::collaboration-invite.collaboration-invite",
+      "properties": {
+        "fields": [
+          "email",
+          "status",
+          "role",
+          "invitedUser",
+          "collaborationCall",
+          "invitedAt"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "tfvknbs5f2qj74g20rmwuxln",
+      "action": "plugin::content-manager.explorer.update",
+      "actionParameters": {},
+      "subject": "api::collaboration-invite.collaboration-invite",
+      "properties": {
+        "fields": [
+          "email",
+          "status",
+          "role",
+          "invitedUser",
+          "collaborationCall",
+          "invitedAt"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "ngnencszwej1wh61wb3kys1l",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "api::institution.institution",
@@ -27,7 +180,7 @@
       "locale": null
     },
     {
-      "documentId": "a4gadasozadfv0ovsoeyobpf",
+      "documentId": "gpgm4ja98z1e7w0bdote0p9n",
       "action": "plugin::content-manager.explorer.delete",
       "actionParameters": {},
       "subject": "api::institution.institution",
@@ -41,7 +194,7 @@
       "locale": null
     },
     {
-      "documentId": "aldbz50bp6zu7i00sjmceqbq",
+      "documentId": "el0kf6zabuj7khjzp5vue5xe",
       "action": "plugin::content-manager.explorer.publish",
       "actionParameters": {},
       "subject": "api::institution.institution",
@@ -55,7 +208,7 @@
       "locale": null
     },
     {
-      "documentId": "mfcp7sjhqtte59uis5z7vmvp",
+      "documentId": "ifalr6t3jlj1ocf7a1jgy5gj",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "api::institution.institution",
@@ -76,7 +229,7 @@
       "locale": null
     },
     {
-      "documentId": "ck8gimywuyr7wxy6zmkoj97z",
+      "documentId": "hudvk0zzitk5dyw0sgy6dq3n",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "api::institution.institution",
@@ -97,7 +250,7 @@
       "locale": null
     },
     {
-      "documentId": "nvteoumm8fa4f4yrqu0ql9zw",
+      "documentId": "c9ynr1xpp5ym8znao39hskpj",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "api::interest.interest",
@@ -115,7 +268,7 @@
       "locale": null
     },
     {
-      "documentId": "x410hnpd8xwosvs7o95upl7y",
+      "documentId": "bztmk489tqx99jbvm5azvrnh",
       "action": "plugin::content-manager.explorer.delete",
       "actionParameters": {},
       "subject": "api::interest.interest",
@@ -129,7 +282,7 @@
       "locale": null
     },
     {
-      "documentId": "zde12604o6sdz591lk8pui0y",
+      "documentId": "f32ptg61g94u768y50i6kuph",
       "action": "plugin::content-manager.explorer.publish",
       "actionParameters": {},
       "subject": "api::interest.interest",
@@ -143,7 +296,7 @@
       "locale": null
     },
     {
-      "documentId": "zsrnpt2a3oye8luo65o5ferk",
+      "documentId": "l1ebdhcq21qharejzbde3v0x",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "api::interest.interest",
@@ -161,7 +314,7 @@
       "locale": null
     },
     {
-      "documentId": "f91s0chep9a8rp4xgzxti0cx",
+      "documentId": "mz4h2eu5catjp2mp2kh573g5",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "api::interest.interest",
@@ -458,7 +611,7 @@
       "locale": null
     },
     {
-      "documentId": "i6bbxfag76v39cczp9jln5ia",
+      "documentId": "wk77lqguj6z0tlwo9qaegbhh",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -490,12 +643,7 @@
           "userType",
           "roleType",
           "educationInstitutionName",
-          "institutionName",
-          "otpCode",
-          "otpExpiration",
-          "lastOtpSentAt",
-          "otpResendCount",
-          "otpResendWindowStart"
+          "institutionName"
         ]
       },
       "conditions": [],
@@ -520,7 +668,7 @@
       "locale": null
     },
     {
-      "documentId": "gv25v3s2bb9o1m10ypqx3g98",
+      "documentId": "i2pqixzcnkc4vndabn7zbo3t",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -552,19 +700,14 @@
           "userType",
           "roleType",
           "educationInstitutionName",
-          "institutionName",
-          "otpCode",
-          "otpExpiration",
-          "lastOtpSentAt",
-          "otpResendCount",
-          "otpResendWindowStart"
+          "institutionName"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "uk2f5sezy3zugi1yjot5jz27",
+      "documentId": "wn1zjd6bij3z2wzk80it6mzj",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -596,12 +739,7 @@
           "userType",
           "roleType",
           "educationInstitutionName",
-          "institutionName",
-          "otpCode",
-          "otpExpiration",
-          "lastOtpSentAt",
-          "otpResendCount",
-          "otpResendWindowStart"
+          "institutionName"
         ]
       },
       "conditions": [],

@@ -38,6 +38,28 @@ jest.mock("react-i18next", () => ({
   }),
 }));
 
+// Mock next-i18next
+jest.mock("next-i18next", () => ({
+  useTranslation: () => ({
+    t: (key, options) => {
+      // Return email if provided for description check
+      if (options?.email) return options.email;
+      // Return key for everything else
+      return key;
+    },
+  }),
+}));
+
+// Mock react-i18next
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key, options) => {
+      if (options?.email) return options.email;
+      return key;
+    },
+  }),
+}));
+
 // Mock next/router
 const mockPush = jest.fn();
 jest.mock("next/router", () => ({
@@ -67,6 +89,7 @@ describe("VerifyEmailContent", () => {
     expect(
       screen.queryByText(/verify_email\.resend_button/i),
     ).not.toBeInTheDocument();
+
   });
 
   it("starts countdown after successful resend", async () => {
@@ -85,10 +108,12 @@ describe("VerifyEmailContent", () => {
 
     // Fast-forward cooldown (60 seconds)
     for (let i = 0; i < 60; i++) {
+
       act(() => {
         jest.advanceTimersByTime(1000);
       });
     }
+
     expect(resendBtn).not.toBeDisabled();
   });
 
@@ -99,11 +124,13 @@ describe("VerifyEmailContent", () => {
 
     fireEvent.click(screen.getByText(/otp\.resend_button/i).closest("button"));
 
+
     await waitFor(() => {
       expect(screen.getByText(/fail/i)).toBeInTheDocument();
     });
     expect(
       screen.getByText(/otp\.resend_button/i).closest("button"),
+
     ).not.toBeDisabled();
   });
 

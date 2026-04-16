@@ -36,12 +36,21 @@ module.exports = {
       },
     },
     {
-      method: "GET",
+      method: "POST",
       path: "/auth/registration-status",
       handler: "auth.registrationStatus",
       config: {
         auth: false,
         description: "Check if an email is already verified",
+        prefix: "",
+      },
+    },
+    {
+      method: "GET",
+      path: "/auth/users",
+      handler: "auth.findUsers",
+      config: {
+        description: "List users for mentor assignment",
         prefix: "",
       },
     },

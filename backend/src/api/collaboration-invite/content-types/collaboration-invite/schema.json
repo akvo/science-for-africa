@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "collaboration_invites",
+  "info": {
+    "singularName": "collaboration-invite",
+    "pluralName": "collaboration-invites",
+    "displayName": "Collaboration Invite",
+    "description": "Invitations sent for collaboration calls"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["Pending", "Accepted", "Declined"],
+      "default": "Pending",
+      "required": true
+    },
+    "role": {
+      "type": "enumeration",
+      "enum": ["Collaborator", "Mentor"],
+      "default": "Collaborator",
+      "required": true
+    },
+    "invitedUser": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "collaborationCall": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::collaboration-call.collaboration-call",
+      "inversedBy": "invites"
+    },
+    "invitedAt": {
+      "type": "datetime"
+    }
+  }
+}

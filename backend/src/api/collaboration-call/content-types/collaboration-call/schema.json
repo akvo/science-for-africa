@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "collaboration_calls",
+  "info": {
+    "singularName": "collaboration-call",
+    "pluralName": "collaboration-calls",
+    "displayName": "Collaboration Call",
+    "description": "Collaboration call posts created within communities"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "description": {
+      "type": "text",
+      "required": true,
+      "maxLength": 275
+    },
+    "startDate": {
+      "type": "datetime",
+      "required": true
+    },
+    "endDate": {
+      "type": "datetime",
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["Active", "Completed"],
+      "default": "Active",
+      "required": true
+    },
+    "topics": {
+      "type": "json"
+    },
+    "communityName": {
+      "type": "string"
+    },
+    "createdByUser": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "invites": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::collaboration-invite.collaboration-invite",
+      "mappedBy": "collaborationCall"
+    }
+  }
+}

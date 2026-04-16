@@ -190,6 +190,22 @@ export function transformProfileUpdatePayload(userData) {
 }
 
 /**
+ * Create a collaboration call with invites
+ */
+export async function createCollaborationCall(payload) {
+  try {
+    const response = await apiClient.post(
+      "/collaboration-calls/create-with-invites",
+      payload,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error creating collaboration call:", error);
+    return error;
+  }
+}
+
+/**
  * Update authenticated user profile
  */
 export async function updateUserProfile(userData) {

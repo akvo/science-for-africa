@@ -645,6 +645,18 @@ sequenceDiagram
 
 ### 5.2 Implementation Details
 
+**Environment-Aware Redirection:**
+To prevent hardcoded `localhost` redirects in production or testing environments, the backend dynamically resolves the frontend callback URL using the following environment variable priority:
+1. `FRONTEND_URL`
+2. `PUBLIC_URL`
+3. `NEXT_PUBLIC_FRONTEND_URL` (Next.js client-available variable)
+4. `http://localhost:3000` (Local development fallback)
+
+This resolution occurs during the `bootstrap` phase and is applied to the Strapi `grant` store configuration.
+
+**SSR Handshake:**
+The frontend uses a Server-Side Rendering (SSR) handshake via `getServerSideProps` to exchange the Google `access_token` for a Strapi `jwt`. This ensures the session is established securely on the server before the initial page render.
+
 - **Backend Configuration**: Automated via `src/index.js` bootstrap. The system synchronizes provider settings (Client ID, Secret, and Redirect URIs) using `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `NEXT_PUBLIC_FRONTEND_URL`.
 - **Frontend Integration**:
     - `SocialButton`: Custom branded component following Google's identity guidelines.
@@ -681,3 +693,7 @@ The platform follows Google's best practices for localized sites:
 - **Subpath routing**: Distinct URLs for each language.
 - **HTML lang attribute**: Automatically updated by `next-i18next`.
 - **SSR support**: Translations are loaded server-side using `getStaticProps` or `getServerSideProps`.
+<<<<<<< HEAD
+=======
+
+>>>>>>> main

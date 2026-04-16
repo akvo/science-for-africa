@@ -3,9 +3,51 @@
 const { createCoreController } = require("@strapi/strapi").factories;
 const { emailTemplate } = require("../../../helpers/email-template");
 
+/**
+ * Select a safe subset of user fields to expose when populating
+ * `invitedUser` / `createdByUser`. The default core controller strips these
+ * relations entirely because authenticated users don't have the global
+ * users-permissions `find`/`findOne` action. We handle populate manually so
+ * callers always get the mentor/collaborator details they need to render.
+ */
+const USER_PUBLIC_FIELDS = [
+  "id",
+  "documentId",
+  "username",
+  "email",
+  "firstName",
+  "lastName",
+  "fullName",
+  "position",
+];
+
 module.exports = createCoreController(
   "api::collaboration-call.collaboration-call",
   ({ strapi }) => ({
+    /**
+     * Override the default `findOne` so nested user relations survive the
+     * permission sanitizer. We query the DB directly and shape the response
+     * ourselves.
+     */
+    async findOne(ctx) {
+      const { id } = ctx.params;
+      const call = await strapi.db
+        .query("api::collaboration-call.collaboration-call")
+        .findOne({
+          where: { documentId: id },
+          populate: {
+            createdByUser: { select: USER_PUBLIC_FIELDS },
+            invites: {
+              populate: { invitedUser: { select: USER_PUBLIC_FIELDS } },
+            },
+          },
+        });
+
+      if (!call) return ctx.notFound("Collaboration call not found");
+
+      return { data: call, meta: {} };
+    },
+
     async createWithInvites(ctx) {
       const user = ctx.state.user;
       if (!user) {
@@ -84,7 +126,7 @@ module.exports = createCoreController(
             {
               data: {
                 email,
-                status: "Pending",
+                inviteStatus: "Pending",
                 role,
                 invitedUser: existingUser ? existingUser.id : null,
                 collaborationCall: collaborationCall.id,

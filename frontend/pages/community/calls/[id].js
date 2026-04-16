@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import {
   ArrowLeft,
@@ -9,6 +9,7 @@ import {
   AlignLeft,
   Paperclip,
   Calendar,
+  Check,
   FileText,
   ImageIcon,
   ChevronDown,
@@ -21,6 +22,22 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { fetchCollaborationCall, fetchCommunityByName } from "@/lib/strapi";
+import { useAuthStore } from "@/lib/auth-store";
+
+const TEXT_STYLES = [
+  { value: "normal", label: "Normal text" },
+  { value: "h1", label: "Heading 1" },
+  { value: "h2", label: "Heading 2" },
+  { value: "h3", label: "Heading 3" },
+  { value: "quote", label: "Quote" },
+  { value: "code", label: "Code" },
+];
+
+/**
+ * localStorage key for chat messages of a single collaboration call.
+ * Messages persist client-side until a real chat backend is wired up.
+ */
+const chatStorageKey = (callId) => `sfa-chat-${callId}`;
 
 /**
  * Collaboration call detail page.
@@ -29,16 +46,18 @@ import { fetchCollaborationCall, fetchCommunityByName } from "@/lib/strapi";
  * [ Community details sidebar ] [ Chat area ]
  *
  * The sidebar shows details for the community this call belongs to (fetched
- * by `call.communityName`). The chat thread and attachments are static
- * placeholders — there is no messaging backend yet. Swap in a real chat
- * feed once available.
+ * by `call.communityName`). The chat thread is interactive but persisted in
+ * localStorage only — replace `messages` state with a real backend feed
+ * once messaging APIs exist.
  */
 export default function CollaborationCallDetailPage() {
   const router = useRouter();
   const { id } = router.query;
+  const user = useAuthStore((state) => state.user);
   const [call, setCall] = useState(null);
   const [community, setCommunity] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     if (!id) return;
@@ -46,6 +65,48 @@ export default function CollaborationCallDetailPage() {
       .then((res) => setCall(res?.data || null))
       .finally(() => setLoading(false));
   }, [id]);
+
+  // Hydrate messages from localStorage when the call id changes.
+  useEffect(() => {
+    if (!id || typeof window === "undefined") return;
+    try {
+      const raw = window.localStorage.getItem(chatStorageKey(id));
+      setMessages(raw ? JSON.parse(raw) : []);
+    } catch {
+      setMessages([]);
+    }
+  }, [id]);
+
+  // Persist messages whenever they change.
+  useEffect(() => {
+    if (!id || typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(chatStorageKey(id), JSON.stringify(messages));
+    } catch {
+      // ignore quota errors
+    }
+  }, [id, messages]);
+
+  const handleSendMessage = (text) => {
+    const trimmed = (text || "").trim();
+    if (!trimmed) return;
+    const authorName =
+      user?.fullName ||
+      [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
+      user?.username ||
+      user?.email?.split("@")[0] ||
+      "You";
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        self: true,
+        author: authorName,
+        time: formatChatTime(new Date()),
+        text: trimmed,
+      },
+    ]);
+  };
 
   useEffect(() => {
     if (!call?.communityName) return;
@@ -62,6 +123,10 @@ export default function CollaborationCallDetailPage() {
       .map((i) => ({
         id: i.invitedUser.documentId || i.invitedUser.id,
         name:
+          i.invitedUser.fullName ||
+          [i.invitedUser.firstName, i.invitedUser.lastName]
+            .filter(Boolean)
+            .join(" ") ||
           i.invitedUser.username ||
           i.invitedUser.email?.split("@")[0] ||
           "Mentor",
@@ -98,8 +163,8 @@ export default function CollaborationCallDetailPage() {
           isActive={isActive}
           onBack={() => router.back()}
         />
-        <ChatThread />
-        <ChatComposer />
+        <ChatThread messages={messages} />
+        <ChatComposer onSend={handleSendMessage} />
       </section>
     </div>
   );
@@ -212,7 +277,7 @@ function CommunityDetailsSidebar({ community, mentors = [] }) {
                     <span className="truncate text-sm font-medium text-brand-gray-900">
                       {m.name}
                     </span>
-                    <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-800">
+                    <span className="inline-flex items-center rounded-full bg-brand-orange-50 px-2 py-0.5 text-[10px] font-medium text-brand-orange-500">
                       Mentor
                     </span>
                   </div>
@@ -307,15 +372,24 @@ function ChatHeader({ call, isActive, onBack }) {
   );
 }
 
-function ChatThread() {
+function ChatThread({ messages = [] }) {
+  if (!messages.length) {
+    return (
+      <div className="flex flex-1 items-center justify-center px-6 py-10 text-sm text-brand-gray-500">
+        No messages yet — start the conversation below.
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 overflow-y-auto px-6 py-5">
       <ul className="flex flex-col gap-5">
-        {PLACEHOLDER_MESSAGES.map((m, idx) => {
+        {messages.map((m, idx) => {
+          const key = m.id || idx;
           if (m.type === "separator") {
             return (
               <li
-                key={`sep-${idx}`}
+                key={key}
                 className="flex items-center justify-center"
               >
                 <span className="rounded-full bg-brand-gray-100 px-3 py-0.5 text-[11px] font-medium text-brand-gray-500">
@@ -326,9 +400,9 @@ function ChatThread() {
           }
           if (m.self) {
             return (
-              <li key={idx} className="flex justify-end">
+              <li key={key} className="flex justify-end">
                 <div className="flex max-w-[70%] flex-col items-end gap-1">
-                  <div className="rounded-2xl rounded-tr-sm bg-primary-500 px-4 py-2.5 text-sm text-white">
+                  <div className="rounded-2xl rounded-tr-sm bg-primary-500 px-4 py-2.5 text-sm text-white whitespace-pre-wrap break-words">
                     {m.text}
                   </div>
                   <span className="text-[11px] text-brand-gray-400">
@@ -339,7 +413,7 @@ function ChatThread() {
             );
           }
           return (
-            <li key={idx} className="flex items-start gap-3">
+            <li key={key} className="flex items-start gap-3">
               <Avatar size="sm">
                 <AvatarImage src={m.avatarUrl} alt={m.author} />
                 <AvatarFallback>{initialsOf(m.author)}</AvatarFallback>
@@ -372,7 +446,7 @@ function ChatThread() {
                     </div>
                   </div>
                 ) : (
-                  <div className="w-fit rounded-2xl rounded-tl-sm bg-brand-gray-50 px-4 py-2.5 text-sm text-brand-gray-800">
+                  <div className="w-fit rounded-2xl rounded-tl-sm bg-brand-gray-50 px-4 py-2.5 text-sm text-brand-gray-800 whitespace-pre-wrap break-words">
                     {m.text}
                   </div>
                 )}
@@ -385,20 +459,34 @@ function ChatThread() {
   );
 }
 
-function ChatComposer() {
+function ChatComposer({ onSend }) {
   const [value, setValue] = useState("");
+  const [textStyle, setTextStyle] = useState("normal");
+  const activeStyle =
+    TEXT_STYLES.find((s) => s.value === textStyle) || TEXT_STYLES[0];
+
+  const submit = () => {
+    const trimmed = value.trim();
+    if (!trimmed) return;
+    onSend?.(trimmed);
+    setValue("");
+  };
+
+  const handleKeyDown = (e) => {
+    // Cmd/Ctrl + Enter sends; plain Enter inserts a newline.
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      submit();
+    }
+  };
+
+  const canSend = value.trim().length > 0;
 
   return (
     <div className="border-t border-brand-gray-100 px-6 py-4">
       <div className="rounded-xl border border-brand-gray-100 bg-white">
         <div className="flex flex-wrap items-center gap-1 border-b border-brand-gray-100 px-3 py-2">
-          <button
-            type="button"
-            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-brand-gray-600 hover:bg-brand-gray-50"
-          >
-            Normal text
-            <ChevronDown className="size-3" />
-          </button>
+          <TextStyleDropdown value={textStyle} onChange={setTextStyle} />
           <ToolbarButton icon={Bold} label="Bold" />
           <ToolbarButton icon={Italic} label="Italic" />
           <ToolbarButton icon={LinkIcon} label="Link" />
@@ -409,19 +497,95 @@ function ChatComposer() {
         <Textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Enter a description..."
+          onKeyDown={handleKeyDown}
+          placeholder="Write a message..."
           className="min-h-[96px] border-0 focus:ring-0"
         />
       </div>
 
       <div className="mt-3 flex items-center gap-2">
-        <Button size="sm" className="rounded-full">
+        <Button
+          size="sm"
+          className="rounded-full"
+          onClick={submit}
+          disabled={!canSend}
+        >
           Send
         </Button>
-        <Button size="sm" variant="outline" className="rounded-full">
+        <Button
+          size="sm"
+          variant="outline"
+          className="rounded-full"
+          onClick={() => setValue("")}
+          disabled={!value.length}
+        >
           Cancel
         </Button>
       </div>
+    </div>
+  );
+}
+
+function TextStyleDropdown({ value, onChange }) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef(null);
+  const active = TEXT_STYLES.find((s) => s.value === value) || TEXT_STYLES[0];
+
+  useEffect(() => {
+    if (!open) return;
+    const handleClickOutside = (e) => {
+      if (rootRef.current && !rootRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    const handleEsc = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEsc);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, [open]);
+
+  return (
+    <div ref={rootRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-brand-gray-600 hover:bg-brand-gray-50"
+      >
+        {active.label}
+        <ChevronDown
+          className={`size-3 transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open ? (
+        <div className="absolute left-0 top-full z-20 mt-1 w-44 overflow-hidden rounded-lg border border-brand-gray-100 bg-white py-1 shadow-lg">
+          {TEXT_STYLES.map((s) => {
+            const isActive = s.value === value;
+            return (
+              <button
+                key={s.value}
+                type="button"
+                onClick={() => {
+                  onChange(s.value);
+                  setOpen(false);
+                }}
+                className={`flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm hover:bg-brand-gray-50 ${
+                  isActive
+                    ? "text-primary-500 font-medium"
+                    : "text-brand-gray-700"
+                }`}
+              >
+                <span>{s.label}</span>
+                {isActive ? <Check className="size-4" /> : null}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -485,52 +649,22 @@ function formatNumber(n) {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-/* --------------------------- placeholder data --------------------------- */
-/* Messaging is not yet backed by Strapi. Replace once available. */
-
-const PLACEHOLDER_MESSAGES = [
-  {
-    author: "Phoenix Baker",
-    time: "Friday 2:20pm",
-    text: "Hey Olivia, can you please review the latest design when you can?",
-  },
-  {
-    author: "Phoenix Baker",
-    time: "Friday 2:20pm",
-    attachment: {
-      name: "Latest design screenshot.jpg",
-      size: "1.2 MB",
-      kind: "image",
-    },
-  },
-  {
-    author: "Phoenix Baker",
-    time: "Friday 2:20pm",
-    text: "Hey Olivia, can you please review the latest design when you can?",
-  },
-  {
-    self: true,
-    time: "Friday 2:20pm",
-    text: "Sure thing, I'll have a look today.",
-  },
-  {
-    author: "Phoenix Baker",
-    time: "Friday 2:20pm",
-    text: "Hey Olivia, can you please review the latest design when you can?",
-  },
-  { type: "separator", label: "Today" },
-  {
-    self: true,
-    time: "Friday 2:20pm",
-    attachment: {
-      name: "Tech design requirements.pdf",
-      size: "200 KB",
-      kind: "file",
-    },
-  },
-  {
-    author: "Phoenix Baker",
-    time: "Friday 2:20pm",
-    text: "Hey Olivia, can you please review the latest design when you can?",
-  },
+const WEEKDAYS = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
 ];
+
+function formatChatTime(date) {
+  const d = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(d.getTime())) return "";
+  let hours = d.getHours();
+  const mins = String(d.getMinutes()).padStart(2, "0");
+  const ampm = hours >= 12 ? "pm" : "am";
+  hours = hours % 12 || 12;
+  return `${WEEKDAYS[d.getDay()]} ${hours}:${mins}${ampm}`;
+}

@@ -9,7 +9,7 @@ module.exports = {
     {
       method: "PUT",
       path: "/auth/me",
-      handler: "auth.updateMe",
+      handler: "profile.update",
       config: {
         description: "Update current user profile",
         prefix: "",
@@ -48,7 +48,7 @@ module.exports = {
     {
       method: "GET",
       path: "/auth/users",
-      handler: "auth.findUsers",
+      handler: "profile.findUsers",
       config: {
         description: "List users for mentor assignment",
         prefix: "",

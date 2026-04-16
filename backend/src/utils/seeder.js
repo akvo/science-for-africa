@@ -268,8 +268,8 @@ const seed = async (strapi) => {
 
   // 4. Collaboration Call permissions (Authenticated only)
   const collaborationActions = [
-    "api::auth.auth.update-me",
-    "api::auth.auth.findUsers",
+    "api::auth.profile.update",
+    "api::auth.profile.findUsers",
     "api::collaboration-call.collaboration-call.createWithInvites",
     "api::collaboration-call.collaboration-call.create-with-invites",
     "api::collaboration-call.collaboration-call.create",

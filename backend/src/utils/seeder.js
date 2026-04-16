@@ -151,6 +151,32 @@ const synchronizeTranslations = async (strapi, uid) => {
       const frExists = allLocales.some((loc) => loc.locale === "fr");
 
       if (!frExists) {
+        // 2b. Secondary check: does an entry with the same unique name/title exist in 'fr'?
+        // This prevents collisions if the record was previously created under a different documentId.
+        const businessFields = ["name", "title"];
+        const collisionFilter = {};
+        let hasBusinessField = false;
+
+        for (const field of businessFields) {
+          if (entry[field]) {
+            collisionFilter[field] = { $eqi: entry[field] };
+            hasBusinessField = true;
+          }
+        }
+
+        if (hasBusinessField) {
+          const collision = await strapi.documents(uid).findMany({
+            filters: collisionFilter,
+            locale: "fr",
+            status: "published",
+            limit: 1,
+          });
+
+          if (collision.length > 0) {
+            continue;
+          }
+        }
+
         strapi.log.info(
           `Creating French translation for ${uid} (doc: ${docId})...`,
         );

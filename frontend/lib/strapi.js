@@ -164,6 +164,17 @@ export async function fetchCommunity(slug) {
 }
 
 /**
+ * Fetch collaboration calls for a given community (by community name).
+ * Returns them newest-first.
+ */
+export async function fetchCollaborationCalls(communityName) {
+  const qs = communityName
+    ? `?filters[communityName][$eq]=${encodeURIComponent(communityName)}&sort=createdAt:desc`
+    : `?sort=createdAt:desc`;
+  return fetchFromStrapi(`/collaboration-calls${qs}`);
+}
+
+/**
  * Update authenticated user profile
  */
 export async function updateUserProfile(userData) {

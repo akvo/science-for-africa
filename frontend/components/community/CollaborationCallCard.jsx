@@ -60,7 +60,12 @@ export default function CollaborationCallCard({ call, onView }) {
         {call.tags?.length ? (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {call.tags.map((tag) => (
-              <Badge key={tag} variant="outline" size="sm">
+              <Badge
+                key={tag}
+                variant="outline"
+                size="sm"
+                className="h-auto px-3 py-1 text-xs font-medium"
+              >
                 {tag}
               </Badge>
             ))}

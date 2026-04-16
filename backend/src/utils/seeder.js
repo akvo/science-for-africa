@@ -169,38 +169,6 @@ const COMMUNITIES = [
           "Keep comments respectful and on-topic. Personal attacks will result in removal from the community.",
       },
     ],
-    subCommunities: [
-      {
-        name: "Health and Wellness",
-        slug: "health-and-wellness",
-        initials: "HW",
-        description:
-          "Explore the latest trends in health, fitness, and mental well-being.",
-        subscribers: 150000,
-        posts: 89,
-        tags: ["Health", "Wellness", "Fitness"],
-      },
-      {
-        name: "Travel and Adventure",
-        slug: "travel-and-adventure",
-        initials: "TA",
-        description:
-          "Discover breathtaking destinations and tips for your next journey.",
-        subscribers: 95000,
-        posts: 56,
-        tags: ["Travel", "Adventure", "Photography"],
-      },
-      {
-        name: "Arts and Culture",
-        slug: "arts-and-culture",
-        initials: "AC",
-        description:
-          "Dive into the world of creativity, from art history to modern expression.",
-        subscribers: 75000,
-        posts: 41,
-        tags: ["Art", "Culture", "Creativity"],
-      },
-    ],
   },
   {
     name: "Community of Innovators",
@@ -229,18 +197,6 @@ const COMMUNITIES = [
           "Promotional content or self-promotion without community value will be removed.",
       },
     ],
-    subCommunities: [
-      {
-        name: "Science and Technology",
-        slug: "science-and-technology",
-        initials: "ST",
-        description:
-          "Lorem ipsum dolor sit amet consectetur. Eu dis pellentesque in elit auctor.",
-        subscribers: 218000,
-        posts: 112,
-        tags: ["Science", "Technology"],
-      },
-    ],
   },
   {
     name: "Community of Educators",
@@ -267,18 +223,6 @@ const COMMUNITIES = [
         label: "Student privacy",
         description:
           "Never share identifiable student information. Use anonymized data in discussions.",
-      },
-    ],
-    subCommunities: [
-      {
-        name: "Science and Technology",
-        slug: "educators-science-and-technology",
-        initials: "ST",
-        description:
-          "Lorem ipsum dolor sit amet consectetur. Eu dis pellentesque in elit auctor.",
-        subscribers: 218000,
-        posts: 75,
-        tags: ["Science", "Technology", "Education"],
       },
     ],
   },
@@ -331,22 +275,9 @@ const seed = async (strapi) => {
   if (communityCount === 0) {
     strapi.log.info("Seeding Communities...");
     for (const data of COMMUNITIES) {
-      const { subCommunities, ...parentData } = data;
-      const parent = await strapi.db
-        .query("api::community.community")
-        .create({ data: parentData });
-
-      if (subCommunities && subCommunities.length) {
-        for (const sub of subCommunities) {
-          await strapi.db.query("api::community.community").create({
-            data: { ...sub, parent: parent.id },
-          });
-        }
-      }
+      await strapi.db.query("api::community.community").create({ data });
     }
-    strapi.log.info(
-      `Seeded ${COMMUNITIES.length} parent communities with sub-communities.`,
-    );
+    strapi.log.info(`Seeded ${COMMUNITIES.length} communities.`);
   }
 
   // 4. Set Permissions (Ensure Public and Authenticated can search)

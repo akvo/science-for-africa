@@ -126,6 +126,30 @@ const grantPermission = async (strapi, roleType, action) => {
   }
 };
 
+/**
+ * Helper to revoke a permission from a role (inverse of grantPermission).
+ * Used to clean up permissions that were granted in earlier seeder runs but
+ * shouldn't be present anymore.
+ */
+const revokePermission = async (strapi, roleType, action) => {
+  const role = await strapi.db
+    .query("plugin::users-permissions.role")
+    .findOne({ where: { type: roleType } });
+
+  if (!role) return;
+
+  const existing = await strapi.db
+    .query("plugin::users-permissions.permission")
+    .findOne({ where: { role: role.id, action } });
+
+  if (existing) {
+    strapi.log.info(`Revoking ${action} from ${roleType}...`);
+    await strapi.db
+      .query("plugin::users-permissions.permission")
+      .delete({ where: { id: existing.id } });
+  }
+};
+
 const COMMUNITIES = [
   {
     name: "Community of Researchers",
@@ -215,6 +239,7 @@ const seed = async (strapi) => {
     "api::institution.institution.find",
     "api::community.community.find",
     "api::community.community.findOne",
+    "api::collaboration-invite.collaboration-invite.accept",
   ];
 
   for (const role of roles) {
@@ -230,12 +255,22 @@ const seed = async (strapi) => {
     "api::collaboration-call.collaboration-call.create-with-invites",
     "api::collaboration-call.collaboration-call.create",
     "api::collaboration-call.collaboration-call.find",
+    "api::collaboration-call.collaboration-call.findOne",
     "api::collaboration-invite.collaboration-invite.create",
     "api::collaboration-invite.collaboration-invite.find",
   ];
 
   for (const action of collaborationActions) {
     await grantPermission(strapi, "authenticated", action);
+  }
+
+  // 6. Revoke permissions that were previously granted in error.
+  const publicRevokes = [
+    "api::collaboration-call.collaboration-call.find",
+    "api::collaboration-call.collaboration-call.findOne",
+  ];
+  for (const action of publicRevokes) {
+    await revokePermission(strapi, "public", action);
   }
 };
 

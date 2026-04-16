@@ -60,14 +60,20 @@ module.exports = createCoreController(
           },
         );
 
-        // Create invites
-        const emails = inviteEmails || [];
-        const mentors = mentorEmails || [];
+        // Build a deduplicated map of email -> role. A mentor email that
+        // also appears in inviteEmails should only generate a single invite
+        // (with role "Mentor"). Mentors are ALWAYS processed even when the
+        // user chose "Skip" and passed an empty inviteEmails list.
+        const emailRoles = new Map();
+        for (const email of inviteEmails || []) {
+          if (email) emailRoles.set(email, "Collaborator");
+        }
+        for (const email of mentorEmails || []) {
+          if (email) emailRoles.set(email, "Mentor");
+        }
         const createdInvites = [];
 
-        for (const email of emails) {
-          const role = mentors.includes(email) ? "Mentor" : "Collaborator";
-
+        for (const [email, role] of emailRoles) {
           // Check if user exists in the system
           const existingUser = await strapi.db
             .query("plugin::users-permissions.user")

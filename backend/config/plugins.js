@@ -50,9 +50,9 @@ module.exports = ({ env }) => {
 
   const getFrontendUrl = () => {
     return (
+      env("NEXT_PUBLIC_FRONTEND_URL") ||
       env("FRONTEND_URL") ||
       env("PUBLIC_URL") ||
-      env("NEXT_PUBLIC_FRONTEND_URL") ||
       "http://localhost:3000"
     );
   };

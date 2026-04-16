@@ -48,6 +48,8 @@ module.exports = ({ strapi }) => ({
         confirmationToken: null,
         otpCode: null,
         otpExpiration: null,
+        otpResendCount: 0,
+        lastOtpSentAt: null,
       },
     });
 

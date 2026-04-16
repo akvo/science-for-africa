@@ -6,17 +6,17 @@
   "locale": null,
   "permissions": [
     {
-      "documentId": "cawemq5m9jecvmlsuu8f9va0",
+      "documentId": "cjbdgnq0u5xdxxdkgehd7t2d",
       "action": "api::auth.auth.registrationStatus",
       "locale": null
     },
     {
-      "documentId": "du5maowuam5ka4p8kcf9225d",
+      "documentId": "wgd4mvodn8j9if0la54mzl46",
       "action": "api::auth.auth.resendOtp",
       "locale": null
     },
     {
-      "documentId": "fepno3wgr2s81gbte6m844nj",
+      "documentId": "qtry1wkfbi7bvey565yszvfi",
       "action": "api::auth.auth.verifyOtp",
       "locale": null
     },

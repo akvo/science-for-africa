@@ -64,6 +64,7 @@ graph TD
 - `lastOtpSentAt`: `DateTime` (Timestamp of the last resend request).
 - `otpResendCount`: `Integer` (Current number of resends in the active window, default: 0).
 - `otpResendWindowStart`: `DateTime` (Start of the 1-hour rolling window for rate limiting).
+- `verificationStatus`: `Enumeration` (`unverified`, `verified`, default: `unverified`).
 
 ---
 
@@ -135,6 +136,19 @@ graph TD
 - **Response**:
     - `200 OK`: `{ "success": true, "message": "New OTP sent" }`
     - `429 Too Many Requests`: `{ "error": "Please wait 60 seconds before resending" }` or `{ "error": "Maximum resend attempts reached. Try again in 1 hour." }`
+
+### Registration Status (Polling)
+- **Method**: `GET`
+- **Path**: `/api/auth/registration-status`
+- **Query Params**:
+  ```json
+  {
+    "email": "user@example.com"
+  }
+  ```
+- **Response**:
+    - `200 OK`: `{ "email": "user@example.com", "confirmed": true }`
+    - `404 Not Found`: `{ "error": "User not found" }`
 
 ---
 

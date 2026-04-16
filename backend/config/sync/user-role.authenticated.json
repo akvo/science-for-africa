@@ -11,6 +11,11 @@
       "locale": null
     },
     {
+      "documentId": "j2cyea97apl3xb8bvg4ly0jz",
+      "action": "api::auth.auth.update-me",
+      "locale": null
+    },
+    {
       "documentId": "asupvb4f1xk03zab4lpy4r1c",
       "action": "api::auth.auth.updateMe",
       "locale": null
@@ -21,7 +26,7 @@
       "locale": null
     },
     {
-      "documentId": "wk9nl93ymgyh538i4sfj7sby",
+      "documentId": "t2d0gvu4bddznrem0b68arjn",
       "action": "api::collaboration-call.collaboration-call.create-with-invites",
       "locale": null
     },

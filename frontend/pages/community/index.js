@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { Plus } from "lucide-react";
+import { ArrowLeft, ArrowRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -29,7 +29,7 @@ function CommunityCard({ community, onJoin }) {
             {community.avatarUrl ? (
               <AvatarImage src={community.avatarUrl} alt={community.name} />
             ) : null}
-            <AvatarFallback className="text-xs font-semibold">
+            <AvatarFallback className="bg-primary-50 text-primary-500 text-xs font-semibold">
               {community.initials || community.name?.charAt(0)}
             </AvatarFallback>
           </Avatar>
@@ -43,9 +43,9 @@ function CommunityCard({ community, onJoin }) {
           </div>
         </div>
         <Button
-          variant="outline"
+          variant="tertiary"
           size="sm"
-          className="flex-none"
+          className="flex-none bg-[#E8ECEF] text-black hover:bg-[#dde1e4]"
           onClick={(e) => {
             e.stopPropagation();
             onJoin?.(community);
@@ -69,6 +69,9 @@ export default function CommunitiesPage() {
   const [communities, setCommunities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTag, setActiveTag] = useState(ALL_TAG);
+  const tagsScrollRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   useEffect(() => {
     fetchCommunities().then((res) => {
@@ -77,6 +80,34 @@ export default function CommunitiesPage() {
       setLoading(false);
     });
   }, []);
+
+  const updateScrollButtons = () => {
+    const el = tagsScrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 0);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+  };
+
+  useEffect(() => {
+    updateScrollButtons();
+    const el = tagsScrollRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", updateScrollButtons, { passive: true });
+    window.addEventListener("resize", updateScrollButtons);
+    return () => {
+      el.removeEventListener("scroll", updateScrollButtons);
+      window.removeEventListener("resize", updateScrollButtons);
+    };
+  }, [communities]);
+
+  const scrollTags = (direction) => {
+    const el = tagsScrollRef.current;
+    if (!el) return;
+    el.scrollBy({
+      left: direction * Math.max(el.clientWidth * 0.8, 200),
+      behavior: "smooth",
+    });
+  };
 
   // Collect unique tags from all communities
   const allTags = [
@@ -94,7 +125,7 @@ export default function CommunitiesPage() {
 
   return (
     <div className="flex flex-col lg:flex-row">
-      <aside className="w-full lg:w-52 lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4 lg:pt-4 lg:sticky lg:top-28.5 lg:self-start lg:h-[calc(100vh-114px)] lg:overflow-y-auto">
+      <aside className="w-full lg:w-[260px] lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4 lg:pt-4 lg:sticky lg:top-28.5 lg:self-start lg:h-[calc(100vh-114px)] lg:overflow-y-auto">
         <CommunityLeftNav activeKey="communities" />
       </aside>
 
@@ -121,17 +152,48 @@ export default function CommunitiesPage() {
         </div>
 
         {/* Tag filter chips */}
-        <div className="flex flex-wrap gap-2 border-t border-brand-gray-200 py-4 lg:pl-6">
-          {allTags.map((tag) => (
-            <Badge
-              key={tag}
-              variant={activeTag === tag ? "primary" : "outline"}
-              className="cursor-pointer"
-              onClick={() => setActiveTag(tag)}
+        <div className="relative border-t border-brand-gray-200 py-4 lg:pl-6">
+          <div
+            ref={tagsScrollRef}
+            className="flex gap-2 overflow-x-auto scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-10"
+          >
+            {allTags.map((tag) => {
+              const isActive = activeTag === tag;
+              return (
+                <Badge
+                  key={tag}
+                  variant="outline"
+                  className={
+                    "cursor-pointer whitespace-nowrap flex-none rounded-full border-[#D0D5DD] h-auto py-2 px-[14px] text-[14px] leading-[18px] font-normal text-[#344054] " +
+                    (isActive ? "bg-primary-50" : "bg-transparent")
+                  }
+                  onClick={() => setActiveTag(tag)}
+                >
+                  {tag}
+                </Badge>
+              );
+            })}
+          </div>
+          {canScrollLeft ? (
+            <button
+              type="button"
+              aria-label="Scroll tags left"
+              onClick={() => scrollTags(-1)}
+              className="absolute left-0 lg:left-6 top-1/2 -translate-y-1/2 flex size-[40px] items-center justify-center rounded-full border border-brand-gray-200 bg-white text-brand-gray-700 shadow-sm hover:bg-brand-gray-50"
             >
-              {tag}
-            </Badge>
-          ))}
+              <ArrowLeft className="size-[18px]" />
+            </button>
+          ) : null}
+          {canScrollRight ? (
+            <button
+              type="button"
+              aria-label="Scroll tags right"
+              onClick={() => scrollTags(1)}
+              className="absolute right-0 top-1/2 -translate-y-1/2 flex size-[40px] items-center justify-center rounded-full border border-brand-gray-200 bg-white text-brand-gray-700 shadow-sm hover:bg-brand-gray-50"
+            >
+              <ArrowRight className="size-[18px]" />
+            </button>
+          ) : null}
         </div>
 
         {loading ? (

@@ -1,18 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import {
   ArrowLeft,
-  Bold,
-  Italic,
-  Link as LinkIcon,
-  List,
-  AlignLeft,
-  Paperclip,
   Calendar,
-  Check,
   FileText,
   ImageIcon,
-  ChevronDown,
 } from "lucide-react";
 import {
   Avatar,
@@ -20,7 +12,7 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import {
   fetchChatMessages,
   fetchCollaborationCall,
@@ -28,15 +20,7 @@ import {
   postChatMessage,
 } from "@/lib/strapi";
 import { useAuthStore } from "@/lib/auth-store";
-
-const TEXT_STYLES = [
-  { value: "normal", label: "Normal text" },
-  { value: "h1", label: "Heading 1" },
-  { value: "h2", label: "Heading 2" },
-  { value: "h3", label: "Heading 3" },
-  { value: "quote", label: "Quote" },
-  { value: "code", label: "Code" },
-];
+import { htmlToPlainText, sanitizeHtml } from "@/lib/sanitize-html";
 
 /**
  * Map a raw Strapi chat-message row into the shape the ChatThread expects.
@@ -410,9 +394,10 @@ function ChatThread({ messages = [] }) {
             return (
               <li key={key} className="flex justify-end">
                 <div className="flex max-w-[70%] flex-col items-end gap-1">
-                  <div className="rounded-2xl rounded-tr-sm bg-primary-500 px-4 py-2.5 text-sm text-white whitespace-pre-wrap break-words">
-                    {m.text}
-                  </div>
+                  <div
+                    className="rounded-2xl rounded-tr-sm bg-primary-500 px-4 py-2.5 text-sm text-white break-words [&_a]:underline [&_a]:text-white [&_ul]:ml-5 [&_ul]:list-disc [&_ol]:ml-5 [&_ol]:list-decimal [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_p]:m-0 [&_blockquote]:border-l-2 [&_blockquote]:border-white/40 [&_blockquote]:pl-3 [&_pre]:bg-white/10 [&_pre]:rounded-md [&_pre]:p-2 [&_pre]:font-mono [&_pre]:text-xs"
+                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(m.text) }}
+                  />
                   <span className="text-[11px] text-brand-gray-400">
                     {m.time}
                   </span>
@@ -454,9 +439,10 @@ function ChatThread({ messages = [] }) {
                     </div>
                   </div>
                 ) : (
-                  <div className="w-fit rounded-2xl rounded-tl-sm bg-brand-gray-50 px-4 py-2.5 text-sm text-brand-gray-800 whitespace-pre-wrap break-words">
-                    {m.text}
-                  </div>
+                  <div
+                    className="w-fit rounded-2xl rounded-tl-sm bg-brand-gray-50 px-4 py-2.5 text-sm text-brand-gray-800 break-words [&_a]:underline [&_a]:text-primary-500 [&_ul]:ml-5 [&_ul]:list-disc [&_ol]:ml-5 [&_ol]:list-decimal [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_p]:m-0 [&_blockquote]:border-l-2 [&_blockquote]:border-brand-gray-200 [&_blockquote]:pl-3 [&_pre]:bg-white [&_pre]:rounded-md [&_pre]:p-2 [&_pre]:font-mono [&_pre]:text-xs"
+                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(m.text) }}
+                  />
                 )}
               </div>
             </li>
@@ -469,12 +455,13 @@ function ChatThread({ messages = [] }) {
 
 function ChatComposer({ onSend, disabled = false }) {
   const [value, setValue] = useState("");
-  const [textStyle, setTextStyle] = useState("normal");
+
+  const plainText = htmlToPlainText(value).trim();
+  const canSend = plainText.length > 0 && !disabled;
 
   const submit = () => {
-    const trimmed = value.trim();
-    if (!trimmed || disabled) return;
-    onSend?.(trimmed);
+    if (!canSend) return;
+    onSend?.(value);
     setValue("");
   };
 
@@ -486,28 +473,15 @@ function ChatComposer({ onSend, disabled = false }) {
     }
   };
 
-  const canSend = value.trim().length > 0 && !disabled;
-
   return (
     <div className="border-t border-brand-gray-100 px-6 py-4">
-      <div className="rounded-xl border border-brand-gray-100 bg-white">
-        <div className="flex flex-wrap items-center gap-1 border-b border-brand-gray-100 px-3 py-2">
-          <TextStyleDropdown value={textStyle} onChange={setTextStyle} />
-          <ToolbarButton icon={Bold} label="Bold" />
-          <ToolbarButton icon={Italic} label="Italic" />
-          <ToolbarButton icon={LinkIcon} label="Link" />
-          <ToolbarButton icon={List} label="List" />
-          <ToolbarButton icon={AlignLeft} label="Align" />
-          <ToolbarButton icon={Paperclip} label="Attach" />
-        </div>
-        <Textarea
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Write a message..."
-          className="min-h-[96px] border-0 focus:ring-0"
-        />
-      </div>
+      <RichTextEditor
+        value={value}
+        onChange={setValue}
+        onKeyDown={handleKeyDown}
+        placeholder="Write a message..."
+        minHeight={96}
+      />
 
       <div className="mt-3 flex items-center gap-2">
         <Button
@@ -529,82 +503,6 @@ function ChatComposer({ onSend, disabled = false }) {
         </Button>
       </div>
     </div>
-  );
-}
-
-function TextStyleDropdown({ value, onChange }) {
-  const [open, setOpen] = useState(false);
-  const rootRef = useRef(null);
-  const active = TEXT_STYLES.find((s) => s.value === value) || TEXT_STYLES[0];
-
-  useEffect(() => {
-    if (!open) return;
-    const handleClickOutside = (e) => {
-      if (rootRef.current && !rootRef.current.contains(e.target)) {
-        setOpen(false);
-      }
-    };
-    const handleEsc = (e) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleEsc);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEsc);
-    };
-  }, [open]);
-
-  return (
-    <div ref={rootRef} className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-brand-gray-600 hover:bg-brand-gray-50"
-      >
-        {active.label}
-        <ChevronDown
-          className={`size-3 transition-transform ${open ? "rotate-180" : ""}`}
-        />
-      </button>
-      {open ? (
-        <div className="absolute left-0 top-full z-20 mt-1 w-44 overflow-hidden rounded-lg border border-brand-gray-100 bg-white py-1 shadow-lg">
-          {TEXT_STYLES.map((s) => {
-            const isActive = s.value === value;
-            return (
-              <button
-                key={s.value}
-                type="button"
-                onClick={() => {
-                  onChange(s.value);
-                  setOpen(false);
-                }}
-                className={`flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm hover:bg-brand-gray-50 ${
-                  isActive
-                    ? "text-primary-500 font-medium"
-                    : "text-brand-gray-700"
-                }`}
-              >
-                <span>{s.label}</span>
-                {isActive ? <Check className="size-4" /> : null}
-              </button>
-            );
-          })}
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-function ToolbarButton({ icon: Icon, label }) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      className="inline-flex size-7 items-center justify-center rounded-md text-brand-gray-500 hover:bg-brand-gray-50"
-    >
-      <Icon className="size-4" />
-    </button>
   );
 }
 

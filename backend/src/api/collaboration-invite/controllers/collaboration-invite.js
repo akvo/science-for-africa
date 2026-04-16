@@ -28,13 +28,13 @@ module.exports = createCoreController(
         return ctx.notFound("Invite not found");
       }
 
-      if (row.status === "Declined") {
+      if (row.inviteStatus === "Declined") {
         return ctx.badRequest("This invite has been declined");
       }
 
       const user = ctx.state.user;
       const data = {};
-      if (row.status !== "Accepted") data.status = "Accepted";
+      if (row.inviteStatus !== "Accepted") data.inviteStatus = "Accepted";
       if (user && !row.invitedUser) data.invitedUser = user.id;
 
       if (Object.keys(data).length > 0) {

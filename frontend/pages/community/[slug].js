@@ -1,12 +1,16 @@
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { ArrowLeft, ChevronDown } from "lucide-react";
+import { ArrowLeft, ChevronDown, Plus } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
 import { Button } from "@/components/ui/button";
 import CommunityLeftNav from "@/components/community/CommunityLeftNav";
 import CommunityHeader from "@/components/community/CommunityHeader";
 import CommunityAboutCard from "@/components/community/CommunityAboutCard";
 import CollaborationCallsList from "@/components/community/CollaborationCallsList";
+import CreateCollaborationDialog from "@/components/collaboration/CreateCollaborationDialog";
+import { useCollaborationStore } from "@/lib/collaboration-store";
+import { useAuthStore } from "@/lib/auth-store";
 import {
   COMMUNITY_TABS,
   MOCK_COLLABORATION_CALLS,
@@ -23,6 +27,16 @@ import {
  */
 export default function CommunityDetailPage() {
   const router = useRouter();
+  const openCollaborationDialog = useCollaborationStore((s) => s.open);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
+  const openCollaboration = () => {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+    openCollaborationDialog();
+  };
   // Keep the default stable between SSR and first client render to avoid
   // hydration mismatches. `router.query` is empty during SSR and populated
   // only after hydration.
@@ -47,7 +61,7 @@ export default function CommunityDetailPage() {
       </aside>
 
       <div className="flex flex-1 flex-col gap-6 min-w-0">
-        <CommunityHeader community={community} />
+        <CommunityHeader community={community} onCreatePost={openCollaboration} />
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
           <div className="flex flex-col gap-5 min-w-0 lg:border-r lg:border-brand-gray-100">
@@ -60,10 +74,20 @@ export default function CommunityDetailPage() {
               >
                 <ArrowLeft className="size-4" />
               </button>
-              <Button variant="outline" size="md" className="gap-2">
-                <ChevronDown className="size-4" />
-                Sort by
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  size="md"
+                  className="gap-2 rounded-full"
+                  onClick={openCollaboration}
+                >
+                  <Plus className="size-4" />
+                  Create post
+                </Button>
+                <Button variant="outline" size="md" className="gap-2">
+                  <ChevronDown className="size-4" />
+                  Sort by
+                </Button>
+              </div>
             </div>
 
             <Tabs
@@ -113,6 +137,8 @@ export default function CommunityDetailPage() {
           </aside>
         </div>
       </div>
+
+      <CreateCollaborationDialog />
     </div>
   );
 }

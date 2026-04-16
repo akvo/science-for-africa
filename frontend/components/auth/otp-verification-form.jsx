@@ -123,8 +123,8 @@ export const OTPVerificationForm = ({ email }) => {
       console.log("OTP Verification Response:", res);
       if (res.success) {
         toast.success(t("otp.verified_success"));
-        // Redirect to onboarding
-        router.push("/onboarding");
+        // Redirect to login
+        router.push("/login");
       } else {
         const errorMsg =
           res.message || res.error?.message || t("otp.invalid_error");

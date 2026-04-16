@@ -12,7 +12,6 @@ module.exports = {
       handler: "profile.update",
       config: {
         description: "Update current user profile",
-        prefix: "",
       },
     },
     {
@@ -22,7 +21,6 @@ module.exports = {
       config: {
         auth: false,
         description: "Verify user email via OTP",
-        prefix: "",
       },
     },
     {
@@ -31,18 +29,16 @@ module.exports = {
       handler: "auth.resendOtp",
       config: {
         auth: false,
-        description: "Resend email verification OTP",
-        prefix: "",
+        description: "Verify user email via OTP",
       },
     },
     {
-      method: "POST",
+      method: "GET",
       path: "/auth/registration-status",
       handler: "auth.registrationStatus",
       config: {
         auth: false,
         description: "Check if an email is already verified",
-        prefix: "",
       },
     },
     {
@@ -51,7 +47,6 @@ module.exports = {
       handler: "profile.findUsers",
       config: {
         description: "List users for mentor assignment",
-        prefix: "",
       },
     },
   ],

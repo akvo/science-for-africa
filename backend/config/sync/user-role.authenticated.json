@@ -6,12 +6,12 @@
   "locale": null,
   "permissions": [
     {
-      "documentId": "z0wijw0o4noa4dvdoq2am3qz",
+      "documentId": "d6y3osp1hvimhpn87v54xa7v",
       "action": "api::auth.profile.findUsers",
       "locale": null
     },
     {
-      "documentId": "mxqoxktwv3whtff6tdxgec2v",
+      "documentId": "uh5a5o3xk3mhesuahosyxkzg",
       "action": "api::auth.profile.update",
       "locale": null
     },
@@ -21,7 +21,7 @@
       "locale": null
     },
     {
-      "documentId": "c2gr2q4yp5ehgfrn3agrntmg",
+      "documentId": "ltcedyydpk8jj332g35kqkwx",
       "action": "api::collaboration-call.collaboration-call.create-with-invites",
       "locale": null
     },

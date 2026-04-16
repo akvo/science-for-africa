@@ -84,6 +84,23 @@ module.exports = {
     }
 
     // 2. Override users-permissions register route and controller
+    // Intercept and log all auth requests
+    strapi.server.use(async (ctx, next) => {
+      if (ctx.url.includes("/auth/")) {
+        const hasAuth = !!ctx.get("Authorization");
+        const userId = ctx.state.user ? ctx.state.user.id : "ANONYMOUS";
+        console.log(
+          `[AUTH-TRACE] [${userId}] [AuthHeader: ${hasAuth}] Incoming ${ctx.method} ${ctx.url}`,
+        );
+      }
+
+      await next();
+
+      if (ctx.url.includes("/auth/")) {
+        console.log(`[AUTH-TRACE] Result for ${ctx.url}: ${ctx.status}`);
+      }
+    });
+
     const usersPermissionsPlugin = strapi.plugin("users-permissions");
 
     // Disable route-level body validation for the register endpoint
@@ -148,40 +165,50 @@ module.exports = {
       }
     };
 
-    // Override the emailConfirmation controller to return JSON
+    // 3. Extend users-permissions with PUT /auth/me
+    const contentApiRoutes =
+      usersPermissionsPlugin.routes["content-api"].routes;
+
+    // 3. The custom /auth routes are now primarily handled by the standalone api::auth
+    // which allows for better organization and permission management in v5.
+    // We remove the plugin route overrides to avoid path conflicts.
+    // --- CONSOLIDATION: Routes moved to api::auth/routes/auth.js ---
+
+    // Add actions to the user controller using the modern Strapi v5 API
+    const userController = strapi.plugin("users-permissions").controller("user");
+
+    // We no longer override verifyOtp, resendOtp, etc. here because they are handled
+    // in the standalone api::auth which follows better organization.
+    // However, we preserve the updateMe override IF needed for plugin-level hooks,
+    // but the routes are now pointing to api::auth.
+
+    // 4. Override the emailConfirmation controller to return JSON
     const originalEmailConfirmation =
       usersPermissionsPlugin.controller("auth").emailConfirmation;
     usersPermissionsPlugin.controller("auth").emailConfirmation = async (
       ctx,
     ) => {
-      console.log("[AUTH-DEBUG] emailConfirmation started", ctx.query);
       try {
-        if (typeof originalEmailConfirmation !== "function") {
-          console.error(
-            "[AUTH-DEBUG] originalEmailConfirmation is NOT a function!",
-            typeof originalEmailConfirmation,
-          );
-          ctx.status = 500;
-          ctx.body = { error: "Internal Server Error: Missing controller" };
-          return;
-        }
         await originalEmailConfirmation(ctx);
-        console.log(
-          `[AUTH-DEBUG] emailConfirmation original called, status: ${ctx.status}`,
-        );
-        // If the original logic set a redirect, we transform it into a JSON response
         if (ctx.response.status === 302) {
           ctx.body = { success: true };
           ctx.status = 200;
         }
       } catch (error) {
-        console.error(
-          "[AUTH-DEBUG] Error in emailConfirmation override:",
-          error,
-        );
+        strapi.log.error("Email Confirmation Error: " + error.message);
         throw error;
       }
     };
+
+    // 5. Add /auth/users GET route for search
+    contentApiRoutes.push({
+      method: "GET",
+      path: "/auth/users",
+      handler: "user.find", // Use built-in find or custom
+      config: {
+        prefix: "",
+      },
+    });
 
     try {
       if (strapi.plugin("documentation")) {
@@ -218,6 +245,29 @@ module.exports = {
         `[AUTH-DEBUG] Database connected to host: ${strapi.config.get("database.connection.connection.host")}, database: ${strapi.config.get("database.connection.connection.database")}`,
       );
     }
+
+    // Diagnostic: Scan Auth Routes
+    console.log("--- SCANNING AUTH ROUTES DETAILS ---");
+    try {
+      const upRoutes =
+        strapi.plugins["users-permissions"].routes["content-api"].routes;
+      upRoutes.forEach((route) => {
+        if (
+          route.path.includes("/me") ||
+          route.path.includes("/find-users") ||
+          route.handler.includes("otp")
+        ) {
+          const auth = route.config?.auth === false ? "PUBLIC" : "REQUIRED";
+          const policies = route.config?.policies || [];
+          console.log(
+            `[ROUTE] ${route.method} ${route.path} -> ${route.handler} | Auth: ${auth} | Policies: ${JSON.stringify(policies)}`,
+          );
+        }
+      });
+    } catch (err) {
+      console.log(`[SCAN-ERROR] Failed to scan UP routes: ${err.message}`);
+    }
+    console.log("--- SCAN COMPLETE ---");
 
     // Add user lifecycles in bootstrap
     strapi.db.lifecycles.subscribe({

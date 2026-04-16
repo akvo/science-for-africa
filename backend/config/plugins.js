@@ -110,7 +110,7 @@ module.exports = ({ env }) => {
           expiresIn: "30d",
         },
         advanced: {
-          email_confirmation_redirection: frontendUrl + "/auth/verify-email",
+          email_confirmation_redirection: frontendUrl + "/login?verified=true",
         },
         ratelimit: {
           enabled: false,
@@ -121,16 +121,6 @@ module.exports = ({ env }) => {
             clientId: env("GOOGLE_CLIENT_ID"),
             clientSecret: env("GOOGLE_CLIENT_SECRET"),
             callback: frontendUrl + "/auth/google",
-          },
-        },
-        ratelimit: {
-          enabled: false,
-        },
-        grant: {
-          google: {
-            enabled: true,
-            clientId: env("GOOGLE_CLIENT_ID"),
-            clientSecret: env("GOOGLE_CLIENT_SECRET"),
           },
         },
       },

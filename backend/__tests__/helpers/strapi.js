@@ -166,7 +166,21 @@ async function grantPermissions(roleType, permissions) {
 
   for (const [controller, actions] of Object.entries(permissions)) {
     for (const action of actions) {
-      const actionString = `api::auth.auth.${action}`;
+      let actionString;
+
+      if (action.includes("::")) {
+        // Full action string provided
+        actionString = action;
+      } else {
+        // Relative action string, determine context
+        if (controller === "auth" || controller === "profile") {
+          actionString = `api::auth.${controller}.${action}`;
+        } else if (controller === "user" || controller === "role") {
+          actionString = `plugin::users-permissions.${controller}.${action}`;
+        } else {
+          actionString = `api::${controller}.${controller}.${action}`;
+        }
+      }
 
       // Check if permission already exists for this role
       const existingPermission = await strapi

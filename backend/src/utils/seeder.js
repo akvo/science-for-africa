@@ -266,7 +266,17 @@ const seed = async (strapi) => {
     }
   }
 
-  // 4. Collaboration Call permissions (Authenticated only)
+  // Grant Public access to OTP verification (New custom API routes)
+  const publicAuthActions = [
+    "api::auth.auth.verifyOtp",
+    "api::auth.auth.resendOtp",
+    "api::auth.auth.registrationStatus",
+  ];
+  for (const action of publicAuthActions) {
+    await grantPermission(strapi, "public", action);
+  }
+
+  // 4. Collaboration Call and Profile permissions (Authenticated only)
   const collaborationActions = [
     "api::auth.profile.update",
     "api::auth.profile.findUsers",

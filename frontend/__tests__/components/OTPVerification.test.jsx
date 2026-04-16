@@ -91,7 +91,7 @@ describe("OTPVerificationForm", () => {
 
     await waitFor(() => {
       expect(verifyOtp).toHaveBeenCalledWith(testEmail, "123456");
-      expect(mockPush).toHaveBeenCalledWith("/onboarding");
+      expect(mockPush).toHaveBeenCalledWith("/login");
     });
   });
 

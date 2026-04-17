@@ -46,7 +46,7 @@ describe("Institution API", () => {
         },
       }),
     ).rejects.toThrow(
-      "An institution with this name already exists (case-insensitive).",
+      "An institution with this name already exists in this locale (case-insensitive).",
     );
   });
 

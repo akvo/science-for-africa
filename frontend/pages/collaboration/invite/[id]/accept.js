@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
+import Meta from "@/components/seo/Meta";
 
 export default function AcceptInvitePage() {
   const router = useRouter();
@@ -8,6 +9,7 @@ export default function AcceptInvitePage() {
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
+      <Meta title="Collaboration Invitation" />
       <div className="flex flex-col items-center gap-6 text-center max-w-md px-4">
         <div className="flex size-16 items-center justify-center rounded-full bg-brand-teal-50">
           <CheckCircle className="size-8 text-brand-teal-600" />

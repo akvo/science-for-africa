@@ -12,18 +12,20 @@ import { useAuthStore } from "@/lib/auth-store";
 import { useRouter } from "next/router";
 import { SocialButton } from "./social-auth";
 import Link from "next/link";
-
-const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
-  rememberMe: z.boolean().default(false),
-});
+import { useTranslation } from "next-i18next";
 
 export const LoginForm = () => {
+  const { t } = useTranslation("auth");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+
+  const loginSchema = z.object({
+    email: z.string().email(t("validation.email_invalid")),
+    password: z.string().min(1, t("validation.password_required")),
+    rememberMe: z.boolean().default(false),
+  });
 
   const {
     register,
@@ -55,7 +57,7 @@ export const LoginForm = () => {
       if (result && result.jwt) {
         // Success! Persist auth state
         const { setAuth } = useAuthStore.getState();
-        setAuth(result.user, result.jwt);
+        setAuth(result.user, result.jwt, values.rememberMe);
 
         // Redirect based on onboarding status
         if (result.user?.onboardingComplete) {
@@ -64,10 +66,10 @@ export const LoginForm = () => {
           router.push("/onboarding");
         }
       } else {
-        setError("Login failed. Please try again.");
+        setError(t("login.error_failed"));
       }
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
+      setError(t("login.error_unexpected"));
     } finally {
       setIsLoading(false);
     }
@@ -77,10 +79,10 @@ export const LoginForm = () => {
     <div className="w-full max-w-90 mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col gap-3 mb-32">
         <h1 className="text-3xl font-bold tracking-tight text-brand-teal-900">
-          Log in
+          {t("login.title")}
         </h1>
         <p className="text-base text-brand-gray-500">
-          Welcome back to the platform! Please enter your details.
+          {t("login.description")}
         </p>
       </div>
 
@@ -96,7 +98,7 @@ export const LoginForm = () => {
             htmlFor="email"
             className="text-sm font-bold text-brand-gray-900"
           >
-            Email
+            {t("login.email_label")}
           </Label>
           <div className="relative group">
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-gray-400 group-focus-within:text-brand-teal-500 transition-colors pointer-events-none">
@@ -106,7 +108,7 @@ export const LoginForm = () => {
               id="email"
               type="email"
               {...register("email")}
-              placeholder="email@institution.org"
+              placeholder={t("login.email_placeholder")}
               className={`pl-10 h-11 ${errors.email ? "border-destructive ring-destructive" : ""}`}
             />
           </div>
@@ -122,7 +124,7 @@ export const LoginForm = () => {
             htmlFor="password"
             className="text-sm font-bold text-brand-gray-900"
           >
-            Password
+            {t("login.password_label")}
           </Label>
           <div className="relative group">
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-gray-400 group-focus-within:text-brand-teal-500 transition-colors pointer-events-none">
@@ -132,7 +134,7 @@ export const LoginForm = () => {
               id="password"
               type={showPassword ? "text" : "password"}
               {...register("password")}
-              placeholder="••••••••"
+              placeholder={t("login.password_placeholder")}
               className={`pl-10 pr-10 h-11 ${errors.password ? "border-destructive ring-destructive" : ""}`}
             />
             <button
@@ -160,14 +162,14 @@ export const LoginForm = () => {
               htmlFor="rememberMe"
               className="text-sm font-medium text-brand-gray-700 cursor-pointer"
             >
-              Remember me
+              {t("login.remember_me")}
             </Label>
           </div>
           <Link
             href="/auth/forgot-password"
             className="text-sm text-brand-teal-700 font-bold hover:text-brand-teal-900 transition-colors"
           >
-            Forgot password
+            {t("login.forgot_password")}
           </Link>
         </div>
 
@@ -182,24 +184,24 @@ export const LoginForm = () => {
             {isLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
-              "Login"
+              t("login.button")
             )}
           </Button>
 
           <SocialButton
             provider="google"
-            className="rounded-full h-11 border-brand-gray-200"
+            className="h-11 border-brand-gray-200"
           />
         </div>
       </form>
 
       <div className="mt-8 text-center flex items-center justify-center gap-1.5">
-        <p className="text-sm text-brand-gray-500">Don’t have an account?</p>
+        <p className="text-sm text-brand-gray-500">{t("login.no_account")}</p>
         <Link
           href="/signup"
           className="text-sm text-brand-teal-700 font-bold hover:text-brand-teal-900 transition-colors"
         >
-          Sign up
+          {t("login.signup_link")}
         </Link>
       </div>
     </div>

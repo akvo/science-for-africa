@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import AppLayout from "./AppLayout";
 import AuthLayout from "./AuthLayout";
+import Meta from "../seo/Meta";
 import { useAuthStore } from "@/lib/auth-store";
 
 /**
@@ -10,7 +11,7 @@ import { useAuthStore } from "@/lib/auth-store";
  * Automatically switches between Standard App Layout and Auth Layout
  * based on the current route.
  */
-const MainLayout = ({ children }) => {
+const MainLayout = ({ children, title, description }) => {
   const router = useRouter();
   const { isAuthenticated, user } = useAuthStore();
 
@@ -35,7 +36,7 @@ const MainLayout = ({ children }) => {
     ) {
       router.push("/onboarding");
     }
-  }, [isAuthenticated, user, router.pathname]);
+  }, [isAuthenticated, user, router.pathname, router]);
 
   // Define routes that use the specialized AuthLayout
   // login, signup, forget password, 2fa, etc.
@@ -52,11 +53,16 @@ const MainLayout = ({ children }) => {
       "/auth/two-factor": 3,
     };
     const activeStep = stepMap[router.pathname] || 1;
-    
+
     return <AuthLayout activeStep={activeStep}>{children}</AuthLayout>;
   }
 
-  return <AppLayout>{children}</AppLayout>;
+  return (
+    <AppLayout>
+      <Meta title={title} description={description} />
+      {children}
+    </AppLayout>
+  );
 };
 
 export default MainLayout;

@@ -6,6 +6,8 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import Image from "next/image";
+import LocaleSwitcher from "./LocaleSwitcher";
 
 const carouselData = [
   {
@@ -50,10 +52,16 @@ const AuthLayout = ({ children, activeStep }) => {
       <div className="w-full md:w-[44%] flex flex-col h-screen overflow-y-auto">
         {/* Header Navigation */}
         <div className="flex items-start p-8 lg:p-12">
-          <Link href="/" className="transition-opacity hover:opacity-80">
-            <img
+          <Link
+            href="/"
+            className="transition-opacity hover:opacity-80 relative block w-auto h-32"
+          >
+            <Image
               src="/logo-full.png"
               alt="Science for Africa"
+              width={240}
+              height={128}
+              priority
               className="h-32 w-auto object-contain"
             />
           </Link>
@@ -69,24 +77,7 @@ const AuthLayout = ({ children, activeStep }) => {
           <p className="text-xs md:text-sm text-brand-gray-500 font-medium">
             © Science for Africa 2026
           </p>
-          <div className="flex items-center gap-1.5 cursor-pointer group transition-all duration-200">
-            <span className="text-xs md:text-sm font-bold text-brand-gray-500 group-hover:text-brand-gray-900 transition-colors uppercase tracking-wider">
-              ENG
-            </span>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-brand-gray-400 group-hover:text-brand-gray-900 transition-colors"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </div>
+          <LocaleSwitcher />
         </div>
       </div>
 
@@ -119,10 +110,11 @@ const AuthLayout = ({ children, activeStep }) => {
                 >
                   <div className="relative w-full h-full">
                     {/* Main Background Image */}
-                    <img
+                    <Image
                       src={slide.image}
                       alt={slide.title}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-6000 scale-105"
+                      fill
+                      className="object-cover transition-transform duration-6000 scale-105"
                     />
 
                     {/* Subtle Overlay instead of broken noisy SVG */}

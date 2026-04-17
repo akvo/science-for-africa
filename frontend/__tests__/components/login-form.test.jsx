@@ -15,6 +15,20 @@ jest.mock("../../lib/strapi", () => ({
   loginUser: jest.fn(),
 }));
 
+// Mock next-i18next
+jest.mock("next-i18next", () => ({
+  useTranslation: () => ({
+    t: (key, options) => (options?.email ? options.email : key),
+  }),
+}));
+
+// Mock react-i18next
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key, options) => (options?.email ? options.email : key),
+  }),
+}));
+
 // Mock the auth store
 jest.mock("../../lib/auth-store", () => ({
   useAuthStore: Object.assign(jest.fn(), {
@@ -37,21 +51,23 @@ describe("LoginForm", () => {
 
   it("renders correctly", () => {
     render(<LoginForm />);
-    expect(screen.getByText(/Log in/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Login/i })).toBeInTheDocument();
+    expect(screen.getByText(/login\.title/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/login\.email_label/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/login\.password_label/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /login\.button/i }),
+    ).toBeInTheDocument();
   });
 
   it("shows validation errors for empty fields", async () => {
     render(<LoginForm />);
-    fireEvent.click(screen.getByRole("button", { name: /Login/i }));
+    fireEvent.click(screen.getByRole("button", { name: /login\.button/i }));
 
     expect(
-      await screen.findByText(/Please enter a valid email address/i),
+      await screen.findByText(/validation\.email_invalid/i),
     ).toBeInTheDocument();
     expect(
-      await screen.findByText(/Password is required/i),
+      await screen.findByText(/validation\.password_required/i),
     ).toBeInTheDocument();
   });
 
@@ -63,14 +79,14 @@ describe("LoginForm", () => {
 
     render(<LoginForm />);
 
-    fireEvent.change(screen.getByLabelText(/Email/i), {
+    fireEvent.change(screen.getByLabelText(/login\.email_label/i), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(screen.getByLabelText(/Password/i), {
+    fireEvent.change(screen.getByLabelText(/login\.password_label/i), {
       target: { value: "Password123!" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: /Login/i }));
+    fireEvent.click(screen.getByRole("button", { name: /login\.button/i }));
 
     await waitFor(() => {
       expect(loginUser).toHaveBeenCalledWith({
@@ -89,14 +105,14 @@ describe("LoginForm", () => {
 
     render(<LoginForm />);
 
-    fireEvent.change(screen.getByLabelText(/Email/i), {
+    fireEvent.change(screen.getByLabelText(/login\.email_label/i), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(screen.getByLabelText(/Password/i), {
+    fireEvent.change(screen.getByLabelText(/login\.password_label/i), {
       target: { value: "Password123!" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: /Login/i }));
+    fireEvent.click(screen.getByRole("button", { name: /login\.button/i }));
 
     await waitFor(() => {
       expect(mockPush).toHaveBeenCalledWith("/onboarding");
@@ -110,14 +126,14 @@ describe("LoginForm", () => {
 
     render(<LoginForm />);
 
-    fireEvent.change(screen.getByLabelText(/Email/i), {
+    fireEvent.change(screen.getByLabelText(/login\.email_label/i), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(screen.getByLabelText(/Password/i), {
+    fireEvent.change(screen.getByLabelText(/login\.password_label/i), {
       target: { value: "Password123!" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: /Login/i }));
+    fireEvent.click(screen.getByRole("button", { name: /login\.button/i }));
 
     expect(
       await screen.findByText(/Invalid identifier or password/i),

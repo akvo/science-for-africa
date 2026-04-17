@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useOnboardingStore } from "@/lib/onboarding-store";
 import { useAuthStore } from "@/lib/auth-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Loader2, Search } from "lucide-react";
-import { fetchFromStrapi, updateUserProfile } from "@/lib/strapi";
+import {
+  fetchFromStrapi,
+  fetchLocalized,
+  updateUserProfile,
+} from "@/lib/strapi";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 
 const OnboardingStep5 = () => {
+  const { t } = useTranslation("onboarding");
   const router = useRouter();
+  const { locale } = router;
   const { formData, updateFormData, prevStep, userType, resetStore } =
     useOnboardingStore();
   const { jwt, updateUser } = useAuthStore();
@@ -20,7 +27,7 @@ const OnboardingStep5 = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const searchTimeoutRef = React.useRef(null);
+  const searchTimeoutRef = useRef(null);
 
   const handleSearch = async (val) => {
     setSearchTerm(val);
@@ -36,8 +43,9 @@ const OnboardingStep5 = () => {
 
       searchTimeoutRef.current = setTimeout(async () => {
         const encodedVal = encodeURIComponent(val);
-        const response = await fetchFromStrapi(
+        const response = await fetchLocalized(
           `/institutions?filters[name][$containsi]=${encodedVal}`,
+          locale,
         );
         if (response?.data) {
           setInstitutions(
@@ -102,7 +110,7 @@ const OnboardingStep5 = () => {
           className="flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"
         >
           <ArrowLeft size={18} />
-          <span>Back</span>
+          <span>{t("steps.back")}</span>
         </button>
         {/* No skip on the final step, usually */}
       </div>
@@ -110,11 +118,10 @@ const OnboardingStep5 = () => {
       {/* Header Section */}
       <div className="space-y-3 mb-32">
         <h1 className="text-display-sm font-bold text-brand-teal-900 leading-tight">
-          Current affiliation
+          {t("step5.title")}
         </h1>
         <p className="text-md text-brand-gray-800 leading-relaxed">
-          We&apos;ll suggest research partners and funders based on your current
-          institutional affiliation.
+          {t("step5.description")}
         </p>
       </div>
 
@@ -122,7 +129,7 @@ const OnboardingStep5 = () => {
       <div className="space-y-6 mb-12">
         <div className="space-y-2 relative">
           <label className="text-md font-medium text-black">
-            Search institution
+            {t("step5.search_label")}
           </label>
           <div className="relative">
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-gray-400">
@@ -132,7 +139,7 @@ const OnboardingStep5 = () => {
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
               onFocus={() => searchTerm.length > 2 && setShowDropdown(true)}
-              placeholder="Type your primary institution"
+              placeholder={t("step5.search_placeholder")}
               className="w-full h-11 pl-10 pr-10 py-2.5 border-brand-gray-100 rounded-8 text-md focus:ring-brand-teal-500"
             />
             {loading && (
@@ -162,13 +169,13 @@ const OnboardingStep5 = () => {
             searchTerm.length > 2 && (
               <div className="absolute z-50 w-full mt-1 bg-white border border-brand-gray-100 rounded-8 shadow-xl p-4 text-center animate-in fade-in slide-in-from-top-2">
                 <p className="text-sm text-brand-gray-500">
-                  No institutions found. You can continue with what you typed.
+                  {t("step1.no_institutions_found")}
                 </p>
                 <button
                   onClick={() => setShowDropdown(false)}
                   className="mt-2 text-sm font-medium text-brand-teal-600 hover:underline"
                 >
-                  Dismiss
+                  {t("step1.dismiss")}
                 </button>
               </div>
             )}
@@ -185,10 +192,10 @@ const OnboardingStep5 = () => {
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Finishing...
+              {t("step5.finishing")}
             </>
           ) : (
-            "Complete Setup"
+            t("step5.complete_button")
           )}
         </Button>
       </div>

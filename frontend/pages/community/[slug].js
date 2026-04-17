@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import Meta from "@/components/seo/Meta";
 import { ArrowLeft, ChevronDown, Plus } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
@@ -56,6 +57,7 @@ export default function CommunityDetailPage() {
 
   return (
     <div className="flex flex-col lg:flex-row">
+      <Meta title={community?.name} />
       <aside className="w-full lg:w-52 lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4 lg:sticky lg:top-28.5 lg:self-start lg:h-[calc(100vh-114px)] lg:overflow-y-auto">
         <CommunityLeftNav activeKey="communities" />
       </aside>

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuthStore } from "@/lib/auth-store";
 import axios from "axios";
+import Meta from "@/components/seo/Meta";
 
 const GoogleCallback = ({ jwt, user, error }) => {
   const router = useRouter();
@@ -29,6 +30,7 @@ const GoogleCallback = ({ jwt, user, error }) => {
 
   return (
     <div className="flex h-screen items-center justify-center">
+      <Meta title={error ? "Authentication Failed" : "Authenticating..."} />
       <div className="text-center">
         <h1 className="text-2xl font-semibold">
           {error ? "Authentication Failed" : "Authenticating with Google..."}

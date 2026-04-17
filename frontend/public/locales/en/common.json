@@ -19,5 +19,11 @@
   "common": {
     "loading": "Loading...",
     "back": "Back"
+  },
+  "seo": {
+    "description": "Advancing Science for Africa's Future. Join the community of scientists, researchers, and innovators.",
+    "home_title": "Design System | Style Guide",
+    "onboarding_title": "Complete Your Profile",
+    "community_title": "Community"
   }
 }

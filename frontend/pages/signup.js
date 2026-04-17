@@ -1,12 +1,16 @@
-import React from "react";
 import Link from "next/link";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
+import Meta from "@/components/seo/Meta";
 import { SignUpForm } from "@/components/auth/signup-form";
 import { SocialButton } from "@/components/auth/social-auth";
 
 const SignupPage = () => {
+  const { t } = useTranslation("auth");
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <Meta title={t("signup.title")} />
       <div className="space-y-2 mb-32">
         <h1 className="text-display-sm font-bold text-brand-teal-900 tracking-tight">
           Sign up

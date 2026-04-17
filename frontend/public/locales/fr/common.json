@@ -19,5 +19,11 @@
   "common": {
     "loading": "Chargement...",
     "back": "Retour"
+  },
+  "seo": {
+    "description": "Faire progresser l'avenir de la science en Afrique. Rejoignez la communauté de scientifiques, de chercheurs et d'innovateurs.",
+    "home_title": "Système de Conception | Guide de Style",
+    "onboarding_title": "Complétez Votre Profil",
+    "community_title": "Communauté"
   }
 }

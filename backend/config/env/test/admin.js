@@ -1,13 +1,13 @@
 module.exports = () => ({
   auth: {
-    secret: 'test-secret',
+    secret: "test-secret",
   },
   apiToken: {
-    salt: 'test-api-token-salt',
+    salt: "test-api-token-salt",
   },
   transfer: {
     token: {
-      salt: 'test-transfer-token-salt',
+      salt: "test-transfer-token-salt",
     },
   },
 });

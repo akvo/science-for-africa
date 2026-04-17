@@ -645,6 +645,8 @@ sequenceDiagram
 
 ### 5.2 Implementation Details
 
+- **Dynamic OAuth Sync**: Strapi `plugins.js` is supplemented by an `index.js` bootstrap script that synchronizes `users-permissions` Grant (Client ID/Secret) and Advanced (google_redirection) settings on every startup. This ensures reliability across Local and Production environments by force-aligning database state with Environment Variables.
+
 **Environment-Aware Redirection:**
 To prevent hardcoded `localhost` redirects in production or testing environments, the backend dynamically resolves the frontend callback URL using the following environment variable priority:
 1. `FRONTEND_URL`

@@ -34,25 +34,28 @@ This implementation follows the **[Strapi Users & Permissions Provider](https://
 
 ## 📐 Architecture Design
 
-### Data Flow / Logic Flow (SSR Handshake)
+### Data Flow / Logic Flow (Standard Handshake)
 ```mermaid
 sequenceDiagram
     participant User
     participant Browser
-    participant NextServer as Next.js Server (SSR)
     participant Strapi as Strapi (Backend)
+    participant NextServer as Next.js Server (SSR)
     participant Google
 
     User->>Browser: Click "Sign in with Google"
     Browser->>Strapi: GET /api/connect/google?redirect=...
+    Note right of Strapi: redirect param is the frontend landing page
     Strapi->>Google: Redirect to OAuth Consent
     Google-->>User: Show Consent Screen
     User->>Google: Approve
-    Google-->>Browser: Redirect to /auth/google?code=...
+    Google-->>Strapi: Redirect to /api/connect/google/callback (Handshake)
+    Note over Strapi: grant middleware processes Authorization Code
+    Strapi-->>Browser: Redirect to /auth/google?access_token=... (App Redirection)
     Browser->>NextServer: GET /auth/google (Initial SSR hit)
     Note over NextServer: getServerSideProps triggers
-    NextServer->>Strapi: GET /api/auth/google/callback (Internal Network)
-    Note right of NextServer: Sends { access_token: CODE }
+    NextServer->>Strapi: GET /api/auth/google/callback (Exchange)
+    Note over Strapi: users-permissions exchanges access_token for JWT
     Strapi-->>NextServer: { jwt, user }
     NextServer-->>Browser: Render page with { jwt, user }
     Browser->>Browser: setAuth(user, jwt)
@@ -133,7 +136,15 @@ When running in Docker Compose, the Next.js server (SSR) uses a "Smart Swap" log
 
 ### Common Errors
 - **401 Unauthorized**: Usually means the `access_token` expired or the backend cannot reach Google's servers to verify.
+- **Grant: missing session**: Usually caused by a SameSite cookie issue or mismatched Host headers between the initiation and callback. Fixed by setting `sameSite: 'lax'` in `strapi::session` middleware.
 - **ECONNREFUSED**: Usually means the backend service is down or unreachable from the frontend container.
+
+### 🛡️ Hardening & Session Security
+To ensure reliability across Docker containers and proxies:
+1. **Explicit Sessions**: The `strapi::session` middleware is configured with `sameSite: 'lax'` to allow cookies to be sent during the OAuth 302 redirect from Google.
+2. **Bootstrap Sync**: The `backend/src/index.js` forces the sync of Google Grant settings on every startup, ensuring environment variables always override database drift.
+3. **URL Encoding**: All frontend-to-backend redirect parameters are URL-encoded to prevent truncation or malformed request errors.
+4. **Error Surfaceing**: The `LoginForm` component is enhanced to detect and display `error` query parameters redirected back from the OAuth flow.
 
 ---
 

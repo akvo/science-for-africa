@@ -4,12 +4,9 @@ module.exports = ({ env }) => ({
   app: {
     keys: env.array("APP_KEYS"),
   },
-  // Trust proxy headers from nginx
-  proxy: {
-    koa: true,
-  },
+  proxy: true,
   // Public URL for Strapi (webhooks, emails, OAuth)
-  url: env("BACKEND_URL", "http://localhost/cms"),
+  url: env("BACKEND_URL", "http://localhost:1337"),
   webhooks: {
     populateRelations: env.bool("WEBHOOKS_POPULATE_RELATIONS", false),
   },

@@ -55,7 +55,9 @@ export async function getServerSideProps(context) {
   // Smart Swap for Docker SSR:
   // getServerSideProps runs inside the container. If the backend URL points to 'localhost',
   // it must be swapped to the internal service name 'backend' to be reachable.
-  const internalBackendUrl = publicBackendUrl.replace("localhost", "backend");
+  const internalBackendUrl = publicBackendUrl
+    .replace("localhost", "backend")
+    .replace("127.0.0.1", "backend");
 
   // FLOW A: We already have a JWT from a direct backend redirect (Native Strapi Handshake)
   if (jwt) {

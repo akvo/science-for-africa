@@ -197,6 +197,7 @@ export default function CommunityDetailPage() {
                 <CollaborationCallsList
                   calls={calls}
                   onView={(call) => router.push(`/community/calls/${call.id}`)}
+                  onCreate={openCollaboration}
                 />
               </TabsContent>
               <TabsContent value="resources" className="pt-2">

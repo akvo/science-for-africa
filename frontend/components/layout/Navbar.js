@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
@@ -19,7 +19,12 @@ import Image from "next/image";
 const Navbar = () => {
   const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { isAuthenticated, user, logout } = useAuthStore();
 
@@ -132,7 +137,7 @@ const Navbar = () => {
               </svg>
             </Button>
 
-            {isAuthenticated ? (
+            {mounted && isAuthenticated ? (
               <div className="flex items-center gap-4">
                 {/* Publish Button */}
                 <Button
@@ -199,7 +204,7 @@ const Navbar = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-            ) : (
+            ) : mounted ? (
               <div className="flex items-center gap-3">
                 <Button variant="outline" size="xl" asChild>
                   <Link href="/login" className="font-medium">
@@ -212,7 +217,7 @@ const Navbar = () => {
                   </Link>
                 </Button>
               </div>
-            )}
+            ) : null}
 
             {/* Mobile Toggle */}
             <button
@@ -253,10 +258,17 @@ const Navbar = () => {
               </Link>
             ))}
             <div className="flex flex-col gap-3 pt-4 border-t border-brand-gray-100">
-              {isAuthenticated ? (
+              {mounted && isAuthenticated ? (
                 <>
-                  <div className="flex items-center gap-3 px-2 py-3">
-                    <Avatar size="sm">
+                  <Link
+                    href="/profile"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-3 px-2 py-3 hover:bg-brand-gray-50 rounded-lg transition-colors cursor-pointer group"
+                  >
+                    <Avatar
+                      size="sm"
+                      className="group-hover:ring-2 group-hover:ring-brand-teal-100 transition-all"
+                    >
                       <AvatarImage src={user?.avatar?.url} />
                       <AvatarFallback>
                         {getInitials(user?.fullName || user?.username)}
@@ -270,7 +282,7 @@ const Navbar = () => {
                         {user?.email}
                       </p>
                     </div>
-                  </div>
+                  </Link>
                   <Button
                     variant="outline"
                     size="xl"
@@ -303,13 +315,14 @@ const Navbar = () => {
                     {t("navbar.logout")}
                   </Button>
                 </>
-              ) : (
+              ) : mounted ? (
                 <>
                   <Button
                     variant="outline"
                     size="xl"
                     className="w-full"
                     asChild
+                    onClick={() => setIsOpen(false)}
                   >
                     <Link href="/login" className="font-medium">
                       {t("navbar.login")}
@@ -320,13 +333,14 @@ const Navbar = () => {
                     size="xl"
                     className="w-full"
                     asChild
+                    onClick={() => setIsOpen(false)}
                   >
                     <Link href="/signup" className="font-medium">
                       {t("navbar.signup")}
                     </Link>
                   </Button>
                 </>
-              )}
+              ) : null}
             </div>
           </nav>
         </div>

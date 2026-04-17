@@ -690,6 +690,8 @@ Specific content types have localization enabled:
 ### 6.4 SEO
 
 The platform follows Google's best practices for localized sites:
+- **Centralized Metadata**: A reusable `Meta` component (`frontend/components/seo/Meta.js`) manages browser titles and SEO meta tags using `next/head`.
+- **Title Pattern**: Standardized titles follow the pattern `[Page Name] | Science for Africa`.
 - **Subpath routing**: Distinct URLs for each language.
 - **HTML lang attribute**: Automatically updated by `next-i18next`.
 - **SSR support**: Translations are loaded server-side using `getStaticProps` or `getServerSideProps`.

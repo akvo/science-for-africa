@@ -36,7 +36,8 @@ apiClient.interceptors.request.use(
     }
 
     // Inject locale parameter from window/url if on client
-    if (typeof window !== "undefined") {
+    // Skip for public auth endpoints as Strapi built-in auth logic may reject unknown query params
+    if (typeof window !== "undefined" && !isPublicAuthEndpoint) {
       const pathParts = window.location.pathname.split("/");
       // Check if first part of path is a supported locale (e.g. 'fr')
       const supportedLocales = ["en", "fr"];

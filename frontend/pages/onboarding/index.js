@@ -1,4 +1,6 @@
-import React from "react";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
+import Meta from "@/components/seo/Meta";
 import AuthLayout from "@/components/layout/AuthLayout";
 import { useOnboardingStore } from "@/lib/onboarding-store";
 import OnboardingStep1 from "@/components/onboarding/OnboardingStep1";
@@ -9,6 +11,7 @@ import OnboardingStep5 from "@/components/onboarding/OnboardingStep5";
 
 const OnboardingPage = () => {
   const { step } = useOnboardingStore();
+  const { t } = useTranslation("common");
 
   const renderStep = () => {
     switch (step) {
@@ -27,7 +30,20 @@ const OnboardingPage = () => {
     }
   };
 
-  return <div className="w-full">{renderStep()}</div>;
+  return (
+    <div className="w-full">
+      <Meta title={t("seo.onboarding_title")} />
+      {renderStep()}
+    </div>
+  );
 };
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common", "onboarding"])),
+    },
+  };
+}
 
 export default OnboardingPage;

@@ -1,0 +1,73 @@
+{
+  "steps": {
+    "step_count": "Étape {{current}} sur {{total}}",
+    "back": "Retour",
+    "skip": "Passer",
+    "confirm": "Confirmer",
+    "next": "Suivant",
+    "finish": "Terminer"
+  },
+  "step1": {
+    "title": "Quel type de compte souhaitez-vous créer ?",
+    "description": "Sélectionnez votre type de compte pour personnaliser votre expérience.",
+    "individual_tab": "Individuel",
+    "institution_tab": "Institution",
+    "individual_desc": "Lorem ipsum dolor sit amet consectetur. Rhoncus quis nunc ipsum pellentesque praesent facilisis tempor.",
+    "institution_desc": "Lorem ipsum dolor sit amet consectetur. Rhoncus quis nunc ipsum pellentesque praesent facilisis tempor.",
+    "role_label": "Rôle",
+    "role_placeholder": "Sélectionnez un rôle",
+    "institution_label": "Institution",
+    "institution_placeholder": "Tapez le nom de votre institution",
+    "no_institutions_found": "Aucune institution trouvée. Vous pouvez continuer avec ce que vous avez tapé.",
+    "dismiss": "Ignorer"
+  },
+  "roles": {
+    "Researcher": "Chercheur",
+    "Principal Investigator / Lab Lead": "Chercheur principal / Chef de laboratoire",
+    "Post-doctoral Fellow": "Chercheur post-doctoral",
+    "PhD Candidate": "Candidat au doctorat",
+    "Graduate / Undergraduate Student": "Étudiant diplômé / de premier cycle",
+    "Administrator / Support Staff": "Administrateur / Personnel de soutien",
+    "Program Manager / Funder representative": "Responsable de programme / Représentant du bailleur de fonds",
+    "External Reviewer": "Réviseur externe"
+  },
+  "education_levels": {
+    "High School": "Lycée",
+    "Bachelor's Degree": "Licence",
+    "Master's Degree": "Master",
+    "Doctorate (PhD)": "Doctorat (PhD)",
+    "Post-Doctorate": "Post-Doctorat",
+    "Professional Certificate": "Certificat professionnel"
+  },
+  "step2": {
+    "title": "Domaines d'intérêt",
+    "description": "Sélectionnez au moins 3 domaines qui vous intéressent le plus.",
+    "search_placeholder": "Rechercher des intérêts...",
+    "selected_count": "{{count}} sélectionnés",
+    "min_required": "Veuillez sélectionner au moins 3 intérêts pour continuer",
+    "loading_interests": "Chargement des intérêts...",
+    "limit_reached": "Maximum 5 intérêts autorisés"
+  },
+  "step3": {
+    "title": "Éducation et carrière",
+    "description": "Aidez-nous à comprendre votre parcours pour vous proposer des opportunités scientifiques plus pertinentes.",
+    "level_label": "Niveau d'études",
+    "level_placeholder": "Sélectionnez le niveau d'études",
+    "institution_label": "Institution d'enseignement (où vous avez étudié)",
+    "institution_placeholder": "Rechercher ou taper votre université"
+  },
+  "step4": {
+    "title": "Avez-vous un ORCID ?",
+    "description": "L'ORCID fournit un identifiant numérique persistant qui vous distingue de tout autre chercheur.",
+    "orcid_label": "Insérez votre ORCID",
+    "orcid_placeholder": "0000-0000-0000-0000"
+  },
+  "step5": {
+    "title": "Affiliation actuelle",
+    "description": "Nous vous suggérerons des partenaires de recherche et des bailleurs de fonds en fonction de votre affiliation institutionnelle actuelle.",
+    "search_label": "Rechercher une institution",
+    "search_placeholder": "Tapez votre institution principale",
+    "finishing": "Finalisation...",
+    "complete_button": "Terminer la configuration"
+  }
+}

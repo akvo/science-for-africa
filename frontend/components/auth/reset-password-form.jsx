@@ -10,29 +10,33 @@ import { resetPassword } from "@/lib/strapi";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "next-i18next";
 
-import { passwordSchema } from "@/lib/validation";
-
-const resetPasswordSchema = z
-  .object({
-    password: passwordSchema,
-    passwordConfirmation: z
-      .string()
-      .min(1, "Password confirmation is required"),
-  })
-  .refine((data) => data.password === data.passwordConfirmation, {
-    message: "Passwords do not match",
-    path: ["passwordConfirmation"],
-  });
+import { getPasswordSchema } from "@/lib/validation";
 
 export const ResetPasswordForm = () => {
+  const { t } = useTranslation("auth");
   const router = useRouter();
-  const { code } = router.query;
+  const { code: queryCode } = router.query;
+  // Handle Next.js hydration where query might be an array or temporarily undefined
+  const code = Array.isArray(queryCode) ? queryCode[0] : queryCode;
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState("");
+
+  const resetPasswordSchema = z
+    .object({
+      password: getPasswordSchema(t),
+      passwordConfirmation: z
+        .string()
+        .min(1, t("validation.password_required")),
+    })
+    .refine((data) => data.password === data.passwordConfirmation, {
+      message: t("validation.passwords_mismatch"),
+      path: ["passwordConfirmation"],
+    });
 
   const {
     register,
@@ -54,7 +58,7 @@ export const ResetPasswordForm = () => {
 
   const onSubmit = async (values) => {
     if (!code) {
-      setError("Invalid or expired reset link. Please request a new one.");
+      setError(t("verify_email.failed_desc"));
       return;
     }
 
@@ -72,7 +76,7 @@ export const ResetPasswordForm = () => {
         const errorMessage =
           result.error.message ||
           result.error ||
-          "Reset failed. Please try again.";
+          t("reset_password.error_failed");
         setError(errorMessage);
         return;
       }
@@ -83,7 +87,7 @@ export const ResetPasswordForm = () => {
         router.push("/login");
       }, 3000);
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
+      setError(t("signup.error_unexpected"));
     } finally {
       setIsLoading(false);
     }
@@ -98,18 +102,17 @@ export const ResetPasswordForm = () => {
           </div>
         </div>
         <h1 className="text-3xl font-bold tracking-tight text-brand-teal-900 mb-3">
-          Password updated
+          {t("reset_password.success_title")}
         </h1>
         <p className="text-base text-brand-gray-500 mb-8">
-          Your password has been successfully updated. You can now log in with
-          your new credentials. You will be redirected shortly...
+          {t("reset_password.success_description")}
         </p>
         <Link href="/login">
           <Button
             variant="primary"
             className="w-full rounded-full h-11 bg-primary-500 hover:bg-primary-600"
           >
-            Log in now
+            {t("reset_password.success_button")}
           </Button>
         </Link>
       </div>
@@ -124,17 +127,16 @@ export const ResetPasswordForm = () => {
           className="inline-flex items-center gap-2 text-sm font-medium text-brand-gray-500 hover:text-brand-gray-700 transition-colors"
         >
           <ArrowLeft size={16} />
-          Back
+          {t("navbar.back", { ns: "common" })}
         </Link>
       </div>
 
       <div className="flex flex-col gap-3 mb-10">
         <h1 className="text-3xl font-bold tracking-tight text-brand-teal-900">
-          Create new password
+          {t("reset_password.title")}
         </h1>
         <p className="text-base text-brand-gray-500 leading-relaxed">
-          Please enter and confirm your new password below to complete the reset
-          process.
+          {t("reset_password.description")}
         </p>
       </div>
 
@@ -150,14 +152,14 @@ export const ResetPasswordForm = () => {
             htmlFor="password"
             className="text-sm font-bold text-brand-gray-900"
           >
-            New password
+            {t("reset_password.password_label")}
           </Label>
           <div className="relative group">
             <Input
               id="password"
               type={showPassword ? "text" : "password"}
               {...register("password")}
-              placeholder="password"
+              placeholder={t("login.password_placeholder")}
               className={cn(
                 "pr-10 h-11",
                 errors.password ? "border-destructive ring-destructive" : "",
@@ -183,14 +185,14 @@ export const ResetPasswordForm = () => {
             htmlFor="passwordConfirmation"
             className="text-sm font-bold text-brand-gray-900"
           >
-            Confirm password
+            {t("reset_password.confirm_password_label")}
           </Label>
           <div className="relative group">
             <Input
               id="passwordConfirmation"
               type={showConfirmPassword ? "text" : "password"}
               {...register("passwordConfirmation")}
-              placeholder="password"
+              placeholder={t("login.password_placeholder")}
               className={cn(
                 "pr-10 h-11",
                 errors.passwordConfirmation
@@ -227,7 +229,7 @@ export const ResetPasswordForm = () => {
           {isLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            "Reset password"
+            t("reset_password.button")
           )}
         </Button>
       </form>

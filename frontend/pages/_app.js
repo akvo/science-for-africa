@@ -1,3 +1,4 @@
+import { appWithTranslation } from "next-i18next";
 import "@/styles/globals.css";
 import { Inter } from "next/font/google";
 
@@ -7,7 +8,7 @@ const inter = Inter({
 
 import MainLayout from "@/components/layout/MainLayout";
 
-export default function App({ Component, pageProps }) {
+function App({ Component, pageProps }) {
   return (
     <div className={inter.className}>
       <MainLayout>
@@ -16,3 +17,5 @@ export default function App({ Component, pageProps }) {
     </div>
   );
 }
+
+export default appWithTranslation(App);

@@ -1,0 +1,29 @@
+{
+  "navbar": {
+    "about": "À propos",
+    "community": "Communauté",
+    "opportunities": "Opportunités",
+    "learning": "Apprentissage",
+    "resources": "Ressources",
+    "login": "Connexion",
+    "signup": "S'inscrire",
+    "search": "Rechercher",
+    "news": "Actualités et perspectives",
+    "contact": "Contact",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "logout": "Se déconnecter",
+    "publish": "Publier",
+    "back": "Retour"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "back": "Retour"
+  },
+  "seo": {
+    "description": "Faire progresser l'avenir de la science en Afrique. Rejoignez la communauté de scientifiques, de chercheurs et d'innovateurs.",
+    "home_title": "Système de Conception | Guide de Style",
+    "onboarding_title": "Complétez Votre Profil",
+    "community_title": "Communauté"
+  }
+}

@@ -14,6 +14,37 @@ export async function fetchFromStrapi(endpoint) {
 }
 
 /**
+ * Fetch localized content from Strapi with an automatic fallback to English
+ * if the requested locale returns empty results.
+ */
+export async function fetchLocalized(endpoint, currentLocale) {
+  try {
+    // 1. Try fetching with current locale
+    const separator = endpoint.includes("?") ? "&" : "?";
+    let response = await fetchFromStrapi(
+      `${endpoint}${separator}locale=${currentLocale}`,
+    );
+
+    // 2. If empty and not 'en', fallback to 'en'
+    if (
+      (!response?.data ||
+        (Array.isArray(response.data) && response.data.length === 0)) &&
+      currentLocale !== "en"
+    ) {
+      console.warn(
+        `No content found for locale "${currentLocale}" at ${endpoint}. Falling back to "en".`,
+      );
+      response = await fetchFromStrapi(`${endpoint}${separator}locale=en`);
+    }
+
+    return response;
+  } catch (error) {
+    console.error(`Error in fetchLocalized for ${endpoint}:`, error);
+    return null;
+  }
+}
+
+/**
  * Post data to Strapi
  */
 export async function postToStrapi(endpoint, data, wrapInData = true) {
@@ -68,7 +99,36 @@ export async function resendVerification(email) {
 }
 
 /**
- * Verify email with token
+ * Verify email with OTP code
+ */
+export async function verifyOtp(email, otpCode) {
+  return postToStrapi("/auth/verify-otp", { email, otpCode }, false);
+}
+
+/**
+ * Resend email verification OTP
+ */
+export async function resendOtp(email) {
+  return postToStrapi("/auth/resend-otp", { email }, false);
+}
+
+/**
+ * Check registration/verification status
+ */
+export async function getRegistrationStatus(email) {
+  try {
+    const response = await apiClient.get(
+      `/auth/registration-status?email=${encodeURIComponent(email)}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error checking registration status:", error);
+    return error;
+  }
+}
+
+/**
+ * Verify email with token (link-based)
  */
 export async function verifyEmailToken(token) {
   try {

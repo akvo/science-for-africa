@@ -87,11 +87,11 @@ graph TD
 - [x] **Email Verification**: Handler for unique links + success redirect to Login.
 
 ### Phase 4: Onboarding Journey (Step-by-Step)
-- [x] **Account Type & Institution**: Branching logic for Individual/Institutional, searchable dropdown.
-- [x] **Expertise & Interests**: Category-based selection, visual highlights, max 5 limit check.
+- [x] **Account Type & Institution**: Branching logic for Individual/Institutional, searchable dropdown. Integrated `fetchLocalized` with English fallback.
+- [x] **Expertise & Interests**: Category-based selection, visual highlights, max 5 limit check. Integrated `fetchLocalized` for multi-locale support.
 - [x] **Education & Career**: Education level dropdown, institution type field, "Skip" logic (Individual only).
 - [x] **ORCID Integration**: 16-digit regex validation, "Skip" logic (Individual only).
-- [x] **Affiliation**: Search and select institution manually (Individual only).
+- [x] **Affiliation**: Search and select institution manually (Individual only). Uses `fetchLocalized` for consistent data availability.
 
 ### Phase 5: Password Recovery
 - [x] **Request**: Forgot password link -> Strapi standard forgot password email with a secure reset link.

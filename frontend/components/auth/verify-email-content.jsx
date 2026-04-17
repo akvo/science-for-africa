@@ -11,8 +11,11 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { resendVerification, verifyEmailToken } from "@/lib/strapi";
+import { useTranslation } from "next-i18next";
+import { OTPVerificationForm } from "./otp-verification-form";
 
 export const VerifyEmailContent = ({ email, confirmation }) => {
+  const { t } = useTranslation("auth");
   const [countdown, setCountdown] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -36,9 +39,7 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
           setIsError(true);
           // Special case: if token is invalid, it may have already been used (success)
           if (result.error.toLowerCase().includes("invalid token")) {
-            setMessage(
-              "The verification link was invalid or already used. If you continue to have trouble, please try logging in.",
-            );
+            setMessage(t("verify_email.failed_link_invalid"));
           } else {
             setMessage(result.error);
           }
@@ -46,13 +47,13 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
         } else {
           setIsVerified(true);
           setIsVerifying(false);
-          setMessage("Email verified successfully!");
+          setMessage(t("verify_email.success_title"));
           setRedirectCountdown(3);
         }
       };
       performVerification();
     }
-  }, [confirmation, isVerified, isVerifying, isError]);
+  }, [confirmation, isVerified, isVerifying, isError, t]);
 
   // Handle Resend Countdown
   useEffect(() => {
@@ -93,7 +94,7 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
           result.error.toLowerCase().includes("already confirmed") ||
           result.status === 400
         ) {
-          setMessage("Your account is already verified! Please log in.");
+          setMessage(t("verify_email.already_verified"));
         } else {
           setMessage(result.error);
         }
@@ -101,15 +102,15 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
       }
 
       if (result) {
-        setMessage("Verification email resent successfully!");
+        setMessage(t("verify_email.resend_success"));
         setCountdown(30);
       } else {
         setIsError(true);
-        setMessage("Failed to resend email. Please try again later.");
+        setMessage(t("verify_email.resend_error"));
       }
     } catch (err) {
       setIsError(true);
-      setMessage("An error occurred. Please try again.");
+      setMessage(t("signup.error_unexpected"));
     } finally {
       setIsLoading(false);
     }
@@ -124,10 +125,10 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
         </div>
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-brand-teal-900">
-            Verifying your email
+            {t("verify_email.verifying_title")}
           </h1>
           <p className="text-brand-gray-500 font-medium">
-            Please wait while we confirm your email address...
+            {t("verify_email.verifying_desc")}
           </p>
         </div>
       </div>
@@ -143,18 +144,17 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
         </div>
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-brand-teal-900">
-            Email verified successfully!
+            {t("verify_email.success_title")}
           </h1>
           <p className="text-brand-gray-500 font-medium">
-            Your account is now active. Redirecting to login page in{" "}
-            {redirectCountdown}s...
+            {t("verify_email.success_desc", { count: redirectCountdown })}
           </p>
         </div>
         <Button
           onClick={() => router.push("/login")}
           className="w-full bg-brand-teal-600 hover:bg-brand-teal-700 text-white font-bold h-12 rounded-xl transition-all"
         >
-          Go to Login
+          {t("verify_email.success_button")}
         </Button>
       </div>
     );
@@ -169,10 +169,10 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
         </div>
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-brand-teal-900">
-            Verification failed
+            {t("verify_email.failed_title")}
           </h1>
           <p className="text-destructive font-medium">
-            {message || "The verification link is invalid or has expired."}
+            {message || t("verify_email.failed_desc")}
           </p>
         </div>
         <div className="space-y-4 w-full">
@@ -180,21 +180,26 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
             onClick={() => router.push("/signup")}
             className="w-full bg-brand-teal-600 hover:bg-brand-teal-700 text-white font-bold h-12 rounded-xl transition-all"
           >
-            Return to Signup
+            {t("verify_email.return_signup")}
           </Button>
           <Button
             variant="outline"
             onClick={() => router.push("/login")}
             className="w-full border-brand-teal-200 text-brand-teal-700 font-bold h-12 rounded-xl transition-all"
           >
-            Return to Login
+            {t("verify_email.return_login")}
           </Button>
         </div>
       </div>
     );
   }
 
-  // 4. Default State (Pending Verification)
+  // 4. OTP Entry State (Default when no confirmation token or error/success/verifying)
+  if (!confirmation) {
+    return <OTPVerificationForm email={email} />;
+  }
+
+  // 5. Default State (Pending Verification via Link)
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-sm">
       {/* Back Button */}
@@ -204,7 +209,7 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
           className="inline-flex items-center gap-2 text-sm font-bold text-brand-gray-500 hover:text-brand-gray-900 transition-colors"
         >
           <ArrowLeft size={18} />
-          <span>Back</span>
+          <span>{t("navbar.back", { ns: "common" })}</span>
         </Link>
       </div>
 
@@ -213,23 +218,18 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
         <div className="w-12 h-12 bg-brand-teal-50 rounded-xl flex items-center justify-center mb-4">
           <Mail className="text-brand-teal-600" size={24} />
         </div>
-        <h1 className="text-[30px] font-bold text-brand-teal-900 leading-tight">
-          Confirm email
+        <h1 className="text-display-sm font-bold text-brand-teal-900 leading-tight">
+          {t("verify_email.confirm_title")}
         </h1>
         <div className="space-y-6">
           <p className="text-brand-gray-500 font-medium text-base leading-relaxed">
-            We sent you an email to{" "}
-            <span className="text-brand-teal-800 font-bold">
-              {email || "your email"}
-            </span>{" "}
-            with a secret link to confirm your account.
+            {t("verify_email.confirm_sent_to", {
+              email: email || t("login.email_label"),
+            })}
           </p>
 
           <p className="text-brand-gray-500 font-medium text-base leading-relaxed">
-            If you do not see the email within 5 minutes, please contact us at{" "}
-            <span className="text-brand-teal-800 font-bold">
-              support@sfa.com
-            </span>
+            {t("verify_email.confirm_no_email")}
           </p>
         </div>
       </div>
@@ -257,23 +257,25 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : countdown > 0 ? (
-              <span>Resend link in {countdown}s</span>
+              <span>
+                {t("verify_email.resend_countdown", { count: countdown })}
+              </span>
             ) : (
               <>
                 <RefreshCw size={16} />
-                <span>Resend verification email</span>
+                <span>{t("verify_email.resend_button")}</span>
               </>
             )}
           </Button>
         </div>
 
         <div className="flex items-center gap-1 text-sm font-medium text-brand-gray-500 pt-4 border-t border-brand-gray-100">
-          <span>Already have an account?</span>
+          <span>{t("signup.already_have_account")}</span>
           <Link
             href="/login"
             className="text-brand-teal-800 font-bold hover:text-brand-teal-900 transition-colors"
           >
-            Sign in
+            {t("signup.login_link")}
           </Link>
         </div>
       </div>

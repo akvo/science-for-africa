@@ -9,16 +9,18 @@ import { Label } from "@/components/ui/label";
 import { forgotPassword } from "@/lib/strapi";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-
-const forgotPasswordSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-});
+import { useTranslation } from "next-i18next";
 
 export const ForgotPasswordForm = () => {
+  const { t } = useTranslation("auth");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState("");
   const [error, setError] = useState("");
+
+  const forgotPasswordSchema = z.object({
+    email: z.string().email(t("validation.email_invalid")),
+  });
 
   const {
     register,
@@ -39,17 +41,14 @@ export const ForgotPasswordForm = () => {
       const result = await forgotPassword(values.email);
 
       if (result && result.error) {
-        // If it's a specific error from Strapi, we could show it,
-        // but for security it's often better to show success even if email doesn't exist.
-        // However, if the server is down or something, we show a generic error.
-        setError("An error occurred. Please try again later.");
+        setError(t("signup.error_unexpected"));
         return;
       }
 
       setSubmittedEmail(values.email);
       setIsSubmitted(true);
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
+      setError(t("signup.error_unexpected"));
     } finally {
       setIsLoading(false);
     }
@@ -60,32 +59,25 @@ export const ForgotPasswordForm = () => {
       <div className="w-full max-w-90 mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
         <div className="flex flex-col gap-3 mb-10 text-left">
           <h1 className="text-3xl font-bold tracking-tight text-brand-teal-900">
-            Reset password
+            {t("forgot_password.success_title")}
           </h1>
           <div className="text-base text-brand-gray-500 space-y-4">
             <p>
-              We sent you an email to{" "}
-              <span className="text-brand-teal-600 font-bold">
-                {submittedEmail}
-              </span>{" "}
-              with a secret link to reset your password.
+              {t("verify_email.confirm_sent_to", { email: submittedEmail })}
             </p>
-            <p>
-              If you do not see the email within 5 minutes, please contact us at{" "}
-              <span className="text-brand-teal-600 font-bold">
-                support@sfa.com
-              </span>
-            </p>
+            <p>{t("verify_email.confirm_no_email")}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-1 text-sm mt-8 border-t border-brand-gray-100 pt-8">
-          <span className="text-brand-gray-500">Already have an account?</span>
+          <span className="text-brand-gray-500">
+            {t("signup.already_have_account")}
+          </span>
           <Link
             href="/login"
             className="font-semibold text-brand-teal-700 hover:text-brand-teal-800 transition-colors"
           >
-            Sign in
+            {t("signup.login_link")}
           </Link>
         </div>
       </div>
@@ -100,17 +92,16 @@ export const ForgotPasswordForm = () => {
           className="inline-flex items-center gap-2 text-sm font-medium text-brand-gray-500 hover:text-brand-gray-700 transition-colors"
         >
           <ArrowLeft size={16} />
-          Back
+          {t("navbar.back", { ns: "common" })}
         </Link>
       </div>
 
       <div className="flex flex-col gap-3 mb-10">
         <h1 className="text-3xl font-bold tracking-tight text-brand-teal-900">
-          Reset password
+          {t("forgot_password.title")}
         </h1>
         <p className="text-base text-brand-gray-500 leading-relaxed">
-          Enter your email address or username and we&apos;ll send you a link to
-          reset your password.
+          {t("forgot_password.description")}
         </p>
       </div>
 
@@ -126,7 +117,7 @@ export const ForgotPasswordForm = () => {
             htmlFor="email"
             className="text-sm font-bold text-brand-gray-900"
           >
-            Email
+            {t("forgot_password.email_label")}
           </Label>
           <div className="relative group">
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-gray-400 group-focus-within:text-brand-teal-500 transition-colors pointer-events-none">
@@ -136,7 +127,7 @@ export const ForgotPasswordForm = () => {
               id="email"
               type="email"
               {...register("email")}
-              placeholder="name@institution.org"
+              placeholder={t("forgot_password.email_placeholder")}
               className={`pl-10 h-11 ${errors.email ? "border-destructive ring-destructive" : ""}`}
             />
           </div>
@@ -161,7 +152,7 @@ export const ForgotPasswordForm = () => {
           {isLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            "Reset password"
+            t("forgot_password.button")
           )}
         </Button>
       </form>

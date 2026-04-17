@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import Meta from "@/components/seo/Meta";
 import { ArrowLeft, ChevronDown } from "lucide-react";
 import {
   Tabs,
@@ -131,12 +133,16 @@ export default function CommunityDetailPage() {
 
   return (
     <div className="flex flex-col lg:flex-row">
+      <Meta title={community?.name} />
       <aside className="w-full lg:w-[260px] lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4 lg:sticky lg:top-28.5 lg:self-start lg:h-[calc(100vh-114px)] lg:overflow-y-auto">
         <CommunityLeftNav activeKey="communities" />
       </aside>
 
       <div className="flex flex-1 flex-col gap-6 min-w-0">
-        <CommunityHeader community={community} onCreatePost={openCollaboration} />
+        <CommunityHeader
+          community={community}
+          onCreatePost={openCollaboration}
+        />
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
           <div className="flex flex-col gap-5 min-w-0 lg:border-r lg:border-brand-gray-100">
@@ -216,4 +222,12 @@ function EmptyTab({ label }) {
       {label} content coming soon.
     </div>
   );
+}
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+    },
+  };
 }

@@ -181,6 +181,89 @@ const COMMUNITIES = [
 ];
 
 /**
+ * Helper to synchronize French translations for a collection
+ */
+const synchronizeTranslations = async (strapi, uid) => {
+  try {
+    // 1. Get all English records
+    const entries = await strapi.documents(uid).findMany({
+      locale: "en",
+      status: "published",
+    });
+
+    for (const entry of entries) {
+      const docId = entry.documentId;
+
+      // 2. Check if this document already has a French version
+      // In v5, we can fetch all locales for a given documentId
+      const allLocales = await strapi.documents(uid).findMany({
+        filters: { documentId: docId },
+        fields: ["locale"],
+        status: "published",
+      });
+
+      const frExists = allLocales.some((loc) => loc.locale === "fr");
+
+      if (!frExists) {
+        // 2b. Secondary check: does an entry with the same unique name/title exist in 'fr'?
+        // This prevents collisions if the record was previously created under a different documentId.
+        const businessFields = ["name", "title"];
+        const collisionFilter = {};
+        let hasBusinessField = false;
+
+        for (const field of businessFields) {
+          if (entry[field]) {
+            collisionFilter[field] = { $eqi: entry[field] };
+            hasBusinessField = true;
+          }
+        }
+
+        if (hasBusinessField) {
+          const collision = await strapi.documents(uid).findMany({
+            filters: collisionFilter,
+            locale: "fr",
+            status: "published",
+            limit: 1,
+          });
+
+          if (collision.length > 0) {
+            continue;
+          }
+        }
+
+        strapi.log.info(
+          `Creating French translation for ${uid} (doc: ${docId})...`,
+        );
+
+        // Clean entry: Extract business fields only
+        const {
+          id,
+          documentId,
+          locale,
+          localizations,
+          publishedAt,
+          createdAt,
+          updatedAt,
+          ...businessData
+        } = entry;
+
+        // Use Document Service to create a translation for an existing documentId
+        await strapi.documents(uid).create({
+          documentId: docId,
+          locale: "fr",
+          data: businessData,
+          status: "published",
+        });
+      }
+    }
+  } catch (error) {
+    strapi.log.error(
+      `Failed to synchronize translations for ${uid}: ${error.message}`,
+    );
+  }
+};
+
+/**
  * Seeder Utility
  */
 const seed = async (strapi) => {
@@ -232,6 +315,11 @@ const seed = async (strapi) => {
     strapi.log.info(`Seeded ${COMMUNITIES.length} communities.`);
   }
 
+  // 3b. Synchronize French Translations for critical collections
+  strapi.log.info("Synchronizing French translations...");
+  await synchronizeTranslations(strapi, "api::interest.interest");
+  await synchronizeTranslations(strapi, "api::institution.institution");
+
   // 4. Set Permissions (Ensure Public and Authenticated can search)
   const roles = ["public", "authenticated"];
   const actions = [
@@ -241,16 +329,26 @@ const seed = async (strapi) => {
     "api::community.community.findOne",
     "api::collaboration-invite.collaboration-invite.accept",
   ];
-
   for (const role of roles) {
     for (const action of actions) {
       await grantPermission(strapi, role, action);
     }
   }
 
-  // 5. Collaboration Call permissions (Authenticated only)
+  // Grant Public access to OTP verification (New custom API routes)
+  const publicAuthActions = [
+    "api::auth.auth.verifyOtp",
+    "api::auth.auth.resendOtp",
+    "api::auth.auth.registrationStatus",
+  ];
+  for (const action of publicAuthActions) {
+    await grantPermission(strapi, "public", action);
+  }
+
+  // 5. Collaboration Call and Profile permissions (Authenticated only)
   const collaborationActions = [
-    "api::auth.auth.findUsers",
+    "api::auth.profile.update",
+    "api::auth.profile.findUsers",
     "api::collaboration-call.collaboration-call.createWithInvites",
     "api::collaboration-call.collaboration-call.create-with-invites",
     "api::collaboration-call.collaboration-call.create",

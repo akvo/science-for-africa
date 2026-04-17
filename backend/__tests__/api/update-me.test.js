@@ -39,7 +39,7 @@ describe("Auth Me Update API", () => {
     });
 
     await grantPermissions("authenticated", {
-      auth: ["updateMe"],
+      profile: ["update"],
     });
   });
 

@@ -25,17 +25,6 @@
       "locale": null
     },
     {
-      "documentId": "vpv4r6makz6d4fdxva2xwdzv",
-      "action": "plugin::content-manager.explorer.delete",
-      "actionParameters": {},
-      "subject": "api::institution.institution",
-      "properties": {},
-      "conditions": [
-        "admin::is-creator"
-      ],
-      "locale": null
-    },
-    {
       "documentId": "vv0yhrxmcir88g329cyqdg9s",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
@@ -84,17 +73,6 @@
           "category"
         ]
       },
-      "conditions": [
-        "admin::is-creator"
-      ],
-      "locale": null
-    },
-    {
-      "documentId": "c0gicbm94vei7e057vgey7gv",
-      "action": "plugin::content-manager.explorer.delete",
-      "actionParameters": {},
-      "subject": "api::interest.interest",
-      "properties": {},
       "conditions": [
         "admin::is-creator"
       ],

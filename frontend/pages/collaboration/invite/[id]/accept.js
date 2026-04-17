@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Loader2, XCircle } from "lucide-react";
+import Meta from "@/components/seo/Meta";
 import { acceptCollaborationInvite } from "@/lib/strapi";
 
 export default function AcceptInvitePage() {
@@ -37,6 +38,7 @@ export default function AcceptInvitePage() {
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
+      <Meta title="Collaboration Invitation" />
       <div className="flex max-w-md flex-col items-center gap-6 px-4 text-center">
         {status === "loading" ? (
           <>

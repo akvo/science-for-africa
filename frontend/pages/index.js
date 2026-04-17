@@ -1,4 +1,6 @@
-import Head from "next/head";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
+import Meta from "@/components/seo/Meta";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -32,12 +34,20 @@ import {
 } from "@/components/ui/card";
 import { SocialAuth, SocialButton } from "@/components/auth/social-auth";
 
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+    },
+  };
+}
+
 export default function StyleGuide() {
+  const { t } = useTranslation("common");
+
   return (
     <div className="min-h-screen bg-white">
-      <Head>
-        <title>SFA Design System | Style Guide</title>
-      </Head>
+      <Meta title={t("seo.home_title")} />
 
       <nav className="border-b border-brand-gray-100 py-4 sticky top-0 bg-white/80 backdrop-blur-md z-50">
         <div className="container mx-auto px-4 flex justify-between items-center">

@@ -1,8 +1,8 @@
 #!/bin/sh
 set -eu
 
-echo "📦 Installing dependencies..."
-npm install
+echo "📦 Checking/Installing dependencies..."
+npm install --no-audit --no-fund --prefer-offline
 
 echo "🚀 Starting Strapi server..."
 

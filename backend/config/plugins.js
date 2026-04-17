@@ -48,6 +48,17 @@ module.exports = ({ env }) => {
       }
     : {};
 
+  const getFrontendUrl = () => {
+    return (
+      env("NEXT_PUBLIC_FRONTEND_URL") ||
+      env("FRONTEND_URL") ||
+      env("PUBLIC_URL") ||
+      "http://localhost:3000"
+    );
+  };
+
+  const frontendUrl = getFrontendUrl();
+
   return {
     email: {
       config: {
@@ -95,10 +106,22 @@ module.exports = ({ env }) => {
         register: {
           allowedFields: ["fullName"],
         },
+        jwt: {
+          expiresIn: "30d",
+        },
         advanced: {
-          email_confirmation_redirection:
-            env("NEXT_PUBLIC_FRONTEND_URL", "http://localhost:3000") +
-            "/auth/verify-email",
+          email_confirmation_redirection: frontendUrl + "/login?verified=true",
+        },
+        ratelimit: {
+          enabled: false,
+        },
+        grant: {
+          google: {
+            enabled: true,
+            clientId: env("GOOGLE_CLIENT_ID"),
+            clientSecret: env("GOOGLE_CLIENT_SECRET"),
+            callback: frontendUrl + "/auth/google",
+          },
         },
       },
     },

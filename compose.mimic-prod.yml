@@ -50,6 +50,10 @@ services:
       GCS_BASE_URL: ${GCS_BASE_URL:-}
       GCS_PUBLIC_FILES: ${GCS_PUBLIC_FILES:-}
       GCS_UNIFORM: ${GCS_UNIFORM:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      NEXT_PUBLIC_FRONTEND_URL: ${NEXT_PUBLIC_FRONTEND_URL:-http://localhost:3000}
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:1337/api}
 
   db:
     image: postgres:16-alpine

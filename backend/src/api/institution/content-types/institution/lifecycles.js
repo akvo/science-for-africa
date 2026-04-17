@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * Lifecycle callbacks for the `institution` model.
@@ -11,16 +11,21 @@ module.exports = {
   async beforeCreate(event) {
     const { data } = event.params;
     if (data.name) {
-      const existing = await strapi.db.query('api::institution.institution').findOne({
-        where: {
-          name: {
-            $eqi: data.name,
+      const existing = await global.strapi.db
+        .query("api::institution.institution")
+        .findOne({
+          where: {
+            name: {
+              $eqi: data.name,
+            },
+            locale: data.locale || "en",
           },
-        },
-      });
+        });
 
       if (existing) {
-        throw new Error('An institution with this name already exists (case-insensitive).');
+        throw new Error(
+          "An institution with this name already exists in this locale (case-insensitive).",
+        );
       }
     }
   },
@@ -28,19 +33,24 @@ module.exports = {
   async beforeUpdate(event) {
     const { data, where } = event.params;
     if (data.name) {
-      const existing = await strapi.db.query('api::institution.institution').findOne({
-        where: {
-          name: {
-            $eqi: data.name,
+      const existing = await global.strapi.db
+        .query("api::institution.institution")
+        .findOne({
+          where: {
+            name: {
+              $eqi: data.name,
+            },
+            locale: data.locale,
+            id: {
+              $ne: where.id,
+            },
           },
-          id: {
-            $ne: where.id,
-          },
-        },
-      });
+        });
 
       if (existing) {
-        throw new Error('An institution with this name already exists (case-insensitive).');
+        throw new Error(
+          "An institution with this name already exists in this locale (case-insensitive).",
+        );
       }
     }
   },

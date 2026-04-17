@@ -1,8 +1,8 @@
 {
   "key": "plugin_upload_metrics",
   "value": {
-    "weeklySchedule": "28 47 23 * * 1",
-    "lastWeeklyUpdate": 1775519248886
+    "weeklySchedule": "42 37 5 * * 4",
+    "lastWeeklyUpdate": 1776317867816
   },
   "type": "object",
   "environment": null,

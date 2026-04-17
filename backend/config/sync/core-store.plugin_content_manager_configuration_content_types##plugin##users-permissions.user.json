@@ -399,6 +399,76 @@
           "sortable": true
         }
       },
+      "otpCode": {
+        "edit": {
+          "label": "otpCode",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "otpCode",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "otpExpiration": {
+        "edit": {
+          "label": "otpExpiration",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "otpExpiration",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "lastOtpSentAt": {
+        "edit": {
+          "label": "lastOtpSentAt",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "lastOtpSentAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "otpResendCount": {
+        "edit": {
+          "label": "otpResendCount",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "otpResendCount",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "otpResendWindowStart": {
+        "edit": {
+          "label": "otpResendWindowStart",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "otpResendWindowStart",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -595,6 +665,32 @@
           },
           {
             "name": "institutionName",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "otpCode",
+            "size": 6
+          },
+          {
+            "name": "otpExpiration",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "lastOtpSentAt",
+            "size": 6
+          },
+          {
+            "name": "otpResendCount",
+            "size": 4
+          }
+        ],
+        [
+          {
+            "name": "otpResendWindowStart",
             "size": 6
           }
         ]

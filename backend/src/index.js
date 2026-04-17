@@ -92,12 +92,29 @@ module.exports = {
         console.log(
           `[AUTH-TRACE] [${userId}] [AuthHeader: ${hasAuth}] Incoming ${ctx.method} ${ctx.url}`,
         );
+
+        // Log request body for non-GET requests (redact password)
+        if (ctx.method !== "GET" && ctx.request.body) {
+          const body = { ...ctx.request.body };
+          if (body.password) body.password = "[REDACTED]";
+          if (body.passwordConfirmation)
+            body.passwordConfirmation = "[REDACTED]";
+          console.log(`[AUTH-TRACE] Request Body:`, JSON.stringify(body));
+        }
       }
 
       await next();
 
       if (ctx.url.includes("/auth/")) {
         console.log(`[AUTH-TRACE] Result for ${ctx.url}: ${ctx.status}`);
+
+        // Log error body for failed requests to help diagnose 400/5xx
+        if (ctx.status >= 400) {
+          console.log(
+            `[AUTH-TRACE] Error Body for ${ctx.url}:`,
+            JSON.stringify(ctx.body),
+          );
+        }
       }
     });
 
@@ -175,7 +192,9 @@ module.exports = {
     // --- CONSOLIDATION: Routes moved to api::auth/routes/auth.js ---
 
     // Add actions to the user controller using the modern Strapi v5 API
-    const userController = strapi.plugin("users-permissions").controller("user");
+    const userController = strapi
+      .plugin("users-permissions")
+      .controller("user");
 
     // We no longer override verifyOtp, resendOtp, etc. here because they are handled
     // in the standalone api::auth which follows better organization.

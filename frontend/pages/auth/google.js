@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useAuthStore } from "@/lib/auth-store";
 import axios from "axios";
 import Meta from "@/components/seo/Meta";
+import { getBackendApiUrl } from "@/lib/url-helpers";
 
 const GoogleCallback = ({ jwt, user, error }) => {
   const router = useRouter();
@@ -49,8 +50,7 @@ export async function getServerSideProps(context) {
   const { query } = context;
   const { jwt, access_token, id_token, code } = query;
 
-  const publicBackendUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api";
+  const publicBackendUrl = getBackendApiUrl();
 
   // Smart Swap for Docker SSR:
   // getServerSideProps runs inside the container. If the backend URL points to 'localhost',

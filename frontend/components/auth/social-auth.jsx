@@ -1,12 +1,12 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { getBackendApiUrl } from "@/lib/url-helpers";
 
 export const SocialButton = ({ provider, text, className, ...props }) => {
   const isGoogle = provider === "google";
 
   const handleLogin = () => {
-    const apiBaseUrl =
-      process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api";
+    const apiBaseUrl = getBackendApiUrl();
     const redirectUrl = `${window.location.origin}/auth/google`;
     window.location.href = `${apiBaseUrl}/connect/${provider}?redirect=${redirectUrl}`;
   };

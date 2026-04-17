@@ -38,8 +38,10 @@ function formatCount(n) {
 }
 
 export default function CommunityAboutCard({ community }) {
-  const { stats = {}, moderators = [], subCommunities = [], rules = [] } =
-    community;
+  const stats = community.stats || {};
+  const moderators = community.moderators || [];
+  const subCommunities = community.subCommunities || [];
+  const rules = community.rules || [];
 
   return (
     <aside className="flex flex-col gap-5 rounded-2xl border border-brand-gray-100 bg-brand-gray-50 p-5">

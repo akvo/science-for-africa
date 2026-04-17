@@ -31,6 +31,16 @@
       "locale": null
     },
     {
+      "documentId": "c0m1p2u3b4l5i6c7f8i9n0d1",
+      "action": "api::community.community.find",
+      "locale": null
+    },
+    {
+      "documentId": "c0m2p3u4b5l6i7c8f9i0n1d2",
+      "action": "api::community.community.findOne",
+      "locale": null
+    },
+    {
       "documentId": "okbj37olgl4iolyi2vdk4ujv",
       "action": "plugin::users-permissions.auth.callback",
       "locale": null

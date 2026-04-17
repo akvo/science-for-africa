@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Meta from "@/components/seo/Meta";
@@ -12,10 +13,10 @@ import CollaborationCallsList from "@/components/community/CollaborationCallsLis
 import CreateCollaborationDialog from "@/components/collaboration/CreateCollaborationDialog";
 import { useCollaborationStore } from "@/lib/collaboration-store";
 import { useAuthStore } from "@/lib/auth-store";
+import { fetchCommunity } from "@/lib/strapi";
 import {
   COMMUNITY_TABS,
   MOCK_COLLABORATION_CALLS,
-  MOCK_COMMUNITY,
 } from "@/lib/community-mock-data";
 
 /**
@@ -38,13 +39,40 @@ export default function CommunityDetailPage() {
     }
     openCollaborationDialog();
   };
+  const [community, setCommunity] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { slug } = router.query;
+
+  useEffect(() => {
+    if (!slug) return;
+    fetchCommunity(slug).then((res) => {
+      const items = res?.data || [];
+      if (items.length > 0) {
+        const c = items[0];
+        // Normalise shape for existing components
+        setCommunity({
+          ...c,
+          about: c.description,
+          stats: { subscribers: c.subscribers || 0, posts: c.posts || 0 },
+          subCommunities: (c.subCommunities || []).map((sc) => ({
+            id: sc.documentId || sc.id,
+            name: sc.name,
+            subscribers: sc.subscribers || 0,
+          })),
+          moderators: (c.moderators || []).map((m) => ({
+            id: m.documentId || m.id,
+            name: m.username || m.email,
+          })),
+        });
+      }
+      setLoading(false);
+    });
+  }, [slug]);
+
   // Keep the default stable between SSR and first client render to avoid
   // hydration mismatches. `router.query` is empty during SSR and populated
   // only after hydration.
   const initialTab = "collaboration-calls";
-
-  // TODO: fetch by slug from Strapi
-  const community = MOCK_COMMUNITY;
   const calls = MOCK_COLLABORATION_CALLS;
 
   const handleTabChange = (value) => {
@@ -55,10 +83,36 @@ export default function CommunityDetailPage() {
     );
   };
 
+  if (loading) {
+    return (
+      <div className="flex flex-col lg:flex-row">
+        <aside className="w-full lg:w-[260px] lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4">
+          <CommunityLeftNav activeKey="communities" />
+        </aside>
+        <div className="flex flex-1 items-center justify-center py-20 text-sm text-brand-gray-500">
+          Loading community...
+        </div>
+      </div>
+    );
+  }
+
+  if (!community) {
+    return (
+      <div className="flex flex-col lg:flex-row">
+        <aside className="w-full lg:w-[260px] lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4">
+          <CommunityLeftNav activeKey="communities" />
+        </aside>
+        <div className="flex flex-1 items-center justify-center py-20 text-sm text-brand-gray-500">
+          Community not found.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col lg:flex-row">
       <Meta title={community?.name} />
-      <aside className="w-full lg:w-52 lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4 lg:sticky lg:top-28.5 lg:self-start lg:h-[calc(100vh-114px)] lg:overflow-y-auto">
+      <aside className="w-full lg:w-[260px] lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4 lg:sticky lg:top-28.5 lg:self-start lg:h-[calc(100vh-114px)] lg:overflow-y-auto">
         <CommunityLeftNav activeKey="communities" />
       </aside>
 

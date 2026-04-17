@@ -45,7 +45,7 @@ export function useApi(apiFn, { immediate = false, args = [] } = {}) {
     if (immediate) {
       execute(...args);
     }
-  }, [immediate, ...args]); // Warning: ...args in dependency array can cause loops if args is recreated
+  }, [immediate, execute, args]);
 
   return { data, loading, error, execute };
 }

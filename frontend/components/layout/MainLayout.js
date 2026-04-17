@@ -35,7 +35,7 @@ const MainLayout = ({ children }) => {
     ) {
       router.push("/onboarding");
     }
-  }, [isAuthenticated, user, router.pathname]);
+  }, [isAuthenticated, user, router.pathname, router]);
 
   // Define routes that use the specialized AuthLayout
   // login, signup, forget password, 2fa, etc.
@@ -52,7 +52,7 @@ const MainLayout = ({ children }) => {
       "/auth/two-factor": 3,
     };
     const activeStep = stepMap[router.pathname] || 1;
-    
+
     return <AuthLayout activeStep={activeStep}>{children}</AuthLayout>;
   }
 

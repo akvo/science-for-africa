@@ -38,7 +38,7 @@ const LocaleSwitcher = () => {
           <ChevronDown className="w-3.5 h-3.5 opacity-70" strokeWidth={2.5} />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-fit min-w-[110px] p-1.5">
+      <DropdownMenuContent align="start" className="w-fit min-w-28 p-1.5">
         {locales.map((loc) => (
           <DropdownMenuItem
             key={loc.code}

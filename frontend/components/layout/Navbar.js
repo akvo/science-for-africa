@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User, LogOut, Settings, Plus } from "lucide-react";
+import Image from "next/image";
 
 const Navbar = () => {
   const { t } = useTranslation("common");
@@ -72,10 +73,13 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           {/* Logo & Links Group */}
           <div className="flex items-center gap-10">
-            <Link href="/" className="shrink-0">
-              <img
+            <Link href="/" className="shrink-0 relative block w-auto h-32">
+              <Image
                 src="/logo-full.png"
                 alt="Science for Africa"
+                width={240}
+                height={128}
+                priority
                 className="h-32 w-auto"
               />
             </Link>

@@ -153,6 +153,29 @@ module.exports = {
       }
 
       console.log(`[AUTH-TRACE] Result for ${ctx.url}: ${ctx.status}`);
+
+      // --- GENERATION SNAPSHOT ---
+      if (ctx.url.includes("/forgot-password") && ctx.status === 200) {
+        const email = ctx.request.body ? ctx.request.body.email : null;
+        if (email) {
+          // Wait slightly for DB commit
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          try {
+            const user = await strapi.db
+              .query("plugin::users-permissions.user")
+              .findOne({
+                where: { email },
+              });
+            console.log(
+              `[AUTH-TRACE] [GENERATION-SNAPSHOT] User: ${email}, DB Token: ${user ? user.resetPasswordToken || user.reset_password_token : "NULL"}`,
+            );
+          } catch (e) {
+            console.log(`[AUTH-TRACE] Snapshot Error: ${e.message}`);
+          }
+        }
+      }
+      // ----------------------------
+
       if (ctx.status >= 400 && ctx.body) {
         console.log(
           `[AUTH-TRACE] Error Body for ${ctx.url}:`,

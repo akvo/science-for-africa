@@ -118,6 +118,28 @@ module.exports = {
             console.log(
               `[AUTH-TRACE] Reset Code Received. Length: ${code.length}, Start: ${code.substring(0, 4)}..., End: ...${code.substring(code.length - 4)}`,
             );
+
+            // --- FINAL DB DIAGNOSTIC ---
+            try {
+              const userByToken = await strapi.db
+                .query("plugin::users-permissions.user")
+                .findOne({
+                  where: { resetPasswordToken: code },
+                });
+
+              if (userByToken) {
+                console.log(
+                  `[AUTH-TRACE] DB MATCH FOUND: User ${userByToken.email} has this token. Provider: ${userByToken.provider}`,
+                );
+              } else {
+                console.log(
+                  `[AUTH-TRACE] DB MATCH NOT FOUND: No user has this resetPasswordToken in the database.`,
+                );
+              }
+            } catch (dbErr) {
+              console.log(`[AUTH-TRACE] DB Lookup Error: ${dbErr.message}`);
+            }
+            // ---------------------------
           }
           if (body.password) body.password = "[REDACTED]";
           if (body.passwordConfirmation)

@@ -17,7 +17,9 @@ import { getPasswordSchema } from "@/lib/validation";
 export const ResetPasswordForm = () => {
   const { t } = useTranslation("auth");
   const router = useRouter();
-  const { code } = router.query;
+  const { code: queryCode } = router.query;
+  // Handle Next.js hydration where query might be an array or temporarily undefined
+  const code = Array.isArray(queryCode) ? queryCode[0] : queryCode;
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

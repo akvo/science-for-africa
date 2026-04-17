@@ -96,6 +96,14 @@ module.exports = {
         // Log request body for non-GET requests (redact password)
         if (ctx.method !== "GET" && ctx.request.body) {
           const body = { ...ctx.request.body };
+          // --- DIAGNOSTIC LOGGING ---
+          if (body.code) {
+            const code = String(body.code);
+            console.log(
+              `[AUTH-TRACE] Reset Code Received. Length: ${code.length}, Start: ${code.substring(0, 4)}..., End: ...${code.substring(code.length - 4)}`,
+            );
+          }
+          // --------------------------
           if (body.password) body.password = "[REDACTED]";
           if (body.passwordConfirmation)
             body.passwordConfirmation = "[REDACTED]";

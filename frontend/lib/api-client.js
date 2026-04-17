@@ -26,10 +26,22 @@ apiClient.interceptors.request.use(
       "/auth/forgot-password",
       "/auth/reset-password",
       "/auth/email-confirmation",
+      "/auth/verify-otp",
+      "/auth/resend-otp",
+      "/auth/registration-status",
     ];
-    const isPublicAuthEndpoint = publicAuthEndpoints.some((endpoint) =>
-      config.url?.includes(endpoint),
-    );
+
+    // Normalize URL for robust matching (handle leading slashes and potential API prefixes)
+    const normalizedUrl = config.url
+      ?.replace(/^(\/?api)?\//, "")
+      .replace(/\/$/, "");
+
+    const isPublicAuthEndpoint = publicAuthEndpoints.some((endpoint) => {
+      const normalizedEndpoint = endpoint.replace(/^\//, "").replace(/\/$/, "");
+      return (
+        normalizedUrl === normalizedEndpoint || config.url?.includes(endpoint)
+      );
+    });
 
     if (jwt && !isPublicAuthEndpoint) {
       config.headers.Authorization = `Bearer ${jwt}`;

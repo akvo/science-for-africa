@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCollaborationStore } from "@/lib/collaboration-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,21 +12,22 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Bold, Italic, Underline, List, Link } from "lucide-react";
-
-const COMMUNITIES = [
-  "Bioinformatics Hub",
-  "Climate Action Network",
-  "Public Health Forum",
-  "AI for Africa",
-  "STEM Education",
-  "Genetics Research",
-  "Environmental Sciences",
-];
+import { fetchCommunities } from "@/lib/strapi";
 
 export default function StepCreateSpace() {
   const { formData, updateFormData, nextStep, prevStep } =
     useCollaborationStore();
   const [errors, setErrors] = useState({});
+  const [communities, setCommunities] = useState([]);
+  const [loadingCommunities, setLoadingCommunities] = useState(true);
+
+  useEffect(() => {
+    fetchCommunities()
+      .then((res) => {
+        setCommunities(res?.data || []);
+      })
+      .finally(() => setLoadingCommunities(false));
+  }, []);
 
   const charCount = formData.description?.length || 0;
 
@@ -56,14 +57,24 @@ export default function StepCreateSpace() {
           <Select
             value={formData.communityName}
             onValueChange={(val) => updateFormData({ communityName: val })}
+            disabled={loadingCommunities}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select a community" />
+              <SelectValue
+                placeholder={
+                  loadingCommunities
+                    ? "Loading communities..."
+                    : "Select a community"
+                }
+              />
             </SelectTrigger>
-            <SelectContent>
-              {COMMUNITIES.map((c) => (
-                <SelectItem key={c} value={c}>
-                  {c}
+            <SelectContent alignItemWithTrigger={false}>
+              {communities.map((c) => (
+                <SelectItem
+                  key={c.documentId || c.id}
+                  value={c.name}
+                >
+                  {c.name}
                 </SelectItem>
               ))}
             </SelectContent>

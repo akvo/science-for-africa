@@ -2,7 +2,10 @@ import i18nConfig from "./next-i18next.config.js";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  i18n: i18nConfig.i18n,
+  i18n: {
+    defaultLocale: i18nConfig.i18n.defaultLocale,
+    locales: i18nConfig.i18n.locales,
+  },
   output: "standalone",
   images: {
     remotePatterns: [

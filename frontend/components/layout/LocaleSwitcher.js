@@ -38,7 +38,7 @@ const LocaleSwitcher = () => {
           <ChevronDown className="w-3.5 h-3.5 opacity-70" strokeWidth={2.5} />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-32">
+      <DropdownMenuContent align="start" className="w-fit min-w-[110px] p-1.5">
         {locales.map((loc) => (
           <DropdownMenuItem
             key={loc.code}
@@ -47,8 +47,11 @@ const LocaleSwitcher = () => {
               activeLocale === loc.code ? "bg-brand-gray-50 font-semibold" : ""
             }`}
           >
-            <span className="text-base">{loc.flag}</span>
-            <span>{loc.name}</span>
+            <span className="text-base leading-none">{loc.flag}</span>
+            <span className="uppercase text-[11px] font-bold text-brand-teal-600 bg-brand-teal-50 px-1 rounded-sm leading-none flex items-center h-4">
+              {loc.code}
+            </span>
+            <span className="ml-1 text-sm text-brand-gray-700">{loc.name}</span>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

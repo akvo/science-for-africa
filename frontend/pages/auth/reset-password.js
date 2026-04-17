@@ -10,7 +10,7 @@ const ResetPasswordPage = () => {
   );
 };
 
-export async function getServerSideProps({ locale }) {
+export async function getStaticProps({ locale }) {
   return {
     props: {
       ...(await serverSideTranslations(locale, ["common", "auth"])),

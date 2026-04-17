@@ -13,7 +13,8 @@
     "profile": "Profile",
     "settings": "Settings",
     "logout": "Sign out",
-    "publish": "Publish"
+    "publish": "Publish",
+    "back": "Back"
   },
   "common": {
     "loading": "Loading...",

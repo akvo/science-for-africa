@@ -63,6 +63,11 @@ apiClient.interceptors.request.use(
       };
     }
 
+    // Force Content-Type for POST/PUT/PATCH to ensure body parsing works consistently
+    if (["POST", "PUT", "PATCH"].includes(config.method?.toUpperCase())) {
+      config.headers["Content-Type"] = "application/json";
+    }
+
     return config;
   },
   (error) => Promise.reject(error),

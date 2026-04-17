@@ -86,43 +86,56 @@ module.exports = {
     // 2. Override users-permissions register route and controller
     // Intercept and log all auth requests
     strapi.server.use(async (ctx, next) => {
-      if (ctx.url.includes("/auth/")) {
-        const hasAuth = !!ctx.get("Authorization");
-        const userId = ctx.state.user ? ctx.state.user.id : "ANONYMOUS";
-        console.log(
-          `[AUTH-TRACE] [${userId}] [AuthHeader: ${hasAuth}] Incoming ${ctx.method} ${ctx.url}`,
-        );
+      const isAuthRequest = ctx.url.includes("/auth/");
+      if (!isAuthRequest) return next();
 
-        // Log request body for non-GET requests (redact password)
-        if (ctx.method !== "GET" && ctx.request.body) {
-          const body = { ...ctx.request.body };
-          // --- DIAGNOSTIC LOGGING ---
+      const authHeader = ctx.get("Authorization");
+      const userType = authHeader ? "AUTHENTICATED" : "ANONYMOUS";
+
+      console.log(
+        `[AUTH-TRACE] [${userType}] Incoming ${ctx.method} ${ctx.url}`,
+      );
+      console.log(
+        `[AUTH-TRACE] Headers:`,
+        JSON.stringify({
+          "content-type": ctx.get("content-type"),
+          "content-length": ctx.get("content-length"),
+          host: ctx.get("host"),
+          "x-forwarded-for": ctx.get("x-forwarded-for"),
+          "x-forwarded-proto": ctx.get("x-forwarded-proto"),
+        }),
+      );
+
+      await next();
+
+      // Post-parse diagnostic
+      if (ctx.method !== "GET") {
+        const body = ctx.request.body ? { ...ctx.request.body } : null;
+
+        if (body) {
           if (body.code) {
             const code = String(body.code);
             console.log(
               `[AUTH-TRACE] Reset Code Received. Length: ${code.length}, Start: ${code.substring(0, 4)}..., End: ...${code.substring(code.length - 4)}`,
             );
           }
-          // --------------------------
           if (body.password) body.password = "[REDACTED]";
           if (body.passwordConfirmation)
             body.passwordConfirmation = "[REDACTED]";
-          console.log(`[AUTH-TRACE] Request Body:`, JSON.stringify(body));
+          console.log(`[AUTH-TRACE] Parsed Body:`, JSON.stringify(body));
+        } else {
+          console.log(
+            `[AUTH-TRACE] Body is EMPTY after parsing (this often means Content-Type mismatch or proxy stripping). Status: ${ctx.status}`,
+          );
         }
       }
 
-      await next();
-
-      if (ctx.url.includes("/auth/")) {
-        console.log(`[AUTH-TRACE] Result for ${ctx.url}: ${ctx.status}`);
-
-        // Log error body for failed requests to help diagnose 400/5xx
-        if (ctx.status >= 400) {
-          console.log(
-            `[AUTH-TRACE] Error Body for ${ctx.url}:`,
-            JSON.stringify(ctx.body),
-          );
-        }
+      console.log(`[AUTH-TRACE] Result for ${ctx.url}: ${ctx.status}`);
+      if (ctx.status >= 400 && ctx.body) {
+        console.log(
+          `[AUTH-TRACE] Error Body for ${ctx.url}:`,
+          JSON.stringify(ctx.body),
+        );
       }
     });
 

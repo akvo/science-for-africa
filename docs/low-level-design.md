@@ -660,7 +660,8 @@ The frontend uses a Server-Side Rendering (SSR) handshake via `getServerSideProp
 - **Backend Configuration**: Automated via `src/index.js` bootstrap. The system synchronizes provider settings (Client ID, Secret, and Redirect URIs) using `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `NEXT_PUBLIC_FRONTEND_URL`.
 - **Frontend Integration**:
     - `SocialButton`: Custom branded component following Google's identity guidelines.
-    - `pages/auth/google.js`: Dedicated callback handler with "Smart Swap" logic for internal Docker networking via `NEXT_PUBLIC_BACKEND_URL`. Implements a **Frontend-Intercept** pattern where Google redirects to the app for more environment-agnostic redirection handling.
+    - `getBackendApiUrl`: A centralized helper in `lib/url-helpers.js` that implements **Dynamic Backend Discovery (DBD)**. It automatically swaps the built-in `localhost` fallback for `${window.location.origin}/cms/api` when running on a public domain, ensuring Docker image portability without rebuilds.
+    - `pages/auth/google.js`: Dedicated callback handler with "Smart Swap" logic for internal Docker networking via `getBackendApiUrl`.
 - **Bypass Logic**: Social users are automatically marked as `confirmed: true`, bypassing the email verification step required for local registrations.
 - **Session Persistence**: Social login sessions are automatically persistent (30 days), matching the "Remember Me" behavior of local login.
 

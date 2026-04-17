@@ -137,10 +137,18 @@ When running in Docker Compose, the Next.js server (SSR) uses a "Smart Swap" log
 
 ---
 
+### Environment Agnostic & Portable
+The frontend uses **Dynamic Backend Discovery (DBD)** to ensure Docker images are portable across environments:
+- **Build-time Fallback**: `NEXT_PUBLIC_BACKEND_URL` is used as the initial reference.
+- **Runtime Discovery**: If the browser detects it's running on a domain other than `localhost`, it automatically derivations the API URL from `window.location.origin` (e.g., `https://domain.com/cms/api`).
+
+---
+
 ## ✅ Implementation Checklist
 - [x] SSR Handshake implemented in `google.js`.
 - [x] Internal networking verified via container IP.
 - [x] Verified user persistence in `up_users` table.
+- [x] Environment-agnostic URL discovery implemented in `url-helpers.js`.
 
 ---
 

@@ -41,9 +41,21 @@ export function useApi(apiFn, { immediate = false, args = [] } = {}) {
     }
   }, []);
 
+  // Use a ref to prevent infinite loops if args are not memoized
+  const prevArgsRef = useRef(null);
+
   useEffect(() => {
     if (immediate) {
-      execute(...args);
+      // Only execute if it's the first time or if args have actually changed (shallow check)
+      const argsChanged =
+        !prevArgsRef.current ||
+        args.length !== prevArgsRef.current.length ||
+        args.some((arg, i) => arg !== prevArgsRef.current[i]);
+
+      if (argsChanged) {
+        execute(...args);
+        prevArgsRef.current = args;
+      }
     }
   }, [immediate, execute, args]);
 

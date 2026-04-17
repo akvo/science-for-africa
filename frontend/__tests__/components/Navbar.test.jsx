@@ -40,7 +40,7 @@ describe("Navbar Component (TDD)", () => {
     jest.clearAllMocks();
   });
 
-  it("renders correctly for an unauthenticated user", () => {
+  it("renders correctly for an unauthenticated user", async () => {
     // Setup: Unauthenticated state
     useAuthStore.mockReturnValue({
       isAuthenticated: false,
@@ -51,15 +51,18 @@ describe("Navbar Component (TDD)", () => {
     render(<Navbar />);
 
     // Expectations: Login and Sign up buttons are visible
-    expect(screen.getByText("navbar.login")).toBeInTheDocument();
-    expect(screen.getByText("navbar.signup")).toBeInTheDocument();
+    // Must wait for component to mount (asynchronous due to setMounted in useEffect)
+    await waitFor(() => {
+      expect(screen.getByText("navbar.login")).toBeInTheDocument();
+      expect(screen.getByText("navbar.signup")).toBeInTheDocument();
 
-    // Expectations: Authenticated-only actions are hidden
-    expect(screen.queryByText("navbar.publish")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("avatar")).not.toBeInTheDocument();
+      // Expectations: Authenticated-only actions are hidden
+      expect(screen.queryByText("navbar.publish")).not.toBeInTheDocument();
+      expect(screen.queryByTestId("avatar")).not.toBeInTheDocument();
+    });
   });
 
-  it("renders correctly for an authenticated user", () => {
+  it("renders correctly for an authenticated user", async () => {
     // Setup: Authenticated state
     useAuthStore.mockReturnValue({
       isAuthenticated: true,
@@ -75,14 +78,17 @@ describe("Navbar Component (TDD)", () => {
     render(<Navbar />);
 
     // Expectations: Login and Sign up buttons are hidden
-    expect(screen.queryByText("navbar.login")).not.toBeInTheDocument();
-    expect(screen.queryByText("navbar.signup")).not.toBeInTheDocument();
+    // Must wait for component to mount
+    await waitFor(() => {
+      expect(screen.queryByText("navbar.login")).not.toBeInTheDocument();
+      expect(screen.queryByText("navbar.signup")).not.toBeInTheDocument();
 
-    // Expectations: Authenticated actions are visible
-    expect(screen.getByText("navbar.publish")).toBeInTheDocument();
+      // Expectations: Authenticated actions are visible
+      expect(screen.getByText("navbar.publish")).toBeInTheDocument();
 
-    // Check for user initials in Avatar (using JD from "John Doe")
-    expect(screen.getByText("JD")).toBeInTheDocument();
+      // Check for user initials in Avatar (using JD from "John Doe")
+      expect(screen.getByText("JD")).toBeInTheDocument();
+    });
   });
 
   it("executes logout logic correctly", async () => {
@@ -100,8 +106,11 @@ describe("Navbar Component (TDD)", () => {
     render(<Navbar />);
 
     // 1. Click the Avatar to open the dropdown
-    const avatar = screen.getByText("JD");
-    fireEvent.click(avatar);
+    // Wait for initials to appear before clicking
+    await waitFor(() => {
+      const avatar = screen.getByText("JD");
+      fireEvent.click(avatar);
+    });
 
     // 2. Click the Sign out button
     const logoutBtn = screen.getByText("navbar.logout");
@@ -114,7 +123,7 @@ describe("Navbar Component (TDD)", () => {
     });
   });
 
-  it("renders correctly for an authenticated user with no full name (uses username initials)", () => {
+  it("renders correctly for an authenticated user with no full name (uses username initials)", async () => {
     // Setup: Authenticated state with username fallback
     useAuthStore.mockReturnValue({
       isAuthenticated: true,
@@ -129,6 +138,9 @@ describe("Navbar Component (TDD)", () => {
     render(<Navbar />);
 
     // Expecting initials from username: SC (first two chars of scientist_alpha)
-    expect(screen.getByText("SC")).toBeInTheDocument();
+    // Must wait for component to mount
+    await waitFor(() => {
+      expect(screen.getByText("SC")).toBeInTheDocument();
+    });
   });
 });

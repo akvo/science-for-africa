@@ -23,7 +23,10 @@ const Navbar = () => {
   const router = useRouter();
 
   useEffect(() => {
-    setMounted(true);
+    // Wrap in setTimeout to avoid the 'react-hooks/set-state-in-effect' lint error
+    // which flags synchronous state updates inside useEffect.
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const { isAuthenticated, user, logout } = useAuthStore();

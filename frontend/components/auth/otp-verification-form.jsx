@@ -200,7 +200,7 @@ export const OTPVerificationForm = ({ email }) => {
           </div>
         )}
         <div
-          className="flex justify-between max-w-75 mx-auto gap-2"
+          className="flex justify-center mx-auto gap-2"
           onPaste={handlePaste}
         >
           {otp.map((digit, idx) => (
@@ -214,7 +214,7 @@ export const OTPVerificationForm = ({ email }) => {
               autoComplete="one-time-code"
               onChange={(e) => handleChange(e, idx)}
               onKeyDown={(e) => handleKeyDown(e, idx)}
-              className="w-10 h-12 md:w-12 md:h-14 border-2 rounded-md text-xl font-bold text-center focus:border-primary-500 focus:ring-2 focus:ring-primary-50 outline-none transition-all placeholder:text-gray-200"
+              className="w-10 h-12 md:w-12 md:h-14 border-2 rounded-xl text-xl font-bold text-center focus:border-brand-teal-500 focus:ring-4 focus:ring-brand-teal-50 outline-none transition-all placeholder:text-brand-gray-200 bg-white"
               placeholder="0"
             />
           ))}

@@ -11,8 +11,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Search, Loader2 } from "lucide-react";
-import { fetchFromStrapi, fetchLocalized } from "@/lib/strapi";
+import { Search, Loader2 } from "lucide-react";
+import { fetchLocalized } from "@/lib/strapi";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
@@ -28,7 +28,6 @@ const OnboardingStep1 = () => {
     formData,
     updateFormData,
     nextStep,
-    prevStep,
     skipStep,
   } = useOnboardingStore();
 
@@ -105,14 +104,7 @@ const OnboardingStep1 = () => {
   return (
     <div className="flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-90 mx-auto">
       {/* Top Navigation Row */}
-      <div className="flex items-center justify-between mb-24">
-        <button
-          onClick={prevStep}
-          className="flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors"
-        >
-          <ArrowLeft size={18} />
-          <span>{t("steps.back")}</span>
-        </button>
+      <div className="flex items-center justify-end mb-24">
         <button
           onClick={skipStep}
           className="text-brand-gray-500 hover:text-brand-teal-700 transition-colors"

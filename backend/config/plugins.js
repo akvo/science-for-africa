@@ -124,10 +124,8 @@ module.exports = ({ env }) => {
             protocol: "oauth2",
             key: env("GOOGLE_CLIENT_ID"),
             secret: env("GOOGLE_CLIENT_SECRET"),
-            callback:
-              (env("BACKEND_URL") || "http://localhost:1337")
-                .replace(/\/$/, "")
-                .replace(/\/api$/, "") + "/api/connect/google/callback",
+            callback: frontendUrl + "/auth/google",
+            scope: ["email", "profile"],
             custom_params: {
               prompt: "consent",
             },

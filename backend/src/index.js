@@ -472,10 +472,12 @@ module.exports = {
       const clientId = process.env.GOOGLE_CLIENT_ID;
       const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 
-      const backendUrl = (process.env.BACKEND_URL || "http://localhost:1337")
-        .replace(/\/$/, "")
-        .replace(/\/api$/, "");
-      const targetCallback = `${backendUrl}/api/connect/google/callback`;
+      const frontendUrlForCallback = (
+        process.env.NEXT_PUBLIC_FRONTEND_URL ||
+        process.env.FRONTEND_URL ||
+        process.env.PUBLIC_URL ||
+        "http://localhost:3000"
+      ).replace(/\/$/, "");
 
       // Use essentials only to prevent header bloat
       const googleConfig = {
@@ -483,7 +485,8 @@ module.exports = {
         protocol: "oauth2",
         key: clientId,
         secret: clientSecret || currentGrant?.google?.secret,
-        callback: targetCallback,
+        callback: `${frontendUrlForCallback}/auth/google`,
+        scope: ["email", "profile"],
       };
 
       if (clientId) {
@@ -518,7 +521,7 @@ module.exports = {
         });
 
         strapi.log.info(
-          `[AUTH] Synced Google OAuth & Redirect to: ${targetCallback} -> ${frontendUrl}`,
+          `[AUTH] Synced Google OAuth & Redirect to: ${googleConfig.callback} -> ${frontendUrl}`,
         );
       }
     } catch (error) {

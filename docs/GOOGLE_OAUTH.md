@@ -142,7 +142,7 @@ When running in Docker Compose, the Next.js server (SSR) uses a "Smart Swap" log
 ### 🛡️ Hardening & Session Security
 To ensure reliability across Docker containers and proxies:
 1. **Explicit Sessions**: The `strapi::session` middleware is configured with `sameSite: 'lax'` to allow cookies to be sent during the OAuth 302 redirect from Google.
-2. **Bootstrap Sync**: The `backend/src/index.js` forces the sync of Google Grant settings on every startup, ensuring environment variables always override database drift.
+2. **Bootstrap Sync**: The `backend/src/index.js` forces the sync of Google Grant settings on every startup, ensuring environment variables always override database drift. It explicitly injects the `scope: ["email", "profile"]` parameter into the Grant payload to prevent Google `400 invalid_request (Missing required parameter: scope)` errors.
 3. **URL Encoding**: All frontend-to-backend redirect parameters are URL-encoded to prevent truncation or malformed request errors.
 4. **Error Surfaceing**: The `LoginForm` component is enhanced to detect and display `error` query parameters redirected back from the OAuth flow.
 

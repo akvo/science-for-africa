@@ -210,32 +210,26 @@ const Navbar = () => {
                         {
                           key: "details",
                           href: "/coming-soon",
-                          icon: User,
                         },
                         {
                           key: "communities",
                           href: "/coming-soon",
-                          icon: Users,
                         },
                         {
                           key: "content",
                           href: "/coming-soon",
-                          icon: FileText,
                         },
                         {
                           key: "saved_posts",
                           href: "/coming-soon",
-                          icon: Bookmark,
                         },
                         {
                           key: "my_events",
                           href: "/coming-soon",
-                          icon: Calendar,
                         },
                         {
                           key: "courses",
                           href: "/coming-soon",
-                          icon: Award,
                         },
                       ].map((item) => (
                         <DropdownMenuItem
@@ -247,8 +241,7 @@ const Navbar = () => {
                             href={item.href}
                             className="flex items-center w-full"
                           >
-                            <item.icon className="mr-3 h-5 w-5 text-brand-gray-400 group-hover:text-brand-teal-600 transition-colors" />
-                            <span className="text-sm font-medium text-brand-gray-700 group-hover:text-brand-teal-900 transition-colors">
+                            <span className="text-sm font-medium text-black group-hover:text-brand-teal-900 transition-colors">
                               {t(`navbar.profile_dropdown.${item.key}`)}
                             </span>
                           </Link>
@@ -268,8 +261,7 @@ const Navbar = () => {
                           href="/coming-soon"
                           className="flex items-center w-full"
                         >
-                          <HelpCircle className="mr-3 h-5 w-5 text-brand-gray-400 group-hover:text-brand-teal-600 transition-colors" />
-                          <span className="text-sm font-medium text-brand-gray-700 group-hover:text-brand-teal-900 transition-colors">
+                          <span className="text-sm font-medium text-black group-hover:text-brand-teal-900 transition-colors">
                             {t("navbar.profile_dropdown.faq")}
                           </span>
                         </Link>
@@ -374,13 +366,13 @@ const Navbar = () => {
                   </Link>
                   <div className="grid grid-cols-2 gap-2 mt-2">
                     {[
-                      { key: "details", icon: User },
-                      { key: "communities", icon: Users },
-                      { key: "content", icon: FileText },
-                      { key: "saved_posts", icon: Bookmark },
-                      { key: "my_events", icon: Calendar },
-                      { key: "courses", icon: Award },
-                      { key: "faq", icon: HelpCircle },
+                      { key: "details" },
+                      { key: "communities" },
+                      { key: "content" },
+                      { key: "saved_posts" },
+                      { key: "my_events" },
+                      { key: "courses" },
+                      { key: "faq" },
                     ].map((item) => (
                       <Button
                         key={item.key}
@@ -391,8 +383,7 @@ const Navbar = () => {
                         onClick={() => setIsOpen(false)}
                       >
                         <Link href="/coming-soon">
-                          <item.icon className="mr-2 h-4 w-4 text-brand-gray-400" />
-                          <span className="text-xs truncate">
+                          <span className="text-xs truncate text-black font-medium">
                             {t(`navbar.profile_dropdown.${item.key}`)}
                           </span>
                         </Link>

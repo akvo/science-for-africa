@@ -170,7 +170,7 @@ describe("OTP Verification API", () => {
       expect(message).toMatch(/wait/i);
     });
 
-    it("should fail if hourly limit (3) exceeded", async () => {
+    it("should fail if hourly limit (5) exceeded", async () => {
       const email = `resend-limit-${Date.now()}@example.com`;
       await request(strapi.server.httpServer)
         .post("/api/auth/local/register")
@@ -181,11 +181,11 @@ describe("OTP Verification API", () => {
           fullName: "Resend Limit User",
         });
 
-      // Simulate 3 resends already done
+      // Simulate 5 resends already done
       await strapi.db.query("plugin::users-permissions.user").update({
         where: { email },
         data: {
-          otpResendCount: 3,
+          otpResendCount: 5,
           otpResendWindowStart: new Date(),
           lastOtpSentAt: new Date(Date.now() - 65000), // Bypass 60s cooldown
         },

@@ -193,10 +193,10 @@ const Navbar = () => {
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col min-w-0">
-                        <p className="text-md font-bold text-brand-teal-900 truncate">
+                        <p className="text-md font-bold text-brand-teal-900 truncate capitalize">
                           {user?.fullName || user?.username}
                         </p>
-                        <p className="text-sm font-medium text-brand-gray-500 truncate mt-0.5">
+                        <p className="text-sm font-medium text-brand-gray-500 truncate mt-0.5 capitalize">
                           {user?.userType || t("navbar.researcher_placeholder")}
                         </p>
                       </div>
@@ -355,11 +355,11 @@ const Navbar = () => {
                         {getInitials(user?.fullName || user?.username)}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="flex flex-col">
-                      <p className="text-sm font-bold text-brand-teal-900 truncate">
+                    <div className="flex flex-col min-w-0">
+                      <p className="text-sm font-bold text-brand-teal-900 truncate capitalize">
                         {user?.fullName || user?.username}
                       </p>
-                      <p className="text-xs text-brand-gray-500 truncate">
+                      <p className="text-xs text-brand-gray-500 truncate capitalize">
                         {user?.userType || t("navbar.researcher_placeholder")}
                       </p>
                     </div>

@@ -3,8 +3,8 @@ import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import MainLayout from "@/components/layout/MainLayout";
 import { Rocket } from "lucide-react";
+import Meta from "@/components/seo/Meta";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -18,62 +18,75 @@ const ComingSoon = () => {
   const { t } = useTranslation("common");
 
   return (
-    <MainLayout title={t("common.coming_soon.title")}>
-      <div className="flex flex-col items-center justify-center py-20 min-h-[60vh] text-center">
-        <div className="mb-8 p-4 bg-brand-teal-50 rounded-full animate-bounce">
-          <Rocket className="w-12 h-12 text-brand-teal-600" />
+    <>
+      <Meta title={t("common.coming_soon.title")} />
+      <div className="py-12 px-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        {/* Breadcrumb Header Alignment */}
+        <div className="flex items-center gap-2 mb-12">
+          <span className="text-sm font-bold text-brand-teal-900">SFA</span>
+          <span className="text-brand-gray-300">/</span>
+          <span className="text-sm font-medium text-brand-gray-500">
+            {t("common.coming_soon.title")}
+          </span>
         </div>
 
-        <h1 className="text-display-md text-brand-teal-900 mb-4 uppercase tracking-tight">
-          {t("common.coming_soon.title")}
-        </h1>
+        <div className="max-w-4xl">
+          <div className="mb-10 w-64 h-64 bg-brand-teal-50 rounded-full flex items-center justify-center">
+            <Rocket className="w-32 h-32 text-brand-teal-600" />
+          </div>
 
-        <p className="text-xl text-brand-gray-500 max-w-md mx-auto mb-10 leading-relaxed">
-          {t("common.coming_soon.description")}
-        </p>
+          <h1 className="text-display-md font-bold text-brand-teal-900 mb-4 uppercase tracking-tight">
+            {t("common.coming_soon.title")}
+          </h1>
 
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
-          <Button
-            variant="primary"
-            size="xl"
-            asChild
-            className="rounded-full px-10"
-          >
-            <Link href="/">{t("common.coming_soon.back_home")}</Link>
-          </Button>
+          <p className="text-xl text-brand-gray-500 mb-12 leading-relaxed max-w-2xl font-medium">
+            {t("common.coming_soon.description")}
+          </p>
 
-          <Button
-            variant="outline"
-            size="xl"
-            asChild
-            className="rounded-full px-10"
-          >
-            <Link href="/contact">{t("navbar.contact")}</Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 items-center">
+            <Button
+              variant="primary"
+              size="xl"
+              asChild
+              className="rounded-full px-12 h-14 bg-brand-teal-900 hover:bg-brand-teal-800 w-full sm:w-auto"
+            >
+              <Link href="/">{t("common.coming_soon.back_home")}</Link>
+            </Button>
+
+            <Button
+              variant="outline"
+              size="xl"
+              asChild
+              className="rounded-full px-12 h-14 border-brand-gray-200 text-brand-gray-600 hover:bg-brand-gray-50 w-full sm:w-auto"
+            >
+              <Link href="/contact">{t("navbar.contact")}</Link>
+            </Button>
+          </div>
         </div>
 
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl text-left">
-          <div className="p-6 bg-brand-gray-50 rounded-2xl border border-brand-gray-100 opacity-60">
-            <div className="h-2 w-12 bg-brand-teal-500 rounded-full mb-4" />
+        <div className="mt-24 pt-12 border-t border-brand-gray-100 grid grid-cols-1 md:grid-cols-2 gap-12 opacity-60">
+          <div>
+            <div className="h-1 w-12 bg-brand-teal-500 rounded-full mb-4" />
             <h3 className="font-bold text-brand-gray-900 mb-2">
-              Network Expansion
+              Platform Integration
             </h3>
-            <p className="text-sm text-brand-gray-500">
-              Connecting more research hubs across the continent.
+            <p className="text-brand-gray-500 max-w-sm">
+              We are currently optimizing this feature for your research
+              workflow.
             </p>
           </div>
-          <div className="p-6 bg-brand-gray-50 rounded-2xl border border-brand-gray-100 opacity-60">
-            <div className="h-2 w-12 bg-brand-teal-900 rounded-full mb-4" />
+          <div>
+            <div className="h-1 w-12 bg-brand-orange-500 rounded-full mb-4" />
             <h3 className="font-bold text-brand-gray-900 mb-2">
-              Collaborative Tools
+              Secure Environment
             </h3>
-            <p className="text-sm text-brand-gray-500">
-              Real-time peer review and collaboration workspace.
+            <p className="text-brand-gray-500 max-w-sm">
+              Ensuring the highest standards of data security and accessibility.
             </p>
           </div>
         </div>
       </div>
-    </MainLayout>
+    </>
   );
 };
 

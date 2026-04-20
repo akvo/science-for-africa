@@ -479,6 +479,9 @@ module.exports = {
         "http://localhost:3000"
       ).replace(/\/$/, "");
 
+      const backendUrlForLogs = (process.env.BACKEND_URL || "http://localhost:1337")
+        .replace(/\/$/, "");
+
       // Use essentials only to prevent header bloat
       const googleConfig = {
         enabled: true,

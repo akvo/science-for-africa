@@ -22,7 +22,7 @@ The Profile Dropdown provides authenticated users with a centralized navigation 
 ## 🎯 Design Principles
 - **Visual Hierarchy**: Clear separation between identity (header), navigation (body), and actions (footer) using dividers.
 - **Micro-interactions**: Subtle hover states for each menu item to provide feedback.
-- **Consistent Iconography**: Use Lucide-react icons that match the "Science for Africa" design language.
+- **Minimalist Iconography**: Only the "Log out" action retains an icon for visual emphasis, aligning with the brand's premium aesthetic.
 - **Responsive Layout**: Ensure the dropdown is accessible and scrollable on smaller viewports if necessary.
 
 ---
@@ -46,7 +46,7 @@ The Profile Dropdown provides authenticated users with a centralized navigation 
     - `DropdownMenuContent`
         - **Header Section** (Avatar + Name + Type)
         - **Separator**
-        - **Management Section** (Map of Links with Lucide Icons)
+        - **Management Section** (Map of Links)
         - **Separator**
         - **Support Section** (FAQ)
         - **Separator**
@@ -80,7 +80,7 @@ The Profile Dropdown provides authenticated users with a centralized navigation 
 
 ### Technical Acceptance Criteria (Tech AC)
 - [x] Use `@/components/ui/dropdown-menu` (Radix UI) for accessibility.
-- [x] Use `lucide-react` for icons.
+- [x] Use `lucide-react` for the Logout icon.
 - [x] Dynamic routing for profile sections (placeholder used for now).
 - [x] i18n support for all labels.
 - [x] Component is performant with no unnecessary re-renders.
@@ -97,7 +97,7 @@ The Profile Dropdown provides authenticated users with a centralized navigation 
 ### Phase 2: Component Implementation (Design/Implement)
 - [x] Layout the dropdown structure with headers and separators.
 - [x] Style the Identity Header with the avatar and subtitle.
-- [x] Implement the navigation links with icons.
+- [x] Implement the navigation links (text-only).
 - [x] Add the Logout action with the `LogOut` icon.
 
 ### Phase 3: Verification (Test/Document)

@@ -141,9 +141,10 @@ When running in Docker Compose, the Next.js server (SSR) uses a "Smart Swap" log
 
 ### 🛡️ Hardening & Session Security
 To ensure reliability across Docker containers and proxies:
-1. **Explicit Sessions**: The `strapi::session` middleware is configured with `sameSite: 'lax'` to allow cookies to be sent during the OAuth 302 redirect from Google.
-2. **Bootstrap Sync**: The `backend/src/index.js` forces the sync of Google Grant settings on every startup, ensuring environment variables always override database drift. It explicitly injects the `scope: ["email", "profile"]` parameter into the Grant payload to prevent Google `400 invalid_request (Missing required parameter: scope)` errors.
-3. **URL Encoding**: All frontend-to-backend redirect parameters are URL-encoded to prevent truncation or malformed request errors.
+1. **Explicit Sessions**: The `strapi::session` middleware is configured with `sameSite: 'lax'` and conditionally `secure: true` (in production) to ensure cookies are successfully persisted and transmitted securely across Nginx reverse proxies during the OAuth 302 redirections.
+2. **Bootstrap Sync**: The `backend/src/index.js` forces the sync of Google Grant settings on every startup, ensuring environment variables always override database drift. It explicitly injects the `scope: ["email", "profile"]` parameter into the Grant payload to prevent Google `400 invalid_request` errors, and targets the frontend callback directly (`Frontend URL + /auth/google`) to prevent `431 Request Header Fields Too Large` recursive redirect loops.
+3. **URL Root Separation**: `BACKEND_URL` is strictly used by the underlying Node.js service and must point to the root domain (e.g., `http://localhost:1337` or `https://domain.com/cms`). Adding the `/api` suffix to `BACKEND_URL` will cause the internal Route builder to throw `500 Server Errors`. Conversely, the frontend expects `NEXT_PUBLIC_BACKEND_URL` to explicitly include the `/api` route.
+4. **URL Encoding**: All frontend-to-backend redirect parameters are URL-encoded to prevent truncation or malformed request errors.
 4. **Error Surfaceing**: The `LoginForm` component is enhanced to detect and display `error` query parameters redirected back from the OAuth flow.
 
 ---

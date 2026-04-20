@@ -16,7 +16,7 @@ module.exports = [
       httpOnly: true,
       clearInvalid: true,
       sameSite: "lax",
-      secure: process.env.NODE_ENV === "production" ? true : false,
+      secure: false, // Set to false to avoid 'Cannot send secure cookie' crash behind Google LB/Nginx proxies that strip X-Forwarded-Proto
     },
   },
   "strapi::favicon",

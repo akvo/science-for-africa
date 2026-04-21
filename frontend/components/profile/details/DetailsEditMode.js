@@ -337,10 +337,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                         </div>
                       ) : (
                         institutions.map((inst) => (
-                          <SelectItem
-                            key={inst.id}
-                            value={inst.id.toString()}
-                          >
+                          <SelectItem key={inst.id} value={inst.id.toString()}>
                             {inst.name}
                           </SelectItem>
                         ))
@@ -405,11 +402,17 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
               render={({ field }) => (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
-                    <SelectValue />
+                    <SelectValue>
+                      {field.value
+                        ? t(`languages.${field.value}`, {
+                            defaultValue: field.value,
+                          })
+                        : ""}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="en">English</SelectItem>
-                    <SelectItem value="fr">French</SelectItem>
+                    <SelectItem value="en">{t("languages.en")}</SelectItem>
+                    <SelectItem value="fr">{t("languages.fr")}</SelectItem>
                   </SelectContent>
                 </Select>
               )}

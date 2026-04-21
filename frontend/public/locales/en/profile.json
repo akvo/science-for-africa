@@ -50,6 +50,10 @@
     "Post-Doctorate": "Post-Doctorate",
     "Professional Certificate": "Professional Certificate"
   },
+  "languages": {
+    "en": "English",
+    "fr": "French"
+  },
   "tabs": {
     "profile": "Profile",
     "details": "Details",

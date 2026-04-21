@@ -60,120 +60,124 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Sidebar Area */}
-          <aside className="lg:col-span-3 space-y-6">
-            <div className="bg-brand-gray-50 rounded-xl p-5 border border-brand-gray-100 space-y-6">
+          <aside className="lg:col-span-3">
+            <div className="bg-brand-gray-50 rounded-2xl border border-brand-gray-100 overflow-hidden">
               {/* Identity Header */}
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <Avatar className="size-12 border border-brand-gray-100 relative overflow-hidden">
-                    {user?.profilePhoto?.url ? (
-                      <Image
-                        src={user.profilePhoto.url}
-                        alt="Avatar"
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-                      <AvatarFallback className="bg-brand-teal-50 text-brand-teal-700 font-bold">
-                        {initials}
-                      </AvatarFallback>
-                    )}
-                  </Avatar>
-                  <div>
-                    <h2 className="text-[15px] font-bold text-brand-gray-900 leading-tight">
-                      {user?.fullName || user?.username}
-                    </h2>
-                    <p className="text-xs text-brand-gray-500">
-                      {user?.roleType}
-                    </p>
+              <div className="p-6 border-b border-brand-gray-200">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="size-12 border border-brand-gray-100 relative overflow-hidden bg-brand-teal-50">
+                      {user?.profilePhoto?.url ? (
+                        <Image
+                          src={user.profilePhoto.url}
+                          alt="Avatar"
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <AvatarFallback className="text-brand-teal-700 font-bold">
+                          {initials}
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
+                    <div>
+                      <h2 className="text-[15px] font-bold text-brand-gray-900 leading-tight">
+                        {user?.fullName || user?.username}
+                      </h2>
+                      <p className="text-xs text-brand-gray-500 mt-0.5">
+                        {user?.roleType || "Researcher"}
+                      </p>
+                    </div>
                   </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-10 rounded-full bg-brand-gray-100/50 text-brand-gray-400 hover:bg-brand-gray-200/50"
+                  >
+                    <MoreHorizontal size={20} />
+                  </Button>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  className="text-brand-gray-400"
-                >
-                  <MoreHorizontal size={20} />
-                </Button>
               </div>
 
-              {/* Biography */}
-              <p className="text-xs text-brand-gray-600 leading-relaxed italic">
-                {user?.biography ||
-                  t("details.no_bio", {
-                    defaultValue: "No biography provided yet.",
-                  })}
-              </p>
+              {/* Biography Section */}
+              <div className="p-6 border-b border-brand-gray-200">
+                <p className="text-sm text-brand-gray-600 leading-relaxed">
+                  {user?.biography ||
+                    t("details.no_bio", {
+                      defaultValue: "Lorem ipsum dolor sit amet consectetur. Nunc et posuere cras bibendum cras. Diam felis sagittis suspendisse scelerisque quam eu.",
+                    })}
+                </p>
+              </div>
 
-              {/* Stats Grid */}
-              <div className="grid grid-cols-2 border border-brand-gray-100 rounded-lg overflow-hidden bg-white">
-                <div className="p-3 border-r border-brand-gray-100">
-                  <p className="text-[10px] text-brand-gray-400 font-bold uppercase tracking-wider mb-1">
+              {/* Stats Grid - Integrated style */}
+              <div className="grid grid-cols-2 border-b border-brand-gray-200">
+                <div className="p-6 border-r border-brand-gray-200">
+                  <p className="text-[11px] text-brand-gray-400 font-bold uppercase tracking-wider mb-2">
                     Subscribers
                   </p>
-                  <p className="text-sm font-bold text-brand-gray-900">
+                  <p className="text-base font-bold text-brand-gray-900 uppercase">
                     {user?.subscribersCount || "63716"}
                   </p>
                 </div>
-                <div className="p-3">
-                  <p className="text-[10px] text-brand-gray-400 font-bold uppercase tracking-wider mb-1">
+                <div className="p-6">
+                  <p className="text-[11px] text-brand-gray-400 font-bold uppercase tracking-wider mb-2">
                     Posts
                   </p>
-                  <p className="text-sm font-bold text-brand-gray-900">
+                  <p className="text-base font-bold text-brand-gray-900">
                     {user?.postsCount || "323"}
                   </p>
                 </div>
               </div>
 
               {/* Education Section */}
-              <div className="space-y-3 pt-2">
-                <h4 className="text-[10px] text-brand-gray-400 font-bold uppercase tracking-wider">
+              <div className="p-6 border-b border-brand-gray-200 space-y-4">
+                <h4 className="text-[11px] text-brand-gray-400 font-bold uppercase tracking-wider">
                   Education
                 </h4>
-                <div>
-                  <p className="text-sm font-bold text-brand-gray-900">
-                    {user?.educationLevel || "Education not specified"}
+                <div className="space-y-1">
+                  <p className="text-[15px] font-bold text-brand-gray-900 leading-snug">
+                    {user?.educationLevel || "Master degree in Computer science"}
                   </p>
-                  <p className="text-xs text-brand-gray-500">
-                    {user?.institution?.name ||
-                      user?.institutionName ||
-                      "Not provided"}
+                  <p className="text-sm text-brand-gray-500">
+                    {user?.educationInstitutionName || user?.institution?.name || "University of Sydney"}
                   </p>
                 </div>
               </div>
 
-              {/* Expertise Tags */}
-              <div className="flex flex-wrap gap-1.5 pt-2">
-                {(
-                  user?.expertise || [
-                    "STI Policy & Governance",
-                    "Research Funding & Financi",
-                    "Water Security",
-                    "#One Health",
-                    "Science Diplomacy",
-                    "Digital Health",
-                    "Sustainable Energy",
-                  ]
-                ).map((tag) => (
-                  <Badge
-                    key={tag}
-                    variant="outline"
-                    className="rounded-full px-3 py-0.5 text-[10px] font-bold text-brand-gray-600 border-brand-gray-300 bg-white"
-                  >
-                    #{tag.replace("#", "")}
-                  </Badge>
-                ))}
+              {/* Expertise Tags Section */}
+              <div className="p-6 border-b border-brand-gray-200">
+                <div className="flex flex-wrap gap-2">
+                  {(
+                    user?.expertise || [
+                      "STI Policy & Governance",
+                      "Research Funding & Financi",
+                      "Water Security",
+                      "One Health",
+                      "Science Diplomacy",
+                      "Digital Health",
+                      "Sustainable Energy",
+                    ]
+                  ).map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="outline"
+                      className="rounded-full px-3.5 py-1.5 text-[12px] font-medium text-brand-gray-600 border-brand-gray-300 bg-white"
+                    >
+                      #{tag.replace("#", "")}
+                    </Badge>
+                  ))}
+                </div>
               </div>
 
               {/* Communities Section */}
-              <div className="pt-4 border-t border-brand-gray-100 space-y-4">
+              <div className="p-6 space-y-5">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-[10px] text-brand-gray-400 font-bold uppercase tracking-wider">
+                  <h4 className="text-[11px] text-brand-gray-400 font-bold uppercase tracking-wider">
                     Communities
                   </h4>
                   <Link
                     href="/profile/communities"
-                    className="text-[10px] font-bold text-brand-gray-500 hover:text-brand-teal-600"
+                    className="text-[11px] font-bold text-brand-gray-500 hover:text-brand-teal-600"
                   >
                     See all
                   </Link>

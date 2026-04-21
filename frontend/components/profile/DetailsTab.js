@@ -6,7 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Mail, UploadCloud, ChevronDown } from "lucide-react";
+import {
+  Loader2,
+  Mail,
+  UploadCloud,
+  ChevronDown,
+  User as UserIcon,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -14,6 +20,7 @@ import { updateUserProfile } from "@/lib/strapi";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { fetchFromStrapi } from "@/lib/strapi";
 
 const profileSchema = z.object({
   displayName: z.string().optional(),
@@ -34,6 +41,17 @@ const DetailsTab = () => {
   const { user, updateUser } = useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [institutions, setInstitutions] = useState([]);
+
+  React.useEffect(() => {
+    const loadInstitutions = async () => {
+      const resp = await fetchFromStrapi("/institutions?sort=name:asc");
+      if (resp?.data) {
+        setInstitutions(resp.data);
+      }
+    };
+    loadInstitutions();
+  }, []);
 
   const {
     register,
@@ -47,13 +65,41 @@ const DetailsTab = () => {
       displayName: user?.displayName || "",
       biography: user?.biography || "",
       role: user?.role || "",
-      orcidId: user?.orcidId || "608-429-3268",
+      orcidId: user?.orcidId || "",
       educationLevel: user?.educationLevel || "",
       institutionType: user?.institutionType || "",
+      affiliationInstitution: {
+        id: user?.institution?.id?.toString() || "",
+        name: user?.institutionName || "",
+      },
       language: user?.languagePreferences?.[0] || "English",
       careerStage: user?.careerStage || "",
+      fullName: user?.fullName || "",
+      email: user?.email || "",
     },
   });
+
+  React.useEffect(() => {
+    if (user) {
+      reset({
+        displayName: user.displayName || "",
+        biography: user.biography || "",
+        role: user.role || "",
+        orcidId: user.orcidId || "",
+        educationLevel: user.educationLevel || "",
+        institutionType: user.institutionType || "",
+        affiliationInstitution: {
+          id: user.institution?.id?.toString() || "",
+          name: user.institutionName || "",
+        },
+        educationInstitutionName: user.educationInstitutionName || "",
+        language: user.languagePreferences?.[0] || "English",
+        careerStage: user.careerStage || "",
+        fullName: user.fullName || "",
+        email: user.email || "",
+      });
+    }
+  }, [user, reset]);
 
   const bioContent = watch("biography", "");
   const charsLeft = 275 - (bioContent?.length || 0);
@@ -77,7 +123,7 @@ const DetailsTab = () => {
   };
 
   const FormRow = ({ label, description, children, error }) => (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 py-8 border-b border-brand-gray-100 last:border-0 items-start">
+    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 py-4 border-b border-brand-gray-100 last:border-0 items-start">
       <div className="md:col-span-4 transition-all pr-4">
         <Label className="text-[15px] font-bold text-brand-gray-900 mb-1 block">
           {label}
@@ -124,7 +170,7 @@ const DetailsTab = () => {
         className="animate-in fade-in duration-500"
       >
         {/* Header with buttons */}
-        <div className="flex items-center justify-between pb-8 border-b border-brand-gray-100">
+        <div className="flex items-center justify-between pb-9 border-b border-brand-gray-100">
           <div>
             <h2 className="text-lg font-bold text-brand-gray-900">
               Personal info
@@ -157,7 +203,7 @@ const DetailsTab = () => {
         <div className="max-w-4xl">
           <FormRow label="Full name">
             <Input
-              defaultValue={user?.fullName || "Stuart Harber"}
+              {...register("fullName")}
               className="max-w-lg h-11 border-brand-gray-200 rounded-xl px-4 text-brand-gray-700"
             />
           </FormRow>
@@ -169,7 +215,7 @@ const DetailsTab = () => {
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-gray-400 group-focus-within:text-brand-teal-600"
               />
               <Input
-                defaultValue={user?.email || "Stuart.Harber72@yahoo.com"}
+                {...register("email")}
                 className="h-11 border-brand-gray-200 rounded-xl pl-10 pr-4 text-brand-gray-700"
               />
             </div>
@@ -184,7 +230,7 @@ const DetailsTab = () => {
                 <Avatar className="size-10">
                   <AvatarImage src={user?.profilePhoto?.url} />
                   <AvatarFallback className="bg-transparent">
-                    <UploadCloud size={20} />
+                    <UserIcon size={20} />
                   </AvatarFallback>
                 </Avatar>
               </div>
@@ -212,9 +258,17 @@ const DetailsTab = () => {
 
           <FormRow label="Role">
             <div className="relative max-w-lg">
-              <select className="w-full h-11 border border-brand-gray-200 rounded-xl px-4 flex items-center bg-white text-brand-gray-700 text-sm appearance-none font-medium focus:ring-2 focus:ring-brand-teal-500/20 outline-none">
+              <select
+                {...register("role")}
+                className="w-full h-11 border border-brand-gray-200 rounded-xl px-4 flex items-center bg-white text-brand-gray-700 text-sm appearance-none font-medium focus:ring-2 focus:ring-brand-teal-500/20 outline-none"
+              >
                 <option value="">Select</option>
                 <option value="Researcher">Researcher</option>
+                <option value="Principal Investigator">
+                  Principal Investigator
+                </option>
+                <option value="Student">Student</option>
+                <option value="Administrator">Administrator</option>
               </select>
               <ChevronDown
                 size={16}
@@ -230,9 +284,15 @@ const DetailsTab = () => {
                   Education level
                 </Label>
                 <div className="relative">
-                  <select className="w-full h-11 border border-brand-gray-200 rounded-xl px-4 bg-white text-sm appearance-none font-medium text-brand-gray-700 focus:ring-2 focus:ring-brand-teal-500/20 outline-none">
+                  <select
+                    {...register("educationLevel")}
+                    className="w-full h-11 border border-brand-gray-200 rounded-xl px-4 bg-white text-sm appearance-none font-medium text-brand-gray-700 focus:ring-2 focus:ring-brand-teal-500/20 outline-none"
+                  >
                     <option value="">Select</option>
+                    <option value="Bachelor">Bachelor Degree</option>
                     <option value="Master">Master Degree</option>
+                    <option value="PhD">PhD / Doctorate</option>
+                    <option value="PostDoc">Post-Doctorate</option>
                   </select>
                   <ChevronDown
                     size={16}
@@ -255,9 +315,16 @@ const DetailsTab = () => {
           <FormRow label="Institutional affiliation">
             <div className="max-w-lg space-y-4">
               <div className="relative">
-                <select className="w-full h-11 border border-brand-gray-200 rounded-xl px-4 bg-white text-sm appearance-none font-medium text-brand-gray-700 focus:ring-2 focus:ring-brand-teal-500/20 outline-none">
+                <select
+                  {...register("affiliationInstitution.id")}
+                  className="w-full h-11 border border-brand-gray-200 rounded-xl px-4 bg-white text-sm appearance-none font-medium text-brand-gray-700 focus:ring-2 focus:ring-brand-teal-500/20 outline-none"
+                >
                   <option value="">Select org</option>
-                  <option value="SFA">Science for Africa</option>
+                  {institutions.map((inst) => (
+                    <option key={inst.id} value={inst.id}>
+                      {inst.name}
+                    </option>
+                  ))}
                 </select>
                 <ChevronDown
                   size={16}
@@ -387,7 +454,7 @@ const DetailsTab = () => {
             <Avatar className="size-14 rounded-full border border-brand-gray-100 shadow-sm">
               <AvatarImage src={user?.profilePhoto?.url} />
               <AvatarFallback className="bg-brand-teal-50 text-brand-teal-600">
-                <UploadCloud size={20} />
+                <UserIcon size={20} />
               </AvatarFallback>
             </Avatar>
           </div>
@@ -406,14 +473,16 @@ const DetailsTab = () => {
               {user?.educationLevel || "Not provided"}
             </p>
             <p className="text-[15px] text-brand-gray-500 font-medium">
-              {user?.institution?.name || "Not provided"}
+              {user?.educationInstitutionName || "Not provided"}
             </p>
           </div>
         </div>
 
         <ViewRow
           label="Institutional affiliation"
-          value={user?.institution?.name || "Not provided"}
+          value={
+            user?.institution?.name || user?.institutionName || "Not provided"
+          }
           badge={
             <Badge
               variant="outline"

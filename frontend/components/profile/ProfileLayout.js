@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -15,6 +15,7 @@ import {
   MapPin,
   MoreVertical,
 } from "lucide-react";
+import { getMe } from "@/lib/strapi";
 
 const TABS = [
   { id: "details", label: "tabs.details", href: "/profile" },
@@ -50,8 +51,19 @@ const SidebarCommunity = ({ name, subscribers, t }) => (
 
 const ProfileLayout = ({ children, activeTab = "details" }) => {
   const { t } = useTranslation(["profile", "common"]);
-  const { user } = useAuthStore();
+  const { user, updateUser, isAuthenticated } = useAuthStore();
   const router = useRouter();
+
+  // Sync user data on mount to ensure we have the latest (especially after onboarding)
+  useEffect(() => {
+    if (isAuthenticated) {
+      getMe().then((freshUser) => {
+        if (freshUser) {
+          updateUser(freshUser);
+        }
+      });
+    }
+  }, [isAuthenticated, updateUser]);
 
   const initials = user?.fullName
     ? user.fullName

@@ -89,6 +89,19 @@ export async function loginUser(credentials) {
 }
 
 /**
+ * Get current user profile with population
+ */
+export async function getMe() {
+  try {
+    const response = await apiClient.get("/users/me?populate=*");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+    return null;
+  }
+}
+
+/**
  * Send password reset email
  */
 export async function forgotPassword(email) {

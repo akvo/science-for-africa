@@ -126,6 +126,36 @@ const grantPermission = async (strapi, roleType, action) => {
   }
 };
 
+const COMMUNITIES = [
+  {
+    name: "Community of Researchers",
+    slug: "community-of-researchers",
+    handle: "891 775 7240",
+    initials: "CR",
+    description:
+      "Explore the latest trends in health, fitness, and mental well-being.",
+    tags: ["Research", "Science", "Health", "Technology"],
+  },
+  {
+    name: "Community of Innovators",
+    slug: "community-of-innovators",
+    handle: "442 889 1023",
+    initials: "CI",
+    description:
+      "Lorem ipsum dolor sit amet consectetur. Eu dis pellentesque in elit auctor.",
+    tags: ["Innovation", "Technology", "Startups", "AI"],
+  },
+  {
+    name: "Community of Educators",
+    slug: "community-of-educators",
+    handle: "317 556 8891",
+    initials: "CE",
+    description:
+      "Lorem ipsum dolor sit amet consectetur. Nunc et posuere cras bibendum cras. Diam felis sagittis suspendisse scelerisque quam.",
+    tags: ["Education", "Teaching", "Curriculum", "STEM"],
+  },
+];
+
 /**
  * Helper to synchronize French translations for a collection
  */
@@ -249,7 +279,19 @@ const seed = async (strapi) => {
     strapi.log.info(`Seeded ${INSTITUTIONS.length} Institutions.`);
   }
 
-  // 3. Synchronize French Translations for critical collections
+  // 3. Seed Communities
+  const communityCount = await strapi.db
+    .query("api::community.community")
+    .count();
+  if (communityCount === 0) {
+    strapi.log.info("Seeding Communities...");
+    for (const data of COMMUNITIES) {
+      await strapi.db.query("api::community.community").create({ data });
+    }
+    strapi.log.info(`Seeded ${COMMUNITIES.length} communities.`);
+  }
+
+  // 3b. Synchronize French Translations for critical collections
   strapi.log.info("Synchronizing French translations...");
   await synchronizeTranslations(strapi, "api::interest.interest");
   await synchronizeTranslations(strapi, "api::institution.institution");
@@ -259,6 +301,8 @@ const seed = async (strapi) => {
   const actions = [
     "api::interest.interest.find",
     "api::institution.institution.find",
+    "api::community.community.find",
+    "api::community.community.findOne",
   ];
   for (const role of roles) {
     for (const action of actions) {
@@ -276,7 +320,7 @@ const seed = async (strapi) => {
     await grantPermission(strapi, "public", action);
   }
 
-  // 4. Collaboration Call and Profile permissions (Authenticated only)
+  // 5. Collaboration Call and Profile permissions (Authenticated only)
   const collaborationActions = [
     "api::auth.profile.update",
     "api::auth.profile.findUsers",
@@ -286,6 +330,8 @@ const seed = async (strapi) => {
     "api::collaboration-call.collaboration-call.find",
     "api::collaboration-invite.collaboration-invite.create",
     "api::collaboration-invite.collaboration-invite.find",
+    "api::chat-message.chat-message.find",
+    "api::chat-message.chat-message.create",
   ];
 
   for (const action of collaborationActions) {

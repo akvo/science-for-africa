@@ -1,0 +1,77 @@
+{
+  "kind": "collectionType",
+  "collectionName": "communities",
+  "info": {
+    "singularName": "community",
+    "pluralName": "communities",
+    "displayName": "Community",
+    "description": "Parent and sub-communities for the forum"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "handle": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "bannerUrl": {
+      "type": "string"
+    },
+    "avatarUrl": {
+      "type": "string"
+    },
+    "initials": {
+      "type": "string"
+    },
+    "subscribers": {
+      "type": "integer",
+      "default": 0
+    },
+    "posts": {
+      "type": "integer",
+      "default": 0
+    },
+    "tags": {
+      "type": "json"
+    },
+    "rules": {
+      "type": "json"
+    },
+    "parent": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::community.community",
+      "inversedBy": "subCommunities"
+    },
+    "subCommunities": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::community.community",
+      "mappedBy": "parent"
+    },
+    "createdByUser": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "moderators": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}

@@ -206,6 +206,24 @@ export async function createCollaborationCall(payload) {
 }
 
 /**
+ * Fetch all communities (with sub-communities populated)
+ */
+export async function fetchCommunities() {
+  return fetchFromStrapi(
+    "/communities?populate[subCommunities]=true&populate[parent]=true&sort=name:asc",
+  );
+}
+
+/**
+ * Fetch a single community by slug (with relations populated)
+ */
+export async function fetchCommunity(slug) {
+  return fetchFromStrapi(
+    `/communities?filters[slug][$eq]=${slug}&populate[subCommunities]=true&populate[parent]=true&populate[moderators]=true&populate[createdByUser]=true`,
+  );
+}
+
+/**
  * Update authenticated user profile
  */
 export async function updateUserProfile(userData) {

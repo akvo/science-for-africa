@@ -6,6 +6,55 @@
 
 module.exports = ({ strapi }) => ({
   /**
+   * Returns the profile of the currently authenticated user with deep population
+   */
+  async getMe(ctx) {
+    const user = ctx.state.user;
+    if (!user) {
+      return ctx.unauthorized();
+    }
+
+    try {
+      const fullUser = await strapi.entityService.findOne(
+        "plugin::users-permissions.user",
+        user.id,
+        {
+          populate: {
+            institution: true,
+            interests: true,
+            profilePhoto: true,
+            pageCover: true,
+            memberships: {
+              populate: {
+                community: true,
+              },
+            },
+          },
+        },
+      );
+
+      // Manually fetch collaboration invites since programmatic relations can be tricky for population
+      const invites = await strapi
+        .documents("api::collaboration-invite.collaboration-invite")
+        .findMany({
+          filters: {
+            invitedUser: user.id,
+            inviteStatus: "Accepted",
+          },
+          populate: ["collaborationCall"],
+          status: "published",
+        });
+
+      fullUser.collaborationInvites = invites;
+
+      return fullUser;
+    } catch (error) {
+      strapi.log.error("GetMe Error: " + error.message);
+      return ctx.internalServerError(error.message);
+    }
+  },
+
+  /**
    * Updates the profile of the currently authenticated user
    */
   async findUsers(ctx) {

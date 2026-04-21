@@ -70,6 +70,12 @@ module.exports = {
           target: "api::community-membership.community-membership",
           mappedBy: "user",
         },
+        collaborationInvites: {
+          type: "relation",
+          relation: "oneToMany",
+          target: "api::collaboration-invite.collaboration-invite",
+          mappedBy: "invitedUser",
+        },
         otpCode: {
           type: "string",
         },

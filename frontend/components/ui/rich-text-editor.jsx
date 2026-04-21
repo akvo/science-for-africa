@@ -59,8 +59,9 @@ export function RichTextEditor({
   toolbarExtras,
 }) {
   const editorRef = useRef(null);
-  const [isEmpty, setIsEmpty] = useState(true);
   const [activeBlock, setActiveBlock] = useState("P");
+
+  const isEmpty = !value || value.replace(/<[^>]*>/g, "").trim().length === 0;
 
   // Sync the editor DOM with the controlled `value` when the parent resets
   // it (e.g. after submitting). We avoid rewriting the DOM while the user
@@ -70,14 +71,11 @@ export function RichTextEditor({
     if (editorRef.current.innerHTML !== (value || "")) {
       editorRef.current.innerHTML = value || "";
     }
-    const text = editorRef.current.innerText || "";
-    setIsEmpty(text.trim().length === 0);
   }, [value]);
 
   const emit = useCallback(() => {
     const el = editorRef.current;
     if (!el) return;
-    setIsEmpty((el.innerText || "").trim().length === 0);
     onChange?.(el.innerHTML);
   }, [onChange]);
 

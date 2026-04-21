@@ -113,9 +113,7 @@ export default function CommunitiesPage() {
   // Collect unique tags from all communities
   const allTags = [
     ALL_TAG,
-    ...Array.from(
-      new Set(communities.flatMap((c) => c.tags || [])),
-    ),
+    ...Array.from(new Set(communities.flatMap((c) => c.tags || []))),
   ];
 
   // Filter communities by selected tag

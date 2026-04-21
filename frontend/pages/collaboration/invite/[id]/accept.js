@@ -22,9 +22,7 @@ export default function AcceptInvitePage() {
         setInvite(result.data);
         setStatus("accepted");
       } else {
-        setErrorMessage(
-          result?.error || "We couldn't accept this invitation.",
-        );
+        setErrorMessage(result?.error || "We couldn't accept this invitation.");
         setStatus("error");
       }
     })();
@@ -48,7 +46,7 @@ export default function AcceptInvitePage() {
                 Accepting invitation...
               </h1>
               <p className="text-sm text-brand-gray-500">
-                Hang tight, we're confirming your invite.
+                Hang tight, we&apos;re confirming your invite.
               </p>
             </div>
           </>

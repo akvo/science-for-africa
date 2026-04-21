@@ -63,7 +63,11 @@ apiClient.interceptors.request.use(
     }
 
     // Force Content-Type for POST/PUT/PATCH to ensure body parsing works consistently
-    if (["POST", "PUT", "PATCH"].includes(config.method?.toUpperCase())) {
+    // Skip this for FormData (uploads)
+    if (
+      ["POST", "PUT", "PATCH"].includes(config.method?.toUpperCase()) &&
+      !(config.data instanceof FormData)
+    ) {
       config.headers["Content-Type"] = "application/json";
     }
 

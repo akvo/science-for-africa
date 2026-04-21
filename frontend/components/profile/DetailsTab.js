@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useAuthStore } from "@/lib/auth-store";
-import { updateUserProfile } from "@/lib/strapi";
+import { updateUserProfile, uploadFile } from "@/lib/strapi";
 import { toast } from "sonner";
 import DetailsViewMode from "./details/DetailsViewMode";
 import DetailsEditMode from "./details/DetailsEditMode";
@@ -17,20 +17,7 @@ const DetailsTab = () => {
     try {
       // 1. Handle Photo Upload if needed
       if (data.profilePhoto instanceof File) {
-        const formData = new FormData();
-        formData.append("files", data.profilePhoto);
-
-        const uploadResp = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/upload`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${useAuthStore.getState().token}`,
-            },
-            body: formData,
-          },
-        );
-        const uploadData = await uploadResp.json();
+        const uploadData = await uploadFile(data.profilePhoto);
         if (uploadData?.[0]?.id) {
           data.profilePhoto = uploadData[0].id;
         }

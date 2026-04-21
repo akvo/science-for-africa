@@ -60,6 +60,21 @@ export async function postToStrapi(endpoint, data, wrapInData = true) {
 }
 
 /**
+ * Upload a file to Strapi
+ */
+export async function uploadFile(file) {
+  try {
+    const formData = new FormData();
+    formData.append("files", file);
+    const response = await apiClient.post("/upload", formData);
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading file to Strapi:", error);
+    return null;
+  }
+}
+
+/**
  * Register a new user
  */
 export async function registerUser(userData) {

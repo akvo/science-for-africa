@@ -15,7 +15,7 @@ import StepSuccess from "./StepSuccess";
 
 const STEPS = {
   1: { component: StepSelectTopics, title: "What topic will your collaboration be dedicated to?", subtitle: "Choose a topic to help find your community." },
-  2: { component: StepCreateSpace, title: "Create Collaboration Space" },
+  2: { component: StepCreateSpace, title: "Create Collaboration Space", subtitle: "Choose a topic to help find your collaboration space." },
   3: { component: StepSelectDueDate, title: "Select a due date", subtitle: "The following date will terminate the collaboration space." },
   4: { component: StepAssignMentor, title: "Assign a mentor", subtitle: "The following users have access to this project:" },
   5: { component: StepInviteUsers, title: "Invite users and collaborators", subtitle: "Your new collaboration has been created. Invite colleagues to collaborate on this project." },

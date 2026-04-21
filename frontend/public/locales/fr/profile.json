@@ -1,0 +1,53 @@
+{
+  "details": {
+    "title": "Détails professionnels",
+    "description": "Mettez à jour votre photo et vos informations personnelles ici.",
+    "edit_button": "Modifier",
+    "save_button": "Enregistrer",
+    "cancel_button": "Annuler",
+    "photo_label": "Votre photo (Optionnel)",
+    "photo_description": "Ceci sera affiché sur votre profil.",
+    "click_to_upload": "Cliquez pour télécharger",
+    "drag_drop": "ou glisser-déposer",
+    "upload_hint": "SVG, PNG, JPG ou GIF (max. 800x400px)",
+    "full_name": "Nom complet",
+    "email": "Adresse e-mail",
+    "role": "Rôle",
+    "role_placeholder": "Sélectionnez un rôle",
+    "education_title": "Éducation",
+    "education_level_label": "Niveau d'éducation",
+    "education_level_placeholder": "Sélectionnez le niveau d'éducation",
+    "university_label": "Établissement d'enseignement (où vous avez étudié)",
+    "university_placeholder": "Recherchez ou tapez votre université",
+    "affiliation_title": "Affiliation institutionnelle",
+    "affiliation_placeholder": "Tapez votre institution principale",
+    "biography_label": "Biographie",
+    "biography_placeholder": "Écrivez une courte introduction.",
+    "characters_left": "caractères restants",
+    "language_label": "Préférences linguistiques",
+    "orcid_label": "ID ORCID",
+    "request_button": "Demander",
+    "save_success": "Profil mis à jour avec succès",
+    "save_error": "Échec de la mise à jour du profil",
+    "not_provided": "Non fourni",
+    "no_bio": "Aucune biographie fournie pour le moment."
+  },
+  "roles": {
+    "Researcher": "Chercheur",
+    "Principal Investigator / Lab Lead": "Chercheur principal / Chef de laboratoire",
+    "Post-doctoral Fellow": "Chercheur post-doctoral",
+    "PhD Candidate": "Candidat au doctorat",
+    "Graduate / Undergraduate Student": "Étudiant diplômé / de premier cycle",
+    "Administrator / Support Staff": "Administrateur / Personnel de soutien",
+    "Program Manager / Funder representative": "Gestionnaire de programme / Représentant du bailleur de fonds",
+    "External Reviewer": "Examinateur externe"
+  },
+  "education_levels": {
+    "High School": "Lycée",
+    "Bachelor's Degree": "Licence",
+    "Master's Degree": "Master",
+    "Doctorate (PhD)": "Doctorat (PhD)",
+    "Post-Doctorate": "Post-doctorat",
+    "Professional Certificate": "Certificat professionnel"
+  }
+}

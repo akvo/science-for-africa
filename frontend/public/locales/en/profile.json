@@ -1,0 +1,53 @@
+{
+  "details": {
+    "title": "Professional Details",
+    "description": "Update your photo and personal details here.",
+    "edit_button": "Edit",
+    "save_button": "Save",
+    "cancel_button": "Cancel",
+    "photo_label": "Your photo (Optional)",
+    "photo_description": "This will be displayed on your profile.",
+    "click_to_upload": "Click to upload",
+    "drag_drop": "or drag and drop",
+    "upload_hint": "SVG, PNG, JPG or GIF (max. 800x400px)",
+    "full_name": "Full Name",
+    "email": "Email Address",
+    "role": "Role",
+    "role_placeholder": "Select role",
+    "education_title": "Education",
+    "education_level_label": "Education level",
+    "education_level_placeholder": "Select education level",
+    "university_label": "Educational institution (where you studied)",
+    "university_placeholder": "Search or type your university",
+    "affiliation_title": "Institutional affiliation",
+    "affiliation_placeholder": "Type your primary institution",
+    "biography_label": "Biography",
+    "biography_placeholder": "Write a short introduction.",
+    "characters_left": "characters left",
+    "language_label": "Language preferences",
+    "orcid_label": "ORCID iD",
+    "request_button": "Request",
+    "save_success": "Profile updated successfully",
+    "save_error": "Failed to update profile",
+    "not_provided": "Not provided",
+    "no_bio": "No biography provided yet."
+  },
+  "roles": {
+    "Researcher": "Researcher",
+    "Principal Investigator / Lab Lead": "Principal Investigator / Lab Lead",
+    "Post-doctoral Fellow": "Post-doctoral Fellow",
+    "PhD Candidate": "PhD Candidate",
+    "Graduate / Undergraduate Student": "Graduate / Undergraduate Student",
+    "Administrator / Support Staff": "Administrator / Support Staff",
+    "Program Manager / Funder representative": "Program Manager / Funder representative",
+    "External Reviewer": "External Reviewer"
+  },
+  "education_levels": {
+    "High School": "High School",
+    "Bachelor's Degree": "Bachelor's Degree",
+    "Master's Degree": "Master's Degree",
+    "Doctorate (PhD)": "Doctorate (PhD)",
+    "Post-Doctorate": "Post-Doctorate",
+    "Professional Certificate": "Professional Certificate"
+  }
+}

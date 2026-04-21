@@ -5,13 +5,13 @@ import Meta from "@/components/seo/Meta";
 import { useTranslation } from "next-i18next";
 
 export default function ProfilePage() {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("profile");
 
   return (
     <>
       <Meta
-        title={t("profile.profile_title") || "My Profile"}
-        description={t("profile.profile_description")}
+        title={t("details.title") || "My Profile"}
+        description={t("details.description")}
       />
       <ProfileLayout activeTab="details">
         <DetailsTab />
@@ -23,7 +23,7 @@ export default function ProfilePage() {
 export async function getServerSideProps({ locale }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, ["profile", "common"])),
     },
   };
 }

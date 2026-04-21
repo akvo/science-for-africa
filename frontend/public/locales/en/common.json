@@ -24,31 +24,6 @@
     "profile_title": "Professional Profile | Science for Africa",
     "profile_description": "Manage your professional identity, communities, and collaborations."
   },
-  "profile": {
-    "tabs": {
-      "details": "Details",
-      "communities": "Communities",
-      "collaboration": "Collaboration",
-      "resources": "Resources"
-    },
-    "about": "About",
-    "no_bio": "This professional hasn't added a biography yet.",
-    "share": "Share Profile",
-    "edit_profile": "Edit Profile",
-    "professional_details": "Professional Details",
-    "display_name": "Display Name",
-    "full_name": "Full Name",
-    "email": "Email Address",
-    "role": "Current Role",
-    "professional_role": "Professional Role",
-    "orcid_id": "ORCID iD",
-    "education_level": "Education Level",
-    "career_stage": "Career Stage",
-    "biography": "Biography",
-    "verified_professional": "Verified Member",
-    "save_success": "Profile updated successfully",
-    "save_error": "Failed to update profile. Please try again."
-  },
   "common": {
     "loading": "Loading...",
     "back": "Back",

@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { useAuthStore } from "@/lib/auth-store";
@@ -42,7 +43,7 @@ const SidebarCommunity = ({ name, subscribers }) => (
 );
 
 const ProfileLayout = ({ children, activeTab = "details" }) => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("profile");
   const { user } = useAuthStore();
   const router = useRouter();
 
@@ -64,18 +65,26 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
               {/* Identity Header */}
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <Avatar className="size-12 border border-brand-gray-100">
-                    <AvatarImage src={user?.profilePhoto?.url} />
-                    <AvatarFallback className="bg-brand-teal-50 text-brand-teal-700 font-bold">
-                      {initials}
-                    </AvatarFallback>
+                  <Avatar className="size-12 border border-brand-gray-100 relative overflow-hidden">
+                    {user?.profilePhoto?.url ? (
+                      <Image
+                        src={user.profilePhoto.url}
+                        alt="Avatar"
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <AvatarFallback className="bg-brand-teal-50 text-brand-teal-700 font-bold">
+                        {initials}
+                      </AvatarFallback>
+                    )}
                   </Avatar>
                   <div>
                     <h2 className="text-[15px] font-bold text-brand-gray-900 leading-tight">
-                      {user?.fullName || "Olivia Rhye"}
+                      {user?.fullName || user?.username}
                     </h2>
                     <p className="text-xs text-brand-gray-500">
-                      {user?.role || "Researcher"}
+                      {user?.roleType}
                     </p>
                   </div>
                 </div>
@@ -89,9 +98,11 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
               </div>
 
               {/* Biography */}
-              <p className="text-xs text-brand-gray-600 leading-relaxed">
+              <p className="text-xs text-brand-gray-600 leading-relaxed italic">
                 {user?.biography ||
-                  "Lorem ipsum dolor sit amet consectetur. Nunc et posuere cras bibendum cras. Diam felis sagittis suspendisse scelerisque quam eu."}
+                  t("details.no_bio", {
+                    defaultValue: "No biography provided yet.",
+                  })}
               </p>
 
               {/* Stats Grid */}
@@ -121,11 +132,12 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                 </h4>
                 <div>
                   <p className="text-sm font-bold text-brand-gray-900">
-                    {user?.educationLevel ||
-                      "Master degree in Computer science"}
+                    {user?.educationLevel || "Education not specified"}
                   </p>
                   <p className="text-xs text-brand-gray-500">
-                    {user?.institution?.name || "University of Sydney"}
+                    {user?.institution?.name ||
+                      user?.institutionName ||
+                      "Not provided"}
                   </p>
                 </div>
               </div>

@@ -51,6 +51,14 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
   const [photoPreview, setPhotoPreview] = React.useState(null);
   const [institutions, setInstitutions] = React.useState([]);
   const [loadingInstitutions, setLoadingInstitutions] = React.useState(false);
+  const [showRequestInstitution, setShowRequestInstitution] =
+    React.useState(false);
+
+  React.useEffect(() => {
+    if (user?.institutionName) {
+      setShowRequestInstitution(true);
+    }
+  }, [user]);
 
   const {
     register,
@@ -88,6 +96,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
   React.useEffect(() => {
     if (selectedInstitutionId && selectedInstitutionId !== "") {
       setValue("affiliationInstitution.name", "");
+      setShowRequestInstitution(false);
     }
   }, [selectedInstitutionId, setValue]);
 
@@ -349,7 +358,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                           ? institutions.find(
                               (i) => i.id.toString() === field.value.toString(),
                             )?.name || field.value
-                          : "Select official institution"}
+                          : t("details.affiliation_placeholder")}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
@@ -370,17 +379,33 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                 )}
               />
             </div>
-            <div className="space-y-4">
-              <Input
-                {...register("affiliationInstitution.name")}
-                placeholder={t("details.affiliation_placeholder")}
-                className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 w-full"
-              />
+
+            {showRequestInstitution ? (
+              <div className="animate-in slide-in-from-top-2 duration-300 space-y-4">
+                <Input
+                  {...register("affiliationInstitution.name")}
+                  placeholder="Type your primary institution"
+                  className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 w-full"
+                />
+                <Button
+                  variant="ghost"
+                  type="button"
+                  onClick={() => {
+                    setShowRequestInstitution(false);
+                    setValue("affiliationInstitution.name", "");
+                  }}
+                  className="text-sm font-bold text-brand-teal-600 hover:bg-brand-teal-50 px-0 ml-auto flex"
+                >
+                  Cancel Request
+                </Button>
+              </div>
+            ) : (
               <div className="flex items-center gap-4">
                 <Button
                   variant="outline"
                   type="button"
-                  className="px-8 rounded-full text-sm h-10 border-brand-teal-900 text-brand-teal-900 hover:bg-brand-teal-50 hover:text-brand-teal-700 transition-all font-outfit"
+                  onClick={() => setShowRequestInstitution(true)}
+                  className="px-8 rounded-full text-sm h-10 border-brand-teal-800 text-brand-teal-800 hover:bg-brand-teal-50 transition-all font-outfit"
                 >
                   {t("details.request_button")}
                 </Button>
@@ -389,14 +414,13 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                   type="button"
                   onClick={() => {
                     setValue("affiliationInstitution.id", "");
-                    setValue("affiliationInstitution.name", "");
                   }}
-                  className="text-sm font-outfit text-brand-gray-500 hover:text-brand-teal-600 hover:bg-transparent px-0"
+                  className="text-sm font-medium text-brand-gray-500 hover:text-brand-teal-600 hover:bg-transparent px-0"
                 >
                   {t("details.cancel_button")}
                 </Button>
               </div>
-            </div>
+            )}
           </div>
         </FormRow>
 

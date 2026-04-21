@@ -100,7 +100,7 @@ const DetailsTab = () => {
   );
 
   const ViewRow = ({ label, value, badge }) => (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 py-10 border-b border-brand-gray-100 last:border-0 items-baseline">
+    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-4 pb-9 border-b border-brand-gray-100 last:border-0 items-baseline">
       <div className="md:col-span-4">
         <span className="text-[15px] font-bold text-brand-gray-900">
           {label}
@@ -138,7 +138,7 @@ const DetailsTab = () => {
               variant="outline"
               type="button"
               onClick={() => setIsEditing(false)}
-              className="rounded-full px-6 h-10 font-bold border-brand-gray-300"
+              className="px-6 font-bold"
             >
               Cancel
             </Button>
@@ -146,11 +146,9 @@ const DetailsTab = () => {
               variant="primary"
               type="submit"
               disabled={isSaving}
-              className="rounded-xl px-10 h-10 bg-brand-teal-800 hover:bg-brand-teal-900 font-bold transition-all"
+              className="px-10 font-bold shadow-sm"
             >
-              {isSaving ? (
-                <Loader2 className="animate-spin mr-2" size={16} />
-              ) : null}
+              {isSaving && <Loader2 className="animate-spin mr-2" size={16} />}
               Save
             </Button>
           </div>
@@ -270,14 +268,14 @@ const DetailsTab = () => {
                 <Button
                   variant="outline"
                   type="button"
-                  className="rounded-full shadow-sm px-6 h-9 text-xs font-bold border-brand-gray-300"
+                  className="px-6 h-9 text-xs font-bold"
                 >
                   Request
                 </Button>
                 <Button
                   variant="ghost"
                   type="button"
-                  className="text-xs font-bold text-brand-gray-500 hover:text-brand-gray-700"
+                  className="text-xs font-bold"
                 >
                   Cancel
                 </Button>
@@ -328,14 +326,14 @@ const DetailsTab = () => {
                 <Button
                   variant="outline"
                   type="button"
-                  className="rounded-full shadow-sm px-6 h-9 text-xs font-bold border-brand-gray-300"
+                  className="px-6 h-9 text-xs font-bold"
                 >
                   Request
                 </Button>
                 <Button
                   variant="ghost"
                   type="button"
-                  className="text-xs font-bold text-brand-gray-500 hover:text-brand-gray-700"
+                  className="text-xs font-bold"
                 >
                   Cancel
                 </Button>
@@ -350,7 +348,7 @@ const DetailsTab = () => {
   return (
     <div className="animate-in fade-in duration-500">
       {/* Header with edit button */}
-      <div className="flex items-center justify-between pb-8 border-b border-brand-gray-100">
+      <div className="flex items-center justify-between pb-9 border-b border-brand-gray-100">
         <div>
           <h2 className="text-lg font-bold text-brand-gray-900">
             Personal info
@@ -363,7 +361,7 @@ const DetailsTab = () => {
           variant="outline"
           size="sm"
           onClick={() => setIsEditing(true)}
-          className="rounded-full px-6 h-9 font-bold border-brand-gray-300 shadow-sm transition-all hover:bg-brand-gray-100"
+          className="px-6 font-bold shadow-sm"
         >
           Edit
         </Button>
@@ -376,7 +374,7 @@ const DetailsTab = () => {
           value={user?.email || "Stuart.Harber72@yahoo.com"}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 py-10 border-b border-brand-gray-100 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-4 pb-9 border-b border-brand-gray-100 items-center">
           <div className="md:col-span-4 transition-all">
             <span className="text-[15px] font-bold text-brand-gray-900">
               Your photo (Optional)
@@ -405,17 +403,17 @@ const DetailsTab = () => {
           </div>
           <div className="md:col-span-8 space-y-4">
             <p className="text-[15px] text-brand-gray-500 font-medium">
-              {user?.educationLevel || "Master degree in Computer science"}
+              {user?.educationLevel || "Not provided"}
             </p>
             <p className="text-[15px] text-brand-gray-500 font-medium">
-              {user?.institution?.name || "University of Sydney"}
+              {user?.institution?.name || "Not provided"}
             </p>
           </div>
         </div>
 
         <ViewRow
           label="Institutional affiliation"
-          value={user?.institution?.name || "Science for Africa"}
+          value={user?.institution?.name || "Not provided"}
           badge={
             <Badge
               variant="outline"
@@ -426,7 +424,7 @@ const DetailsTab = () => {
           }
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 py-10 border-b border-brand-gray-100 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-4 pb-9 border-b border-brand-gray-100 items-start">
           <div className="md:col-span-4 transition-all">
             <span className="text-[15px] font-bold text-brand-gray-900 block">
               Bio (Optional)
@@ -437,8 +435,7 @@ const DetailsTab = () => {
           </div>
           <div className="md:col-span-8">
             <p className="text-[15px] text-brand-gray-500 font-medium leading-relaxed max-w-2xl">
-              {user?.biography ||
-                "Lorem ipsum dolor sit amet consectetur. Libero adipiscing justo orci convallis sed risus arcu sit enim. Accumsan dapibus ut nunc sed pulvinar lectus. Etiam magna eget vitae eget. Posuere aliquam accumsan penatibus in tortor quam tellus orci."}
+              {user?.biography || "Not provided"}
             </p>
           </div>
         </div>
@@ -447,7 +444,7 @@ const DetailsTab = () => {
           label="Language preferences"
           value={user?.languagePreferences?.[0] || "English"}
         />
-        <ViewRow label="ORCHID" value={user?.orcidId || "608-429-3268"} />
+        <ViewRow label="ORCHID" value={user?.orcidId || "Not provided"} />
       </div>
     </div>
   );

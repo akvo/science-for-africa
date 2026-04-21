@@ -5,74 +5,73 @@
     "singularName": "community",
     "pluralName": "communities",
     "displayName": "Community",
-    "description": "Professional communities within the Science for Africa platform"
+    "description": "Parent and sub-communities for the forum"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
-  "pluginOptions": {
-    "i18n": {
-      "localized": true
-    }
-  },
+  "pluginOptions": {},
   "attributes": {
     "name": {
       "type": "string",
-      "required": true
+      "required": true,
+      "unique": true
     },
     "slug": {
       "type": "uid",
-      "targetField": "name"
+      "targetField": "name",
+      "required": true
+    },
+    "handle": {
+      "type": "string"
     },
     "description": {
       "type": "text"
     },
-    "type": {
-      "type": "enumeration",
-      "enum": ["General", "Technical", "Interest"],
-      "default": "General"
+    "bannerUrl": {
+      "type": "string"
     },
-    "privacy": {
-      "type": "enumeration",
-      "enum": ["Public", "Private"],
-      "default": "Public"
+    "avatarUrl": {
+      "type": "string"
     },
-    "status": {
-      "type": "enumeration",
-      "enum": ["Active", "Inactive"],
-      "default": "Active"
+    "initials": {
+      "type": "string"
     },
-    "logo": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": ["images"]
-    },
-    "banner": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": ["images"]
-    },
-    "memberCount": {
+    "subscribers": {
       "type": "integer",
       "default": 0
+    },
+    "posts": {
+      "type": "integer",
+      "default": 0
+    },
+    "tags": {
+      "type": "json"
+    },
+    "rules": {
+      "type": "json"
     },
     "parent": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::community.community",
-      "inversedBy": "children"
+      "inversedBy": "subCommunities"
     },
-    "children": {
+    "subCommunities": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::community.community",
       "mappedBy": "parent"
     },
-    "memberships": {
+    "createdByUser": {
       "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::community-membership.community-membership",
-      "mappedBy": "community"
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "moderators": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

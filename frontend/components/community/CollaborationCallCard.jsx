@@ -38,8 +38,30 @@ export default function CollaborationCallCard({ call, onView }) {
   const datePrefix =
     call.status === COLLABORATION_CALL_STATUS.COMPLETED ? "Ended" : "Valid till";
 
+  const handleClick = () => {
+    if (onView) onView(call);
+  };
+
+  const handleKeyDown = (e) => {
+    if (!onView) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onView(call);
+    }
+  };
+
   return (
-    <article className="flex items-start justify-between gap-4 py-5 lg:px-6">
+    <article
+      role={onView ? "button" : undefined}
+      tabIndex={onView ? 0 : undefined}
+      onClick={onView ? handleClick : undefined}
+      onKeyDown={onView ? handleKeyDown : undefined}
+      className={`flex items-start justify-between gap-4 py-5 lg:px-6 ${
+        onView
+          ? "cursor-pointer transition-colors hover:bg-brand-gray-50 focus:bg-brand-gray-50 focus:outline-none"
+          : ""
+      }`}
+    >
       <div className="min-w-0 flex-1">
         <div className="mb-3 inline-flex h-[34px] w-fit items-center divide-x divide-brand-gray-200 rounded-full bg-[#E8ECEF] text-sm font-medium text-brand-gray-700">
           <span className="inline-flex h-full items-center gap-2 px-4">
@@ -60,7 +82,12 @@ export default function CollaborationCallCard({ call, onView }) {
         {call.tags?.length ? (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {call.tags.map((tag) => (
-              <Badge key={tag} variant="outline" size="sm">
+              <Badge
+                key={tag}
+                variant="outline"
+                size="sm"
+                className="h-auto px-3 py-1 text-xs font-medium"
+              >
                 {tag}
               </Badge>
             ))}
@@ -73,7 +100,10 @@ export default function CollaborationCallCard({ call, onView }) {
           variant="outline"
           size="sm"
           className="border-transparent bg-[#E8ECEF] hover:bg-[#dde2e6]"
-          onClick={() => onView(call)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onView(call);
+          }}
         >
           View
         </Button>

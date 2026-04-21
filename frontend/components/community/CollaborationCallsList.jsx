@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
+import { Plus } from "lucide-react";
 import CollaborationCallCard from "./CollaborationCallCard";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { COLLABORATION_CALL_STATUS } from "@/lib/community-mock-data";
 
@@ -10,7 +12,8 @@ const FILTERS = [
 ];
 
 /**
- * Collaboration Calls list with status filters and a sort control slot.
+ * Collaboration Calls list with status filters, a Create button, and a
+ * sort control slot.
  *
  * Stateless w.r.t. data — pass `calls` in. The active/completed filter is
  * local UI state. Replace with server-driven filters when API is wired up.
@@ -18,6 +21,7 @@ const FILTERS = [
 export default function CollaborationCallsList({
   calls = [],
   onView,
+  onCreate,
   className,
 }) {
   const [filter, setFilter] = useState("all");
@@ -28,8 +32,8 @@ export default function CollaborationCallsList({
   }, [calls, filter]);
 
   return (
-    <section className={cn("flex flex-col gap-4", className)}>
-      <div className="flex items-center gap-2 border-b border-brand-gray-100 pb-4 lg:pl-6">
+    <section className={cn("flex flex-col", className)}>
+      <div className="flex items-center gap-2 border-b border-brand-gray-100 pb-4 lg:px-6">
         {FILTERS.map((f) => {
           const isActive = filter === f.key;
           return (
@@ -38,9 +42,9 @@ export default function CollaborationCallsList({
               type="button"
               onClick={() => setFilter(f.key)}
               className={cn(
-                "inline-flex h-[34px] items-center rounded-full px-[14px] text-sm font-medium transition-colors",
+                "inline-flex h-[34px] cursor-pointer items-center rounded-full px-[14px] text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-brand-teal-500 text-white"
+                  ? "border border-[#D0D5DD] bg-primary-50 text-brand-gray-900 shadow-[0_1px_2px_0_rgba(16,24,40,0.05),0_0_0_4px_var(--color-primary-50)]"
                   : "bg-white text-brand-gray-700 border border-brand-gray-100 hover:bg-brand-gray-50",
               )}
               aria-pressed={isActive}
@@ -49,6 +53,17 @@ export default function CollaborationCallsList({
             </button>
           );
         })}
+        {onCreate ? (
+          <Button
+            size="sm"
+            variant="outline"
+            className="ml-auto gap-1.5 rounded-full"
+            onClick={onCreate}
+          >
+            <Plus className="size-4" />
+            Create
+          </Button>
+        ) : null}
       </div>
 
       {visibleCalls.length === 0 ? (
@@ -56,7 +71,7 @@ export default function CollaborationCallsList({
           No collaboration calls to show.
         </div>
       ) : (
-        <div className="flex flex-col divide-y divide-brand-gray-100">
+        <div className="flex flex-col divide-y divide-brand-gray-100 border-b border-brand-gray-100">
           {visibleCalls.map((call) => (
             <CollaborationCallCard
               key={call.id}

@@ -2,4 +2,4 @@
 
 const { createCoreService } = require("@strapi/strapi").factories;
 
-module.exports = createCoreService("api::community.community");
+module.exports = createCoreService("api::chat-message.chat-message");

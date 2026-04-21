@@ -206,6 +206,102 @@ export async function createCollaborationCall(payload) {
 }
 
 /**
+ * Fetch all communities (with sub-communities populated)
+ */
+export async function fetchCommunities() {
+  return fetchFromStrapi(
+    "/communities?populate[subCommunities]=true&populate[parent]=true&sort=name:asc",
+  );
+}
+
+/**
+ * Fetch a single community by slug (with relations populated)
+ */
+export async function fetchCommunity(slug) {
+  return fetchFromStrapi(
+    `/communities?filters[slug][$eq]=${slug}&populate[subCommunities]=true&populate[parent]=true&populate[moderators]=true&populate[createdByUser]=true`,
+  );
+}
+
+/**
+ * Fetch a single community by name (exact match, relations populated).
+ * Useful when we only have the community name (e.g. stored on a
+ * collaboration call as a free-text `communityName`) and need the full
+ * community record.
+ */
+export async function fetchCommunityByName(name) {
+  return fetchFromStrapi(
+    `/communities?filters[name][$eq]=${encodeURIComponent(name)}&populate[subCommunities]=true&populate[parent]=true&populate[moderators]=true&populate[createdByUser]=true`,
+  );
+}
+
+/**
+ * Fetch collaboration calls for a given community (by community name).
+ * Returns them newest-first.
+ */
+export async function fetchCollaborationCalls(communityName) {
+  const qs = communityName
+    ? `?filters[communityName][$eq]=${encodeURIComponent(communityName)}&sort=createdAt:desc`
+    : `?sort=createdAt:desc`;
+  return fetchFromStrapi(`/collaboration-calls${qs}`);
+}
+
+/**
+ * Accept a collaboration invite by its numeric id.
+ */
+export async function acceptCollaborationInvite(id) {
+  try {
+    const response = await apiClient.post(
+      `/collaboration-invites/${id}/accept`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error accepting collaboration invite:", error);
+    return error;
+  }
+}
+
+/**
+ * Fetch a single collaboration call by its documentId (Strapi v5).
+ * Populates createdByUser and accepted invites so the detail page can
+ * render the mentor/collaborator sidebar.
+ */
+export async function fetchCollaborationCall(documentId) {
+  return fetchFromStrapi(
+    `/collaboration-calls/${documentId}?populate[createdByUser]=true&populate[invites][populate][invitedUser]=true`,
+  );
+}
+
+/**
+ * Fetch chat messages for a collaboration call (oldest-first).
+ * Requires auth — backend filters by the call's documentId and populates
+ * a safe subset of author fields.
+ */
+export async function fetchChatMessages(callDocumentId) {
+  return fetchFromStrapi(
+    `/chat-messages?filters[collaborationCall][documentId][$eq]=${encodeURIComponent(
+      callDocumentId,
+    )}`,
+  );
+}
+
+/**
+ * Post a chat message to a collaboration call. Author is derived from the
+ * authenticated user server-side — never trusted from the request body.
+ */
+export async function postChatMessage(callDocumentId, text) {
+  try {
+    const response = await apiClient.post("/chat-messages", {
+      data: { text, collaborationCall: callDocumentId },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error posting chat message:", error);
+    return error;
+  }
+}
+
+/**
  * Update authenticated user profile
  */
 export async function updateUserProfile(userData) {

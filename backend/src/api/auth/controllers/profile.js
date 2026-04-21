@@ -47,13 +47,48 @@ module.exports = ({ strapi }) => ({
       return ctx.unauthorized();
     }
 
+    // Whitelist allowed fields to prevent arbitrary updates
+    const allowedFields = [
+      "displayName",
+      "biography",
+      "firstName",
+      "lastName",
+      "fullName",
+      "position",
+      "interests",
+      "educationTopic",
+      "educationLevel",
+      "languagePreferences",
+      "orcidId",
+      "socialLinks",
+      "profilePhoto",
+      "pageCover",
+      "institution",
+      "onboardingComplete",
+      "userType",
+      "institutionName",
+      "educationInstitutionName",
+    ];
+
+    const data = {};
+    allowedFields.forEach((field) => {
+      if (body[field] !== undefined) {
+        data[field] = body[field];
+      }
+    });
+
+    // Validation: Biography character limit (Baseline UAC Requirement)
+    if (data.biography && data.biography.length > 275) {
+      return ctx.badRequest("Biography must be 275 characters or less.");
+    }
+
     try {
       const updatedUser = await strapi.entityService.update(
         "plugin::users-permissions.user",
         user.id,
         {
-          data: body,
-          populate: ["institution", "interests"],
+          data,
+          populate: ["institution", "interests", "profilePhoto", "pageCover"],
         },
       );
 

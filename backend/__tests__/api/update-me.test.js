@@ -104,4 +104,34 @@ describe("Auth Me Update API", () => {
     expect(response.body.institutionName).toBe("New African Institute");
     expect(response.body.educationLevel).toBeNull(); // Strapi will have it as null or omit it
   });
+
+  it("should enforce character limit on biography in /auth/me", async () => {
+    const longBio = "A".repeat(276);
+
+    const response = await request(strapi.server.httpServer)
+      .put("/api/auth/me")
+      .set("Authorization", `Bearer ${jwt}`)
+      .send({ biography: longBio });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.message).toContain("275 characters or less");
+  });
+
+  it("should update new individual profile fields in /auth/me", async () => {
+    const updateData = {
+      displayName: "New Display Name",
+      languagePreferences: "fr",
+      biography: "A short bio within the limit.",
+    };
+
+    const response = await request(strapi.server.httpServer)
+      .put("/api/auth/me")
+      .set("Authorization", `Bearer ${jwt}`)
+      .send(updateData);
+
+    expect(response.status).toBe(200);
+    expect(response.body.displayName).toBe("New Display Name");
+    expect(response.body.languagePreferences).toBe("fr");
+    expect(response.body.biography).toBe("A short bio within the limit.");
+  });
 });

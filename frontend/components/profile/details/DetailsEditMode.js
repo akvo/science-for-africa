@@ -1,17 +1,12 @@
 import React from "react";
 import Image from "next/image";
-import {
-  Mail,
-  UploadCloud,
-  ChevronDown,
-  User as UserIcon,
-  Loader2,
-} from "lucide-react";
+import { Mail, UploadCloud, User as UserIcon, Loader2 } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -256,7 +251,9 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                   <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
                     <SelectValue>
                       {field.value
-                        ? t(`roles.${field.value}`, { defaultValue: field.value })
+                        ? t(`roles.${field.value}`, {
+                            defaultValue: field.value,
+                          })
                         : t("details.role_placeholder")}
                     </SelectValue>
                   </SelectTrigger>
@@ -280,42 +277,52 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
             </span>
           </div>
           <div className="md:col-span-8 flex flex-col gap-5">
-            <div className="w-full relative group">
-              <Controller
-                name="educationLevel"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    value={field.value || ""}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
-                      <SelectValue>
-                        {field.value
-                          ? t(`education_levels.${field.value}`, {
-                              defaultValue: field.value,
-                            })
-                          : "Select level"}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {EDUCATION_LEVEL_OPTIONS.map((level) => (
-                        <SelectItem key={level} value={level}>
-                          {t(`education_levels.${level}`, {
-                            defaultValue: level,
-                          })}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
+            <div className="w-full space-y-2">
+              <Label className="text-sm font-medium text-brand-gray-900">
+                {t("details.education_level_label")}
+              </Label>
+              <div className="relative group">
+                <Controller
+                  name="educationLevel"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value || ""}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
+                        <SelectValue>
+                          {field.value
+                            ? t(`education_levels.${field.value}`, {
+                                defaultValue: field.value,
+                              })
+                            : "Select"}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {EDUCATION_LEVEL_OPTIONS.map((level) => (
+                          <SelectItem key={level} value={level}>
+                            {t(`education_levels.${level}`, {
+                              defaultValue: level,
+                            })}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
+            </div>
+            <div className="w-full space-y-2">
+              <Label className="text-sm font-medium text-brand-gray-900">
+                {t("details.university_label")}
+              </Label>
+              <Input
+                {...register("educationInstitutionName")}
+                placeholder={t("details.university_placeholder")}
+                className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 placeholder:text-brand-gray-400"
               />
             </div>
-            <Input
-              {...register("educationInstitutionName")}
-              placeholder={t("details.university_placeholder")}
-              className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700"
-            />
           </div>
         </div>
 

@@ -138,16 +138,16 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
         </div>
       </div>
 
-      <div className="max-w-4xl">
+      <div>
         <FormRow label={t("details.full_name")} error={errors.fullName}>
           <Input
             {...register("fullName")}
-            className="max-w-lg h-11 border-brand-gray-200 rounded-xl px-4 text-brand-gray-700"
+            className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-brand-gray-700"
           />
         </FormRow>
 
         <FormRow label={t("details.email")}>
-          <div className="relative max-w-lg group">
+          <div className="relative w-full group">
             <Mail
               size={16}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-gray-400 group-focus-within:text-brand-teal-600"
@@ -177,7 +177,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                 <UserIcon size={24} />
               )}
             </div>
-            <div className="flex-1 max-w-sm">
+            <div className="flex-1 w-full">
               <input
                 type="file"
                 ref={fileInputRef}
@@ -185,28 +185,34 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                 accept="image/*"
                 className="hidden"
               />
-              <button
-                type="button"
+              <div
                 onClick={handlePhotoClick}
-                className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-brand-gray-200 rounded-xl py-3 text-brand-gray-500 hover:border-brand-teal-500 hover:text-brand-teal-600 transition-all group"
+                className="w-full flex flex-col items-center justify-center border border-brand-gray-200 rounded-xl py-5 px-4 bg-white cursor-pointer hover:bg-brand-gray-50 hover:border-brand-teal-200 transition-all group shadow-sm"
               >
-                <UploadCloud
-                  size={16}
-                  className="group-hover:scale-110 transition-transform"
-                />
-                <span className="text-xs font-bold font-outfit uppercase tracking-wider">
-                  {t("details.click_to_upload")}
-                </span>
-              </button>
-              <p className="text-[10px] text-brand-gray-400 mt-2 font-medium">
-                {t("details.upload_hint")}
-              </p>
+                <div className="size-10 rounded-full bg-brand-gray-100 flex items-center justify-center text-brand-gray-500 mb-3 group-hover:bg-brand-teal-50 group-hover:text-brand-teal-600 transition-colors">
+                  <UploadCloud
+                    size={20}
+                    className="group-hover:scale-110 transition-transform"
+                  />
+                </div>
+                <div className="text-sm text-center mb-1">
+                  <span className="font-bold text-brand-teal-600 hover:underline">
+                    {t("details.click_to_upload")}
+                  </span>{" "}
+                  <span className="text-brand-gray-600 font-medium">
+                    {t("details.drag_drop")}
+                  </span>
+                </div>
+                <p className="text-[11px] text-brand-gray-400 font-medium">
+                  {t("details.upload_hint")}
+                </p>
+              </div>
             </div>
           </div>
         </FormRow>
 
         <FormRow label={t("details.role")} error={errors.roleType}>
-          <div className="max-w-lg relative group">
+          <div className="w-full relative group">
             <select
               {...register("roleType")}
               className="w-full h-11 border border-brand-gray-200 rounded-xl px-4 bg-white text-sm appearance-none font-medium text-brand-gray-700 focus:ring-2 focus:ring-brand-teal-500/20 outline-none"
@@ -240,7 +246,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
             </span>
           </div>
           <div className="md:col-span-8 flex flex-col gap-5">
-            <div className="max-w-lg relative group">
+            <div className="w-full relative group">
               <select
                 {...register("educationLevel")}
                 className="w-full h-11 border border-brand-gray-200 rounded-xl px-4 bg-white text-sm appearance-none font-medium text-brand-gray-700 focus:ring-2 focus:ring-brand-teal-500/20 outline-none"
@@ -268,7 +274,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
             <Input
               {...register("educationInstitutionName")}
               placeholder={t("details.university_placeholder")}
-              className="max-w-lg h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700"
+              className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700"
             />
           </div>
         </div>
@@ -280,7 +286,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
             errors["affiliationInstitution.name"]
           }
         >
-          <div className="max-w-lg space-y-4">
+          <div className="w-full space-y-4">
             <div className="relative group">
               <select
                 {...register("affiliationInstitution.id")}
@@ -332,7 +338,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
           description={t("details.biography_placeholder")}
           error={errors.biography}
         >
-          <div className="max-w-lg space-y-2">
+          <div className="w-full space-y-2">
             <Textarea
               {...register("biography")}
               rows={6}
@@ -345,7 +351,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
         </FormRow>
 
         <FormRow label={t("details.language_label")}>
-          <div className="max-w-lg relative group">
+          <div className="w-full relative group">
             <select
               {...register("language")}
               className="w-full h-11 border border-brand-gray-200 rounded-xl px-4 bg-white text-sm appearance-none font-medium text-brand-gray-700 focus:ring-2 focus:ring-brand-teal-500/20 outline-none"
@@ -361,7 +367,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
         </FormRow>
 
         <FormRow label={t("details.orcid_label")} error={errors.orcidId}>
-          <div className="flex items-center gap-3 max-w-lg">
+          <div className="flex items-center gap-3 w-full">
             <Input
               {...register("orcidId")}
               className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700"

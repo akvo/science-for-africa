@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CommunityLeftNav from "@/components/community/CommunityLeftNav";
 import { fetchCommunities } from "@/lib/strapi";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const ALL_TAG = "All";
 
@@ -112,9 +113,7 @@ export default function CommunitiesPage() {
   // Collect unique tags from all communities
   const allTags = [
     ALL_TAG,
-    ...Array.from(
-      new Set(communities.flatMap((c) => c.tags || [])),
-    ),
+    ...Array.from(new Set(communities.flatMap((c) => c.tags || []))),
   ];
 
   // Filter communities by selected tag
@@ -217,4 +216,12 @@ export default function CommunitiesPage() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+    },
+  };
 }

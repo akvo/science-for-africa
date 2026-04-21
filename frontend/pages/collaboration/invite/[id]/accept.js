@@ -63,8 +63,8 @@ export default function AcceptInvitePage() {
               </h1>
               <p className="text-sm text-brand-gray-500">
                 {callTitle
-                  ? `You&apos;ve joined "${callTitle}".`
-                  : "You&apos;ve joined the collaboration."}
+                  ? `You've joined "${callTitle}".`
+                  : "You've joined the collaboration."}
               </p>
             </div>
             <div className="flex items-center gap-3">

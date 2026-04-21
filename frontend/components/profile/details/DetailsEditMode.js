@@ -7,13 +7,25 @@ import {
   User as UserIcon,
   Loader2,
 } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { FormRow } from "./SharedComponents";
+import {
+  ROLE_OPTIONS,
+  EDUCATION_LEVEL_OPTIONS,
+} from "@/lib/onboarding-constants";
+import { fetchFromStrapi } from "@/lib/strapi";
 
 const profileSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -42,6 +54,8 @@ const profileSchema = z.object({
 const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
   const fileInputRef = React.useRef(null);
   const [photoPreview, setPhotoPreview] = React.useState(null);
+  const [institutions, setInstitutions] = React.useState([]);
+  const [loadingInstitutions, setLoadingInstitutions] = React.useState(false);
 
   const {
     register,
@@ -49,6 +63,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
     reset,
     watch,
     setValue,
+    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(profileSchema),
@@ -86,6 +101,23 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
       setValue("affiliationInstitution.id", "");
     }
   }, [customInstitutionName, setValue]);
+
+  React.useEffect(() => {
+    async function getInstitutions() {
+      setLoadingInstitutions(true);
+      try {
+        const response = await fetchFromStrapi("/institutions?sort=name:asc");
+        if (response?.data) {
+          setInstitutions(response.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch institutions:", err);
+      } finally {
+        setLoadingInstitutions(false);
+      }
+    }
+    getInstitutions();
+  }, []);
 
   const handlePhotoClick = () => {
     fileInputRef.current?.click();
@@ -213,28 +245,26 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
 
         <FormRow label={t("details.role")} error={errors.roleType}>
           <div className="w-full relative group">
-            <select
-              {...register("roleType")}
-              className="w-full h-11 border border-brand-gray-200 rounded-xl px-4 bg-white text-sm appearance-none font-medium text-brand-gray-700 focus:ring-2 focus:ring-brand-teal-500/20 outline-none"
-            >
-              <option value="">{t("details.role_placeholder")}</option>
-              {[
-                "Researcher",
-                "Principal Investigator / Lab Lead",
-                "Program Manager / Funder representative",
-                "Journal Editor / Publisher",
-                "Institution administrator / librarian",
-                "Public official / Public policy person",
-                "Other",
-              ].map((role) => (
-                <option key={role} value={role}>
-                  {t(`roles.${role}`)}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              size={16}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-gray-400 pointer-events-none group-focus-within:text-brand-teal-600"
+            <Controller
+              name="roleType"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value || ""}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
+                    <SelectValue placeholder={t("details.role_placeholder")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ROLE_OPTIONS.map((role) => (
+                      <SelectItem key={role} value={role}>
+                        {t(`roles.${role}`, { defaultValue: role })}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             />
           </div>
         </FormRow>
@@ -247,28 +277,28 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
           </div>
           <div className="md:col-span-8 flex flex-col gap-5">
             <div className="w-full relative group">
-              <select
-                {...register("educationLevel")}
-                className="w-full h-11 border border-brand-gray-200 rounded-xl px-4 bg-white text-sm appearance-none font-medium text-brand-gray-700 focus:ring-2 focus:ring-brand-teal-500/20 outline-none"
-              >
-                <option value="">Select level</option>
-                {[
-                  "High School",
-                  "Associate Degree",
-                  "Bachelor's Degree",
-                  "Master's Degree",
-                  "Doctorate (PhD / MD / etc.)",
-                  "Post-Doctorate",
-                  "Other",
-                ].map((level) => (
-                  <option key={level} value={level}>
-                    {t(`education_levels.${level}`)}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown
-                size={16}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-gray-400 pointer-events-none"
+              <Controller
+                name="educationLevel"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value || ""}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
+                      <SelectValue placeholder="Select level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {EDUCATION_LEVEL_OPTIONS.map((level) => (
+                        <SelectItem key={level} value={level}>
+                          {t(`education_levels.${level}`, {
+                            defaultValue: level,
+                          })}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
               />
             </div>
             <Input
@@ -288,17 +318,36 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
         >
           <div className="w-full space-y-4">
             <div className="relative group">
-              <select
-                {...register("affiliationInstitution.id")}
-                className="w-full h-11 border border-brand-gray-200 rounded-xl px-4 bg-white text-sm appearance-none font-medium text-brand-gray-700 focus:ring-2 focus:ring-brand-teal-500/20 outline-none"
-              >
-                <option value="">Select official institution</option>
-                <option value="1">Akvo</option>
-                <option value="2">Science for Africa</option>
-              </select>
-              <ChevronDown
-                size={16}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-gray-400 pointer-events-none"
+              <Controller
+                name="affiliationInstitution.id"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value || ""}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
+                      <SelectValue placeholder="Select official institution" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {loadingInstitutions ? (
+                        <div className="p-2 text-sm text-brand-gray-400 flex items-center gap-2">
+                          <Loader2 size={14} className="animate-spin" />
+                          Loading...
+                        </div>
+                      ) : (
+                        institutions.map((inst) => (
+                          <SelectItem
+                            key={inst.id}
+                            value={inst.id.toString()}
+                          >
+                            {inst.name}
+                          </SelectItem>
+                        ))
+                      )}
+                    </SelectContent>
+                  </Select>
+                )}
               />
             </div>
             <div className="space-y-4">
@@ -350,16 +399,20 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
 
         <FormRow label={t("details.language_label")}>
           <div className="w-full relative group">
-            <select
-              {...register("language")}
-              className="w-full h-11 border border-brand-gray-200 rounded-xl px-4 bg-white text-sm appearance-none font-medium text-brand-gray-700 focus:ring-2 focus:ring-brand-teal-500/20 outline-none"
-            >
-              <option value="en">English</option>
-              <option value="fr">French</option>
-            </select>
-            <ChevronDown
-              size={16}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-gray-400 pointer-events-none"
+            <Controller
+              name="language"
+              control={control}
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="fr">French</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
             />
           </div>
         </FormRow>

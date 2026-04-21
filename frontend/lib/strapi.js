@@ -157,13 +157,13 @@ export function transformProfileUpdatePayload(userData) {
   if (data.affiliationInstitution) {
     if (data.affiliationInstitution.id) {
       data.institution = Number(data.affiliationInstitution.id);
-      data.institutionName = null;
+      delete data.institutionName;
     } else if (data.affiliationInstitution.name) {
       data.institutionName = data.affiliationInstitution.name;
-      data.institution = null;
+      delete data.institution;
     } else {
-      data.institution = null;
-      data.institutionName = null;
+      delete data.institution;
+      delete data.institutionName;
     }
     delete data.affiliationInstitution;
   }
@@ -196,7 +196,7 @@ export function transformProfileUpdatePayload(userData) {
       "roleType",
     ];
     if (data[key] === "" && !identityFields.includes(key)) {
-      data[key] = null;
+      delete data[key];
     }
   });
 

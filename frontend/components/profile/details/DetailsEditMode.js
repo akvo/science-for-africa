@@ -301,13 +301,20 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-gray-400 pointer-events-none"
               />
             </div>
-            <div className="flex items-center gap-3">
+            <div className="space-y-4">
               <Input
                 {...register("affiliationInstitution.name")}
                 placeholder={t("details.affiliation_placeholder")}
-                className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700"
+                className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 w-full"
               />
-              {(selectedInstitutionId || customInstitutionName) && (
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="outline"
+                  type="button"
+                  className="px-8 rounded-full text-sm h-10 border-brand-teal-900 text-brand-teal-900 hover:bg-brand-teal-50 hover:text-brand-teal-700 transition-all font-outfit"
+                >
+                  {t("details.request_button")}
+                </Button>
                 <Button
                   variant="ghost"
                   type="button"
@@ -315,20 +322,11 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                     setValue("affiliationInstitution.id", "");
                     setValue("affiliationInstitution.name", "");
                   }}
-                  className="text-xs font-bold font-outfit text-brand-gray-500"
+                  className="text-sm font-outfit text-brand-gray-500 hover:text-brand-teal-600 hover:bg-transparent px-0"
                 >
                   {t("details.cancel_button")}
                 </Button>
-              )}
-              {!selectedInstitutionId && !customInstitutionName && (
-                <Button
-                  variant="outline"
-                  type="button"
-                  className="px-6 font-bold text-xs h-11 border-brand-orange-200 text-brand-orange-600 hover:bg-brand-orange-50 hover:text-brand-orange-700 whitespace-nowrap"
-                >
-                  {t("details.request_button")}
-                </Button>
-              )}
+              </div>
             </div>
           </div>
         </FormRow>
@@ -367,30 +365,28 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
         </FormRow>
 
         <FormRow label={t("details.orcid_label")} error={errors.orcidId}>
-          <div className="flex items-center gap-3 w-full">
+          <div className="space-y-4 w-full">
             <Input
               {...register("orcidId")}
-              className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700"
+              className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 w-full"
             />
-            {!watch("orcidId") && (
+            <div className="flex items-center gap-4">
               <Button
                 variant="outline"
                 type="button"
-                className="px-6 font-bold text-xs h-11 border-brand-orange-200 text-brand-orange-600 hover:bg-brand-orange-50 hover:text-brand-orange-700 whitespace-nowrap"
+                className="px-8 rounded-full text-sm h-10 border-brand-teal-900 text-brand-teal-900 hover:bg-brand-teal-50 hover:text-brand-teal-700 transition-all font-outfit"
               >
                 {t("details.request_button")}
               </Button>
-            )}
-            {watch("orcidId") && (
               <Button
                 variant="ghost"
                 type="button"
                 onClick={() => setValue("orcidId", "")}
-                className="text-xs font-bold font-outfit text-brand-gray-500"
+                className="text-sm font-outfit text-brand-gray-500 hover:text-brand-teal-600 hover:bg-transparent px-0"
               >
                 {t("details.cancel_button")}
               </Button>
-            )}
+            </div>
           </div>
         </FormRow>
       </div>

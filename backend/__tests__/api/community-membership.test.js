@@ -31,9 +31,7 @@ describe("Community Membership API", () => {
         data: {
           name: "Test Community",
           slug: "test-community",
-          status: "Active",
         },
-        status: "published",
         locale: "en",
       });
     } catch (error) {

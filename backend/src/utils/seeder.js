@@ -349,6 +349,8 @@ const seed = async (strapi) => {
   const collaborationActions = [
     "api::auth.profile.update",
     "api::auth.profile.findUsers",
+    "api::community-membership.community-membership.find",
+    "api::community-membership.community-membership.leave",
     "api::collaboration-call.collaboration-call.createWithInvites",
     "api::collaboration-call.collaboration-call.create-with-invites",
     "api::collaboration-call.collaboration-call.create",

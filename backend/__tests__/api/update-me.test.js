@@ -39,7 +39,7 @@ describe("Auth Me Update API", () => {
     });
 
     await grantPermissions("authenticated", {
-      profile: ["update"],
+      profile: ["update", "getMe"],
     });
   });
 
@@ -133,5 +133,72 @@ describe("Auth Me Update API", () => {
     expect(response.body.displayName).toBe("New Display Name");
     expect(response.body.languagePreferences).toBe("fr");
     expect(response.body.biography).toBe("A short bio within the limit.");
+  });
+
+  it("should return populated profile data on GET /auth/me", async () => {
+    // 1. Create a membership and collaboration invite first
+    const community = await strapi
+      .documents("api::community.community")
+      .create({
+        data: { name: "Populate Test Community", slug: "populate-test" },
+        status: "published",
+        locale: "en",
+      });
+
+    await strapi
+      .documents("api::community-membership.community-membership")
+      .create({
+        data: {
+          user: user.id,
+          community: community.id,
+          role: "Member",
+        },
+        status: "published",
+      });
+
+    const call = await strapi
+      .documents("api::collaboration-call.collaboration-call")
+      .create({
+        data: {
+          title: "Populate Collab",
+          description: "Test Collab",
+          startDate: new Date().toISOString(),
+          endDate: new Date(Date.now() + 86400000).toISOString(),
+          status: "Active",
+        },
+        status: "published",
+      });
+
+    await strapi
+      .documents("api::collaboration-invite.collaboration-invite")
+      .create({
+        data: {
+          email: user.email,
+          inviteStatus: "Accepted",
+          invitedUser: user.id,
+          collaborationCall: call.id,
+        },
+        status: "published",
+      });
+
+    // 2. Fetch the profile
+    const response = await request(strapi.server.httpServer)
+      .get("/api/auth/me")
+      .set("Authorization", `Bearer ${jwt}`);
+
+    expect(response.status).toBe(200);
+    // Verified memberships
+    expect(response.body.memberships).toBeDefined();
+    expect(response.body.memberships.length).toBeGreaterThan(0);
+    expect(response.body.memberships[0].community.name).toBe(
+      "Populate Test Community",
+    );
+
+    // Verified collaborationInvites
+    expect(response.body.collaborationInvites).toBeDefined();
+    expect(response.body.collaborationInvites.length).toBeGreaterThan(0);
+    expect(response.body.collaborationInvites[0].collaborationCall.title).toBe(
+      "Populate Collab",
+    );
   });
 });

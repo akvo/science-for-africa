@@ -100,7 +100,7 @@ const DetailsTab = () => {
   );
 
   const ViewRow = ({ label, value, badge }) => (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 py-8 border-b border-brand-gray-100 last:border-0 items-baseline">
+    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 py-10 border-b border-brand-gray-100 last:border-0 items-baseline">
       <div className="md:col-span-4">
         <span className="text-[15px] font-bold text-brand-gray-900">
           {label}
@@ -376,7 +376,7 @@ const DetailsTab = () => {
           value={user?.email || "Stuart.Harber72@yahoo.com"}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 py-8 border-b border-brand-gray-100 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 py-10 border-b border-brand-gray-100 items-center">
           <div className="md:col-span-4 transition-all">
             <span className="text-[15px] font-bold text-brand-gray-900">
               Your photo (Optional)
@@ -426,7 +426,7 @@ const DetailsTab = () => {
           }
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 py-8 border-b border-brand-gray-100 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 py-10 border-b border-brand-gray-100 items-start">
           <div className="md:col-span-4 transition-all">
             <span className="text-[15px] font-bold text-brand-gray-900 block">
               Bio (Optional)

@@ -43,7 +43,7 @@ export default function CommunityLeftNav({
             className={cn(
               "rounded-lg px-3 py-2 font-medium whitespace-nowrap transition-colors",
               isActive
-                ? "bg-brand-teal-50 text-brand-teal-700"
+                ? "bg-primary-50 text-brand-teal-700"
                 : "text-brand-gray-700 hover:bg-brand-gray-50",
             )}
           >

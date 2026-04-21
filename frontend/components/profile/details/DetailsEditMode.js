@@ -254,7 +254,11 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                   onValueChange={field.onChange}
                 >
                   <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
-                    <SelectValue placeholder={t("details.role_placeholder")} />
+                    <SelectValue>
+                      {field.value
+                        ? t(`roles.${field.value}`, { defaultValue: field.value })
+                        : t("details.role_placeholder")}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {ROLE_OPTIONS.map((role) => (
@@ -286,7 +290,13 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                     onValueChange={field.onChange}
                   >
                     <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
-                      <SelectValue placeholder="Select level" />
+                      <SelectValue>
+                        {field.value
+                          ? t(`education_levels.${field.value}`, {
+                              defaultValue: field.value,
+                            })
+                          : "Select level"}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       {EDUCATION_LEVEL_OPTIONS.map((level) => (
@@ -327,7 +337,13 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                     onValueChange={field.onChange}
                   >
                     <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
-                      <SelectValue placeholder="Select official institution" />
+                      <SelectValue>
+                        {field.value
+                          ? institutions.find(
+                              (i) => i.id.toString() === field.value.toString(),
+                            )?.name || field.value
+                          : "Select official institution"}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       {loadingInstitutions ? (

@@ -17,33 +17,39 @@ import {
 } from "lucide-react";
 
 const TABS = [
-  { id: "details", label: "Details", href: "/profile" },
-  { id: "communities", label: "My Communities", href: "/profile/communities" },
-  { id: "content", label: "Content", href: "/profile/content" },
-  { id: "saved", label: "Saved", href: "/profile/saved" },
-  { id: "events", label: "My events", href: "/profile/events" },
+  { id: "details", label: "tabs.details", href: "/profile" },
+  {
+    id: "communities",
+    label: "tabs.communities",
+    href: "/profile/communities",
+  },
+  { id: "content", label: "tabs.content", href: "/profile/content" },
+  { id: "saved", label: "tabs.saved", href: "/profile/saved" },
+  { id: "events", label: "tabs.events", href: "/profile/events" },
   {
     id: "collaboration",
-    label: "Collaboration",
+    label: "tabs.collaboration",
     href: "/profile/collaboration",
   },
   {
     id: "courses",
-    label: "Courses and certifications",
+    label: "tabs.courses",
     href: "/profile/courses",
   },
-  { id: "mentorship", label: "Mentorship", href: "/profile/mentorship" },
+  { id: "mentorship", label: "tabs.mentorship", href: "/profile/mentorship" },
 ];
 
-const SidebarCommunity = ({ name, subscribers }) => (
+const SidebarCommunity = ({ name, subscribers, t }) => (
   <div className="py-3 last:pb-0">
     <h5 className="text-sm font-bold text-brand-gray-900">{name}</h5>
-    <p className="text-xs text-brand-gray-500">{subscribers} Subscribers</p>
+    <p className="text-xs text-brand-gray-500">
+      {subscribers} {t("profile:sidebar.subscribers")}
+    </p>
   </div>
 );
 
 const ProfileLayout = ({ children, activeTab = "details" }) => {
-  const { t } = useTranslation("profile");
+  const { t } = useTranslation(["profile", "common"]);
   const { user } = useAuthStore();
   const router = useRouter();
 
@@ -57,7 +63,7 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
 
   return (
     <div className="min-h-screen bg-brand-gray-25 pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Sidebar Area */}
           <aside className="lg:col-span-3">
@@ -85,7 +91,9 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                         {user?.fullName || user?.username}
                       </h2>
                       <p className="text-xs text-brand-gray-500 mt-0.5">
-                        {user?.roleType || "Researcher"}
+                        {user?.roleType
+                          ? t(`profile:roles.${user.roleType}`)
+                          : t("profile:roles.Researcher")}
                       </p>
                     </div>
                   </div>
@@ -104,7 +112,8 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                 <p className="text-sm text-brand-gray-600 leading-relaxed">
                   {user?.biography ||
                     t("details.no_bio", {
-                      defaultValue: "Lorem ipsum dolor sit amet consectetur. Nunc et posuere cras bibendum cras. Diam felis sagittis suspendisse scelerisque quam eu.",
+                      defaultValue:
+                        "Lorem ipsum dolor sit amet consectetur. Nunc et posuere cras bibendum cras. Diam felis sagittis suspendisse scelerisque quam eu.",
                     })}
                 </p>
               </div>
@@ -113,7 +122,7 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
               <div className="grid grid-cols-2 border-b border-brand-gray-200">
                 <div className="p-6 border-r border-brand-gray-200">
                   <p className="text-[11px] text-brand-gray-400 font-bold uppercase tracking-wider mb-2">
-                    Subscribers
+                    {t("profile:sidebar.subscribers")}
                   </p>
                   <p className="text-base font-bold text-brand-gray-900 uppercase">
                     {user?.subscribersCount || "63716"}
@@ -121,7 +130,7 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                 </div>
                 <div className="p-6">
                   <p className="text-[11px] text-brand-gray-400 font-bold uppercase tracking-wider mb-2">
-                    Posts
+                    {t("profile:sidebar.posts")}
                   </p>
                   <p className="text-base font-bold text-brand-gray-900">
                     {user?.postsCount || "323"}
@@ -132,14 +141,18 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
               {/* Education Section */}
               <div className="p-6 border-b border-brand-gray-200 space-y-4">
                 <h4 className="text-[11px] text-brand-gray-400 font-bold uppercase tracking-wider">
-                  Education
+                  {t("profile:sidebar.education")}
                 </h4>
                 <div className="space-y-1">
                   <p className="text-[15px] font-bold text-brand-gray-900 leading-snug">
-                    {user?.educationLevel || "Master degree in Computer science"}
+                    {user?.educationLevel
+                      ? t(`profile:education_levels.${user.educationLevel}`)
+                      : t("profile:education_levels.Master's Degree")}
                   </p>
                   <p className="text-sm text-brand-gray-500">
-                    {user?.educationInstitutionName || user?.institution?.name || "University of Sydney"}
+                    {user?.educationInstitutionName ||
+                      user?.institution?.name ||
+                      "University of Sydney"}
                   </p>
                 </div>
               </div>
@@ -173,31 +186,35 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
               <div className="p-6 space-y-5">
                 <div className="flex items-center justify-between">
                   <h4 className="text-[11px] text-brand-gray-400 font-bold uppercase tracking-wider">
-                    Communities
+                    {t("profile:sidebar.communities")}
                   </h4>
                   <Link
                     href="/profile/communities"
                     className="text-[11px] font-bold text-brand-gray-500 hover:text-brand-teal-600"
                   >
-                    See all
+                    {t("profile:sidebar.see_all")}
                   </Link>
                 </div>
                 <div className="divide-y divide-brand-gray-100">
                   <SidebarCommunity
                     name="Health and Wellness"
                     subscribers="150k"
+                    t={t}
                   />
                   <SidebarCommunity
                     name="Travel and Adventure"
                     subscribers="92k"
+                    t={t}
                   />
                   <SidebarCommunity
                     name="Food and Cooking"
                     subscribers="330k"
+                    t={t}
                   />
                   <SidebarCommunity
                     name="Finance and Investing"
                     subscribers="175k"
+                    t={t}
                   />
                 </div>
               </div>
@@ -207,7 +224,7 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
           {/* Main Area */}
           <main className="lg:col-span-9 space-y-6">
             <h1 className="text-display-md text-brand-gray-900 font-bold">
-              Profile
+              {t("profile:tabs.profile")}
             </h1>
 
             {/* Tabs List */}
@@ -223,7 +240,7 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                       : "text-brand-gray-500 hover:text-brand-gray-700",
                   )}
                 >
-                  {tab.label}
+                  {t(`profile:${tab.label}`)}
                 </Link>
               ))}
             </div>

@@ -49,5 +49,23 @@
     "Doctorate (PhD)": "Doctorat (PhD)",
     "Post-Doctorate": "Post-doctorat",
     "Professional Certificate": "Certificat professionnel"
+  },
+  "tabs": {
+    "profile": "Profil",
+    "details": "Détails",
+    "communities": "Mes communautés",
+    "content": "Contenu",
+    "saved": "Enregistré",
+    "events": "Mes événements",
+    "collaboration": "Collaboration",
+    "courses": "Cours et certifications",
+    "mentorship": "Mentorat"
+  },
+  "sidebar": {
+    "subscribers": "Abonnés",
+    "posts": "Publications",
+    "education": "Éducation",
+    "communities": "Communautés",
+    "see_all": "Voir tout"
   }
 }

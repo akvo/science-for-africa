@@ -117,6 +117,7 @@ module.exports = ({ strapi }) => ({
       "userType",
       "institutionName",
       "educationInstitutionName",
+      "roleType",
     ];
 
     const data = {};
@@ -143,6 +144,13 @@ module.exports = ({ strapi }) => ({
 
       return updatedUser;
     } catch (error) {
+      console.error("[AUTH-ERR] UpdateMe Full Error:", error);
+      if (error.details && error.details.errors) {
+        console.error(
+          "[AUTH-ERR] Validation Details:",
+          JSON.stringify(error.details.errors, null, 2),
+        );
+      }
       strapi.log.error("UpdateMe Error: " + error.message);
       return ctx.internalServerError(error.message);
     }

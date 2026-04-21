@@ -185,12 +185,14 @@ erDiagram
         string email UK
         string password
         string fullName
-        string displayName
         text biography
-        enum languagePreferences
+        string languagePreferences
         string orcidId
-        enum careerStage
-        enum educationLevel
+        string roleType
+        string careerStage
+        string educationLevel
+        string educationInstitutionName
+        string institutionName
         boolean mentorAvailability
         json notificationPreferences
         boolean confirmed

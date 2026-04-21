@@ -48,12 +48,18 @@ graph TD
 
 ### Database Schema / Data Structure
 - **User Entity**: Extension of current schema to include:
-    - `displayName` (string)
+    - `fullName` (string)
     - `profilePhoto` (Media Relation)
     - `pageCover` (Media Relation)
     - `languagePreferences` (Enum: en, fr)
     - `biography` (Text, 275 char limit)
-    - `full_name` (Auto-synced from first/last name)
+    - `roleType` (Enum: professional roles)
+    - `careerStage` (Enum: career stages)
+    - `educationLevel` (string)
+    - `educationInstitutionName` (string)
+    - `institutionName` (string)
+    - `orcidId` (string)
+    - `onboardingComplete` (boolean)
     - `memberships` (One-to-Many to `CommunityMembership`)
     - `collaborationInvites` (One-to-Many to `CollaborationInvite`)
 - **Community**: (Branch 31 Merged)
@@ -107,7 +113,7 @@ The following features were identified in the initial discovery but are not part
 - [x] **API Security**: Endpoints restricted to authenticated owner of the profile.
 - [ ] **Optimistic UI**: Joined/Leave/Saved status updates immediately on frontend.
 - [ ] **Image Optimization**: Profile photos and covers are optimized/resized on upload.
-- [x] **I18n**: Support for multi-language display (English/French).
+- [x] **I18n**: Support for multi-language display (English/French) via dedicated `profile` namespace.
 
 ---
 

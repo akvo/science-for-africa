@@ -21,7 +21,7 @@ function CommunityCard({ community, onJoin }) {
 
   return (
     <div
-      className="flex h-[154px] cursor-pointer flex-col justify-between border border-brand-gray-200 bg-white p-6 -mb-px -mr-px transition-shadow hover:shadow-sm hover:z-10 hover:relative"
+      className="flex h-38.5 cursor-pointer flex-col justify-between border border-brand-gray-200 bg-white p-6 -mb-px -mr-px transition-shadow hover:shadow-sm hover:z-10 hover:relative"
       onClick={() => router.push(`/community/${community.slug}`)}
     >
       <div className="flex items-start justify-between gap-3">
@@ -124,7 +124,7 @@ export default function CommunitiesPage() {
 
   return (
     <div className="flex flex-col lg:flex-row">
-      <aside className="w-full lg:w-[260px] lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4 lg:pt-4 lg:sticky lg:top-28.5 lg:self-start lg:h-[calc(100vh-114px)] lg:overflow-y-auto">
+      <aside className="w-full lg:w-65 lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4 lg:pt-4 lg:sticky lg:top-28.5 lg:self-start lg:h-[calc(100vh-114px)] lg:overflow-y-auto">
         <CommunityLeftNav activeKey="communities" />
       </aside>
 
@@ -163,7 +163,7 @@ export default function CommunitiesPage() {
                   key={tag}
                   variant="outline"
                   className={
-                    "cursor-pointer whitespace-nowrap flex-none rounded-full border-[#D0D5DD] h-auto py-2 px-[14px] text-[14px] leading-[18px] font-normal text-[#344054] " +
+                    "cursor-pointer whitespace-nowrap flex-none rounded-full border-[#D0D5DD] h-auto py-2 px-3.5 text-[14px] leading-4.5 font-normal text-[#344054] " +
                     (isActive ? "bg-primary-50" : "bg-transparent")
                   }
                   onClick={() => setActiveTag(tag)}
@@ -178,9 +178,9 @@ export default function CommunitiesPage() {
               type="button"
               aria-label="Scroll tags left"
               onClick={() => scrollTags(-1)}
-              className="absolute left-0 lg:left-6 top-1/2 -translate-y-1/2 flex size-[40px] items-center justify-center rounded-full border border-brand-gray-200 bg-white text-brand-gray-700 shadow-sm hover:bg-brand-gray-50"
+              className="absolute left-0 lg:left-6 top-1/2 -translate-y-1/2 flex size-10 items-center justify-center rounded-full border border-brand-gray-200 bg-white text-brand-gray-700 shadow-sm hover:bg-brand-gray-50"
             >
-              <ArrowLeft className="size-[18px]" />
+              <ArrowLeft className="size-4.5" />
             </button>
           ) : null}
           {canScrollRight ? (
@@ -188,9 +188,9 @@ export default function CommunitiesPage() {
               type="button"
               aria-label="Scroll tags right"
               onClick={() => scrollTags(1)}
-              className="absolute right-0 top-1/2 -translate-y-1/2 flex size-[40px] items-center justify-center rounded-full border border-brand-gray-200 bg-white text-brand-gray-700 shadow-sm hover:bg-brand-gray-50"
+              className="absolute right-0 top-1/2 -translate-y-1/2 flex size-10 items-center justify-center rounded-full border border-brand-gray-200 bg-white text-brand-gray-700 shadow-sm hover:bg-brand-gray-50"
             >
-              <ArrowRight className="size-[18px]" />
+              <ArrowRight className="size-4.5" />
             </button>
           ) : null}
         </div>

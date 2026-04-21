@@ -156,9 +156,14 @@ export function transformProfileUpdatePayload(userData) {
 
   if (data.affiliationInstitution) {
     if (data.affiliationInstitution.id) {
-      data.institution = data.affiliationInstitution.id;
+      data.institution = Number(data.affiliationInstitution.id);
+      data.institutionName = null;
     } else if (data.affiliationInstitution.name) {
       data.institutionName = data.affiliationInstitution.name;
+      data.institution = null;
+    } else {
+      data.institution = null;
+      data.institutionName = null;
     }
     delete data.affiliationInstitution;
   }
@@ -166,6 +171,11 @@ export function transformProfileUpdatePayload(userData) {
   if (data.educationInstitution && data.educationInstitution.name) {
     data.educationInstitutionName = data.educationInstitution.name;
     delete data.educationInstitution;
+  }
+
+  if (data.language) {
+    data.languagePreferences = data.language;
+    delete data.language;
   }
 
   if (data.userType === "institution") {
@@ -177,8 +187,16 @@ export function transformProfileUpdatePayload(userData) {
   }
 
   Object.keys(data).forEach((key) => {
-    if (data[key] === "") {
-      delete data[key];
+    const identityFields = [
+      "fullName",
+      "username",
+      "email",
+      "firstName",
+      "lastName",
+      "roleType",
+    ];
+    if (data[key] === "" && !identityFields.includes(key)) {
+      data[key] = null;
     }
   });
 

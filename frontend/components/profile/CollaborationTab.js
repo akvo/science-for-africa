@@ -206,6 +206,10 @@ const CollaborationTab = () => {
         {invites.map((invite) => (
           <CollaborationCard key={invite.id} invite={invite} />
         ))}
+        {/* Fill empty slot to hide gray background if odd number of items */}
+        {invites.length % 2 !== 0 && (
+          <div className="hidden xl:block bg-white" />
+        )}
       </div>
 
       {hasMore && (

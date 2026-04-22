@@ -226,6 +226,15 @@ const CommunitiesTab = () => {
             onLeave={removeMembershipFromList}
           />
         ))}
+        {/* Fill empty slots to hide gray background */}
+        {memberships.length % 3 !== 0 && (
+          <>
+            <div className="hidden xl:block bg-white" />
+            {memberships.length % 3 === 1 && (
+              <div className="hidden xl:block bg-white" />
+            )}
+          </>
+        )}
       </div>
 
       {hasMore && (

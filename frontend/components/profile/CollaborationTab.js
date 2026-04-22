@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { fetchMyCollaborations } from "@/lib/strapi";
-import { Loader2, ArrowUpRight, Calendar, Handshake } from "lucide-react";
+import { Loader2, ArrowRight, Calendar, Handshake } from "lucide-react";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import { format } from "date-fns";
@@ -21,7 +21,7 @@ const CollaborationCard = ({ invite }) => {
   const formattedEndDate = endDate ? format(endDate, "dd/MM/yy") : "--/--/--";
 
   return (
-    <div className="bg-white border border-brand-gray-100 p-6 flex flex-col gap-8 hover:shadow-md transition-shadow relative group">
+    <div className="bg-white p-6 flex flex-col gap-8 hover:shadow-sm transition-shadow relative group">
       {/* Top Section: Status and View Button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center overflow-hidden rounded-full border border-brand-gray-100 bg-brand-gray-50">
@@ -127,12 +127,12 @@ const CollaborationCard = ({ invite }) => {
 
         <Link
           href={`/community/${call.communityName?.toLowerCase().replace(/\s+/g, "-") || "#"}`}
-          className="flex items-center gap-1 text-xs text-brand-gray-400 hover:text-brand-teal-600 transition-colors"
+          className="flex items-center gap-1 text-xs text-brand-gray-400 hover:text-brand-teal-600 transition-colors group/link"
         >
           {t("collaboration.view_community", {
             defaultValue: "View community",
           })}
-          <ArrowUpRight className="size-3" />
+          <ArrowRight className="size-3.5 group-hover/link:translate-x-0.5 transition-transform" />
         </Link>
       </div>
     </div>
@@ -206,16 +206,16 @@ const CollaborationTab = () => {
             "Start joining communities and responding to calls to begin collaborating.",
         })}
         actionLabel={t("collaboration.explore_calls", {
-          defaultValue: "Explore calls",
+          defaultValue: "Explore collaboration calls",
         })}
-        actionHref="/communities"
+        actionHref="/community"
       />
     );
   }
 
   return (
     <div className="flex flex-col space-y-8 pb-10">
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-px bg-brand-gray-100 border border-brand-gray-100 overflow-hidden shadow-sm">
         {invites.map((invite) => (
           <CollaborationCard key={invite.id} invite={invite} />
         ))}

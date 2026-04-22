@@ -348,19 +348,12 @@ export async function postChatMessage(callDocumentId, text) {
 }
 
 /**
- * Fetch current user's community memberships
+ * Fetch current user's community memberships (paginated)
  */
-export async function fetchMyCommunityMemberships() {
+export async function fetchMyCommunityMemberships(page = 1, pageSize = 6) {
   try {
-    // In Strapi v5, we populate the community relation to get its details
-    // We filter by the current user is handled by Strapi if we use a specific endpoint or we filter here
-    // For now, let's assume we filter by user.id in the query or the backend handles it.
-    // If the backend doesn't handle it, we'd need the user ID from the store.
-    // Actually, it's better to have a dedicated endpoint like /api/community-memberships/me
-    // but based on the routes, we only have /api/community-memberships.
-    // So we'll filter by user id.
     const response = await fetchFromStrapi(
-      "/community-memberships?populate=community",
+      `/community-memberships?populate=community&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
     );
     return response;
   } catch (error) {

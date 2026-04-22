@@ -81,7 +81,7 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
           <aside className="lg:col-span-3">
             <div className="bg-brand-gray-50 rounded-2xl border border-brand-gray-100 overflow-hidden">
               {/* Identity Header */}
-              <div className="p-6 border-b border-brand-gray-200">
+              <div className="py-6 px-4 border-b border-brand-gray-200">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
                     <Avatar className="size-12 border border-brand-gray-100 relative overflow-hidden bg-brand-teal-50">

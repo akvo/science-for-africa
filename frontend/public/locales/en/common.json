@@ -5,6 +5,7 @@
     "opportunities": "Opportunities",
     "learning": "Learning",
     "resources": "Resources",
+    "researcher_placeholder": "Institutional researcher",
     "login": "Login",
     "signup": "Sign up",
     "search": "Search",
@@ -14,11 +15,31 @@
     "settings": "Settings",
     "logout": "Sign out",
     "publish": "Publish",
-    "back": "Back"
+    "back": "Back",
+    "profile_dropdown": {
+      "details": "Details",
+      "communities": "Communities",
+      "content": "Content",
+      "saved_posts": "Saved posts",
+      "my_events": "My events",
+      "courses": "Courses and certifications",
+      "faq": "FAQ",
+      "logout": "Log out"
+    }
   },
   "common": {
     "loading": "Loading...",
-    "back": "Back"
+    "back": "Back",
+    "coming_soon": {
+      "title": "Coming Soon",
+      "description": "We are working hard to bring this feature to you. Stay tuned!",
+      "back_home": "Back to Home"
+    },
+    "error_404": {
+      "title": "Page Not Found",
+      "description": "Sorry, the page you are looking for doesn't exist or has been moved.",
+      "back_home": "Back to Home"
+    }
   },
   "seo": {
     "description": "Advancing Science for Africa's Future. Join the community of scientists, researchers, and innovators.",

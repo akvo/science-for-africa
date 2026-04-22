@@ -63,7 +63,7 @@ const CollaborationCard = ({ invite }) => {
           <Button
             variant="outline"
             size="sm"
-            className="rounded-full bg-brand-gray-50 border-brand-gray-100 text-brand-gray-900 hover:bg-brand-gray-100 font-bold px-5"
+            className="rounded-full bg-brand-gray-50 border-brand-gray-100 text-brand-gray-900 hover:bg-brand-gray-100 px-5"
           >
             {t("common:view", { defaultValue: "View" })}
           </Button>
@@ -73,7 +73,7 @@ const CollaborationCard = ({ invite }) => {
       {/* Middle Section: Content */}
       <div className="flex flex-col gap-6 grow">
         <div className="space-y-2">
-          <h3 className="text-xl font-bold text-brand-gray-900 line-clamp-1 group-hover:text-brand-teal-600 transition-colors">
+          <h3 className="text-lg font-bold text-brand-gray-900 line-clamp-1 group-hover:text-brand-teal-600 transition-colors">
             {call.title}
           </h3>
           <p className="text-sm text-brand-gray-500 line-clamp-2 leading-relaxed">
@@ -94,20 +94,7 @@ const CollaborationCard = ({ invite }) => {
               </Badge>
             ))
           ) : (
-            <>
-              <Badge
-                variant="outline"
-                className="rounded-full px-3 py-1 text-xs font-medium text-brand-gray-500 border-brand-gray-200 bg-white"
-              >
-                #Technology
-              </Badge>
-              <Badge
-                variant="outline"
-                className="rounded-full px-3 py-1 text-xs font-medium text-brand-gray-500 border-brand-gray-200 bg-white"
-              >
-                #Innovation
-              </Badge>
-            </>
+            <div>&nbsp;</div>
           )}
         </div>
       </div>
@@ -115,8 +102,8 @@ const CollaborationCard = ({ invite }) => {
       {/* Bottom Section: Community Affiliation */}
       <div className="flex items-center justify-between pt-2">
         <div className="flex items-center gap-1.5">
-          <Avatar className="size-6 border border-brand-gray-100 bg-brand-teal-50">
-            <AvatarFallback className="text-[8px] text-brand-teal-700 font-bold bg-brand-teal-50">
+          <Avatar className="size-7 border border-brand-gray-100 bg-brand-teal-50">
+            <AvatarFallback className="text-sm text-brand-teal-700 font-bold bg-brand-teal-50">
               {call.communityName?.substring(0, 2).toUpperCase() || "CR"}
             </AvatarFallback>
           </Avatar>

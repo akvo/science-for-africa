@@ -16,6 +16,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User, LogOut, Settings, Plus } from "lucide-react";
 import Image from "next/image";
 
+import VerificationBadge from "@/components/shared/VerificationBadge";
+
 const Navbar = () => {
   const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState(false);
@@ -170,8 +172,9 @@ const Navbar = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="mt-2">
                     <div className="px-2 py-3">
-                      <p className="text-sm font-bold text-brand-teal-900 truncate">
+                      <p className="text-sm font-bold text-brand-teal-900 truncate flex items-center gap-2">
                         {user?.fullName || user?.username}
+                        <VerificationBadge verified={user?.verified} />
                       </p>
                       <p className="text-xs text-brand-gray-500 truncate">
                         {user?.email}
@@ -278,8 +281,9 @@ const Navbar = () => {
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <p className="text-sm font-bold text-brand-teal-900 truncate">
+                      <p className="text-sm font-bold text-brand-teal-900 truncate flex items-center gap-2">
                         {user?.fullName || user?.username}
+                        <VerificationBadge verified={user?.verified} />
                       </p>
                       <p className="text-xs text-brand-gray-500 truncate">
                         {user?.email}

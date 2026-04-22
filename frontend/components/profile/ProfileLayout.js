@@ -16,6 +16,7 @@ import {
   MoreVertical,
 } from "lucide-react";
 import { getMe } from "@/lib/strapi";
+import VerificationBadge from "@/components/shared/VerificationBadge";
 
 const TABS = [
   { id: "details", label: "tabs.details", href: "/profile" },
@@ -99,8 +100,9 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                       )}
                     </Avatar>
                     <div>
-                      <h2 className="text-[15px] font-bold text-brand-gray-900 leading-tight">
+                      <h2 className="text-[15px] font-bold text-brand-gray-900 leading-tight flex items-center gap-2">
                         {user?.fullName || user?.username}
+                        <VerificationBadge verified={user?.verified} />
                       </h2>
                       <p className="text-xs text-brand-gray-500 mt-0.5">
                         {user?.roleType

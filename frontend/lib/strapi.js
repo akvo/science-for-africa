@@ -351,6 +351,37 @@ export async function postChatMessage(callDocumentId, text) {
 }
 
 /**
+ * Fetch current user's community memberships (paginated)
+ */
+export async function fetchMyCommunityMemberships(page = 1, pageSize = 6) {
+  try {
+    const response = await fetchFromStrapi(
+      `/community-memberships?populate=community&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching memberships:", error);
+    return null;
+  }
+}
+
+/**
+ * Leave a community
+ */
+export async function leaveCommunity(communityId) {
+  try {
+    // communityId can be the id or documentId
+    const response = await apiClient.delete(
+      `/communities/${communityId}/leave`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error leaving community:", error);
+    return error;
+  }
+}
+
+/**
  * Update authenticated user profile
  */
 export async function updateUserProfile(userData) {
@@ -362,5 +393,19 @@ export async function updateUserProfile(userData) {
   } catch (error) {
     console.error("Error updating profile:", error);
     return error;
+  }
+}
+/**
+ * Fetch current user's collaboration invites (paginated)
+ */
+export async function fetchMyCollaborations(page = 1, pageSize = 6) {
+  try {
+    const response = await fetchFromStrapi(
+      `/collaboration-invites?filters[inviteStatus]=Accepted&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching collaborations:", error);
+    return null;
   }
 }

@@ -11,6 +11,66 @@ module.exports = createCoreController(
      * caller is authenticated and the invite has no linked user yet, the
      * current user is attached as `invitedUser`.
      */
+    async find(ctx) {
+      const user = ctx.state.user;
+      if (!user) {
+        return ctx.unauthorized();
+      }
+
+      try {
+        const { pagination, filters } = ctx.query;
+        const page = parseInt(pagination?.page) || 1;
+        const pageSize = parseInt(pagination?.pageSize) || 6;
+        const limit = pageSize;
+        const start = (page - 1) * pageSize;
+
+        const [data, total] = await Promise.all([
+          strapi
+            .documents("api::collaboration-invite.collaboration-invite")
+            .findMany({
+              filters: {
+                ...(filters || {}),
+                invitedUser: { id: user.id },
+              },
+              populate: {
+                collaborationCall: true,
+              },
+              status: "published",
+              limit,
+              start,
+            }),
+          strapi
+            .documents("api::collaboration-invite.collaboration-invite")
+            .count({
+              filters: {
+                ...(filters || {}),
+                invitedUser: { id: user.id },
+              },
+              status: "published",
+            }),
+        ]);
+
+        const pageCount = Math.ceil(total / pageSize);
+
+        return {
+          data,
+          meta: {
+            pagination: {
+              page,
+              pageSize,
+              pageCount,
+              total,
+            },
+          },
+        };
+      } catch (err) {
+        strapi.log.error(
+          `[DEBUG] collaboration-invite find error: ${err.message}`,
+        );
+        return ctx.badRequest(err.message);
+      }
+    },
+
     async accept(ctx) {
       const { id } = ctx.params;
 

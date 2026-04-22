@@ -21,6 +21,16 @@ Please note that this document outlines parts of the solution beyond the MVP del
 | Sonner | 2 | Toast notifications |
 | Jest + React Testing Library | 30 / - | Unit and integration testing |
 
+#### 1.1.1 Shared Components
+
+To maintain DRY principles and UI consistency, common patterns are extracted into `@/components/shared/`:
+
+| Component | Purpose |
+|---|---|
+| `LoadingState` | Centered spinner with optional message for tab/page initialization. |
+| `EmptyState` | Standardized "No results" view with icon, title, description, and CTA button. |
+
+
 ### 1.2 Backend
 
 | Technology | Version | Purpose |

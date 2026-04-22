@@ -71,5 +71,28 @@
     "education": "Education",
     "communities": "Communities",
     "see_all": "See all"
+  },
+  "communities": {
+    "description": "Manage your community memberships and explore new ones.",
+    "joined": "Joined",
+    "leave_confirm": "Are you sure you want to leave {{name}}?",
+    "leave_success": "You have left {{name}} successfully.",
+    "leave_error": "Failed to leave community. Please try again.",
+    "empty_title": "You don't have any communities yet",
+    "empty_description": "Join communities to connect with other researchers and participate in discussions.",
+    "explore": "Explore communities",
+    "no_description": "No description available."
+  },
+  "collaboration": {
+    "title": "My Collaborations",
+    "description": "Track your active and completed collaboration projects.",
+    "status_active": "Active",
+    "status_completed": "Completed",
+    "valid_till": "Valid till:",
+    "ended": "Ended:",
+    "view_community": "View community",
+    "empty_title": "You don't have any collaborations yet",
+    "empty_desc": "Start joining communities and responding to calls to begin collaborating.",
+    "explore_calls": "Explore collaboration calls"
   }
 }

@@ -82,5 +82,17 @@
     "empty_description": "Join communities to connect with other researchers and participate in discussions.",
     "explore": "Explore communities",
     "no_description": "No description available."
+  },
+  "collaboration": {
+    "title": "My Collaborations",
+    "description": "Track your active and completed collaboration projects.",
+    "status_active": "Active",
+    "status_completed": "Completed",
+    "valid_till": "Valid till:",
+    "ended": "Ended:",
+    "view_community": "View community",
+    "empty_title": "You don't have any collaborations yet",
+    "empty_desc": "Start joining communities and responding to calls to begin collaborating.",
+    "explore_calls": "Explore calls"
   }
 }

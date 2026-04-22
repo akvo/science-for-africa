@@ -392,3 +392,17 @@ export async function updateUserProfile(userData) {
     return error;
   }
 }
+/**
+ * Fetch current user's collaboration invites (paginated)
+ */
+export async function fetchMyCollaborations(page = 1, pageSize = 6) {
+  try {
+    const response = await fetchFromStrapi(
+      `/collaboration-invites?filters[inviteStatus]=Accepted&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching collaborations:", error);
+    return null;
+  }
+}

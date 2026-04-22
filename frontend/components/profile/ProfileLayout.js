@@ -84,7 +84,7 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
               {/* Identity Header */}
               <div className="py-6 px-4 border-b border-brand-gray-200">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-start gap-3">
                     <Avatar className="size-12 border border-brand-gray-100 relative overflow-hidden bg-brand-teal-50">
                       {user?.profilePhoto?.url ? (
                         <Image
@@ -102,13 +102,15 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                     <div>
                       <h2 className="text-[15px] font-bold text-brand-gray-900 leading-tight flex items-center gap-2">
                         {user?.fullName || user?.username}
-                        <VerificationBadge verified={user?.verified} />
                       </h2>
                       <p className="text-xs text-brand-gray-500 mt-0.5">
                         {user?.roleType
                           ? t(`profile:roles.${user.roleType}`)
                           : t("profile:roles.Researcher")}
                       </p>
+                      <div className="mt-2">
+                        <VerificationBadge verified={user?.verified} />
+                      </div>
                     </div>
                   </div>
                   <Button

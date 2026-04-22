@@ -283,7 +283,6 @@ const Navbar = () => {
                     <div className="flex flex-col">
                       <p className="text-sm font-bold text-brand-teal-900 truncate flex items-center gap-2">
                         {user?.fullName || user?.username}
-                        <VerificationBadge verified={user?.verified} />
                       </p>
                       <p className="text-xs text-brand-gray-500 truncate">
                         {user?.email}

@@ -83,14 +83,14 @@ graph TD
 - [x] **Validation**: Real-time "characters left" counter for bio; file type/size validation for images.
 
 #### Community Oversight
-- [ ] **Communities Tab**: Displays a grid of joined communities and sub-communities.
-- [ ] **Community Actions**: Ability to "View" a community or "Leave" it.
-- [ ] **Badges**: Show "Joined" status badges where appropriate.
+- [x] **Communities Tab**: Displays a grid of joined communities and sub-communities.
+- [x] **Community Actions**: Ability to "View" a community or "Leave" it.
+- [x] **Badges**: Show "Joined" status badges where appropriate.
 
 #### Collaboration Tracking
-- [ ] **Collaboration Tab**: Monitor involvement in active and completed collaboration spaces.
-- [ ] **Project Details**: Display project objectives and relevant tags.
-- [ ] **Status Badges**: Clear "Active" (green) or "Completed" (red) indicators.
+- [x] **Collaboration Tab**: Monitor involvement in active and completed collaboration spaces.
+- [x] **Project Details**: Display project objectives and relevant tags.
+- [x] **Status Badges**: Clear "Active" (green) or "Completed" (red) indicators.
 
 #### Resource & Activity
 - [ ] **Resources Tab**: Access and download technical documents or reports saved or associated with the profile.
@@ -127,10 +127,10 @@ The following features were identified in the initial discovery but are not part
 
 ### Phase 2: Core Tabs (MVP)
 - [x] **Details Tab**: Implement View/Edit flows for identity management.
-- [ ] **Communities Tab**: Implement grid view, sub-community support, and "Leave" logic.
-- [ ] **Collaboration Tab**: Implement tracking for active/completed projects.
+- [x] **Communities Tab**: Implement grid view, sub-community support, and "Leave" logic.
+- [x] **Collaboration Tab**: Implement tracking for active/completed projects.
 - [ ] **Resources Tab**: Implement document access and download functionality.
-- [ ] **Empty States**: Implement for all tabs.
+- [x] **Empty States**: Implement for all implemented tabs.
 
 ---
 

@@ -29,6 +29,7 @@ To maintain DRY principles and UI consistency, common patterns are extracted int
 |---|---|
 | `LoadingState` | Centered spinner with optional message for tab/page initialization. |
 | `EmptyState` | Standardized "No results" view with icon, title, description, and CTA button. |
+| `VerificationBadge` | Subtle badge showing "Pending" status for unverified users/institutions. |
 
 
 ### 1.2 Backend
@@ -208,6 +209,7 @@ erDiagram
         boolean confirmed
         boolean blocked
         boolean onboardingComplete
+        boolean verified
         json interests
         string otpCode
         datetime otpExpiration

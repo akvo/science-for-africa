@@ -1,15 +1,18 @@
 import React from "react";
 import { Clock } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const VerificationBadge = ({ verified, type = "user", className }) => {
+  const { t } = useTranslation("common");
+
   if (verified) return null;
 
   const tooltipText =
     type === "user"
-      ? "pending account details confirmation"
-      : "pending institution details confirmation";
+      ? t("verification.tooltip_user")
+      : t("verification.tooltip_institution");
 
   return (
     <Badge
@@ -22,7 +25,7 @@ const VerificationBadge = ({ verified, type = "user", className }) => {
       title={tooltipText}
     >
       <Clock className="w-3 h-3" />
-      Pending
+      {t("verification.pending")}
     </Badge>
   );
 };

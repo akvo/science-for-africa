@@ -71,5 +71,16 @@
     "education": "Education",
     "communities": "Communities",
     "see_all": "See all"
+  },
+  "communities": {
+    "description": "Manage your community memberships and explore new ones.",
+    "joined": "Joined",
+    "leave_confirm": "Are you sure you want to leave {{name}}?",
+    "leave_success": "You have left {{name}} successfully.",
+    "leave_error": "Failed to leave community. Please try again.",
+    "empty_title": "You don't have any communities yet",
+    "empty_description": "Join communities to connect with other researchers and participate in discussions.",
+    "explore": "Explore communities",
+    "no_description": "No description available."
   }
 }

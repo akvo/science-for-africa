@@ -47,7 +47,7 @@ Beyond Strapi's auto-generated CRUD, we will create custom endpoints with hand-w
 
 | Endpoint | Method | Justification |
 |---|---|---|
-| `/api/auth/me` | `GET` | **Custom Extension**: Returns the currently authenticated user with deep population of media, memberships, and collaboration involvement. |
+| `/api/auth/me` | `GET` | **Custom Extension**: Returns the currently authenticated user with deep population. Supports optional `membershipLimit` query parameter for optimized sidebar loading. |
 | `/api/auth/me` | `PUT` | **Custom Extension**: Profile update with whitelisting and character limit validation for `biography`. |
 | `/api/auth/verify-otp` | `POST` | **Custom Extension**: Verifies email using a 6-digit number. Confirms user and returns JWT. |
 | `/api/auth/resend-otp` | `POST` | **Custom Extension**: Enforced 60s cooldown and 3/hr limit. Generates new code and sends dual-path email (Link + Code). |
@@ -198,6 +198,7 @@ erDiagram
         boolean confirmed
         boolean blocked
         boolean onboardingComplete
+        json interests
         string otpCode
         datetime otpExpiration
         datetime lastOtpSentAt

@@ -241,6 +241,39 @@ const COMMUNITIES = [
     ],
   },
 ];
+ 
+const COLLABORATION_CALLS = [
+  {
+    title: "Bio-Diversity Research Project",
+    description:
+      "Join our cross-border research team to study biodiversity patterns across East Africa.",
+    startDate: "2024-01-01T00:00:00.000Z",
+    endDate: "2024-12-31T23:59:59.000Z",
+    status: "Active",
+    topics: ["Biodiversity", "Ecology", "East Africa"],
+    communityName: "Community of Researchers",
+  },
+  {
+    title: "Climate Change Impact Study",
+    description:
+      "A collaborative study on the socioeconomic impacts of climate change on small-scale farmers.",
+    startDate: "2024-03-01T00:00:00.000Z",
+    endDate: "2025-02-28T23:59:59.000Z",
+    status: "Active",
+    topics: ["Climate Change", "Agriculture", "Socioeconomic"],
+    communityName: "Community of Innovators",
+  },
+  {
+    title: "Global Health Initiative",
+    description:
+      "Past collaboration focusing on vaccine distribution strategies in sub-Saharan Africa.",
+    startDate: "2023-01-01T00:00:00.000Z",
+    endDate: "2023-12-31T23:59:59.000Z",
+    status: "Completed",
+    topics: ["Public Health", "Vaccines", "Africa"],
+    communityName: "Health and Wellness",
+  },
+];
 
 /**
  * Helper to synchronize French translations for a collection
@@ -436,6 +469,49 @@ const seed = async (strapi) => {
         }
       }
     }
+  }
+ 
+  // 5. Seed Collaboration Calls and Invites (Development only)
+  const collabCallCount = await strapi.db
+    .query("api::collaboration-call.collaboration-call")
+    .count();
+ 
+  if (collabCallCount === 0) {
+    strapi.log.info("Seeding Collaboration Calls and Invites...");
+    const createdCalls = [];
+ 
+    for (const data of COLLABORATION_CALLS) {
+      const call = await strapi.db
+        .query("api::collaboration-call.collaboration-call")
+        .create({
+          data: {
+            ...data,
+            createdByUser: users[0]?.id, // Default to first user as creator
+          },
+        });
+      createdCalls.push(call);
+    }
+ 
+    // Create Accepted invites for all users for these calls
+    for (const user of users) {
+      for (const call of createdCalls) {
+        await strapi.db
+          .query("api::collaboration-invite.collaboration-invite")
+          .create({
+            data: {
+              invitedUser: user.id,
+              collaborationCall: call.id,
+              email: user.email,
+              inviteStatus: "Accepted",
+              role: "Collaborator",
+              invitedAt: new Date(),
+            },
+          });
+      }
+    }
+    strapi.log.info(
+      `Seeded ${COLLABORATION_CALLS.length} Collaboration Calls and invites for ${users.length} users.`,
+    );
   }
 
   // 3b. Synchronize French Translations for critical collections

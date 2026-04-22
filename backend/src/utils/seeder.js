@@ -241,7 +241,7 @@ const COMMUNITIES = [
     ],
   },
 ];
- 
+
 const COLLABORATION_CALLS = [
   {
     title: "Bio-Diversity Research Project",
@@ -470,18 +470,19 @@ const seed = async (strapi) => {
       }
     }
   }
- 
+
   // 5. Seed Collaboration Calls and Invites (Development only)
-  const collabCallCount = await strapi.db
-    .query("api::collaboration-call.collaboration-call")
-    .count();
+  strapi.log.info("Ensuring collaboration calls and invites exist...");
  
-  if (collabCallCount === 0) {
-    strapi.log.info("Seeding Collaboration Calls and Invites...");
-    const createdCalls = [];
+  const allCalls = [];
+  for (const data of COLLABORATION_CALLS) {
+    let call = await strapi.db
+      .query("api::collaboration-call.collaboration-call")
+      .findOne({ where: { title: data.title } });
  
-    for (const data of COLLABORATION_CALLS) {
-      const call = await strapi.db
+    if (!call) {
+      strapi.log.info(`Creating collaboration call: ${data.title}`);
+      call = await strapi.db
         .query("api::collaboration-call.collaboration-call")
         .create({
           data: {
@@ -489,12 +490,24 @@ const seed = async (strapi) => {
             createdByUser: users[0]?.id, // Default to first user as creator
           },
         });
-      createdCalls.push(call);
     }
+    allCalls.push(call);
+  }
  
-    // Create Accepted invites for all users for these calls
-    for (const user of users) {
-      for (const call of createdCalls) {
+  // Ensure every user has an invite for every call
+  let inviteCreatedCount = 0;
+  for (const user of users) {
+    for (const call of allCalls) {
+      const inviteCount = await strapi.db
+        .query("api::collaboration-invite.collaboration-invite")
+        .count({
+          where: {
+            invitedUser: user.id,
+            collaborationCall: call.id,
+          },
+        });
+ 
+      if (inviteCount === 0) {
         await strapi.db
           .query("api::collaboration-invite.collaboration-invite")
           .create({
@@ -507,10 +520,14 @@ const seed = async (strapi) => {
               invitedAt: new Date(),
             },
           });
+        inviteCreatedCount++;
       }
     }
+  }
+ 
+  if (inviteCreatedCount > 0) {
     strapi.log.info(
-      `Seeded ${COLLABORATION_CALLS.length} Collaboration Calls and invites for ${users.length} users.`,
+      `Created ${inviteCreatedCount} new collaboration invites for ${users.length} users.`,
     );
   }
 

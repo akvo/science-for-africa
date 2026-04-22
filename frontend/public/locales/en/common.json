@@ -16,14 +16,20 @@
     "publish": "Publish",
     "back": "Back"
   },
-  "common": {
-    "loading": "Loading...",
-    "back": "Back"
-  },
   "seo": {
     "description": "Advancing Science for Africa's Future. Join the community of scientists, researchers, and innovators.",
     "home_title": "Design System | Style Guide",
     "onboarding_title": "Complete Your Profile",
-    "community_title": "Community"
+    "community_title": "Community",
+    "profile_title": "Professional Profile | Science for Africa",
+    "profile_description": "Manage your professional identity, communities, and collaborations."
+  },
+  "common": {
+    "loading": "Loading...",
+    "back": "Back",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "not_provided": "Not provided"
   }
 }

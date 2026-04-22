@@ -60,6 +60,21 @@ export async function postToStrapi(endpoint, data, wrapInData = true) {
 }
 
 /**
+ * Upload a file to Strapi
+ */
+export async function uploadFile(file) {
+  try {
+    const formData = new FormData();
+    formData.append("files", file);
+    const response = await apiClient.post("/upload", formData);
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading file to Strapi:", error);
+    return null;
+  }
+}
+
+/**
  * Register a new user
  */
 export async function registerUser(userData) {
@@ -71,6 +86,22 @@ export async function registerUser(userData) {
  */
 export async function loginUser(credentials) {
   return postToStrapi("/auth/local", credentials, false);
+}
+
+/**
+ * Get current user profile with population
+ */
+export async function getMe(membershipLimit = 4) {
+  try {
+    // Call custom auth endpoint which supports dynamic population limits
+    const response = await apiClient.get(
+      `/auth/me${membershipLimit ? `?membershipLimit=${membershipLimit}` : ""}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+    return null;
+  }
 }
 
 /**
@@ -156,9 +187,14 @@ export function transformProfileUpdatePayload(userData) {
 
   if (data.affiliationInstitution) {
     if (data.affiliationInstitution.id) {
-      data.institution = data.affiliationInstitution.id;
+      data.institution = Number(data.affiliationInstitution.id);
+      delete data.institutionName;
     } else if (data.affiliationInstitution.name) {
       data.institutionName = data.affiliationInstitution.name;
+      delete data.institution;
+    } else {
+      delete data.institution;
+      delete data.institutionName;
     }
     delete data.affiliationInstitution;
   }
@@ -166,6 +202,11 @@ export function transformProfileUpdatePayload(userData) {
   if (data.educationInstitution && data.educationInstitution.name) {
     data.educationInstitutionName = data.educationInstitution.name;
     delete data.educationInstitution;
+  }
+
+  if (data.language) {
+    data.languagePreferences = data.language;
+    delete data.language;
   }
 
   if (data.userType === "institution") {
@@ -177,7 +218,15 @@ export function transformProfileUpdatePayload(userData) {
   }
 
   Object.keys(data).forEach((key) => {
-    if (data[key] === "") {
+    const identityFields = [
+      "fullName",
+      "username",
+      "email",
+      "firstName",
+      "lastName",
+      "roleType",
+    ];
+    if (data[key] === "" && !identityFields.includes(key)) {
       delete data[key];
     }
   });

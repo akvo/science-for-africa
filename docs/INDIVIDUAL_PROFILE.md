@@ -48,12 +48,19 @@ graph TD
 
 ### Database Schema / Data Structure
 - **User Entity**: Extension of current schema to include:
-    - `displayName` (string)
+    - `fullName` (string)
     - `profilePhoto` (Media Relation)
     - `pageCover` (Media Relation)
     - `languagePreferences` (Enum: en, fr)
     - `biography` (Text, 275 char limit)
-    - `full_name` (Auto-synced from first/last name)
+    - `roleType` (Enum: professional roles)
+    - `careerStage` (Enum: career stages)
+    - `educationLevel` (string)
+    - `educationInstitutionName` (string)
+    - `institutionName` (string)
+    - `orcidId` (string)
+    - `interests` (Component: user.interest, repeatable)
+    - `onboardingComplete` (boolean)
     - `memberships` (One-to-Many to `CommunityMembership`)
     - `collaborationInvites` (One-to-Many to `CollaborationInvite`)
 - **Community**: (Branch 31 Merged)
@@ -70,10 +77,10 @@ graph TD
 
 ### User Acceptance Criteria (UAC Baseline)
 #### Core Profile
-- [ ] **Profile Customization**: Within "Details" tab, user can update display name, professional bio (character limited), profile photo, and page cover.
-- [ ] **View Details**: See Full Name, Email, Role, Education, Institutional Organization, optional description, language preferences, and unique ORCID identifier.
-- [ ] **Edit Mode**: "Edit" button transforms fields into inputs with "Save" and "Cancel" buttons.
-- [ ] **Validation**: Real-time "characters left" counter for bio; file type/size validation for images.
+- [x] **Profile Customization**: Within "Details" tab, user can update display name, professional bio (character limited), profile photo, and page cover.
+- [x] **View Details**: See Full Name, Email, Role, Education, Institutional Organization, optional description, language preferences, and unique ORCID identifier.
+- [x] **Edit Mode**: "Edit" button transforms fields into inputs with "Save" and "Cancel" buttons.
+- [x] **Validation**: Real-time "characters left" counter for bio; file type/size validation for images.
 
 #### Community Oversight
 - [ ] **Communities Tab**: Displays a grid of joined communities and sub-communities.
@@ -104,22 +111,22 @@ The following features were identified in the initial discovery but are not part
 - **Notification Preferences**: Granular control over platform alerts.
 
 ### Technical Acceptance Criteria (Tech AC)
-- [ ] **API Security**: Endpoints restricted to authenticated owner of the profile.
+- [x] **API Security**: Endpoints restricted to authenticated owner of the profile.
 - [ ] **Optimistic UI**: Joined/Leave/Saved status updates immediately on frontend.
 - [ ] **Image Optimization**: Profile photos and covers are optimized/resized on upload.
-- [ ] **I18n**: Support for multi-language display (English/French).
+- [x] **I18n**: Support for multi-language display (English/French) via dedicated `profile` namespace.
 
 ---
 
 ## 🔧 Implementation Details
 
 ### Phase 1: Foundation & Data Layer
-- [ ] Update Strapi User Schema with missing fields (`displayName`, `profilePhoto`, `pageCover`, etc.).
-- [ ] Implement/Harden `/api/auth/me` PUT endpoint.
-- [ ] Create basic Profile Layout in Next.js with Tab navigation.
+- [x] Update Strapi User Schema with missing fields (`displayName`, `profilePhoto`, `pageCover`, etc.).
+- [x] Implement/Harden `/api/auth/me` PUT endpoint.
+- [x] Create basic Profile Layout in Next.js with Tab navigation.
 
 ### Phase 2: Core Tabs (MVP)
-- [ ] **Details Tab**: Implement View/Edit flows for identity management.
+- [x] **Details Tab**: Implement View/Edit flows for identity management.
 - [ ] **Communities Tab**: Implement grid view, sub-community support, and "Leave" logic.
 - [ ] **Collaboration Tab**: Implement tracking for active/completed projects.
 - [ ] **Resources Tab**: Implement document access and download functionality.

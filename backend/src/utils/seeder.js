@@ -420,6 +420,7 @@ const seed = async (strapi) => {
 
   // 5. Collaboration Call and Profile permissions (Authenticated only)
   const collaborationActions = [
+    "api::auth.profile.getMe",
     "api::auth.profile.update",
     "api::auth.profile.findUsers",
     "api::community-membership.community-membership.find",

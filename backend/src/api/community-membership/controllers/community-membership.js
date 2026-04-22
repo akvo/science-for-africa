@@ -94,8 +94,8 @@ module.exports = createCoreController(
           .findMany({
             filters: {
               user: { id: user.id },
-              community: isNaN(id) 
-                ? { documentId: id } 
+              community: isNaN(id)
+                ? { documentId: id }
                 : { $or: [{ documentId: id }, { id: parseInt(id) }] },
             },
             status: "published",

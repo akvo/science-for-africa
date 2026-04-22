@@ -127,4 +127,37 @@ describe("Collaboration Invite API Isolation & Population", () => {
       total: 2,
     });
   });
+
+  it("should return 403 for unauthorized requests", async () => {
+    const response = await request(strapi.server.httpServer).get(
+      "/api/collaboration-invites",
+    );
+    expect(response.status).toBe(403);
+  });
+
+  it("should return an empty array for a user with no collaborations", async () => {
+    const roles = await strapi
+      .query("plugin::users-permissions.role")
+      .findMany();
+    const authRole = roles.find((r) => r.type === "authenticated");
+
+    const user3 = await createMockUser({
+      username: "collab_user3",
+      email: "collab3@example.com",
+    });
+
+    await strapi.db.query("plugin::users-permissions.user").update({
+      where: { id: user3.id },
+      data: { role: authRole.id },
+    });
+
+    const jwt3 = generateJwtToken(user3);
+
+    const response = await request(strapi.server.httpServer)
+      .get("/api/collaboration-invites")
+      .set("Authorization", `Bearer ${jwt3}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.data).toHaveLength(0);
+  });
 });

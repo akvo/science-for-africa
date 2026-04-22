@@ -10,7 +10,7 @@ import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import { format } from "date-fns";
 
-const CollaborationCard = ({ invite }) => {
+const CollaborationCard = ({ invite, index }) => {
   const { t } = useTranslation(["profile", "common"]);
   const call = invite.collaborationCall;
 
@@ -20,8 +20,20 @@ const CollaborationCard = ({ invite }) => {
   const endDate = call.endDate ? new Date(call.endDate) : null;
   const formattedEndDate = endDate ? format(endDate, "dd/MM/yy") : "--/--/--";
 
+  // Grid border logic to avoid phantom borders and double lines
+  const isFirstRow = index < 2;
+  const isFirstCol = index % 2 === 0;
+
   return (
-    <div className="bg-white border border-brand-gray-100 -ml-px -mt-px p-6 flex flex-col gap-8 hover:shadow-sm hover:relative hover:z-10 transition-shadow relative group">
+    <div
+      className={`bg-white p-6 flex flex-col gap-8 hover:shadow-md transition-shadow relative group border-b border-r border-brand-gray-100 
+      ${isFirstRow ? "xl:border-t" : ""} 
+      ${isFirstCol ? "xl:border-l" : ""} 
+      ${index === 0 ? "border-t border-l" : ""} 
+      ${index === 1 ? "max-xl:border-l" : ""}
+      ${index % 2 !== 0 ? "max-xl:border-t" : ""}
+      `}
+    >
       {/* Top Section: Status and View Button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center overflow-hidden rounded-full border border-brand-gray-100 bg-brand-gray-50">
@@ -202,9 +214,9 @@ const CollaborationTab = () => {
 
   return (
     <div className="flex flex-col space-y-8 pb-10">
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-0 border-t border-l border-brand-gray-100 overflow-hidden shadow-sm">
-        {invites.map((invite) => (
-          <CollaborationCard key={invite.id} invite={invite} />
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-0 overflow-hidden">
+        {invites.map((invite, idx) => (
+          <CollaborationCard key={invite.id} invite={invite} index={idx} />
         ))}
       </div>
 

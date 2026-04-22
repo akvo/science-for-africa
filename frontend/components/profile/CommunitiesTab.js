@@ -11,7 +11,7 @@ import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import ConfirmationModal from "@/components/shared/ConfirmationModal";
 
-const CommunityCard = ({ membership, onLeave }) => {
+const CommunityCard = ({ membership, onLeave, index }) => {
   const { t } = useTranslation(["profile", "common"]);
   const community = membership.community;
   const [isLeaving, setIsLeaving] = useState(false);
@@ -20,6 +20,12 @@ const CommunityCard = ({ membership, onLeave }) => {
   if (!community) {
     return null;
   }
+
+  // Grid border logic (3 columns on XL, 2 columns on MD, 1 on SM)
+  const isFirstRowXL = index < 3;
+  const isFirstColXL = index % 3 === 0;
+  const isFirstRowMD = index < 2;
+  const isFirstColMD = index % 2 === 0;
 
   const handleLeave = async () => {
     setIsLeaving(true);
@@ -67,7 +73,16 @@ const CommunityCard = ({ membership, onLeave }) => {
         isLoading={isLeaving}
         variant="danger"
       />
-      <div className="bg-white border border-brand-gray-100 -ml-px -mt-px p-4 flex flex-col h-full hover:shadow-sm hover:relative hover:z-20 transition-shadow relative group">
+      <div
+        className={`bg-white p-4 flex flex-col h-full hover:shadow-md transition-shadow relative group border-b border-r border-brand-gray-100
+        ${isFirstRowXL ? "xl:border-t" : ""}
+        ${isFirstColXL ? "xl:border-l" : ""}
+        ${isFirstRowMD ? "md:max-xl:border-t" : ""}
+        ${isFirstColMD ? "md:max-xl:border-l" : ""}
+        ${index === 0 ? "max-md:border-t max-md:border-l" : ""}
+        ${index > 0 ? "max-md:border-t max-md:border-l" : ""}
+      `}
+      >
         {/* Whole Card Link */}
         <Link
           href={`/community/${community.slug}`}
@@ -218,12 +233,13 @@ const CommunitiesTab = () => {
 
   return (
     <div className="flex flex-col space-y-8 pb-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0 border-t border-l border-brand-gray-100 overflow-hidden shadow-sm">
-        {memberships.map((membership) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0 overflow-hidden">
+        {memberships.map((membership, idx) => (
           <CommunityCard
             key={membership.id}
             membership={membership}
             onLeave={removeMembershipFromList}
+            index={idx}
           />
         ))}
       </div>

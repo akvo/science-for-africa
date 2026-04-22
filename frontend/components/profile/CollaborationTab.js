@@ -21,7 +21,7 @@ const CollaborationCard = ({ invite }) => {
   const formattedEndDate = endDate ? format(endDate, "dd/MM/yy") : "--/--/--";
 
   return (
-    <div className="bg-white p-6 flex flex-col gap-8 hover:shadow-sm transition-shadow relative group">
+    <div className="bg-white border border-brand-gray-100 -ml-px -mt-px p-6 flex flex-col gap-8 hover:shadow-sm hover:relative hover:z-10 transition-shadow relative group">
       {/* Top Section: Status and View Button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center overflow-hidden rounded-full border border-brand-gray-100 bg-brand-gray-50">
@@ -202,14 +202,10 @@ const CollaborationTab = () => {
 
   return (
     <div className="flex flex-col space-y-8 pb-10">
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-px bg-brand-gray-100 border border-brand-gray-100 overflow-hidden shadow-sm">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-0 border-t border-l border-brand-gray-100 overflow-hidden shadow-sm">
         {invites.map((invite) => (
           <CollaborationCard key={invite.id} invite={invite} />
         ))}
-        {/* Fill empty slot to hide gray background if odd number of items */}
-        {invites.length % 2 !== 0 && (
-          <div className="hidden xl:block bg-white" />
-        )}
       </div>
 
       {hasMore && (

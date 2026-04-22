@@ -67,7 +67,7 @@ const CommunityCard = ({ membership, onLeave }) => {
         isLoading={isLeaving}
         variant="danger"
       />
-      <div className="bg-white p-4 flex flex-col h-full hover:shadow-sm transition-shadow relative group">
+      <div className="bg-white border border-brand-gray-100 -ml-px -mt-px p-4 flex flex-col h-full hover:shadow-sm hover:relative hover:z-20 transition-shadow relative group">
         {/* Whole Card Link */}
         <Link
           href={`/community/${community.slug}`}
@@ -218,7 +218,7 @@ const CommunitiesTab = () => {
 
   return (
     <div className="flex flex-col space-y-8 pb-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-brand-gray-100 border border-brand-gray-100 overflow-hidden shadow-sm">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0 border-t border-l border-brand-gray-100 overflow-hidden shadow-sm">
         {memberships.map((membership) => (
           <CommunityCard
             key={membership.id}
@@ -226,15 +226,6 @@ const CommunitiesTab = () => {
             onLeave={removeMembershipFromList}
           />
         ))}
-        {/* Fill empty slots to hide gray background */}
-        {memberships.length % 3 !== 0 && (
-          <>
-            <div className="hidden xl:block bg-white" />
-            {memberships.length % 3 === 1 && (
-              <div className="hidden xl:block bg-white" />
-            )}
-          </>
-        )}
       </div>
 
       {hasMore && (

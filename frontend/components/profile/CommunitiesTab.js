@@ -67,8 +67,15 @@ const CommunityCard = ({ membership, onLeave }) => {
         isLoading={isLeaving}
         variant="danger"
       />
-      <div className="bg-white p-4 flex flex-col h-full hover:shadow-sm transition-shadow">
-        <div className="flex items-start justify-between mb-4">
+      <div className="bg-white p-4 flex flex-col h-full hover:shadow-sm transition-shadow relative group">
+        {/* Whole Card Link */}
+        <Link
+          href={`/community/${community.slug}`}
+          className="absolute inset-0 z-0"
+          aria-label={community.name}
+        />
+
+        <div className="flex items-start justify-between mb-4 relative z-10 pointer-events-none">
           <div className="flex items-start gap-4">
             <Avatar className="size-12 border border-brand-gray-100 bg-brand-teal-50">
               {community.avatarUrl ? (
@@ -84,7 +91,7 @@ const CommunityCard = ({ membership, onLeave }) => {
               )}
             </Avatar>
             <div className="min-w-0">
-              <h3 className="text-[15px] font-bold text-brand-gray-900 leading-tight">
+              <h3 className="text-[15px] font-bold text-brand-gray-900 leading-tight group-hover:text-brand-teal-600 transition-colors">
                 {community.name}
               </h3>
               <p className="text-sm text-brand-gray-500 mt-0.5">
@@ -93,21 +100,27 @@ const CommunityCard = ({ membership, onLeave }) => {
             </div>
           </div>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowConfirmModal(true)}
-            disabled={isLeaving}
-            className="rounded-full bg-[#E5E7EB] border-transparent text-[#1F2937] hover:bg-gray-300 font-semibold text-sm px-4 h-9"
-          >
-            {isLeaving ? (
-              <Loader2 className="size-3 animate-spin mr-1" />
-            ) : null}
-            {t("communities.joined", { defaultValue: "Joined" })}
-          </Button>
+          <div className="pointer-events-auto">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowConfirmModal(true);
+              }}
+              disabled={isLeaving}
+              className="rounded-full bg-[#E5E7EB] border-transparent text-[#1F2937] hover:bg-gray-300 font-semibold text-sm px-4 h-9"
+            >
+              {isLeaving ? (
+                <Loader2 className="size-3 animate-spin mr-1" />
+              ) : null}
+              {t("communities.joined", { defaultValue: "Joined" })}
+            </Button>
+          </div>
         </div>
 
-        <p className="text-sm text-brand-gray-500 line-clamp-2 leading-relaxed">
+        <p className="text-sm text-brand-gray-500 line-clamp-2 leading-relaxed relative z-10 pointer-events-none">
           {community.description ||
             t("communities.no_description", {
               defaultValue: "No description available.",
@@ -221,7 +234,7 @@ const CommunitiesTab = () => {
             variant="outline"
             onClick={handleLoadMore}
             disabled={isFetchingMore}
-            className="min-w-[140px] rounded-full border-brand-gray-200 text-brand-gray-600 hover:bg-brand-gray-50 font-bold"
+            className="min-w-35 rounded-full border-brand-gray-200 text-brand-gray-600 hover:bg-brand-gray-50 font-bold"
           >
             {isFetchingMore ? (
               <>

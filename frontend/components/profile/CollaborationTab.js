@@ -26,10 +26,10 @@ const CollaborationCard = ({ invite, index }) => {
 
   return (
     <div
-      className={`bg-white p-6 flex flex-col gap-8 hover:shadow-md transition-shadow relative group border-b border-r border-brand-gray-100 
-      ${isFirstRow ? "xl:border-t" : ""} 
-      ${isFirstCol ? "xl:border-l" : ""} 
-      ${index === 0 ? "border-t border-l" : ""} 
+      className={`bg-white p-6 flex flex-col gap-8 hover:shadow-md transition-shadow relative group border-b border-r border-brand-gray-100
+      ${isFirstRow ? "xl:border-t" : ""}
+      ${isFirstCol ? "xl:border-l" : ""}
+      ${index === 0 ? "border-t border-l" : ""}
       ${index === 1 ? "max-xl:border-l" : ""}
       ${index % 2 !== 0 ? "max-xl:border-t" : ""}
       `}

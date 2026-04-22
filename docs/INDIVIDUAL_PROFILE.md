@@ -11,8 +11,9 @@ Provide a centralized hub for registered individual users to manage their profes
 ### User Experience
 Users access their profile via the user dropdown in the Navbar. The profile is organized into logical tabs based on the [Figma Design](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa):
 - **Details**: Identity management and core professional info. ([Design](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=130-5796&m=dev), [Edit](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=179-12861&m=dev))
-- **Communities**: Oversight of joined groups. ([Design](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=175-4875&m=dev), [Empty State](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=299-12849&m=dev))
-- **Collaboration**: Tracking of active and completed projects. ([Design](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=696-37828&m=dev), [Empty State](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=179-9917&m=dev))
+- [x] **Communities Tab**: Displays a grid of joined communities and sub-communities with title, description, and subscribers.
+- [x] **Community Actions**: Ability to "Leave" a community with a shadcn-based confirmation modal.
+- [x] **Badges**: Show "Joined" status badges (pills) matching the design spec.
 - **Resources**: Access to saved documents.
 
 ---
@@ -110,8 +111,8 @@ The following features were identified in the initial discovery but are not part
 - **Notification Preferences**: Granular control over platform alerts.
 
 ### Technical Acceptance Criteria (Tech AC)
-- [x] **API Security**: Endpoints restricted to authenticated owner of the profile.
-- [ ] **Optimistic UI**: Joined/Leave/Saved status updates immediately on frontend.
+- [x] **API Security**: Endpoints restricted to authenticated owner of the profile via custom Document Service controllers.
+- [x] **Optimistic UI**: Joined/Leave/Saved status updates immediately on frontend with professional toast feedback.
 - [ ] **Image Optimization**: Profile photos and covers are optimized/resized on upload.
 - [x] **I18n**: Support for multi-language display (English/French) via dedicated `profile` namespace.
 

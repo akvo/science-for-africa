@@ -15,6 +15,10 @@ module.exports = ({ strapi }) => ({
     }
 
     try {
+      const membershipLimit = ctx.query.membershipLimit
+        ? parseInt(ctx.query.membershipLimit)
+        : undefined;
+
       const fullUser = await strapi.entityService.findOne(
         "plugin::users-permissions.user",
         user.id,
@@ -32,6 +36,11 @@ module.exports = ({ strapi }) => ({
           },
         },
       );
+
+      // Apply membership limit if requested to reduce frontend payload size
+      if (membershipLimit && fullUser.memberships) {
+        fullUser.memberships = fullUser.memberships.slice(0, membershipLimit);
+      }
 
       // Manually fetch collaboration invites since programmatic relations can be tricky for population
       const invites = await strapi

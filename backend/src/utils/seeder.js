@@ -389,6 +389,55 @@ const seed = async (strapi) => {
     );
   }
 
+  // 4. Seed memberships for existing users (Development only)
+  const users = await strapi.db
+    .query("plugin::users-permissions.user")
+    .findMany();
+
+  if (users.length > 0) {
+    const allCommunities = await strapi.db
+      .query("api::community.community")
+      .findMany();
+
+    if (allCommunities.length > 0) {
+      strapi.log.info(
+        `Checking community memberships for ${users.length} users...`,
+      );
+      for (const user of users) {
+        const membershipCount = await strapi.db
+          .query("api::community-membership.community-membership")
+          .count({ where: { user: user.id } });
+
+        if (membershipCount === 0) {
+          // Shuffle and pick 1-3 random communities
+          const shuffled = [...allCommunities].sort(() => 0.5 - Math.random());
+          const count = Math.min(
+            Math.floor(Math.random() * 3) + 1,
+            shuffled.length,
+          );
+          const selected = shuffled.slice(0, count);
+
+          strapi.log.info(
+            `Joining ${user.username} to ${selected.length} random communities...`,
+          );
+
+          for (const community of selected) {
+            await strapi.db
+              .query("api::community-membership.community-membership")
+              .create({
+                data: {
+                  user: user.id,
+                  community: community.id,
+                  role: "Member",
+                  joinedAt: new Date(),
+                },
+              });
+          }
+        }
+      }
+    }
+  }
+
   // 3b. Synchronize French Translations for critical collections
   strapi.log.info("Synchronizing French translations...");
   await synchronizeTranslations(strapi, "api::interest.interest");

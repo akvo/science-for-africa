@@ -12,6 +12,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Loader2, UserRound } from "lucide-react";
 import { fetchFromStrapi } from "@/lib/strapi";
+import VerificationBadge from "@/components/shared/VerificationBadge";
 
 export default function StepAssignMentor() {
   const { formData, addMentor, removeMentorById, prevStep, nextStep } =
@@ -52,6 +53,7 @@ export default function StepAssignMentor() {
           user.fullName ||
           `${user.firstName || ""} ${user.lastName || ""}`.trim(),
         position: user.position || user.roleType || "",
+        verified: user.verified,
       });
       setSelectedUserId("");
     }
@@ -90,9 +92,12 @@ export default function StepAssignMentor() {
               ) : (
                 availableUsers.map((user) => (
                   <SelectItem key={user.id} value={String(user.id)}>
-                    {user.fullName ||
-                      `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
-                      user.email}
+                    <div className="flex items-center gap-2">
+                      {user.fullName ||
+                        `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
+                        user.email}
+                      <VerificationBadge verified={user.verified} />
+                    </div>
                   </SelectItem>
                 ))
               )}
@@ -116,6 +121,7 @@ export default function StepAssignMentor() {
                   <span className="text-sm font-semibold text-brand-gray-900 truncate">
                     {mentor.fullName}
                   </span>
+                  <VerificationBadge verified={mentor.verified} />
                   <Badge variant="secondary" size="sm" className="shrink-0">
                     Mentor
                   </Badge>

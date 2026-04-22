@@ -84,6 +84,7 @@ module.exports = ({ strapi }) => ({
             "lastName",
             "position",
             "roleType",
+            "verified",
           ],
           populate: ["institution"],
           pagination: { pageSize: 100 },

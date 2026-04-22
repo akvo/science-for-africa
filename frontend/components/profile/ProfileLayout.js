@@ -7,7 +7,7 @@ import { useAuthStore } from "@/lib/auth-store";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, formatNumber } from "@/lib/utils";
 import {
   MoreHorizontal,
   Briefcase,
@@ -172,25 +172,24 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
               {/* Expertise Tags Section */}
               <div className="p-6 border-b border-brand-gray-200">
                 <div className="flex flex-wrap gap-2">
-                  {(
-                    user?.expertise || [
-                      "STI Policy & Governance",
-                      "Research Funding & Financi",
-                      "Water Security",
-                      "One Health",
-                      "Science Diplomacy",
-                      "Digital Health",
-                      "Sustainable Energy",
-                    ]
-                  ).map((tag) => (
-                    <Badge
-                      key={tag}
-                      variant="outline"
-                      className="rounded-full px-3.5 py-1.5 text-[12px] font-medium text-brand-gray-600 border-brand-gray-300 bg-white"
-                    >
-                      #{tag.replace("#", "")}
-                    </Badge>
-                  ))}
+                  {user?.interests?.length > 0 ? (
+                    user.interests.map((item) => {
+                      const tag = typeof item === "string" ? item : item.name;
+                      return (
+                        <Badge
+                          key={tag}
+                          variant="outline"
+                          className="rounded-full px-3.5 py-1.5 text-[12px] font-medium text-brand-gray-600 border-brand-gray-300 bg-white"
+                        >
+                          #{tag.replace("#", "")}
+                        </Badge>
+                      );
+                    })
+                  ) : (
+                    <p className="text-[13px] text-brand-gray-400 font-medium italic">
+                      {t("profile:details.not_provided")}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -208,26 +207,26 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                   </Link>
                 </div>
                 <div className="divide-y divide-brand-gray-100">
-                  <SidebarCommunity
-                    name="Health and Wellness"
-                    subscribers="150k"
-                    t={t}
-                  />
-                  <SidebarCommunity
-                    name="Travel and Adventure"
-                    subscribers="92k"
-                    t={t}
-                  />
-                  <SidebarCommunity
-                    name="Food and Cooking"
-                    subscribers="330k"
-                    t={t}
-                  />
-                  <SidebarCommunity
-                    name="Finance and Investing"
-                    subscribers="175k"
-                    t={t}
-                  />
+                  {user?.memberships?.length > 0 ? (
+                    user.memberships.map((membership) => (
+                      <SidebarCommunity
+                        key={membership.id}
+                        name={membership.community?.name || "Unknown"}
+                        subscribers={formatNumber(
+                          membership.community?.subscribers || 0,
+                        )}
+                        t={t}
+                      />
+                    ))
+                  ) : (
+                    <div className="py-4 px-1">
+                      <p className="text-[13px] text-brand-gray-400 font-medium italic">
+                        {t("profile:sidebar.no_communities", {
+                          defaultValue: "No communities joined yet.",
+                        })}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

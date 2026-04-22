@@ -91,9 +91,12 @@ export async function loginUser(credentials) {
 /**
  * Get current user profile with population
  */
-export async function getMe() {
+export async function getMe(membershipLimit = 4) {
   try {
-    const response = await apiClient.get("/users/me?populate=*");
+    // Call custom auth endpoint which supports dynamic population limits
+    const response = await apiClient.get(
+      `/auth/me${membershipLimit ? `?membershipLimit=${membershipLimit}` : ""}`,
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching current user:", error);

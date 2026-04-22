@@ -60,6 +60,7 @@ graph TD
     - `educationInstitutionName` (string)
     - `institutionName` (string)
     - `orcidId` (string)
+    - `interests` (Component: user.interest, repeatable)
     - `onboardingComplete` (boolean)
     - `memberships` (One-to-Many to `CommunityMembership`)
     - `collaborationInvites` (One-to-Many to `CollaborationInvite`)

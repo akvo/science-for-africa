@@ -473,13 +473,13 @@ const seed = async (strapi) => {
 
   // 5. Seed Collaboration Calls and Invites (Development only)
   strapi.log.info("Ensuring collaboration calls and invites exist...");
- 
+
   const allCalls = [];
   for (const data of COLLABORATION_CALLS) {
     let call = await strapi.db
       .query("api::collaboration-call.collaboration-call")
       .findOne({ where: { title: data.title } });
- 
+
     if (!call) {
       strapi.log.info(`Creating collaboration call: ${data.title}`);
       call = await strapi.db
@@ -493,7 +493,7 @@ const seed = async (strapi) => {
     }
     allCalls.push(call);
   }
- 
+
   // Ensure every user has an invite for every call
   let inviteCreatedCount = 0;
   for (const user of users) {
@@ -506,7 +506,7 @@ const seed = async (strapi) => {
             collaborationCall: call.id,
           },
         });
- 
+
       if (inviteCount === 0) {
         await strapi.db
           .query("api::collaboration-invite.collaboration-invite")
@@ -524,7 +524,7 @@ const seed = async (strapi) => {
       }
     }
   }
- 
+
   if (inviteCreatedCount > 0) {
     strapi.log.info(
       `Created ${inviteCreatedCount} new collaboration invites for ${users.length} users.`,

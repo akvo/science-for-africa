@@ -6,7 +6,13 @@ module.exports = [
   "strapi::poweredBy",
   "strapi::query",
   "strapi::body",
-  "strapi::session",
+  {
+    name: "strapi::session",
+    config: {
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    },
+  },
   "strapi::favicon",
   "strapi::public",
   "global::documentation-redirect",

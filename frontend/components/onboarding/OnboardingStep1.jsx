@@ -168,7 +168,7 @@ const OnboardingStep1 = () => {
               >
                 <SelectValue placeholder={t("step1.role_placeholder")} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent alignItemWithTrigger={false}>
                 {ROLE_OPTIONS.map((role) => (
                   <SelectItem key={role} value={role} className="text-md">
                     {t(`roles.${role}`)}
@@ -199,7 +199,7 @@ const OnboardingStep1 = () => {
               >
                 <SelectValue placeholder={t("step1.role_placeholder")} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent alignItemWithTrigger={false}>
                 {ROLE_OPTIONS.map((role) => (
                   <SelectItem key={role} value={role} className="text-md">
                     {t(`roles.${role}`)}

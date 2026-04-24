@@ -8,80 +8,8 @@ module.exports = {
    * This gives you an opportunity to extend code.
    */
   register({ strapi }) {
-    // 1. Extend the user content type attributes
-    const userModel = strapi.contentType("plugin::users-permissions.user");
-    if (userModel) {
-      userModel.attributes = {
-        ...userModel.attributes,
-        firstName: { type: "string" },
-        lastName: { type: "string" },
-        fullName: { type: "string" },
-        position: { type: "string" },
-        biography: { type: "text" },
-        interests: {
-          type: "component",
-          repeatable: true,
-          component: "user.interest",
-          max: 5,
-        },
-        educationTopic: { type: "string" },
-        educationLevel: { type: "string" },
-        institution: {
-          type: "relation",
-          relation: "manyToOne",
-          target: "api::institution.institution",
-          inversedBy: "users",
-        },
-        affiliationStatus: {
-          type: "enumeration",
-          enum: ["Pending", "Approved", "Rejected"],
-          default: "Pending",
-        },
-        orcidId: {
-          type: "string",
-          // Moved regex validation to lifecycle to avoid blocking creation
-        },
-        onboardingComplete: {
-          type: "boolean",
-          default: false,
-        },
-        verificationStatus: {
-          type: "enumeration",
-          enum: ["unverified", "verified"],
-          default: "unverified",
-        },
-        socialLinks: {
-          type: "json",
-        },
-        userType: {
-          type: "enumeration",
-          enum: ["individual", "institution"],
-        },
-        roleType: { type: "string" },
-        educationInstitutionName: {
-          type: "string",
-        },
-        institutionName: {
-          type: "string",
-        },
-        otpCode: {
-          type: "string",
-        },
-        otpExpiration: {
-          type: "datetime",
-        },
-        lastOtpSentAt: {
-          type: "datetime",
-        },
-        otpResendCount: {
-          type: "integer",
-          default: 0,
-        },
-        otpResendWindowStart: {
-          type: "datetime",
-        },
-      };
-    }
+    // 1. User content type attributes are now defined in
+    //    src/extensions/users-permissions/content-types/user/schema.json
 
     // 2. Override users-permissions register route and controller
     const usersPermissionsPlugin = strapi.plugin("users-permissions");

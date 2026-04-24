@@ -16,7 +16,7 @@
       "type": "email",
       "required": true
     },
-    "status": {
+    "inviteStatus": {
       "type": "enumeration",
       "enum": ["Pending", "Accepted", "Declined"],
       "default": "Pending",

@@ -120,7 +120,7 @@ const OnboardingStep3 = () => {
             <SelectTrigger className="w-full h-11 px-3.5 py-2.5 border-brand-gray-100 rounded-8 text-md focus:ring-brand-teal-500">
               <SelectValue placeholder={t("step3.level_placeholder")} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent alignItemWithTrigger={false}>
               {EDUCATION_LEVEL_OPTIONS.map((level) => (
                 <SelectItem key={level} value={level} className="text-md">
                   {t(`education_levels.${level}`)}

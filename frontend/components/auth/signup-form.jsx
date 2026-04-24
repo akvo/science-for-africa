@@ -60,7 +60,15 @@ export const SignUpForm = () => {
       }
 
       if (result && (result.jwt || result.user)) {
-        // Success! Redirect to verify email
+        // Success! Initialize cooldown timer for resend
+        const cooldownSeconds = 60;
+        const endTime = Date.now() + cooldownSeconds * 1000;
+        localStorage.setItem(
+          `otp_timer_end_${values.email}`,
+          endTime.toString(),
+        );
+
+        // Redirect to verify email
         router.push(
           `/auth/verify-email?email=${encodeURIComponent(values.email)}`,
         );

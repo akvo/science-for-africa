@@ -21,6 +21,13 @@ export const LoginForm = () => {
   const [error, setError] = useState("");
   const router = useRouter();
 
+  // Handle errors from OAuth redirects or other sources
+  React.useEffect(() => {
+    if (router.query.error) {
+      setError(router.query.error);
+    }
+  }, [router.query.error]);
+
   const loginSchema = z.object({
     email: z.string().email(t("validation.email_invalid")),
     password: z.string().min(1, t("validation.password_required")),

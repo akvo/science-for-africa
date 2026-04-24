@@ -49,12 +49,14 @@ module.exports = ({ env }) => {
     : {};
 
   const getFrontendUrl = () => {
-    return (
+    const url = (
       env("NEXT_PUBLIC_FRONTEND_URL") ||
       env("FRONTEND_URL") ||
       env("PUBLIC_URL") ||
       "http://localhost:3000"
-    );
+    ).replace(/\/$/, ""); // Remove trailing slash if present
+
+    return url;
   };
 
   const frontendUrl = getFrontendUrl();
@@ -111,6 +113,7 @@ module.exports = ({ env }) => {
         },
         advanced: {
           email_confirmation_redirection: frontendUrl + "/login?verified=true",
+          google_redirection: frontendUrl + "/auth/google",
         },
         ratelimit: {
           enabled: false,
@@ -118,9 +121,14 @@ module.exports = ({ env }) => {
         grant: {
           google: {
             enabled: true,
-            clientId: env("GOOGLE_CLIENT_ID"),
-            clientSecret: env("GOOGLE_CLIENT_SECRET"),
+            protocol: "oauth2",
+            key: env("GOOGLE_CLIENT_ID"),
+            secret: env("GOOGLE_CLIENT_SECRET"),
             callback: frontendUrl + "/auth/google",
+            scope: ["email", "profile"],
+            custom_params: {
+              prompt: "consent",
+            },
           },
         },
       },

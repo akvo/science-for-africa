@@ -36,6 +36,11 @@ const MainLayout = ({ children, title, description }) => {
     ) {
       router.push("/onboarding");
     }
+
+    // 3. Guard for Unauthenticated Users accessing Onboarding
+    if (!isAuthenticated && router.pathname === "/onboarding") {
+      router.push("/login");
+    }
   }, [isAuthenticated, user, router.pathname, router]);
 
   // Define routes that use the specialized AuthLayout

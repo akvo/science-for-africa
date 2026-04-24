@@ -34,25 +34,28 @@ This implementation follows the **[Strapi Users & Permissions Provider](https://
 
 ## 📐 Architecture Design
 
-### Data Flow / Logic Flow (SSR Handshake)
+### Data Flow / Logic Flow (Standard Handshake)
 ```mermaid
 sequenceDiagram
     participant User
     participant Browser
-    participant NextServer as Next.js Server (SSR)
     participant Strapi as Strapi (Backend)
+    participant NextServer as Next.js Server (SSR)
     participant Google
 
     User->>Browser: Click "Sign in with Google"
     Browser->>Strapi: GET /api/connect/google?redirect=...
+    Note right of Strapi: redirect param is the frontend landing page
     Strapi->>Google: Redirect to OAuth Consent
     Google-->>User: Show Consent Screen
     User->>Google: Approve
-    Google-->>Browser: Redirect to /auth/google?code=...
+    Google-->>Strapi: Redirect to /api/connect/google/callback (Handshake)
+    Note over Strapi: grant middleware processes Authorization Code
+    Strapi-->>Browser: Redirect to /auth/google?access_token=... (App Redirection)
     Browser->>NextServer: GET /auth/google (Initial SSR hit)
     Note over NextServer: getServerSideProps triggers
-    NextServer->>Strapi: GET /api/auth/google/callback (Internal Network)
-    Note right of NextServer: Sends { access_token: CODE }
+    NextServer->>Strapi: GET /api/auth/google/callback (Exchange)
+    Note over Strapi: users-permissions exchanges access_token for JWT
     Strapi-->>NextServer: { jwt, user }
     NextServer-->>Browser: Render page with { jwt, user }
     Browser->>Browser: setAuth(user, jwt)
@@ -133,7 +136,25 @@ When running in Docker Compose, the Next.js server (SSR) uses a "Smart Swap" log
 
 ### Common Errors
 - **401 Unauthorized**: Usually means the `access_token` expired or the backend cannot reach Google's servers to verify.
+- **Grant: missing session**: Usually caused by a SameSite cookie issue or mismatched Host headers between the initiation and callback. Fixed by setting `sameSite: 'lax'` in `strapi::session` middleware.
 - **ECONNREFUSED**: Usually means the backend service is down or unreachable from the frontend container.
+- **502 Bad Gateway (Nginx)**: If Strapi returns a massive OAuth `Location` redirect header with nested tokens that exceeds default proxy buffer limits (4/8KB), Nginx drops the upstream connection. Fixed by increasing `proxy_buffer_size 128k;` and `proxy_buffers`.
+- **414 URI Too Long**: The frontend server or initial Nginx entrypoint rejects the massive returned query parameters from the backend redirect. Fixed by increasing `large_client_header_buffers 4 32k;` at the Nginx server block.
+
+### 🛡️ Hardening & Session Security
+To ensure reliability across Docker containers and proxies:
+1. **Explicit Sessions**: The `strapi::session` middleware is configured with `sameSite: 'lax'` and conditionally `secure: true` (in production) to ensure cookies are successfully persisted and transmitted securely across Nginx reverse proxies during the OAuth 302 redirections.
+2. **Bootstrap Sync**: The `backend/src/index.js` forces the sync of Google Grant settings on every startup, ensuring environment variables always override database drift. It explicitly injects the `scope: ["email", "profile"]` parameter into the Grant payload to prevent Google `400 invalid_request` errors, and targets the frontend callback directly (`Frontend URL + /auth/google`) to prevent `431 Request Header Fields Too Large` recursive redirect loops.
+3. **URL Root Separation**: `BACKEND_URL` is strictly used by the underlying Node.js service and must point to the root domain (e.g., `http://localhost:1337` or `https://domain.com/cms`). Adding the `/api` suffix to `BACKEND_URL` will cause the internal Route builder to throw `500 Server Errors`. Conversely, the frontend expects `NEXT_PUBLIC_BACKEND_URL` to explicitly include the `/api` route.
+4. **URL Encoding**: All frontend-to-backend redirect parameters are URL-encoded to prevent truncation or malformed request errors.
+4. **Error Surfaceing**: The `LoginForm` component is enhanced to detect and display `error` query parameters redirected back from the OAuth flow.
+
+---
+
+### Environment Agnostic & Portable
+The frontend uses **Dynamic Backend Discovery (DBD)** to ensure Docker images are portable across environments:
+- **Build-time Fallback**: `NEXT_PUBLIC_BACKEND_URL` is used as the initial reference.
+- **Runtime Discovery**: If the browser detects it's running on a domain other than `localhost`, it automatically derivations the API URL from `window.location.origin` (e.g., `https://domain.com/cms/api`).
 
 ---
 
@@ -141,6 +162,7 @@ When running in Docker Compose, the Next.js server (SSR) uses a "Smart Swap" log
 - [x] SSR Handshake implemented in `google.js`.
 - [x] Internal networking verified via container IP.
 - [x] Verified user persistence in `up_users` table.
+- [x] Environment-agnostic URL discovery implemented in `url-helpers.js`.
 
 ---
 

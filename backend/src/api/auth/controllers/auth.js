@@ -102,11 +102,8 @@ module.exports = ({ strapi }) => ({
         (now.getTime() - lastSent.getTime()) / 1000,
       );
       if (diffSeconds < 60) {
-        return ctx.send(
-          {
-            error: `Please wait ${60 - diffSeconds} seconds before resending.`,
-          },
-          429,
+        return ctx.tooManyRequests(
+          `Please wait ${60 - diffSeconds} seconds before resending.`,
         );
       }
     }
@@ -121,11 +118,10 @@ module.exports = ({ strapi }) => ({
       windowStart = now;
     }
 
-    if (resendCount >= 3) {
+    if (resendCount >= 5) {
       strapi.log.warn(`Resend limit reached for: ${email}`);
-      return ctx.send(
-        { error: "Maximum resend attempts reached. Try again in 1 hour." },
-        429,
+      return ctx.tooManyRequests(
+        "Maximum resend attempts reached. Try again in 1 hour.",
       );
     }
 
@@ -170,7 +166,7 @@ module.exports = ({ strapi }) => ({
             ),
           },
           {
-            USER: user,
+            USER: { ...user, otpCode: newOtpCode },
             CODE: user.confirmationToken,
             OTP_CODE: newOtpCode,
           },
@@ -208,6 +204,7 @@ module.exports = ({ strapi }) => ({
     return {
       email: user.email,
       confirmed: user.confirmed,
+      lastOtpSentAt: user.lastOtpSentAt,
     };
   },
 });

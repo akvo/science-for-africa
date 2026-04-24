@@ -129,25 +129,6 @@ module.exports = {
       }
     };
 
-    // Override the callback controller to debug social login failures
-    const originalCallback = usersPermissionsPlugin.controller("auth").callback;
-    usersPermissionsPlugin.controller("auth").callback = async (ctx) => {
-      const { provider } = ctx.params;
-      console.log(
-        `[AUTH-DEBUG] Social Login Callback for provider: ${provider}`,
-      );
-
-      try {
-        await originalCallback(ctx);
-        console.log(
-          `[AUTH-DEBUG] Callback finished with status: ${ctx.status}`,
-        );
-      } catch (error) {
-        console.error(`[AUTH-DEBUG] Silent Error caught in Callback:`, error);
-        throw error;
-      }
-    };
-
     // 3. Extend users-permissions with PUT /auth/me
     const contentApiRoutes =
       usersPermissionsPlugin.routes["content-api"].routes;
@@ -478,8 +459,77 @@ module.exports = {
       strapi.log.info("Branded email templates initialized.");
     }
 
-    // 3. Google OAuth is now handled declaratively in config/plugins.js
-    // No manual synchronization needed here anymore.
+    // 3. Force-Synchronize Google OAuth Provider settings
+    // Strapi v5 often sticks to database values; this ensures the code fix is applied.
+    try {
+      const grantStore = strapi.store({
+        type: "plugin",
+        name: "users-permissions",
+        key: "grant",
+      });
+      const currentGrant = await grantStore.get();
+
+      const clientId = process.env.GOOGLE_CLIENT_ID;
+      const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+
+      const frontendUrlForCallback = (
+        process.env.NEXT_PUBLIC_FRONTEND_URL ||
+        process.env.FRONTEND_URL ||
+        process.env.PUBLIC_URL ||
+        "http://localhost:3000"
+      ).replace(/\/$/, "");
+
+      const backendUrlForLogs = (process.env.BACKEND_URL || "http://localhost:1337")
+        .replace(/\/$/, "");
+
+      // Use essentials only to prevent header bloat
+      const googleConfig = {
+        enabled: true,
+        protocol: "oauth2",
+        key: clientId,
+        secret: clientSecret || currentGrant?.google?.secret,
+        callback: `${frontendUrlForCallback}/auth/google`,
+        scope: ["email", "profile"],
+      };
+
+      if (clientId) {
+        // Sync Grant settings
+        await grantStore.set({
+          value: {
+            ...currentGrant,
+            google: googleConfig,
+          },
+        });
+
+        // Sync Advanced settings (google_redirection)
+        const advancedStore = strapi.store({
+          type: "plugin",
+          name: "users-permissions",
+          key: "advanced",
+        });
+        const currentAdvanced = await advancedStore.get();
+        const frontendUrl = (
+          process.env.NEXT_PUBLIC_FRONTEND_URL ||
+          process.env.FRONTEND_URL ||
+          process.env.PUBLIC_URL ||
+          "http://localhost:3000"
+        ).replace(/\/$/, "");
+
+        await advancedStore.set({
+          value: {
+            ...currentAdvanced,
+            email_confirmation_redirection: `${frontendUrl}/login?verified=true`,
+            google_redirection: `${frontendUrl}/auth/google`,
+          },
+        });
+
+        strapi.log.info(
+          `[AUTH] Synced Google OAuth & Redirect to: ${googleConfig.callback} -> ${frontendUrl}`,
+        );
+      }
+    } catch (error) {
+      strapi.log.error(`[AUTH] Failed to sync Google OAuth: ${error.message}`);
+    }
 
     // 4. Seed development data
     const { seed } = require("./utils/seeder");

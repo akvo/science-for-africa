@@ -28,9 +28,10 @@ export const OTPVerificationForm = ({ email }) => {
   const [timer, setTimer] = useState(0);
   const inputs = useRef([]);
 
-  // Load saved timer from localStorage on mount
+  // Load saved timer from localStorage on mount or sync with backend
   useEffect(() => {
     if (!email) return;
+
     const savedEndTime = localStorage.getItem(`otp_timer_end_${email}`);
     if (savedEndTime) {
       const remaining = Math.max(
@@ -42,6 +43,31 @@ export const OTPVerificationForm = ({ email }) => {
       } else {
         localStorage.removeItem(`otp_timer_end_${email}`);
       }
+    } else {
+      // Sync with backend if no local timer exists
+      const syncTimer = async () => {
+        try {
+          const res = await getRegistrationStatus(email);
+          if (res && res.lastOtpSentAt) {
+            const lastSent = new Date(res.lastOtpSentAt).getTime();
+            const cooldownMs = 60000;
+            const remaining = Math.max(
+              0,
+              Math.floor((lastSent + cooldownMs - Date.now()) / 1000),
+            );
+            if (remaining > 0) {
+              setTimer(remaining);
+              localStorage.setItem(
+                `otp_timer_end_${email}`,
+                (lastSent + cooldownMs).toString(),
+              );
+            }
+          }
+        } catch (err) {
+          console.error("Failed to sync timer with backend:", err);
+        }
+      };
+      syncTimer();
     }
   }, [email]);
 
@@ -153,8 +179,12 @@ export const OTPVerificationForm = ({ email }) => {
         setTimer(cooldownSeconds);
         localStorage.setItem(`otp_timer_end_${email}`, endTime.toString());
       } else {
+        // Correctly handle transformed error from api-client
         const errorMsg =
-          res.message || res.error?.message || t("otp.resend_error");
+          res.error?.message ||
+          (typeof res.error === "string" ? res.error : null) ||
+          res.message ||
+          t("otp.resend_error");
         setError(errorMsg);
         toast.error(errorMsg);
       }

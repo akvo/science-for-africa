@@ -1,10 +1,8 @@
 import axios from "axios";
 import { useAuthStore } from "./auth-store";
+import { getBackendApiUrl } from "./url-helpers";
 
-const API_URL =
-  (typeof window !== "undefined" && window.__ENV?.NEXT_PUBLIC_BACKEND_URL) ||
-  process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:1337/api";
+const API_URL = getBackendApiUrl();
 
 const apiClient = axios.create({
   baseURL: API_URL,
@@ -29,6 +27,7 @@ apiClient.interceptors.request.use(
       "/auth/verify-otp",
       "/auth/resend-otp",
       "/auth/registration-status",
+      "/connect/google/callback",
     ];
 
     // Normalize URL for robust matching (handle leading slashes and potential API prefixes)

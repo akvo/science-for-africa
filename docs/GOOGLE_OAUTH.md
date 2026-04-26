@@ -140,7 +140,7 @@ When running in Docker Compose, the Next.js server (SSR) uses a "Smart Swap" log
 - **ECONNREFUSED**: Usually means the backend service is down or unreachable from the frontend container.
 - **502 Bad Gateway (Nginx)**: If Strapi returns a massive OAuth `Location` redirect header with nested tokens that exceeds default proxy buffer limits (4/8KB), Nginx drops the upstream connection. Fixed by increasing `proxy_buffer_size 128k;` and `proxy_buffers`.
 - **414 URI Too Long**: The frontend server or initial Nginx entrypoint rejects the massive returned query parameters from the backend redirect. Fixed by increasing `large_client_header_buffers 4 32k;` at the Nginx server block.
-- **Cannot send secure cookie over unencrypted connection**: Occurs when `strapi::session` is configured with `secure: true` in production but the connection is seen as HTTP. Ensure `X-Forwarded-Proto: https` is passed by the proxy and `strapi::session` is explicitly configured in `middlewares.js`.
+- **Cannot send secure cookie over unencrypted connection**: Occurs when `strapi::session` is configured with `secure: true` in production but the connection is seen as HTTP. Ensure `X-Forwarded-Proto: https` is passed by the proxy, and `strapi::session` is explicitly configured with `proxy: true` and `secure: true` in `middlewares.js`.
 
 ### 🛡️ Hardening & Session Security
 To ensure reliability across Docker containers and proxies:

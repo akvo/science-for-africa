@@ -11,6 +11,7 @@ module.exports = [
     config: {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
+      proxy: true,
     },
   },
   "strapi::favicon",

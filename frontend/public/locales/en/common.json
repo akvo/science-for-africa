@@ -31,5 +31,10 @@
     "save": "Save",
     "cancel": "Cancel",
     "not_provided": "Not provided"
+  },
+  "verification": {
+    "pending": "Pending",
+    "tooltip_user": "pending account details confirmation",
+    "tooltip_institution": "pending institution details confirmation"
   }
 }

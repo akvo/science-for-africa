@@ -45,6 +45,10 @@ module.exports = {
           type: "boolean",
           default: false,
         },
+        verified: {
+          type: "boolean",
+          default: false,
+        },
         verificationStatus: {
           type: "enumeration",
           enum: ["unverified", "verified"],

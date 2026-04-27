@@ -62,7 +62,8 @@ export async function getServerSideProps(context) {
   // FLOW A: We already have a JWT from a direct backend redirect (Native Strapi Handshake)
   if (jwt) {
     try {
-      const response = await axios.get(`${internalBackendUrl}/users/me`, {
+      // Use custom /auth/me for full population (institutions, interests, etc.)
+      const response = await axios.get(`${internalBackendUrl}/auth/me`, {
         headers: { Authorization: `Bearer ${jwt}` },
       });
 
@@ -93,19 +94,24 @@ export async function getServerSideProps(context) {
 
   try {
     // Exchange with Strapi
-    const response = await axios.get(
+    const exchangeResponse = await axios.get(
       `${internalBackendUrl}/auth/google/callback`,
       {
         params: { access_token: tokenToExchange },
       },
     );
 
-    const { jwt: exchangedJwt, user } = response.data;
+    const { jwt: exchangedJwt } = exchangeResponse.data;
+
+    // Follow-up fetch for full profile
+    const profileResponse = await axios.get(`${internalBackendUrl}/auth/me`, {
+      headers: { Authorization: `Bearer ${exchangedJwt}` },
+    });
 
     return {
       props: {
         jwt: exchangedJwt,
-        user: user || null,
+        user: profileResponse.data || null,
         error: null,
       },
     };

@@ -93,10 +93,7 @@ export default function CommunityDetailPage() {
     });
   }, [community?.name]);
 
-  // Keep the default stable between SSR and first client render to avoid
-  // hydration mismatches. `router.query` is empty during SSR and populated
-  // only after hydration.
-  const initialTab = "collaboration-calls";
+  const activeTab = router.query.tab || "collaboration-calls";
 
   const handleTabChange = (value) => {
     router.replace(
@@ -165,7 +162,7 @@ export default function CommunityDetailPage() {
             </div>
 
             <Tabs
-              defaultValue={initialTab}
+              value={activeTab}
               onValueChange={handleTabChange}
               className="w-full"
             >

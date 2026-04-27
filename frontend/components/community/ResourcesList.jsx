@@ -35,7 +35,7 @@ function ResourceCard({ resource }) {
   return (
     <div className="flex items-center gap-4 px-6 py-5">
       <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand-gray-100">
-        <File className="size-6 text-brand-teal-600" />
+        <File className="size-6 text-primary-500" />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm text-brand-gray-500">

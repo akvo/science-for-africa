@@ -311,3 +311,16 @@ export async function updateUserProfile(userData) {
     return error;
   }
 }
+
+/**
+ * Fetch the current authenticated user's profile with all relations
+ */
+export async function fetchUserProfile() {
+  try {
+    const response = await apiClient.get("/auth/me");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    return null;
+  }
+}

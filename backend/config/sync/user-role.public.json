@@ -21,13 +21,8 @@
       "locale": null
     },
     {
-      "documentId": "d2kupfblkd5ybfc6hdjidhjo",
-      "action": "api::institution.institution.find",
-      "locale": null
-    },
-    {
-      "documentId": "nlud6pr14pxn7jia0xuk1mxe",
-      "action": "api::interest.interest.find",
+      "documentId": "k13k8p81qmamn60rcwnc6hbn",
+      "action": "api::collaboration-invite.collaboration-invite.accept",
       "locale": null
     },
     {
@@ -38,6 +33,16 @@
     {
       "documentId": "c0m2p3u4b5l6i7c8f9i0n1d2",
       "action": "api::community.community.findOne",
+      "locale": null
+    },
+    {
+      "documentId": "d2kupfblkd5ybfc6hdjidhjo",
+      "action": "api::institution.institution.find",
+      "locale": null
+    },
+    {
+      "documentId": "nlud6pr14pxn7jia0xuk1mxe",
+      "action": "api::interest.interest.find",
       "locale": null
     },
     {

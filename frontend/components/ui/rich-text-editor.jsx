@@ -62,7 +62,6 @@ export function RichTextEditor({
   const [activeBlock, setActiveBlock] = useState("P");
 
   const isEmpty = !value || value.replace(/<[^>]*>/g, "").trim().length === 0;
-
   // Sync the editor DOM with the controlled `value` when the parent resets
   // it (e.g. after submitting). We avoid rewriting the DOM while the user
   // is typing because that collapses the caret.

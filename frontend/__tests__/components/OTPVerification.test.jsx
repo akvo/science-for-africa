@@ -12,6 +12,7 @@ jest.mock("next/router", () => ({
 jest.mock("@/lib/strapi", () => ({
   verifyOtp: jest.fn(),
   resendOtp: jest.fn(),
+  getRegistrationStatus: jest.fn(),
 }));
 
 // Mock next-i18next

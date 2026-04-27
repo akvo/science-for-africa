@@ -115,7 +115,8 @@ The email verification flow: after registration, the user lands on a verificatio
 
 ```mermaid
 erDiagram
-    User ||--o| Institution : "affiliated_with"
+    User ||--o{ InstitutionMembership : "has"
+    User ||--o| Institution : "highest_education"
     User ||--o{ CommunityMembership : "has"
     User ||--o{ Thread : "creates"
     User ||--o{ Post : "writes"
@@ -128,7 +129,8 @@ erDiagram
     User ||--o{ Resource : "uploads"
     User }o--o{ Tag : "tagged_with"
 
-    Institution ||--o{ User : "has_members"
+    Institution ||--o{ InstitutionMembership : "has_members"
+    Institution ||--o{ User : "alumni"
 
     Community ||--o| Community : "parent"
     Community ||--o{ CommunityMembership : "has_members"
@@ -141,6 +143,9 @@ erDiagram
 
     CommunityMembership }o--|| User : "user"
     CommunityMembership }o--|| Community : "community"
+
+    InstitutionMembership }o--|| User : "user"
+    InstitutionMembership }o--|| Institution : "institution"
 
     ForumCategory ||--o| ForumCategory : "parent"
     ForumCategory ||--o{ Thread : "contains"
@@ -190,7 +195,7 @@ erDiagram
         enum languagePreferences
         string orcidId
         enum careerStage
-        enum educationLevel
+        string highestEducationInstitution FK
         boolean mentorAvailability
         json notificationPreferences
         boolean confirmed
@@ -212,6 +217,14 @@ erDiagram
         enum type
         string country
         boolean verified
+    }
+
+    InstitutionMembership {
+        string id PK
+        string user FK
+        string institution FK
+        enum type
+        boolean verificationStatus
     }
 
     Community {
@@ -384,8 +397,9 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 
 | Entity | Purpose |
 |---|---|
-| **User** | Extended Strapi user: bio, orcidId, careerStage, educationLevel, mentorAvailability, notificationPreferences, socialLinks |
-| **Institution** | Organisations (Academic / Research / NGO / Government / Private); users affiliated via relation |
+| **User** | Extended Strapi user: bio, orcidId, careerStage, highestEducationInstitution, mentorAvailability, notificationPreferences, socialLinks |
+| **Institution** | Organisations (Academic / Research / NGO / Government / Private). Verified list. |
+| **InstitutionMembership** | Explicit join table: User + Institution + role (member / owner) + verificationStatus |
 | **Community** | Top-level communities and sub-communities. Self-referential `parent` field for hierarchy. Privacy, type, branding |
 | **CommunityMembership** | Explicit join table: User + Community + role (admin / moderator / curator / member) |
 | **CommunityRule** | Rules per community with sort order |
@@ -416,6 +430,10 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 **Notification as a log table.** The `Notification` entity records every email sent (type, subject, recipient, delivery status). This is for auditability — it does not drive delivery. Delivery is synchronous via the email plugin at the time of the triggering event.
 
 **Institution as a standalone entity.** Rather than storing institution as a string on User, Institution is a first-class entity with type and country. This enables institution-level queries (e.g., "all users from University X") and admin verification workflows.
+
+**InstitutionMembership as explicit join table.** Similar to communities, users are linked to institutions via a dedicated membership entity. This supports multi-institutional profiles and stores metadata like affiliation type (member/owner) and verification status, which were previously rigid fields on the User entity.
+
+**Formalized Education.** Educational background is linked directly to the Institution collection via the `highestEducationInstitution` field, replacing unstructured string data.
 
 ## 3. Deployment & Infrastructure
 

@@ -80,8 +80,8 @@ const OnboardingStep5 = () => {
       );
 
       if (result && !result.error) {
-        // Update local auth store so redirects work correctly
-        updateUser({ onboardingComplete: true });
+        // Update local auth store with the full updated profile from backend
+        updateUser(result);
 
         // Purge professional onboarding data from sessionStorage
         resetStore();
@@ -149,7 +149,7 @@ const OnboardingStep5 = () => {
             )}
           </div>
 
-          {showDropdown && institutions.length > 0 && (
+          {showDropdown && (
             <div className="absolute z-50 w-full mt-1 bg-white border border-brand-gray-100 rounded-8 shadow-xl max-h-64 overflow-y-auto animate-in fade-in slide-in-from-top-2">
               {institutions.map((inst, index) => (
                 <button
@@ -160,25 +160,19 @@ const OnboardingStep5 = () => {
                   {inst.name}
                 </button>
               ))}
-            </div>
-          )}
-
-          {showDropdown &&
-            !loading &&
-            institutions.length === 0 &&
-            searchTerm.length > 2 && (
-              <div className="absolute z-50 w-full mt-1 bg-white border border-brand-gray-100 rounded-8 shadow-xl p-4 text-center animate-in fade-in slide-in-from-top-2">
-                <p className="text-sm text-brand-gray-500">
-                  {t("step1.no_institutions_found")}
-                </p>
+              {!loading && searchTerm.length > 2 && (
                 <button
                   onClick={() => setShowDropdown(false)}
-                  className="mt-2 text-sm font-medium text-brand-teal-600 hover:underline"
+                  className="w-full text-left px-4 py-3 bg-brand-teal-50 hover:bg-brand-teal-100 transition-colors text-md text-brand-teal-700 font-medium italic"
                 >
-                  {t("step1.dismiss")}
+                  {t("step5.use_custom_institution", {
+                    name: searchTerm,
+                    defaultValue: `Use "${searchTerm}"`,
+                  })}
                 </button>
-              </div>
-            )}
+              )}
+            </div>
+          )}
         </div>
       </div>
 

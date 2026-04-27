@@ -75,9 +75,24 @@
           "sortable": true
         }
       },
-      "users": {
+      "memberships": {
         "edit": {
-          "label": "users",
+          "label": "memberships",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "documentId"
+        },
+        "list": {
+          "label": "memberships",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "alumni": {
+        "edit": {
+          "label": "alumni",
           "description": "",
           "placeholder": "",
           "visible": true,
@@ -85,7 +100,7 @@
           "mainField": "username"
         },
         "list": {
-          "label": "users",
+          "label": "alumni",
           "searchable": false,
           "sortable": false
         }
@@ -187,7 +202,11 @@
         ],
         [
           {
-            "name": "users",
+            "name": "memberships",
+            "size": 6
+          },
+          {
+            "name": "alumni",
             "size": 6
           }
         ]

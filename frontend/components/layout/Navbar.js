@@ -13,7 +13,18 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, LogOut, Settings, Plus } from "lucide-react";
+import {
+  User,
+  LogOut,
+  Settings,
+  Plus,
+  Users,
+  FileText,
+  Bookmark,
+  Calendar,
+  Award,
+  HelpCircle,
+} from "lucide-react";
 import Image from "next/image";
 
 const Navbar = () => {
@@ -168,42 +179,109 @@ const Navbar = () => {
                       </AvatarFallback>
                     </Avatar>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="mt-2">
-                    <div className="px-2 py-3">
-                      <p className="text-sm font-bold text-brand-teal-900 truncate">
-                        {user?.fullName || user?.username}
-                      </p>
-                      <p className="text-xs text-brand-gray-500 truncate">
-                        {user?.email}
-                      </p>
+                  <DropdownMenuContent
+                    align="end"
+                    sideOffset={14}
+                    className="w-72 p-0 rounded-2xl shadow-xl border-brand-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+                  >
+                    {/* Identity Header */}
+                    <div className="flex items-center gap-4 px-5 py-4 bg-white">
+                      <Avatar size="lg" className="shrink-0">
+                        <AvatarImage src={user?.avatar?.url} />
+                        <AvatarFallback className="bg-brand-teal-50 text-brand-teal-900 font-bold text-lg">
+                          {getInitials(user?.fullName || user?.username)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col min-w-0">
+                        <p className="text-md font-bold text-brand-teal-900 truncate capitalize">
+                          {user?.fullName || user?.username}
+                        </p>
+                        <p className="text-sm font-medium text-brand-gray-500 truncate mt-0.5 capitalize">
+                          {user?.userType || t("navbar.researcher_placeholder")}
+                        </p>
+                      </div>
                     </div>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href="/profile"
-                        className="flex items-center w-full"
+
+                    <DropdownMenuSeparator className="m-0 bg-brand-gray-100" />
+
+                    {/* Personal Management Section */}
+                    <div className="py-2">
+                      {[
+                        {
+                          key: "details",
+                          href: "/coming-soon",
+                        },
+                        {
+                          key: "communities",
+                          href: "/coming-soon",
+                        },
+                        {
+                          key: "content",
+                          href: "/coming-soon",
+                        },
+                        {
+                          key: "saved_posts",
+                          href: "/coming-soon",
+                        },
+                        {
+                          key: "my_events",
+                          href: "/coming-soon",
+                        },
+                        {
+                          key: "courses",
+                          href: "/coming-soon",
+                        },
+                      ].map((item) => (
+                        <DropdownMenuItem
+                          key={item.key}
+                          asChild
+                          className="px-5 py-3 focus:bg-brand-gray-50 cursor-pointer overflow-hidden group"
+                        >
+                          <Link
+                            href={item.href}
+                            className="flex items-center w-full"
+                          >
+                            <span className="text-sm font-medium text-black group-hover:text-brand-teal-900 transition-colors">
+                              {t(`navbar.profile_dropdown.${item.key}`)}
+                            </span>
+                          </Link>
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
+
+                    <DropdownMenuSeparator className="m-0 bg-brand-gray-100" />
+
+                    {/* Support Section */}
+                    <div className="py-2">
+                      <DropdownMenuItem
+                        asChild
+                        className="px-5 py-3 focus:bg-brand-gray-50 cursor-pointer group"
                       >
-                        <User className="mr-2 h-4 w-4" />
-                        <span>{t("navbar.profile")}</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href="/settings"
-                        className="flex items-center w-full"
+                        <Link
+                          href="/coming-soon"
+                          className="flex items-center w-full"
+                        >
+                          <span className="text-sm font-medium text-black group-hover:text-brand-teal-900 transition-colors">
+                            {t("navbar.profile_dropdown.faq")}
+                          </span>
+                        </Link>
+                      </DropdownMenuItem>
+                    </div>
+
+                    <DropdownMenuSeparator className="m-0 bg-brand-gray-100" />
+
+                    {/* Action Section */}
+                    <div className="py-2">
+                      <DropdownMenuItem
+                        onClick={handleLogout}
+                        className="px-5 py-3 flex items-center justify-between focus:bg-brand-gray-50 cursor-pointer group logout-item"
                       >
-                        <Settings className="mr-2 h-4 w-4" />
-                        <span>{t("navbar.settings")}</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={handleLogout}
-                      className="text-red-600 focus:text-red-700 focus:bg-red-50"
-                    >
-                      <LogOut className="mr-2 h-4 w-4" />
-                      <span>{t("navbar.logout")}</span>
-                    </DropdownMenuItem>
+                        <span className="text-sm font-bold text-brand-gray-900 group-hover:text-red-600 transition-colors">
+                          {t("navbar.profile_dropdown.logout")}
+                        </span>
+                        <LogOut className="h-5 w-5 text-brand-gray-400 group-hover:text-red-600 transition-colors" />
+                      </DropdownMenuItem>
+                    </div>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -264,7 +342,7 @@ const Navbar = () => {
               {mounted && isAuthenticated ? (
                 <>
                   <Link
-                    href="/profile"
+                    href="/coming-soon"
                     onClick={() => setIsOpen(false)}
                     className="flex items-center gap-3 px-2 py-3 hover:bg-brand-gray-50 rounded-lg transition-colors cursor-pointer group"
                   >
@@ -277,37 +355,41 @@ const Navbar = () => {
                         {getInitials(user?.fullName || user?.username)}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="flex flex-col">
-                      <p className="text-sm font-bold text-brand-teal-900 truncate">
+                    <div className="flex flex-col min-w-0">
+                      <p className="text-sm font-bold text-brand-teal-900 truncate capitalize">
                         {user?.fullName || user?.username}
                       </p>
-                      <p className="text-xs text-brand-gray-500 truncate">
-                        {user?.email}
+                      <p className="text-xs text-brand-gray-500 truncate capitalize">
+                        {user?.userType || t("navbar.researcher_placeholder")}
                       </p>
                     </div>
                   </Link>
-                  <Button
-                    variant="outline"
-                    size="xl"
-                    className="w-full justify-start"
-                    asChild
-                  >
-                    <Link href="/profile">
-                      <User className="mr-2 h-4 w-4" />
-                      {t("navbar.profile")}
-                    </Link>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="xl"
-                    className="w-full justify-start"
-                    asChild
-                  >
-                    <Link href="/settings">
-                      <Settings className="mr-2 h-4 w-4" />
-                      {t("navbar.settings")}
-                    </Link>
-                  </Button>
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    {[
+                      { key: "details" },
+                      { key: "communities" },
+                      { key: "content" },
+                      { key: "saved_posts" },
+                      { key: "my_events" },
+                      { key: "courses" },
+                      { key: "faq" },
+                    ].map((item) => (
+                      <Button
+                        key={item.key}
+                        variant="outline"
+                        size="md"
+                        className="w-full justify-start h-10 px-3"
+                        asChild
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <Link href="/coming-soon">
+                          <span className="text-xs truncate text-black font-medium">
+                            {t(`navbar.profile_dropdown.${item.key}`)}
+                          </span>
+                        </Link>
+                      </Button>
+                    ))}
+                  </div>
                   <Button
                     variant="ghost"
                     size="xl"
@@ -315,7 +397,7 @@ const Navbar = () => {
                     onClick={handleLogout}
                   >
                     <LogOut className="mr-2 h-4 w-4" />
-                    {t("navbar.logout")}
+                    {t("navbar.profile_dropdown.logout")}
                   </Button>
                 </>
               ) : mounted ? (

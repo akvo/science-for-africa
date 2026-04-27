@@ -1,23 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "next-i18next";
 import { Plus, File } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { fetchResources } from "@/lib/strapi";
 import AddResourceDialog from "./AddResourceDialog";
 
-const RESOURCE_FILTERS = [
-  { key: "all", label: "All" },
-  { key: "report", label: "Report" },
-  { key: "publication", label: "Publication" },
-  { key: "practice-note", label: "Practice note" },
-  { key: "case-study", label: "Case study" },
+const RESOURCE_FILTER_KEYS = [
+  { key: "all", i18nKey: "resources.all" },
+  { key: "report", i18nKey: "resources.report" },
+  { key: "publication", i18nKey: "resources.publication" },
+  { key: "practice-note", i18nKey: "resources.practice_note" },
+  { key: "case-study", i18nKey: "resources.case_study" },
 ];
 
-const TYPE_LABELS = {
-  report: "Report",
-  publication: "Publication",
-  "practice-note": "Practice note",
-  "case-study": "Case study",
+const TYPE_LABEL_KEYS = {
+  report: "resources.report",
+  publication: "resources.publication",
+  "practice-note": "resources.practice_note",
+  "case-study": "resources.case_study",
 };
 
 function getFullFileUrl(url) {
@@ -30,7 +31,7 @@ function getFullFileUrl(url) {
   return `${backendOrigin}${url}`;
 }
 
-function ResourceCard({ resource }) {
+function ResourceCard({ resource, t }) {
   const fileUrl = getFullFileUrl(resource.file?.url);
   return (
     <div className="flex items-center gap-4 px-6 py-5">
@@ -39,7 +40,7 @@ function ResourceCard({ resource }) {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm text-brand-gray-500">
-          {TYPE_LABELS[resource.resourceType] || resource.resourceType}
+          {t(TYPE_LABEL_KEYS[resource.resourceType]) || resource.resourceType}
         </p>
         <p className="text-base font-semibold text-brand-gray-900 truncate">
           {resource.name}
@@ -53,7 +54,7 @@ function ResourceCard({ resource }) {
             className="border-transparent bg-[#E8ECEF] hover:bg-[#dde2e6]"
             onClick={() => window.open(fileUrl, "_blank")}
           >
-            View
+            {t("resources.view")}
           </Button>
           <Button
             variant="outline"
@@ -73,7 +74,7 @@ function ResourceCard({ resource }) {
               }
             }}
           >
-            Download
+            {t("resources.download")}
           </Button>
         </div>
       )}
@@ -86,6 +87,7 @@ export default function ResourcesList({
   onAdd,
   className,
 }) {
+  const { t } = useTranslation("common");
   const [filter, setFilter] = useState("all");
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -112,7 +114,7 @@ export default function ResourcesList({
   return (
     <section className={cn("flex flex-col", className)}>
       <div className="flex items-center gap-2 border-b border-brand-gray-100 pb-4 lg:px-6">
-        {RESOURCE_FILTERS.map((f) => {
+        {RESOURCE_FILTER_KEYS.map((f) => {
           const isActive = filter === f.key;
           return (
             <button
@@ -127,7 +129,7 @@ export default function ResourcesList({
               )}
               aria-pressed={isActive}
             >
-              {f.label}
+              {t(f.i18nKey)}
             </button>
           );
         })}
@@ -138,17 +140,17 @@ export default function ResourcesList({
           onClick={() => setDialogOpen(true)}
         >
           <Plus className="size-4" />
-          Add resource
+          {t("resources.add_resource")}
         </Button>
       </div>
 
       {loading ? (
         <div className="py-10 text-center text-sm text-brand-gray-500">
-          Loading resources...
+          {t("resources.loading")}
         </div>
       ) : filtered.length === 0 ? (
         <div className="rounded-xl border border-dashed border-brand-gray-200 p-10 text-center text-sm text-brand-gray-500">
-          No resources to show.
+          {t("resources.no_resources")}
         </div>
       ) : (
         <div className="flex flex-col divide-y divide-brand-gray-100 border-b border-brand-gray-100">
@@ -156,6 +158,7 @@ export default function ResourcesList({
             <ResourceCard
               key={r.documentId || r.id}
               resource={r}
+              t={t}
             />
           ))}
         </div>

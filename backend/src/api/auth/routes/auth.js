@@ -15,6 +15,14 @@ module.exports = {
       },
     },
     {
+      method: "GET",
+      path: "/auth/me",
+      handler: "profile.me",
+      config: {
+        description: "Get current user profile",
+      },
+    },
+    {
       method: "POST",
       path: "/auth/verify-otp",
       handler: "auth.verifyOtp",

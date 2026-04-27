@@ -92,16 +92,16 @@
     "educationLevel": {
       "type": "string"
     },
-    "institution": {
+    "highestEducationInstitution": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "api::institution.institution",
-      "inversedBy": "users"
+      "target": "api::institution.institution"
     },
-    "affiliationStatus": {
-      "type": "enumeration",
-      "enum": ["Pending", "Approved", "Rejected"],
-      "default": "Pending"
+    "institutionMemberships": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::institution-membership.institution-membership",
+      "mappedBy": "user"
     },
     "orcidId": {
       "type": "string"
@@ -109,11 +109,6 @@
     "onboardingComplete": {
       "type": "boolean",
       "default": false
-    },
-    "verificationStatus": {
-      "type": "enumeration",
-      "enum": ["unverified", "verified"],
-      "default": "unverified"
     },
     "socialLinks": {
       "type": "json"
@@ -123,12 +118,6 @@
       "enum": ["individual", "institution"]
     },
     "roleType": {
-      "type": "string"
-    },
-    "educationInstitutionName": {
-      "type": "string"
-    },
-    "institutionName": {
       "type": "string"
     },
     "otpCode": {

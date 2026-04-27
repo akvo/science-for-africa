@@ -38,11 +38,17 @@
       "type": "boolean",
       "default": false
     },
-    "users": {
+    "memberships": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::institution-membership.institution-membership",
+      "mappedBy": "institution"
+    },
+    "alumni": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "plugin::users-permissions.user",
-      "mappedBy": "institution"
+      "mappedBy": "highestEducationInstitution"
     }
   }
 }

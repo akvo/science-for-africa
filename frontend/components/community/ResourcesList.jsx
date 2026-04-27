@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { fetchResources } from "@/lib/strapi";
 import AddResourceDialog from "./AddResourceDialog";
+import ViewResourceDialog from "./ViewResourceDialog";
 
 const RESOURCE_FILTER_KEYS = [
   { key: "all", i18nKey: "resources.all" },
@@ -24,14 +25,13 @@ const TYPE_LABEL_KEYS = {
 function getFullFileUrl(url) {
   if (!url) return null;
   if (url.startsWith("http")) return url;
-  // Strapi returns relative paths like /uploads/file.pdf — prepend backend origin
   const backendOrigin = (
     process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api"
   ).replace(/\/api\/?$/, "");
   return `${backendOrigin}${url}`;
 }
 
-function ResourceCard({ resource, t }) {
+function ResourceCard({ resource, onView, t }) {
   const fileUrl = getFullFileUrl(resource.file?.url);
   return (
     <div className="flex items-center gap-4 px-6 py-5">
@@ -46,16 +46,16 @@ function ResourceCard({ resource, t }) {
           {resource.name}
         </p>
       </div>
-      {fileUrl && (
-        <div className="flex items-center gap-2 shrink-0">
-          <Button
-            variant="outline"
-            size="sm"
-            className="border-transparent bg-[#E8ECEF] hover:bg-[#dde2e6]"
-            onClick={() => window.open(fileUrl, "_blank")}
-          >
-            {t("resources.view")}
-          </Button>
+      <div className="flex items-center gap-2 shrink-0">
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-transparent bg-[#E8ECEF] hover:bg-[#dde2e6]"
+          onClick={() => onView?.(resource)}
+        >
+          {t("resources.view")}
+        </Button>
+        {fileUrl && (
           <Button
             variant="outline"
             size="sm"
@@ -76,22 +76,22 @@ function ResourceCard({ resource, t }) {
           >
             {t("resources.download")}
           </Button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
 
 export default function ResourcesList({
   communityDocumentId,
-  onAdd,
   className,
 }) {
   const { t } = useTranslation("common");
   const [filter, setFilter] = useState("all");
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [viewResource, setViewResource] = useState(null);
 
   const loadResources = () => {
     if (!communityDocumentId) return;
@@ -114,30 +114,32 @@ export default function ResourcesList({
   return (
     <section className={cn("flex flex-col", className)}>
       <div className="flex items-center gap-2 border-b border-brand-gray-100 pb-4 lg:px-6">
-        {RESOURCE_FILTER_KEYS.map((f) => {
-          const isActive = filter === f.key;
-          return (
-            <button
-              key={f.key}
-              type="button"
-              onClick={() => setFilter(f.key)}
-              className={cn(
-                "inline-flex h-[34px] cursor-pointer items-center rounded-full px-[14px] text-sm font-medium transition-colors",
-                isActive
-                  ? "border border-[#D0D5DD] bg-primary-50 text-brand-gray-900 shadow-[0_1px_2px_0_rgba(16,24,40,0.05),0_0_0_4px_var(--color-primary-50)]"
-                  : "bg-white text-brand-gray-700 border border-brand-gray-100 hover:bg-brand-gray-50",
-              )}
-              aria-pressed={isActive}
-            >
-              {t(f.i18nKey)}
-            </button>
-          );
-        })}
+        <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto p-1 -m-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          {RESOURCE_FILTER_KEYS.map((f) => {
+            const isActive = filter === f.key;
+            return (
+              <button
+                key={f.key}
+                type="button"
+                onClick={() => setFilter(f.key)}
+                className={cn(
+                  "inline-flex h-[34px] shrink-0 cursor-pointer items-center whitespace-nowrap rounded-full px-[14px] text-sm font-medium transition-colors",
+                  isActive
+                    ? "border border-[#D0D5DD] bg-primary-50 text-brand-gray-900 shadow-[0_1px_2px_0_rgba(16,24,40,0.05),0_0_0_4px_var(--color-primary-50)]"
+                    : "bg-white text-brand-gray-700 border border-brand-gray-100 hover:bg-brand-gray-50",
+                )}
+                aria-pressed={isActive}
+              >
+                {t(f.i18nKey)}
+              </button>
+            );
+          })}
+        </div>
         <Button
           size="sm"
           variant="outline"
-          className="ml-auto gap-1.5 rounded-full"
-          onClick={() => setDialogOpen(true)}
+          className="shrink-0 gap-1.5 rounded-full"
+          onClick={() => setAddDialogOpen(true)}
         >
           <Plus className="size-4" />
           {t("resources.add_resource")}
@@ -158,6 +160,7 @@ export default function ResourcesList({
             <ResourceCard
               key={r.documentId || r.id}
               resource={r}
+              onView={setViewResource}
               t={t}
             />
           ))}
@@ -165,10 +168,18 @@ export default function ResourcesList({
       )}
 
       <AddResourceDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
+        open={addDialogOpen}
+        onOpenChange={setAddDialogOpen}
         communityDocumentId={communityDocumentId}
         onSuccess={loadResources}
+      />
+
+      <ViewResourceDialog
+        open={!!viewResource}
+        onOpenChange={(open) => {
+          if (!open) setViewResource(null);
+        }}
+        resource={viewResource}
       />
     </section>
   );

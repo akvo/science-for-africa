@@ -361,6 +361,8 @@ const seed = async (strapi) => {
     "api::resource.resource.find",
     "api::resource.resource.findOne",
     "api::resource.resource.create",
+    "api::resource-comment.resource-comment.find",
+    "api::resource-comment.resource-comment.create",
     "plugin::upload.content-api.upload",
   ];
 

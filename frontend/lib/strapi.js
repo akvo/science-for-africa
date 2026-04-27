@@ -365,6 +365,34 @@ export async function createResource({ name, resourceType, communityId, file }) 
 }
 
 /**
+ * Fetch a single resource by documentId with all relations populated.
+ */
+export async function fetchResource(documentId) {
+  return fetchFromStrapi(
+    `/resources/${documentId}?populate[file]=true&populate[uploadedBy]=true&populate[community]=true`,
+  );
+}
+
+/**
+ * Fetch comments for a resource (by resource documentId).
+ */
+export async function fetchResourceComments(resourceDocumentId) {
+  return fetchFromStrapi(
+    `/resource-comments?filters[resource][documentId][$eq]=${encodeURIComponent(resourceDocumentId)}&populate[author]=true&sort=createdAt:asc`,
+  );
+}
+
+/**
+ * Post a comment on a resource.
+ */
+export async function postResourceComment(resourceDocumentId, text) {
+  return postToStrapi("/resource-comments", {
+    text,
+    resource: { connect: [resourceDocumentId] },
+  });
+}
+
+/**
  * Update authenticated user profile
  */
 export async function updateUserProfile(userData) {

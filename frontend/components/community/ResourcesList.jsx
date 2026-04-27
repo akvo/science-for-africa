@@ -20,8 +20,18 @@ const TYPE_LABELS = {
   "case-study": "Case study",
 };
 
+function getFullFileUrl(url) {
+  if (!url) return null;
+  if (url.startsWith("http")) return url;
+  // Strapi returns relative paths like /uploads/file.pdf — prepend backend origin
+  const backendOrigin = (
+    process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api"
+  ).replace(/\/api\/?$/, "");
+  return `${backendOrigin}${url}`;
+}
+
 function ResourceCard({ resource }) {
-  const fileUrl = resource.file?.url;
+  const fileUrl = getFullFileUrl(resource.file?.url);
   return (
     <div className="flex items-center gap-4 px-6 py-5">
       <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand-gray-100">
@@ -49,11 +59,21 @@ function ResourceCard({ resource }) {
             variant="outline"
             size="sm"
             className="border-transparent bg-[#E8ECEF] hover:bg-[#dde2e6]"
-            asChild
+            onClick={async () => {
+              try {
+                const res = await fetch(fileUrl);
+                const blob = await res.blob();
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(blob);
+                a.download = resource.file?.name || resource.name;
+                a.click();
+                URL.revokeObjectURL(a.href);
+              } catch {
+                window.open(fileUrl, "_blank");
+              }
+            }}
           >
-            <a href={fileUrl} download>
-              Download
-            </a>
+            Download
           </Button>
         </div>
       )}

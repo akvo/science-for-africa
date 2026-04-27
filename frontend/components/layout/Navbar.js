@@ -13,18 +13,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  User,
-  LogOut,
-  Settings,
-  Plus,
-  Users,
-  FileText,
-  Bookmark,
-  Calendar,
-  Award,
-  HelpCircle,
-} from "lucide-react";
+import { LogOut, Plus } from "lucide-react";
 import Image from "next/image";
 
 import VerificationBadge from "@/components/shared/VerificationBadge";

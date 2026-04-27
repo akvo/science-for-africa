@@ -154,28 +154,24 @@ export function transformProfileUpdatePayload(userData) {
     );
   }
 
-  if (data.affiliationInstitution) {
-    if (data.affiliationInstitution.id) {
-      data.institution = data.affiliationInstitution.id;
-    } else if (data.affiliationInstitution.name) {
-      data.institutionName = data.affiliationInstitution.name;
-    }
-    delete data.affiliationInstitution;
-  }
-
-  if (data.educationInstitution && data.educationInstitution.name) {
-    data.educationInstitutionName = data.educationInstitution.name;
+  // We now pass affiliationInstitution and educationInstitution as objects
+  // The backend handles creation/lookup.
+  // Note: OnboardingStep3 uses 'educationInstitution' in store,
+  // but backend uses 'highestEducationInstitution'.
+  if (data.educationInstitution) {
+    data.highestEducationInstitution = data.educationInstitution;
     delete data.educationInstitution;
   }
 
   if (data.userType === "institution") {
     delete data.educationLevel;
     delete data.educationTopic;
-    delete data.educationInstitutionName;
+    delete data.highestEducationInstitution;
     delete data.orcidId;
     delete data.position;
   }
 
+  // Cleanup empty strings
   Object.keys(data).forEach((key) => {
     if (data[key] === "") {
       delete data[key];

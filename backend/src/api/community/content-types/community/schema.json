@@ -72,6 +72,12 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "plugin::users-permissions.user"
+    },
+    "memberships": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::community-membership.community-membership",
+      "mappedBy": "community"
     }
   }
 }

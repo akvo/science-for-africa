@@ -48,15 +48,21 @@ graph TD
 
 ### Database Schema / Data Structure
 - **User Entity**: Extension of current schema to include:
-    - `displayName` (optional)
-    - `profilePhoto` (Media)
-    - `pageCover` (Media)
-    - `role` (enum/string)
-    - `languagePreferences` (JSON/Enum)
-- **SavedPost**: (Existing) Relation between User and Post.
-- **CommunityMembership**: (Existing) Relation between User and Community with Role.
-- **EventRegistration**: (Existing) Relation between User and Event.
-- **CollaborationMentor**: (Existing) Relation between User and CollaborationCall.
+    - `displayName` (string)
+    - `profilePhoto` (Media Relation)
+    - `pageCover` (Media Relation)
+    - `languagePreferences` (Enum: en, fr)
+    - `biography` (Text, 275 char limit)
+    - `full_name` (Auto-synced from first/last name)
+    - `memberships` (One-to-Many to `CommunityMembership`)
+    - `collaborationInvites` (One-to-Many to `CollaborationInvite`)
+- **Community**: (Branch 31 Merged)
+    - `avatarUrl` (String)
+    - `bannerUrl` (String)
+    - `handle` (String)
+    - `subscribers` / `posts` (Integers)
+- **CommunityMembership**: Relation between User and Community with Role.
+- **CollaborationInvite**: Relation between User and CollaborationCall with InviteStatus.
 
 ---
 
@@ -123,6 +129,11 @@ The following features were identified in the initial discovery but are not part
 
 ## 📡 API Reference
 
+### Fetch Profile
+- **Method**: `GET`
+- **Path**: `/api/auth/me`
+- **Response**: `200 OK` with deep population of `memberships`, `collaborationInvites`, and Media.
+
 ### Update Profile
 - **Method**: `PUT`
 - **Path**: `/api/auth/me` (Custom extended endpoint)
@@ -132,6 +143,8 @@ The following features were identified in the initial discovery but are not part
 ### Leave Community
 - **Method**: `DELETE`
 - **Path**: `/api/communities/:id/leave`
+- **Response**: `200 OK` with success message.
+- **Action**: Permanent deletion of the `CommunityMembership` record for the current user.
 
 ---
 

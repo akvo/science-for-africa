@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "community_memberships",
+  "info": {
+    "singularName": "community-membership",
+    "pluralName": "community-memberships",
+    "displayName": "Community Membership",
+    "description": "User memberships in communities"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "memberships"
+    },
+    "community": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::community.community",
+      "inversedBy": "memberships"
+    },
+    "role": {
+      "type": "enumeration",
+      "enum": ["Admin", "Moderator", "Member"],
+      "default": "Member"
+    },
+    "joinedAt": {
+      "type": "datetime"
+    }
+  }
+}

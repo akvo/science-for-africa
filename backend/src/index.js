@@ -64,6 +64,18 @@ module.exports = {
         institutionName: {
           type: "string",
         },
+        memberships: {
+          type: "relation",
+          relation: "oneToMany",
+          target: "api::community-membership.community-membership",
+          mappedBy: "user",
+        },
+        collaborationInvites: {
+          type: "relation",
+          relation: "oneToMany",
+          target: "api::collaboration-invite.collaboration-invite",
+          mappedBy: "invitedUser",
+        },
         otpCode: {
           type: "string",
         },
@@ -79,6 +91,24 @@ module.exports = {
         },
         otpResendWindowStart: {
           type: "datetime",
+        },
+        displayName: {
+          type: "string",
+        },
+        profilePhoto: {
+          type: "media",
+          multiple: false,
+          allowedTypes: ["images"],
+        },
+        pageCover: {
+          type: "media",
+          multiple: false,
+          allowedTypes: ["images"],
+        },
+        languagePreferences: {
+          type: "enumeration",
+          enum: ["en", "fr"],
+          default: "en",
         },
       };
     }
@@ -479,8 +509,9 @@ module.exports = {
         "http://localhost:3000"
       ).replace(/\/$/, "");
 
-      const backendUrlForLogs = (process.env.BACKEND_URL || "http://localhost:1337")
-        .replace(/\/$/, "");
+      const backendUrlForLogs = (
+        process.env.BACKEND_URL || "http://localhost:1337"
+      ).replace(/\/$/, "");
 
       // Use essentials only to prevent header bloat
       const googleConfig = {

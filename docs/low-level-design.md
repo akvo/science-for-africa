@@ -47,7 +47,8 @@ Beyond Strapi's auto-generated CRUD, we will create custom endpoints with hand-w
 
 | Endpoint | Method | Justification |
 |---|---|---|
-| `/api/auth/me` | `PUT` | **Custom Extension**: Profile update with custom fields (bio, orcidId, careerStage, socialLinks, notificationPreferences) beyond the standard user schema. Provided because Strapi lacks a standard "update self" endpoint. |
+| `/api/auth/me` | `GET` | **Custom Extension**: Returns the currently authenticated user with deep population of media, memberships, and collaboration involvement. |
+| `/api/auth/me` | `PUT` | **Custom Extension**: Profile update with whitelisting and character limit validation for `biography`. |
 | `/api/auth/verify-otp` | `POST` | **Custom Extension**: Verifies email using a 6-digit number. Confirms user and returns JWT. |
 | `/api/auth/resend-otp` | `POST` | **Custom Extension**: Enforced 60s cooldown and 3/hr limit. Generates new code and sends dual-path email (Link + Code). |
 | `/api/posts/:id/moderate` | `PUT` | Moderation action (approve/decline) — wraps status update + notification trigger to post author |
@@ -184,7 +185,9 @@ erDiagram
         string email UK
         string password
         string fullName
-        text bio
+        string displayName
+        text biography
+        enum languagePreferences
         string orcidId
         enum careerStage
         enum educationLevel
@@ -215,13 +218,15 @@ erDiagram
         string id PK
         string name UK
         string slug UK
+        string handle UK
         text description
         enum type
         enum privacy
         enum status
-        media logo
-        media banner
-        integer memberCount
+        string avatarUrl
+        string bannerUrl
+        integer subscribers
+        integer posts
     }
 
     CommunityMembership {

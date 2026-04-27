@@ -8,6 +8,21 @@
 "use strict";
 
 module.exports = async ({ strapi }) => {
+  // Check if migration has already been completed
+  const store = strapi.store({
+    type: "plugin",
+    name: "users-permissions",
+    key: "migrations",
+  });
+  const migrationStatus = await store.get();
+
+  if (migrationStatus?.backfill_institutions_completed) {
+    strapi.log.info(
+      "Backfill-institutions migration already run once, skipping...",
+    );
+    return;
+  }
+
   strapi.log.info("Running backfill-institutions migration...");
 
   // 1. Ensure "Akvo" institution exists
@@ -97,6 +112,14 @@ module.exports = async ({ strapi }) => {
       });
     }
   }
+
+  // Mark migration as completed in the store
+  await store.set({
+    value: {
+      ...migrationStatus,
+      backfill_institutions_completed: true,
+    },
+  });
 
   strapi.log.info("Backfill-institutions migration completed successfully.");
 };

@@ -195,10 +195,14 @@ const Navbar = () => {
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col min-w-0">
-                        <p className="text-md font-bold text-brand-teal-900 truncate capitalize flex items-center gap-2">
-                          {user?.fullName || user?.username}
-                          <VerificationBadge verified={user?.verified} />
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-md font-bold text-brand-teal-900 truncate capitalize">
+                            {user?.fullName || user?.username}
+                          </p>
+                          <div className="shrink-0">
+                            <VerificationBadge verified={user?.verified} />
+                          </div>
+                        </div>
                         <p className="text-sm font-medium text-brand-gray-500 truncate mt-0.5 capitalize">
                           {user?.userType || t("navbar.researcher_placeholder")}
                         </p>
@@ -359,10 +363,14 @@ const Navbar = () => {
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col min-w-0">
-                      <p className="text-sm font-bold text-brand-teal-900 truncate capitalize flex items-center gap-2">
-                        {user?.fullName || user?.username}
-                        <VerificationBadge verified={user?.verified} />
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-bold text-brand-teal-900 truncate capitalize">
+                          {user?.fullName || user?.username}
+                        </p>
+                        <div className="shrink-0">
+                          <VerificationBadge verified={user?.verified} />
+                        </div>
+                      </div>
                       <p className="text-xs text-brand-gray-500 truncate capitalize">
                         {user?.userType || t("navbar.researcher_placeholder")}
                       </p>

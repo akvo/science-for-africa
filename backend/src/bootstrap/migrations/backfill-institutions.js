@@ -32,7 +32,14 @@ module.exports = async ({ strapi }) => {
   const users = await strapi.db
     .query("plugin::users-permissions.user")
     .findMany({
-      populate: ["institutionMemberships", "highestEducationInstitution"],
+      populate: {
+        institutionMemberships: {
+          populate: {
+            institution: true,
+          },
+        },
+        highestEducationInstitution: true,
+      },
     });
 
   strapi.log.info(`Found ${users.length} users to check for migration.`);
@@ -48,11 +55,11 @@ module.exports = async ({ strapi }) => {
     }
 
     // Check InstitutionMembership
-    const hasAkvoMembership = user.institutionMemberships?.some(
+    const akvoMemberships = user.institutionMemberships?.filter(
       (m) => m.institution?.id === akvo.id,
     );
 
-    if (!hasAkvoMembership) {
+    if (!akvoMemberships || akvoMemberships.length === 0) {
       await strapi.db
         .query("api::institution-membership.institution-membership")
         .create({
@@ -60,9 +67,20 @@ module.exports = async ({ strapi }) => {
             user: user.id,
             institution: akvo.id,
             type: "member",
-            verificationStatus: user.onboardingComplete || false, // Default to true if onboarding is complete
+            verificationStatus: user.onboardingComplete || false,
             locale: "en",
           },
+        });
+    } else if (akvoMemberships.length > 1) {
+      // CLEANUP: If we have duplicates, keep the first one and delete the rest
+      strapi.log.info(
+        `Cleaning up ${akvoMemberships.length - 1} duplicate Akvo memberships for user ${user.email}`,
+      );
+      const toDelete = akvoMemberships.slice(1).map((m) => m.id);
+      await strapi.db
+        .query("api::institution-membership.institution-membership")
+        .deleteMany({
+          where: { id: { $in: toDelete } },
         });
     }
 

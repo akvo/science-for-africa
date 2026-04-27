@@ -80,8 +80,8 @@ const OnboardingStep5 = () => {
       );
 
       if (result && !result.error) {
-        // Update local auth store so redirects work correctly
-        updateUser({ onboardingComplete: true });
+        // Update local auth store with the full updated profile from backend
+        updateUser(result);
 
         // Purge professional onboarding data from sessionStorage
         resetStore();

@@ -22,9 +22,7 @@ export default function AcceptInvitePage() {
         setInvite(result.data);
         setStatus("accepted");
       } else {
-        setErrorMessage(
-          result?.error || "We couldn't accept this invitation.",
-        );
+        setErrorMessage(result?.error || "We couldn't accept this invitation.");
         setStatus("error");
       }
     })();

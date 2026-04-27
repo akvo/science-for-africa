@@ -258,9 +258,9 @@
           "sortable": true
         }
       },
-      "institution": {
+      "highestEducationInstitution": {
         "edit": {
-          "label": "institution",
+          "label": "highestEducationInstitution",
           "description": "",
           "placeholder": "",
           "visible": true,
@@ -268,23 +268,24 @@
           "mainField": "name"
         },
         "list": {
-          "label": "institution",
+          "label": "highestEducationInstitution",
           "searchable": true,
           "sortable": true
         }
       },
-      "affiliationStatus": {
+      "institutionMemberships": {
         "edit": {
-          "label": "affiliationStatus",
+          "label": "institutionMemberships",
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true
+          "editable": true,
+          "mainField": "documentId"
         },
         "list": {
-          "label": "affiliationStatus",
-          "searchable": true,
-          "sortable": true
+          "label": "institutionMemberships",
+          "searchable": false,
+          "sortable": false
         }
       },
       "orcidId": {
@@ -311,20 +312,6 @@
         },
         "list": {
           "label": "onboardingComplete",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "verificationStatus": {
-        "edit": {
-          "label": "verificationStatus",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "verificationStatus",
           "searchable": true,
           "sortable": true
         }
@@ -367,34 +354,6 @@
         },
         "list": {
           "label": "roleType",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "educationInstitutionName": {
-        "edit": {
-          "label": "educationInstitutionName",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "educationInstitutionName",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "institutionName": {
-        "edit": {
-          "label": "institutionName",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "institutionName",
           "searchable": true,
           "sortable": true
         }
@@ -465,6 +424,92 @@
         },
         "list": {
           "label": "otpResendWindowStart",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "memberships": {
+        "edit": {
+          "label": "memberships",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "documentId"
+        },
+        "list": {
+          "label": "memberships",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "collaborationInvites": {
+        "edit": {
+          "label": "collaborationInvites",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "documentId"
+        },
+        "list": {
+          "label": "collaborationInvites",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "displayName": {
+        "edit": {
+          "label": "displayName",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "displayName",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "profilePhoto": {
+        "edit": {
+          "label": "profilePhoto",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "profilePhoto",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "pageCover": {
+        "edit": {
+          "label": "pageCover",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "pageCover",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "languagePreferences": {
+        "edit": {
+          "label": "languagePreferences",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "languagePreferences",
           "searchable": true,
           "sortable": true
         }
@@ -618,28 +663,12 @@
         ],
         [
           {
-            "name": "institution",
-            "size": 6
-          },
-          {
-            "name": "affiliationStatus",
-            "size": 6
-          }
-        ],
-        [
-          {
             "name": "orcidId",
             "size": 6
           },
           {
             "name": "onboardingComplete",
             "size": 4
-          }
-        ],
-        [
-          {
-            "name": "verificationStatus",
-            "size": 6
           }
         ],
         [
@@ -655,16 +684,6 @@
           },
           {
             "name": "roleType",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "educationInstitutionName",
-            "size": 6
-          },
-          {
-            "name": "institutionName",
             "size": 6
           }
         ],
@@ -691,6 +710,46 @@
         [
           {
             "name": "otpResendWindowStart",
+            "size": 6
+          },
+          {
+            "name": "highestEducationInstitution",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "institutionMemberships",
+            "size": 6
+          },
+          {
+            "name": "memberships",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "collaborationInvites",
+            "size": 6
+          },
+          {
+            "name": "displayName",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "profilePhoto",
+            "size": 6
+          },
+          {
+            "name": "pageCover",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "languagePreferences",
             "size": 6
           }
         ]

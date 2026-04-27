@@ -17,9 +17,9 @@ module.exports = {
     {
       method: "GET",
       path: "/auth/me",
-      handler: "profile.getMe",
+      handler: "profile.me",
       config: {
-        description: "Get current user profile with population",
+        description: "Get current user profile",
       },
     },
     {

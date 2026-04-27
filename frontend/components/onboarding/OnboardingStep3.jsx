@@ -120,7 +120,7 @@ const OnboardingStep3 = () => {
             <SelectTrigger className="w-full h-11 px-3.5 py-2.5 border-brand-gray-100 rounded-8 text-md focus:ring-brand-teal-500">
               <SelectValue placeholder={t("step3.level_placeholder")} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent alignItemWithTrigger={false}>
               {EDUCATION_LEVEL_OPTIONS.map((level) => (
                 <SelectItem key={level} value={level} className="text-md">
                   {t(`education_levels.${level}`)}
@@ -153,7 +153,7 @@ const OnboardingStep3 = () => {
             )}
           </div>
 
-          {showDropdown && institutions.length > 0 && (
+          {showDropdown && (
             <div className="absolute z-50 w-full mt-1 bg-white border border-brand-gray-100 rounded-8 shadow-xl max-h-48 overflow-y-auto animate-in fade-in slide-in-from-top-2">
               {institutions.map((inst, index) => (
                 <button
@@ -164,6 +164,17 @@ const OnboardingStep3 = () => {
                   {inst.name}
                 </button>
               ))}
+              {!loading && searchTerm.length > 2 && (
+                <button
+                  onClick={() => setShowDropdown(false)}
+                  className="w-full text-left px-4 py-3 bg-brand-teal-50 hover:bg-brand-teal-100 transition-colors text-md text-brand-teal-700 font-medium italic"
+                >
+                  {t("step3.use_custom_institution", {
+                    name: searchTerm,
+                    defaultValue: `Use "${searchTerm}"`,
+                  })}
+                </button>
+              )}
             </div>
           )}
         </div>

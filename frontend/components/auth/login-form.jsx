@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { loginUser } from "@/lib/strapi";
+import { loginUser, fetchUserProfile } from "@/lib/strapi";
 import { useAuthStore } from "@/lib/auth-store";
 import { useRouter } from "next/router";
 import { SocialButton } from "./social-auth";
@@ -63,8 +63,19 @@ export const LoginForm = () => {
 
       if (result && result.jwt) {
         // Success! Persist auth state
-        const { setAuth } = useAuthStore.getState();
+        const { setAuth, updateUser } = useAuthStore.getState();
         setAuth(result.user, result.jwt, values.rememberMe);
+
+        // Fetch full profile with relations (institutions, interests, etc.)
+        // This ensures the store has populated data immediately after login
+        try {
+          const fullProfile = await fetchUserProfile();
+          if (fullProfile) {
+            updateUser(fullProfile);
+          }
+        } catch (err) {
+          console.error("Failed to sync full profile after login:", err);
+        }
 
         // Redirect based on onboarding status
         if (result.user?.onboardingComplete) {

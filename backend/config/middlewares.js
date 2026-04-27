@@ -9,9 +9,8 @@ module.exports = [
   {
     name: "strapi::session",
     config: {
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
       sameSite: "lax",
-      proxy: true,
     },
   },
   "strapi::favicon",

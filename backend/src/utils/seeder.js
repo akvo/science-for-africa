@@ -358,6 +358,10 @@ const seed = async (strapi) => {
     "api::collaboration-invite.collaboration-invite.find",
     "api::chat-message.chat-message.find",
     "api::chat-message.chat-message.create",
+    "api::resource.resource.find",
+    "api::resource.resource.findOne",
+    "api::resource.resource.create",
+    "plugin::upload.content-api.upload",
   ];
 
   for (const action of collaborationActions) {

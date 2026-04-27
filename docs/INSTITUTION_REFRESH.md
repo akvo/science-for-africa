@@ -10,8 +10,8 @@ To modernize the relationship between users and institutions by transitioning fr
 
 ### User Experience
 1.  **Onboarding (Individual Path)**:
-    - **Step 3 (Education)**: Instead of typing a school name, users search and select from the verified Institution list.
-    - **Step 5 (Affiliation)**: Users select their primary institution. This creates an `InstitutionMembership` record with type `member`.
+    - **Step 3 (Education)**: Instead of typing a school name, users search and select from the verified Institution list. If not found, they can create a new "pending" entry.
+    - **Step 5 (Affiliation)**: Users select their primary institution. This creates an `InstitutionMembership` record with type `member`. Supports creation of new "pending" institutions.
 2.  **Profile Management**:
     - Users can view and eventually manage multiple affiliations.
     - Educational background is displayed with high fidelity, linked to the institution's official record.
@@ -21,6 +21,7 @@ To modernize the relationship between users and institutions by transitioning fr
 ## 🎯 Design Principles
 - **Flexibility**: The `InstitutionMembership` join table allows for future roles (e.g., "owner" for institution admins) and multiple affiliations without schema changes.
 - **Data Quality**: Removing free-text fields for institution names prevents duplicates and ensures clean data for reporting and searching.
+- **Search Experience**: Institution search is case-insensitive and supports fuzzy matching to ensure users can find existing entries regardless of casing.
 - **Seamless Migration**: Existing users are automatically transitioned to the new model via a background backfill, ensuring no service interruption.
 
 ---

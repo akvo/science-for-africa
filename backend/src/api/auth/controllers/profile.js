@@ -75,14 +75,35 @@ module.exports = ({ strapi }) => ({
   },
 
   async update(ctx) {
-    const user = ctx.state.user;
+    const userSession = ctx.state.user;
     const body = ctx.request.body;
 
-    if (!user) {
+    if (!userSession) {
       return ctx.unauthorized();
     }
 
     try {
+      // 0. Fetch the full user record with numeric ID and documentId
+      const user = await strapi.db
+        .query("plugin::users-permissions.user")
+        .findOne({
+          where: {
+            $or: [
+              { id: typeof userSession.id === "number" ? userSession.id : -1 },
+              {
+                documentId:
+                  typeof userSession.id === "string"
+                    ? userSession.id
+                    : userSession.documentId || "",
+              },
+            ],
+          },
+        });
+
+      if (!user) {
+        return ctx.unauthorized("User record not found");
+      }
+
       const data = { ...body };
 
       // 1. Handle highestEducationInstitution (on-the-fly creation)
@@ -102,7 +123,7 @@ module.exports = ({ strapi }) => ({
             });
 
           if (!inst) {
-            inst = await strapi
+            const created = await strapi
               .documents("api::institution.institution")
               .create({
                 data: {
@@ -113,30 +134,40 @@ module.exports = ({ strapi }) => ({
                   locale: "en",
                 },
               });
+            inst = await strapi.db
+              .query("api::institution.institution")
+              .findOne({ where: { documentId: created.documentId } });
           }
-          data.highestEducationInstitution = inst.documentId || inst.id;
+          data.highestEducationInstitution = inst.id;
         } else if (targetId) {
-          data.highestEducationInstitution = targetId;
+          // Resolve numeric ID if needed
+          if (typeof targetId === "string") {
+            const inst = await strapi.db
+              .query("api::institution.institution")
+              .findOne({ where: { documentId: targetId } });
+            data.highestEducationInstitution = inst?.id || targetId;
+          } else {
+            data.highestEducationInstitution = targetId;
+          }
         }
       }
 
       // 2. Handle affiliationInstitution (on-the-fly creation + membership)
       if (data.affiliationInstitution) {
-        let instId =
+        let targetId =
           data.affiliationInstitution.documentId ||
           data.affiliationInstitution.id;
         const name = data.affiliationInstitution.name;
 
-        if (!instId && name) {
+        let inst;
+        if (!targetId && name) {
           // Check if it already exists
-          let inst = await strapi.db
-            .query("api::institution.institution")
-            .findOne({
-              where: { name: { $containsi: name } },
-            });
+          inst = await strapi.db.query("api::institution.institution").findOne({
+            where: { name: { $containsi: name } },
+          });
 
           if (!inst) {
-            inst = await strapi
+            const created = await strapi
               .documents("api::institution.institution")
               .create({
                 data: {
@@ -147,57 +178,94 @@ module.exports = ({ strapi }) => ({
                   locale: "en",
                 },
               });
+            inst = await strapi.db
+              .query("api::institution.institution")
+              .findOne({ where: { documentId: created.documentId } });
           }
-          instId = inst.documentId || inst.id;
+        } else if (targetId) {
+          inst = await strapi.db.query("api::institution.institution").findOne({
+            where: {
+              $or: [
+                { id: typeof targetId === "number" ? targetId : -1 },
+                { documentId: typeof targetId === "string" ? targetId : "" },
+              ],
+            },
+          });
         }
 
-        if (instId) {
-          // Check if membership already exists
+        if (inst) {
+          // Check if membership already exists using numeric IDs
           const existingMembership = await strapi.db
             .query("api::institution-membership.institution-membership")
             .findOne({
-              where: { user: user.id, institution: instId },
+              where: { user: user.id, institution: inst.id },
             });
 
           if (!existingMembership) {
-            await strapi
-              .documents("api::institution-membership.institution-membership")
-              .create({
-                data: {
-                  user: user.documentId || user.id,
-                  institution: instId,
-                  type: "member",
-                  verificationStatus: false,
-                  locale: "en",
-                },
-              });
+            try {
+              await strapi
+                .documents("api::institution-membership.institution-membership")
+                .create({
+                  data: {
+                    user: String(user.documentId),
+                    institution: String(inst.documentId),
+                    type: "member",
+                    verificationStatus: false,
+                    locale: "en",
+                  },
+                });
+            } catch (err) {
+              strapi.log.error("Membership Create Error: " + err.message);
+              // Continue anyway to avoid blocking profile update
+            }
           }
         }
         delete data.affiliationInstitution;
       }
 
-      // 3. Remove deprecated fields if they somehow slipped in
+      // 3. Remove deprecated fields
       delete data.institution;
       delete data.institutionName;
       delete data.educationInstitutionName;
 
-      const updatedUser = await strapi
-        .documents("plugin::users-permissions.user")
-        .update({
-          documentId: user.documentId || user.id,
-          data,
-          populate: {
-            highestEducationInstitution: true,
-            institutionMemberships: {
-              populate: {
-                institution: true,
-              },
-            },
-            interests: true,
-          },
-        });
+      // Handle relation mapping for Document Service
+      if (
+        data.highestEducationInstitution &&
+        typeof data.highestEducationInstitution === "number"
+      ) {
+        const inst = await strapi.db
+          .query("api::institution.institution")
+          .findOne({ where: { id: data.highestEducationInstitution } });
+        data.highestEducationInstitution = inst?.documentId;
+      }
 
-      return updatedUser;
+      // 4. Update the user using Document Service
+      try {
+        const updatedUser = await strapi
+          .documents("plugin::users-permissions.user")
+          .update({
+            documentId: String(user.documentId),
+            data,
+            populate: {
+              highestEducationInstitution: true,
+              institutionMemberships: {
+                populate: {
+                  institution: true,
+                },
+              },
+              interests: true,
+            },
+          });
+
+        if (!updatedUser) {
+          throw new Error("Update failed: document not found");
+        }
+
+        return updatedUser;
+      } catch (err) {
+        strapi.log.error("Document Update Error: " + err.message);
+        throw err;
+      }
     } catch (error) {
       strapi.log.error("UpdateMe Error: " + error.message);
       return ctx.internalServerError(error.message);

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { fetchResources } from "@/lib/strapi";
 import AddResourceDialog from "./AddResourceDialog";
+import ViewResourceDialog from "./ViewResourceDialog";
 
 const RESOURCE_FILTERS = [
   { key: "all", label: "All" },
@@ -23,14 +24,13 @@ const TYPE_LABELS = {
 function getFullFileUrl(url) {
   if (!url) return null;
   if (url.startsWith("http")) return url;
-  // Strapi returns relative paths like /uploads/file.pdf — prepend backend origin
   const backendOrigin = (
     process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api"
   ).replace(/\/api\/?$/, "");
   return `${backendOrigin}${url}`;
 }
 
-function ResourceCard({ resource }) {
+function ResourceCard({ resource, onView }) {
   const fileUrl = getFullFileUrl(resource.file?.url);
   return (
     <div className="flex items-center gap-4 px-6 py-5">
@@ -45,16 +45,16 @@ function ResourceCard({ resource }) {
           {resource.name}
         </p>
       </div>
-      {fileUrl && (
-        <div className="flex items-center gap-2 shrink-0">
-          <Button
-            variant="outline"
-            size="sm"
-            className="border-transparent bg-[#E8ECEF] hover:bg-[#dde2e6]"
-            onClick={() => window.open(fileUrl, "_blank")}
-          >
-            View
-          </Button>
+      <div className="flex items-center gap-2 shrink-0">
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-transparent bg-[#E8ECEF] hover:bg-[#dde2e6]"
+          onClick={() => onView?.(resource)}
+        >
+          View
+        </Button>
+        {fileUrl && (
           <Button
             variant="outline"
             size="sm"
@@ -75,21 +75,21 @@ function ResourceCard({ resource }) {
           >
             Download
           </Button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
 
 export default function ResourcesList({
   communityDocumentId,
-  onAdd,
   className,
 }) {
   const [filter, setFilter] = useState("all");
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [viewResource, setViewResource] = useState(null);
 
   const loadResources = () => {
     if (!communityDocumentId) return;
@@ -135,7 +135,7 @@ export default function ResourcesList({
           size="sm"
           variant="outline"
           className="ml-auto gap-1.5 rounded-full"
-          onClick={() => setDialogOpen(true)}
+          onClick={() => setAddDialogOpen(true)}
         >
           <Plus className="size-4" />
           Add resource
@@ -156,16 +156,25 @@ export default function ResourcesList({
             <ResourceCard
               key={r.documentId || r.id}
               resource={r}
+              onView={setViewResource}
             />
           ))}
         </div>
       )}
 
       <AddResourceDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
+        open={addDialogOpen}
+        onOpenChange={setAddDialogOpen}
         communityDocumentId={communityDocumentId}
         onSuccess={loadResources}
+      />
+
+      <ViewResourceDialog
+        open={!!viewResource}
+        onOpenChange={(open) => {
+          if (!open) setViewResource(null);
+        }}
+        resource={viewResource}
       />
     </section>
   );

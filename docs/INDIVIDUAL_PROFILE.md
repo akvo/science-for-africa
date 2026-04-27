@@ -49,6 +49,8 @@ graph TD
 ### Database Schema / Data Structure
 - **User Entity**: Extension of current schema to include:
     - `fullName` (string)
+    - `displayName` (string)
+
     - `profilePhoto` (Media Relation)
     - `pageCover` (Media Relation)
     - `languagePreferences` (Enum: en, fr)
@@ -61,6 +63,8 @@ graph TD
     - `orcidId` (string)
     - `interests` (Component: user.interest, repeatable)
     - `onboardingComplete` (boolean)
+    - `full_name` (Auto-synced from first/last name - legacy reference)
+
     - `memberships` (One-to-Many to `CommunityMembership`)
     - `collaborationInvites` (One-to-Many to `CollaborationInvite`)
 - **Community**: (Branch 31 Merged)

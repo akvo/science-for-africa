@@ -1,5 +1,5 @@
 {
-  "key": "plugin_content_manager_configuration_content_types::api::institution.institution",
+  "key": "plugin_content_manager_configuration_content_types::api::resource.resource",
   "value": {
     "settings": {
       "bulkable": true,
@@ -33,66 +33,52 @@
           "sortable": true
         }
       },
-      "type": {
+      "resourceType": {
         "edit": {
-          "label": "type",
+          "label": "resourceType",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "type",
+          "label": "resourceType",
           "searchable": true,
           "sortable": true
         }
       },
-      "country": {
+      "file": {
         "edit": {
-          "label": "country",
+          "label": "file",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "country",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "verified": {
-        "edit": {
-          "label": "verified",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "verified",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "memberships": {
-        "edit": {
-          "label": "memberships",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true,
-          "mainField": "documentId"
-        },
-        "list": {
-          "label": "memberships",
+          "label": "file",
           "searchable": false,
           "sortable": false
         }
       },
-      "alumni": {
+      "community": {
         "edit": {
-          "label": "alumni",
+          "label": "community",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "name"
+        },
+        "list": {
+          "label": "community",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "uploadedBy": {
+        "edit": {
+          "label": "uploadedBy",
           "description": "",
           "placeholder": "",
           "visible": true,
@@ -100,9 +86,9 @@
           "mainField": "username"
         },
         "list": {
-          "label": "alumni",
-          "searchable": false,
-          "sortable": false
+          "label": "uploadedBy",
+          "searchable": true,
+          "sortable": true
         }
       },
       "createdAt": {
@@ -176,8 +162,8 @@
       "list": [
         "id",
         "name",
-        "type",
-        "country"
+        "resourceType",
+        "file"
       ],
       "edit": [
         [
@@ -186,33 +172,29 @@
             "size": 6
           },
           {
-            "name": "type",
+            "name": "resourceType",
             "size": 6
           }
         ],
         [
           {
-            "name": "country",
+            "name": "file",
             "size": 6
           },
           {
-            "name": "verified",
-            "size": 4
+            "name": "community",
+            "size": 6
           }
         ],
         [
           {
-            "name": "memberships",
-            "size": 6
-          },
-          {
-            "name": "alumni",
+            "name": "uploadedBy",
             "size": 6
           }
         ]
       ]
     },
-    "uid": "api::institution.institution"
+    "uid": "api::resource.resource"
   },
   "type": "object",
   "environment": null,

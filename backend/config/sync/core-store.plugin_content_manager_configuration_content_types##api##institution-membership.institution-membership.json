@@ -1,13 +1,13 @@
 {
-  "key": "plugin_content_manager_configuration_content_types::api::institution.institution",
+  "key": "plugin_content_manager_configuration_content_types::api::institution-membership.institution-membership",
   "value": {
     "settings": {
       "bulkable": true,
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "name",
-      "defaultSortBy": "name",
+      "mainField": "documentId",
+      "defaultSortBy": "documentId",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -19,16 +19,32 @@
           "sortable": true
         }
       },
-      "name": {
+      "user": {
         "edit": {
-          "label": "name",
+          "label": "user",
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true
+          "editable": true,
+          "mainField": "username"
         },
         "list": {
-          "label": "name",
+          "label": "user",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "institution": {
+        "edit": {
+          "label": "institution",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "name"
+        },
+        "list": {
+          "label": "institution",
           "searchable": true,
           "sortable": true
         }
@@ -47,62 +63,18 @@
           "sortable": true
         }
       },
-      "country": {
+      "verificationStatus": {
         "edit": {
-          "label": "country",
+          "label": "verificationStatus",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "country",
+          "label": "verificationStatus",
           "searchable": true,
           "sortable": true
-        }
-      },
-      "verified": {
-        "edit": {
-          "label": "verified",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "verified",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "memberships": {
-        "edit": {
-          "label": "memberships",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true,
-          "mainField": "documentId"
-        },
-        "list": {
-          "label": "memberships",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "alumni": {
-        "edit": {
-          "label": "alumni",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true,
-          "mainField": "username"
-        },
-        "list": {
-          "label": "alumni",
-          "searchable": false,
-          "sortable": false
         }
       },
       "createdAt": {
@@ -175,44 +147,34 @@
     "layouts": {
       "list": [
         "id",
-        "name",
-        "type",
-        "country"
+        "user",
+        "institution",
+        "type"
       ],
       "edit": [
         [
           {
-            "name": "name",
+            "name": "user",
             "size": 6
           },
+          {
+            "name": "institution",
+            "size": 6
+          }
+        ],
+        [
           {
             "name": "type",
             "size": 6
-          }
-        ],
-        [
-          {
-            "name": "country",
-            "size": 6
           },
           {
-            "name": "verified",
+            "name": "verificationStatus",
             "size": 4
-          }
-        ],
-        [
-          {
-            "name": "memberships",
-            "size": 6
-          },
-          {
-            "name": "alumni",
-            "size": 6
           }
         ]
       ]
     },
-    "uid": "api::institution.institution"
+    "uid": "api::institution-membership.institution-membership"
   },
   "type": "object",
   "environment": null,

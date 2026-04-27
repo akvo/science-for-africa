@@ -11,8 +11,23 @@
       "locale": null
     },
     {
+      "documentId": "kx7x8wmp2g5w7385pmtd97y0",
+      "action": "api::auth.profile.me",
+      "locale": null
+    },
+    {
       "documentId": "qjo9o4lt9mbdkzxonhkotmhd",
       "action": "api::auth.profile.update",
+      "locale": null
+    },
+    {
+      "documentId": "j4hud8cfur601ufm3h6yge1g",
+      "action": "api::chat-message.chat-message.create",
+      "locale": null
+    },
+    {
+      "documentId": "cooi2ge6jlp12hdm3qiiu2vs",
+      "action": "api::chat-message.chat-message.find",
       "locale": null
     },
     {
@@ -21,17 +36,7 @@
       "locale": null
     },
     {
-      "documentId": "c0m1a2u3t4h5f6i7n8d9c0m1",
-      "action": "api::community.community.find",
-      "locale": null
-    },
-    {
-      "documentId": "c0m2a3u4t5h6f7i8n9d0c1m2",
-      "action": "api::community.community.findOne",
-      "locale": null
-    },
-    {
-      "documentId": "k52pqtxi9atk1vbt1h3ai2m0",
+      "documentId": "goetop0pg8r9v2qzbefaei0u",
       "action": "api::collaboration-call.collaboration-call.create-with-invites",
       "locale": null
     },
@@ -46,6 +51,16 @@
       "locale": null
     },
     {
+      "documentId": "cofrinyge7zgdrmneu4eh9lv",
+      "action": "api::collaboration-call.collaboration-call.findOne",
+      "locale": null
+    },
+    {
+      "documentId": "on0t3bcvplpkkpbn0fd4vk5h",
+      "action": "api::collaboration-invite.collaboration-invite.accept",
+      "locale": null
+    },
+    {
       "documentId": "ow1seqagnosdmzfsa1qjtyv5",
       "action": "api::collaboration-invite.collaboration-invite.create",
       "locale": null
@@ -56,6 +71,16 @@
       "locale": null
     },
     {
+      "documentId": "c0m1a2u3t4h5f6i7n8d9c0m1",
+      "action": "api::community.community.find",
+      "locale": null
+    },
+    {
+      "documentId": "c0m2a3u4t5h6f7i8n9d0c1m2",
+      "action": "api::community.community.findOne",
+      "locale": null
+    },
+    {
       "documentId": "t98wfv4ar1wdd04yqdjduh6a",
       "action": "api::institution.institution.find",
       "locale": null
@@ -63,6 +88,26 @@
     {
       "documentId": "wt0awwpc8bl6zktg1spucdgs",
       "action": "api::interest.interest.find",
+      "locale": null
+    },
+    {
+      "documentId": "j42deao778507qctfjysjb21",
+      "action": "api::resource.resource.create",
+      "locale": null
+    },
+    {
+      "documentId": "wx9vtj1zomthzeertpsoq1en",
+      "action": "api::resource.resource.find",
+      "locale": null
+    },
+    {
+      "documentId": "rv4eo9g2m62voy36uys7i9lf",
+      "action": "api::resource.resource.findOne",
+      "locale": null
+    },
+    {
+      "documentId": "gixnkyyj5z4cm7hyae3q7v47",
+      "action": "plugin::upload.content-api.upload",
       "locale": null
     },
     {

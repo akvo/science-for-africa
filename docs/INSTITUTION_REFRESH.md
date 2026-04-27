@@ -128,10 +128,19 @@ graph TD
 ---
 
 ## ✅ Implementation Checklist
-- [ ] Migration script tested on local data.
-- [ ] Verification that `onboardingComplete: false` users can still complete the new flow.
-- [ ] Documentation updated in LLD and research logs.
+- [x] Migration script tested on local data.
+- [x] Verification that `onboardingComplete: false` users can still complete the new flow.
+- [x] Documentation updated in LLD and research logs.
 - [ ] Security audit: ensure users cannot create memberships for other users.
+
+### Technical Note: Document Service vs Database Layer
+> [!IMPORTANT]
+> The profile update controller (`profile.js`) transitioned from using the Database Layer (`strapi.db.query`) to the **Document Service Layer** (`strapi.documents().update()`).
+>
+> **Rationale**:
+> 1. **Component Integrity**: Strapi v5's Database Layer does not handle nested component data (like `interests`) as reliably as the Document Service.
+> 2. **ID Safety**: The Document Service uses `documentId` (string UUIDs), which is the standard identifier for lifecycles and draft/publish workflows in v5.
+> 3. **Mixed IDs**: For relational checks (join tables), numeric `id`s are still used via `db.query` to ensure PostgreSQL type compatibility, but the final write always uses the Document Service with `documentId`.
 
 ---
 

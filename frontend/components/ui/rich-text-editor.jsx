@@ -71,6 +71,7 @@ export function RichTextEditor({
       editorRef.current.innerHTML = value || "";
     }
     const text = editorRef.current.innerText || "";
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsEmpty(text.trim().length === 0);
   }, [value]);
 

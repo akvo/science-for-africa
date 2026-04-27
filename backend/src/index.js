@@ -163,6 +163,14 @@ module.exports = {
     }
     console.log("--- SCAN COMPLETE ---");
 
+    // Run migrations
+    try {
+      const backfillInstitutions = require("./bootstrap/migrations/backfill-institutions");
+      await backfillInstitutions({ strapi });
+    } catch (err) {
+      strapi.log.error(`Migration Error: ${err.message}`);
+    }
+
     // Add user lifecycles in bootstrap
     strapi.db.lifecycles.subscribe({
       models: ["plugin::users-permissions.user"],
@@ -211,21 +219,7 @@ module.exports = {
             );
           }
 
-          if (data.affiliationInstitution && data.affiliationInstitution.id) {
-            data.institution = data.affiliationInstitution.id;
-            delete data.affiliationInstitution;
-          } else if (
-            data.affiliationInstitution &&
-            data.affiliationInstitution.name
-          ) {
-            data.institutionName = data.affiliationInstitution.name;
-            delete data.affiliationInstitution;
-          }
-
-          if (data.educationInstitution && data.educationInstitution.name) {
-            data.educationInstitutionName = data.educationInstitution.name;
-            delete data.educationInstitution;
-          }
+          // Deprecated: Institution mappings moved to backfill and frontend logic
         } catch (error) {
           console.error(
             "[AUTH-DEBUG] Error in beforeCreate user lifecycle:",
@@ -235,12 +229,7 @@ module.exports = {
       },
       async beforeUpdate(event) {
         const { data } = event.params;
-        // Synchronize verificationStatus with confirmed status
-        if (data.confirmed === true) {
-          data.verificationStatus = "verified";
-        } else if (data.confirmed === false) {
-          data.verificationStatus = "unverified";
-        }
+        // Deprecated: verificationStatus moved to InstitutionMembership
 
         if (data.firstName || data.lastName) {
           data.fullName =

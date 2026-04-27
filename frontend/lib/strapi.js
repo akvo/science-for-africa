@@ -154,28 +154,24 @@ export function transformProfileUpdatePayload(userData) {
     );
   }
 
-  if (data.affiliationInstitution) {
-    if (data.affiliationInstitution.id) {
-      data.institution = data.affiliationInstitution.id;
-    } else if (data.affiliationInstitution.name) {
-      data.institutionName = data.affiliationInstitution.name;
-    }
-    delete data.affiliationInstitution;
-  }
-
-  if (data.educationInstitution && data.educationInstitution.name) {
-    data.educationInstitutionName = data.educationInstitution.name;
+  // We now pass affiliationInstitution and educationInstitution as objects
+  // The backend handles creation/lookup.
+  // Note: OnboardingStep3 uses 'educationInstitution' in store,
+  // but backend uses 'highestEducationInstitution'.
+  if (data.educationInstitution) {
+    data.highestEducationInstitution = data.educationInstitution;
     delete data.educationInstitution;
   }
 
   if (data.userType === "institution") {
     delete data.educationLevel;
     delete data.educationTopic;
-    delete data.educationInstitutionName;
+    delete data.highestEducationInstitution;
     delete data.orcidId;
     delete data.position;
   }
 
+  // Cleanup empty strings
   Object.keys(data).forEach((key) => {
     if (data[key] === "") {
       delete data[key];
@@ -376,5 +372,18 @@ export async function updateUserProfile(userData) {
   } catch (error) {
     console.error("Error updating profile:", error);
     return error;
+  }
+}
+
+/**
+ * Fetch the current authenticated user's profile with all relations
+ */
+export async function fetchUserProfile() {
+  try {
+    const response = await apiClient.get("/auth/me");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    return null;
   }
 }

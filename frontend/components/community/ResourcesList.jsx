@@ -114,29 +114,31 @@ export default function ResourcesList({
   return (
     <section className={cn("flex flex-col", className)}>
       <div className="flex items-center gap-2 border-b border-brand-gray-100 pb-4 lg:px-6">
-        {RESOURCE_FILTER_KEYS.map((f) => {
-          const isActive = filter === f.key;
-          return (
-            <button
-              key={f.key}
-              type="button"
-              onClick={() => setFilter(f.key)}
-              className={cn(
-                "inline-flex h-[34px] cursor-pointer items-center rounded-full px-[14px] text-sm font-medium transition-colors",
-                isActive
-                  ? "border border-[#D0D5DD] bg-primary-50 text-brand-gray-900 shadow-[0_1px_2px_0_rgba(16,24,40,0.05),0_0_0_4px_var(--color-primary-50)]"
-                  : "bg-white text-brand-gray-700 border border-brand-gray-100 hover:bg-brand-gray-50",
-              )}
-              aria-pressed={isActive}
-            >
-              {t(f.i18nKey)}
-            </button>
-          );
-        })}
+        <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto p-1 -m-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          {RESOURCE_FILTER_KEYS.map((f) => {
+            const isActive = filter === f.key;
+            return (
+              <button
+                key={f.key}
+                type="button"
+                onClick={() => setFilter(f.key)}
+                className={cn(
+                  "inline-flex h-[34px] shrink-0 cursor-pointer items-center whitespace-nowrap rounded-full px-[14px] text-sm font-medium transition-colors",
+                  isActive
+                    ? "border border-[#D0D5DD] bg-primary-50 text-brand-gray-900 shadow-[0_1px_2px_0_rgba(16,24,40,0.05),0_0_0_4px_var(--color-primary-50)]"
+                    : "bg-white text-brand-gray-700 border border-brand-gray-100 hover:bg-brand-gray-50",
+                )}
+                aria-pressed={isActive}
+              >
+                {t(f.i18nKey)}
+              </button>
+            );
+          })}
+        </div>
         <Button
           size="sm"
           variant="outline"
-          className="ml-auto gap-1.5 rounded-full"
+          className="shrink-0 gap-1.5 rounded-full"
           onClick={() => setAddDialogOpen(true)}
         >
           <Plus className="size-4" />

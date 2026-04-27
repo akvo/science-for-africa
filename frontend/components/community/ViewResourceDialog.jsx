@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "next-i18next";
 import {
   Dialog,
   DialogContent,
@@ -21,11 +22,11 @@ import {
   postResourceComment,
 } from "@/lib/strapi";
 
-const TYPE_LABELS = {
-  report: "Report",
-  publication: "Publication",
-  "practice-note": "Practice note",
-  "case-study": "Case study",
+const TYPE_LABEL_KEYS = {
+  report: "resources.report",
+  publication: "resources.publication",
+  "practice-note": "resources.practice_note",
+  "case-study": "resources.case_study",
 };
 
 function getFullFileUrl(url) {
@@ -64,20 +65,20 @@ function formatDate(dateStr) {
   });
 }
 
-function timeAgo(dateStr) {
+function timeAgo(dateStr, t) {
   if (!dateStr) return "";
   const now = new Date();
   const d = new Date(dateStr);
   const diffMs = now - d;
   const mins = Math.floor(diffMs / 60000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 1) return t("resources.just_now");
+  if (mins < 60) return `${mins}m`;
   const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return `${hours}h`;
   const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}d ago`;
+  if (days < 7) return `${days}d`;
   const weeks = Math.floor(days / 7);
-  if (weeks < 5) return `${weeks}w ago`;
+  if (weeks < 5) return `${weeks}w`;
   return formatDate(dateStr);
 }
 
@@ -92,7 +93,7 @@ function getAuthorName(author) {
   );
 }
 
-function Comment({ comment }) {
+function Comment({ comment, t }) {
   const author = comment.author;
   const name = getAuthorName(author);
 
@@ -114,7 +115,7 @@ function Comment({ comment }) {
             </span>
           )}
           <span className="text-xs text-brand-gray-500">
-            · {timeAgo(comment.createdAt)}
+            · {timeAgo(comment.createdAt, t)}
           </span>
         </div>
         <p className="mt-1 text-sm leading-relaxed text-brand-gray-700">
@@ -126,6 +127,7 @@ function Comment({ comment }) {
 }
 
 export default function ViewResourceDialog({ open, onOpenChange, resource: resourceProp }) {
+  const { t } = useTranslation("common");
   const [saved, setSaved] = useState(false);
   const [fullResource, setFullResource] = useState(null);
   const [comments, setComments] = useState([]);
@@ -211,10 +213,10 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-brand-gray-500 mb-1">
               <span>
-                {TYPE_LABELS[resource.resourceType] || resource.resourceType}
+                {t(TYPE_LABEL_KEYS[resource.resourceType]) || resource.resourceType}
               </span>
               <span className="size-1 rounded-full bg-brand-gray-400" />
-              <span>Public</span>
+              <span>{t("resources.public")}</span>
             </div>
             <h2 className="text-lg font-bold text-brand-gray-900 leading-tight">
               {resource.name}
@@ -239,7 +241,7 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
             }
           >
             <XIcon />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">{t("resources.close")}</span>
           </DialogClose>
         </div>
 
@@ -258,20 +260,20 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
                     {uploaderName}
                   </p>
                   <p className="text-xs text-brand-gray-500">
-                    Uploaded {formatDate(resource.createdAt)}
+                    {t("resources.uploaded")} {formatDate(resource.createdAt)}
                   </p>
                 </div>
               </>
             ) : (
               <p className="text-sm text-brand-gray-500">
-                Uploaded {formatDate(resource.createdAt)}
+                {t("resources.uploaded")} {formatDate(resource.createdAt)}
               </p>
             )}
           </div>
           {fileUrl && (
             <Button size="sm" className="gap-2" onClick={handleDownload}>
               <Download className="size-4" />
-              Download
+              {t("resources.download")}
               {resource.file?.ext
                 ? ` · ${resource.file.ext.replace(".", "").toUpperCase()}`
                 : ""}
@@ -284,19 +286,19 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
           {/* Description */}
           <section>
             <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-brand-gray-600">
-              Description
+              {t("resources.description")}
             </h3>
             <p className="text-sm leading-relaxed text-brand-gray-700">
-              {resource.description || "No description provided."}
+              {resource.description || t("resources.no_description")}
             </p>
           </section>
 
           {/* Discussion */}
           <section className="mt-6 border-t border-brand-gray-100 pt-5">
             <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-brand-gray-600">
-              Discussion{" "}
+              {t("resources.discussion")}{" "}
               <span className="ml-2 rounded-full bg-brand-gray-100 px-2 py-0.5 text-xs font-medium text-brand-gray-500 normal-case tracking-normal">
-                {comments.length} comment{comments.length !== 1 ? "s" : ""}
+                {comments.length} {comments.length !== 1 ? t("resources.comments") : t("resources.comment")}
               </span>
             </h3>
 
@@ -317,7 +319,7 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
                   <div className="flex-1 min-w-0">
                     <textarea
                       className="w-full resize-none border-none bg-transparent text-sm text-brand-gray-900 placeholder:text-brand-gray-400 outline-none min-h-[44px] leading-relaxed"
-                      placeholder="Share how you used this, what worked, or what to watch out for..."
+                      placeholder={t("resources.comment_placeholder")}
                       rows={2}
                       value={commentText}
                       onChange={(e) => setCommentText(e.target.value)}
@@ -329,7 +331,7 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
                           size="sm"
                           onClick={() => setCommentText("")}
                         >
-                          Cancel
+                          {t("resources.cancel")}
                         </Button>
                       )}
                       <Button
@@ -340,7 +342,7 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
                         {posting && (
                           <Loader2 className="size-3 animate-spin mr-1" />
                         )}
-                        Post comment
+                        {t("resources.post_comment")}
                       </Button>
                     </div>
                   </div>
@@ -351,12 +353,11 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
             {/* Comment list */}
             {loadingComments ? (
               <div className="py-6 text-center text-sm text-brand-gray-500">
-                Loading comments...
+                {t("resources.loading_comments")}
               </div>
             ) : comments.length === 0 ? (
               <div className="rounded-xl border border-dashed border-brand-gray-200 p-8 text-center text-sm text-brand-gray-500">
-                No comments yet. Be the first to share how you&apos;re using
-                this resource.
+                {t("resources.no_comments")}
               </div>
             ) : (
               <div className="flex flex-col">
@@ -364,6 +365,7 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
                   <Comment
                     key={c.documentId || c.id}
                     comment={c}
+                    t={t}
                   />
                 ))}
               </div>
@@ -383,17 +385,17 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
                   : ""
               }
               onClick={() => setSaved(!saved)}
-              title="Save to your library"
+              title={t("resources.save_to_library")}
             >
               <Bookmark
                 className="size-4"
                 fill={saved ? "currentColor" : "none"}
               />
             </Button>
-            <Button variant="outline" size="icon-sm" title="Share">
+            <Button variant="outline" size="icon-sm" title={t("resources.share")}>
               <Share2 className="size-4" />
             </Button>
-            <span className="text-xs text-brand-gray-500">Save · Share</span>
+            <span className="text-xs text-brand-gray-500">{t("resources.save_share")}</span>
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -401,12 +403,12 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
               size="sm"
               className="text-brand-gray-600"
             >
-              Report
+              {t("resources.report")}
             </Button>
             <DialogClose
               render={<Button variant="outline" size="sm" />}
             >
-              Close
+              {t("resources.close")}
             </DialogClose>
           </div>
         </div>

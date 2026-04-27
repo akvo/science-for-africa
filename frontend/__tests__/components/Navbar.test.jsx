@@ -112,11 +112,20 @@ describe("Navbar Component (TDD)", () => {
       fireEvent.click(avatar);
     });
 
-    // 2. Click the Sign out button
-    const logoutBtn = screen.getByText("navbar.logout");
+    // 2. Verify new dropdown items are present
+    expect(
+      screen.getByText("navbar.profile_dropdown.details"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("navbar.profile_dropdown.communities"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("navbar.profile_dropdown.faq")).toBeInTheDocument();
+
+    // 3. Click the Sign out button (new key)
+    const logoutBtn = screen.getByText("navbar.profile_dropdown.logout");
     fireEvent.click(logoutBtn);
 
-    // 3. Verify store action and redirection
+    // 4. Verify store action and redirection
     await waitFor(() => {
       expect(mockLogout).toHaveBeenCalled();
       expect(mockPush).toHaveBeenCalledWith("/");

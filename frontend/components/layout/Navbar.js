@@ -29,6 +29,15 @@ import Image from "next/image";
 
 import VerificationBadge from "@/components/shared/VerificationBadge";
 
+const PROFILE_MENU_ITEMS = [
+  { key: "details", href: "/profile" },
+  { key: "communities", href: "/coming-soon" },
+  { key: "content", href: "/coming-soon" },
+  { key: "saved_posts", href: "/coming-soon" },
+  { key: "my_events", href: "/coming-soon" },
+  { key: "courses", href: "/coming-soon" },
+];
+
 const Navbar = () => {
   const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState(false);
@@ -213,32 +222,7 @@ const Navbar = () => {
 
                     {/* Personal Management Section */}
                     <div className="py-2">
-                      {[
-                        {
-                          key: "details",
-                          href: "/coming-soon",
-                        },
-                        {
-                          key: "communities",
-                          href: "/coming-soon",
-                        },
-                        {
-                          key: "content",
-                          href: "/coming-soon",
-                        },
-                        {
-                          key: "saved_posts",
-                          href: "/coming-soon",
-                        },
-                        {
-                          key: "my_events",
-                          href: "/coming-soon",
-                        },
-                        {
-                          key: "courses",
-                          href: "/coming-soon",
-                        },
-                      ].map((item) => (
+                      {PROFILE_MENU_ITEMS.map((item) => (
                         <DropdownMenuItem
                           key={item.key}
                           asChild
@@ -378,13 +362,8 @@ const Navbar = () => {
                   </Link>
                   <div className="grid grid-cols-2 gap-2 mt-2">
                     {[
-                      { key: "details" },
-                      { key: "communities" },
-                      { key: "content" },
-                      { key: "saved_posts" },
-                      { key: "my_events" },
-                      { key: "courses" },
-                      { key: "faq" },
+                      ...PROFILE_MENU_ITEMS,
+                      { key: "faq", href: "/coming-soon" },
                     ].map((item) => (
                       <Button
                         key={item.key}
@@ -394,7 +373,7 @@ const Navbar = () => {
                         asChild
                         onClick={() => setIsOpen(false)}
                       >
-                        <Link href="/coming-soon">
+                        <Link href={item.href}>
                           <span className="text-xs truncate text-black font-medium">
                             {t(`navbar.profile_dropdown.${item.key}`)}
                           </span>

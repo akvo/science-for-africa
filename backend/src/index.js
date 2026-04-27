@@ -8,110 +8,8 @@ module.exports = {
    * This gives you an opportunity to extend code.
    */
   register({ strapi }) {
-    // 1. Extend the user content type attributes
-    const userModel = strapi.contentType("plugin::users-permissions.user");
-    if (userModel) {
-      userModel.attributes = {
-        ...userModel.attributes,
-        firstName: { type: "string" },
-        lastName: { type: "string" },
-        fullName: { type: "string" },
-        position: { type: "string" },
-        biography: { type: "text" },
-        interests: {
-          type: "component",
-          repeatable: true,
-          component: "user.interest",
-          max: 5,
-        },
-        educationTopic: { type: "string" },
-        educationLevel: { type: "string" },
-        institution: {
-          type: "relation",
-          relation: "manyToOne",
-          target: "api::institution.institution",
-          inversedBy: "users",
-        },
-        affiliationStatus: {
-          type: "enumeration",
-          enum: ["Pending", "Approved", "Rejected"],
-          default: "Pending",
-        },
-        orcidId: {
-          type: "string",
-          // Moved regex validation to lifecycle to avoid blocking creation
-        },
-        onboardingComplete: {
-          type: "boolean",
-          default: false,
-        },
-        verificationStatus: {
-          type: "enumeration",
-          enum: ["unverified", "verified"],
-          default: "unverified",
-        },
-        socialLinks: {
-          type: "json",
-        },
-        userType: {
-          type: "enumeration",
-          enum: ["individual", "institution"],
-        },
-        roleType: { type: "string" },
-        educationInstitutionName: {
-          type: "string",
-        },
-        institutionName: {
-          type: "string",
-        },
-        memberships: {
-          type: "relation",
-          relation: "oneToMany",
-          target: "api::community-membership.community-membership",
-          mappedBy: "user",
-        },
-        collaborationInvites: {
-          type: "relation",
-          relation: "oneToMany",
-          target: "api::collaboration-invite.collaboration-invite",
-          mappedBy: "invitedUser",
-        },
-        otpCode: {
-          type: "string",
-        },
-        otpExpiration: {
-          type: "datetime",
-        },
-        lastOtpSentAt: {
-          type: "datetime",
-        },
-        otpResendCount: {
-          type: "integer",
-          default: 0,
-        },
-        otpResendWindowStart: {
-          type: "datetime",
-        },
-        displayName: {
-          type: "string",
-        },
-        profilePhoto: {
-          type: "media",
-          multiple: false,
-          allowedTypes: ["images"],
-        },
-        pageCover: {
-          type: "media",
-          multiple: false,
-          allowedTypes: ["images"],
-        },
-        languagePreferences: {
-          type: "enumeration",
-          enum: ["en", "fr"],
-          default: "en",
-        },
-      };
-    }
+    // 1. User content type attributes are now defined in
+    //    src/extensions/users-permissions/content-types/user/schema.json
 
     // 2. Override users-permissions register route and controller
     const usersPermissionsPlugin = strapi.plugin("users-permissions");
@@ -265,6 +163,14 @@ module.exports = {
     }
     console.log("--- SCAN COMPLETE ---");
 
+    // Run migrations
+    try {
+      const backfillInstitutions = require("./bootstrap/migrations/backfill-institutions");
+      await backfillInstitutions({ strapi });
+    } catch (err) {
+      strapi.log.error(`Migration Error: ${err.message}`);
+    }
+
     // Add user lifecycles in bootstrap
     strapi.db.lifecycles.subscribe({
       models: ["plugin::users-permissions.user"],
@@ -313,21 +219,7 @@ module.exports = {
             );
           }
 
-          if (data.affiliationInstitution && data.affiliationInstitution.id) {
-            data.institution = data.affiliationInstitution.id;
-            delete data.affiliationInstitution;
-          } else if (
-            data.affiliationInstitution &&
-            data.affiliationInstitution.name
-          ) {
-            data.institutionName = data.affiliationInstitution.name;
-            delete data.affiliationInstitution;
-          }
-
-          if (data.educationInstitution && data.educationInstitution.name) {
-            data.educationInstitutionName = data.educationInstitution.name;
-            delete data.educationInstitution;
-          }
+          // Deprecated: Institution mappings moved to backfill and frontend logic
         } catch (error) {
           console.error(
             "[AUTH-DEBUG] Error in beforeCreate user lifecycle:",
@@ -337,12 +229,7 @@ module.exports = {
       },
       async beforeUpdate(event) {
         const { data } = event.params;
-        // Synchronize verificationStatus with confirmed status
-        if (data.confirmed === true) {
-          data.verificationStatus = "verified";
-        } else if (data.confirmed === false) {
-          data.verificationStatus = "unverified";
-        }
+        // Deprecated: verificationStatus moved to InstitutionMembership
 
         if (data.firstName || data.lastName) {
           data.fullName =

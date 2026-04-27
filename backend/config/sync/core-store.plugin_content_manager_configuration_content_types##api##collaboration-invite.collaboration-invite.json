@@ -33,16 +33,16 @@
           "sortable": true
         }
       },
-      "status": {
+      "inviteStatus": {
         "edit": {
-          "label": "status",
+          "label": "inviteStatus",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "status",
+          "label": "inviteStatus",
           "searchable": true,
           "sortable": true
         }
@@ -176,17 +176,13 @@
       "list": [
         "id",
         "email",
-        "status",
-        "role"
+        "role",
+        "inviteStatus"
       ],
       "edit": [
         [
           {
             "name": "email",
-            "size": 6
-          },
-          {
-            "name": "status",
             "size": 6
           }
         ],
@@ -207,6 +203,12 @@
           },
           {
             "name": "invitedAt",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "inviteStatus",
             "size": 6
           }
         ]

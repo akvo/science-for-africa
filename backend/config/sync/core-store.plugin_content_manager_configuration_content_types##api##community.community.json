@@ -1,0 +1,396 @@
+{
+  "key": "plugin_content_manager_configuration_content_types::api::community.community",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "name",
+      "defaultSortBy": "name",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "name": {
+        "edit": {
+          "label": "name",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "name",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "slug": {
+        "edit": {
+          "label": "slug",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "slug",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "handle": {
+        "edit": {
+          "label": "handle",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "handle",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "description": {
+        "edit": {
+          "label": "description",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "description",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "bannerUrl": {
+        "edit": {
+          "label": "bannerUrl",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "bannerUrl",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "avatarUrl": {
+        "edit": {
+          "label": "avatarUrl",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "avatarUrl",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "initials": {
+        "edit": {
+          "label": "initials",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "initials",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "subscribers": {
+        "edit": {
+          "label": "subscribers",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "subscribers",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "posts": {
+        "edit": {
+          "label": "posts",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "posts",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "tags": {
+        "edit": {
+          "label": "tags",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "tags",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "rules": {
+        "edit": {
+          "label": "rules",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "rules",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "parent": {
+        "edit": {
+          "label": "parent",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "name"
+        },
+        "list": {
+          "label": "parent",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "subCommunities": {
+        "edit": {
+          "label": "subCommunities",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "name"
+        },
+        "list": {
+          "label": "subCommunities",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "createdByUser": {
+        "edit": {
+          "label": "createdByUser",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "username"
+        },
+        "list": {
+          "label": "createdByUser",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "moderators": {
+        "edit": {
+          "label": "moderators",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "username"
+        },
+        "list": {
+          "label": "moderators",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "createdAt": {
+        "edit": {
+          "label": "createdAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "createdAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedAt": {
+        "edit": {
+          "label": "updatedAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "updatedAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "createdBy": {
+        "edit": {
+          "label": "createdBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "createdBy",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedBy": {
+        "edit": {
+          "label": "updatedBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "updatedBy",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "name",
+        "slug",
+        "handle"
+      ],
+      "edit": [
+        [
+          {
+            "name": "name",
+            "size": 6
+          },
+          {
+            "name": "slug",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "handle",
+            "size": 6
+          },
+          {
+            "name": "description",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "bannerUrl",
+            "size": 6
+          },
+          {
+            "name": "avatarUrl",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "initials",
+            "size": 6
+          },
+          {
+            "name": "subscribers",
+            "size": 4
+          }
+        ],
+        [
+          {
+            "name": "posts",
+            "size": 4
+          }
+        ],
+        [
+          {
+            "name": "tags",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "rules",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "parent",
+            "size": 6
+          },
+          {
+            "name": "subCommunities",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "createdByUser",
+            "size": 6
+          },
+          {
+            "name": "moderators",
+            "size": 6
+          }
+        ]
+      ]
+    },
+    "uid": "api::community.community"
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

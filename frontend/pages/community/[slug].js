@@ -9,6 +9,7 @@ import CommunityLeftNav from "@/components/community/CommunityLeftNav";
 import CommunityHeader from "@/components/community/CommunityHeader";
 import CommunityAboutCard from "@/components/community/CommunityAboutCard";
 import CollaborationCallsList from "@/components/community/CollaborationCallsList";
+import ResourcesList from "@/components/community/ResourcesList";
 import CreateCollaborationDialog from "@/components/collaboration/CreateCollaborationDialog";
 import { useCollaborationStore } from "@/lib/collaboration-store";
 import { useAuthStore } from "@/lib/auth-store";
@@ -87,10 +88,7 @@ export default function CommunityDetailPage() {
     });
   }, [community?.name]);
 
-  // Keep the default stable between SSR and first client render to avoid
-  // hydration mismatches. `router.query` is empty during SSR and populated
-  // only after hydration.
-  const initialTab = "collaboration-calls";
+  const activeTab = router.query.tab || "collaboration-calls";
 
   const handleTabChange = (value) => {
     router.replace(
@@ -159,13 +157,13 @@ export default function CommunityDetailPage() {
             </div>
 
             <Tabs
-              defaultValue={initialTab}
+              value={activeTab}
               onValueChange={handleTabChange}
               className="w-full"
             >
               <TabsList
                 variant="line"
-                className="h-auto! w-full justify-start gap-8 border-y border-brand-gray-100 bg-transparent px-0 py-0 lg:pl-6 lg:-mr-px lg:w-[calc(100%+1px)]"
+                className="!h-auto w-full justify-start gap-8 border-y border-brand-gray-100 bg-transparent px-0 py-0 lg:pl-6 lg:-mr-px lg:w-[calc(100%+1px)]"
               >
                 {COMMUNITY_TABS.map((t) => {
                   const Icon = t.icon;
@@ -196,7 +194,7 @@ export default function CommunityDetailPage() {
                 />
               </TabsContent>
               <TabsContent value="resources" className="pt-2">
-                <EmptyTab label="Resources" />
+                <ResourcesList communityDocumentId={community?.documentId} />
               </TabsContent>
             </Tabs>
           </div>

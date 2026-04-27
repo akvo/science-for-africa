@@ -1,0 +1,9 @@
+{
+  "key": "plugin_users-permissions_migrations",
+  "value": {
+    "backfill_institutions_completed": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

@@ -39,7 +39,7 @@ describe("Auth Me Update API", () => {
     });
 
     await grantPermissions("authenticated", {
-      profile: ["update", "getMe"],
+      profile: ["update", "me"],
     });
   });
 
@@ -52,7 +52,7 @@ describe("Auth Me Update API", () => {
     const institution = await strapi.db
       .query("api::institution.institution")
       .create({
-        data: { name: "Test University" },
+        data: { name: "Test University", documentId: "test-uni-123" },
       });
 
     // This payload matches what the FRONTEND now produces
@@ -60,7 +60,7 @@ describe("Auth Me Update API", () => {
       firstName: "Updated",
       onboardingComplete: true,
       interests: [{ name: "Science" }, { name: "Medicine" }],
-      institution: institution.id,
+      highestEducationInstitution: institution.documentId || institution.id,
     };
 
     const response = await request(strapi.server.httpServer)
@@ -70,7 +70,9 @@ describe("Auth Me Update API", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.onboardingComplete).toBe(true);
-    expect(response.body.institution.id).toBe(institution.id);
+    expect(response.body.highestEducationInstitution.name).toBe(
+      "Test University",
+    );
     expect(response.body.interests).toHaveLength(2);
   });
 
@@ -79,18 +81,15 @@ describe("Auth Me Update API", () => {
     const rawData = {
       firstName: "Org Admin",
       userType: "institution",
-      institutionName: "New African Institute",
       educationLevel: "",
       orcidId: "",
       onboardingComplete: true,
     };
 
     // This represents what the transformProfileUpdatePayload logic DOES
-    // (Strips empty strings and type-specific fields)
     const transformedData = {
       firstName: "Org Admin",
       userType: "institution",
-      institutionName: "New African Institute",
       onboardingComplete: true,
     };
 
@@ -101,8 +100,7 @@ describe("Auth Me Update API", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.userType).toBe("institution");
-    expect(response.body.institutionName).toBe("New African Institute");
-    expect(response.body.educationLevel).toBeNull(); // Strapi will have it as null or omit it
+    expect(response.body.educationLevel).toBeNull();
   });
 
   it("should enforce character limit on biography in /auth/me", async () => {

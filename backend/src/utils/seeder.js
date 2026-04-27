@@ -422,6 +422,7 @@ const seed = async (strapi) => {
   const collaborationActions = [
     "api::auth.profile.getMe",
     "api::auth.profile.update",
+    "api::auth.profile.me",
     "api::auth.profile.findUsers",
     "api::community-membership.community-membership.find",
     "api::community-membership.community-membership.leave",
@@ -434,6 +435,10 @@ const seed = async (strapi) => {
     "api::collaboration-invite.collaboration-invite.find",
     "api::chat-message.chat-message.find",
     "api::chat-message.chat-message.create",
+    "api::resource.resource.find",
+    "api::resource.resource.findOne",
+    "api::resource.resource.create",
+    "plugin::upload.content-api.upload",
   ];
 
   for (const action of collaborationActions) {

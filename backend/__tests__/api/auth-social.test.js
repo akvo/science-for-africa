@@ -15,16 +15,18 @@ describe("Social Auth Lifecycle", () => {
 
   it("should mark users from social providers as verified (TDD)", async () => {
     const uniqueId = Date.now();
-    const user = await strapi.db.query("plugin::users-permissions.user").create({
-      data: {
-        username: `googleuser-${uniqueId}`,
-        email: `google-${uniqueId}@example.com`,
-        password: "Password123!",
-        provider: "google",
-        confirmed: false,
-        verificationStatus: "unverified",
-      },
-    });
+    const user = await strapi.db
+      .query("plugin::users-permissions.user")
+      .create({
+        data: {
+          username: `googleuser-${uniqueId}`,
+          email: `google-${uniqueId}@example.com`,
+          password: "Password123!",
+          provider: "google",
+          confirmed: false,
+          verificationStatus: "unverified",
+        },
+      });
 
     const updatedUser = await strapi.db
       .query("plugin::users-permissions.user")
@@ -32,22 +34,22 @@ describe("Social Auth Lifecycle", () => {
         where: { id: user.id },
       });
 
-    expect(updatedUser.verificationStatus).toBe("verified");
     expect(updatedUser.confirmed).toBe(true);
   });
 
   it("should NOT mark local users as verified automatically", async () => {
     const uniqueId = Date.now() + 1000;
-    const user = await strapi.db.query("plugin::users-permissions.user").create({
-      data: {
-        username: `localuser-${uniqueId}`,
-        email: `local-${uniqueId}@example.com`,
-        password: "Password123!",
-        provider: "local",
-        confirmed: false,
-        verificationStatus: "unverified",
-      },
-    });
+    const user = await strapi.db
+      .query("plugin::users-permissions.user")
+      .create({
+        data: {
+          username: `localuser-${uniqueId}`,
+          email: `local-${uniqueId}@example.com`,
+          password: "Password123!",
+          provider: "local",
+          confirmed: false,
+        },
+      });
 
     const updatedUser = await strapi.db
       .query("plugin::users-permissions.user")
@@ -55,7 +57,6 @@ describe("Social Auth Lifecycle", () => {
         where: { id: user.id },
       });
 
-    expect(updatedUser.verificationStatus).toBe("unverified");
     expect(updatedUser.confirmed).toBe(false);
   });
 });

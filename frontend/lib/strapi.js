@@ -185,22 +185,12 @@ export function transformProfileUpdatePayload(userData) {
     );
   }
 
-  if (data.affiliationInstitution) {
-    if (data.affiliationInstitution.id) {
-      data.institution = Number(data.affiliationInstitution.id);
-      delete data.institutionName;
-    } else if (data.affiliationInstitution.name) {
-      data.institutionName = data.affiliationInstitution.name;
-      delete data.institution;
-    } else {
-      delete data.institution;
-      delete data.institutionName;
-    }
-    delete data.affiliationInstitution;
-  }
-
-  if (data.educationInstitution && data.educationInstitution.name) {
-    data.educationInstitutionName = data.educationInstitution.name;
+  // We now pass affiliationInstitution and educationInstitution as objects
+  // The backend handles creation/lookup.
+  // Note: OnboardingStep3 uses 'educationInstitution' in store,
+  // but backend uses 'highestEducationInstitution'.
+  if (data.educationInstitution) {
+    data.highestEducationInstitution = data.educationInstitution;
     delete data.educationInstitution;
   }
 
@@ -212,11 +202,12 @@ export function transformProfileUpdatePayload(userData) {
   if (data.userType === "institution") {
     delete data.educationLevel;
     delete data.educationTopic;
-    delete data.educationInstitutionName;
+    delete data.highestEducationInstitution;
     delete data.orcidId;
     delete data.position;
   }
 
+  // Cleanup empty strings
   Object.keys(data).forEach((key) => {
     const identityFields = [
       "fullName",
@@ -351,6 +342,7 @@ export async function postChatMessage(callDocumentId, text) {
 }
 
 /**
+/**
  * Fetch current user's community memberships (paginated)
  */
 export async function fetchMyCommunityMemberships(page = 1, pageSize = 6) {
@@ -382,6 +374,78 @@ export async function leaveCommunity(communityId) {
 }
 
 /**
+ * Fetch resources for a community (by community documentId).
+ * Optionally filter by resourceType.
+ */
+export async function fetchResources(communityId, resourceType) {
+  let qs = `?filters[community][documentId][$eq]=${encodeURIComponent(communityId)}&populate[file]=true&populate[uploadedBy]=true&sort=createdAt:desc`;
+  if (resourceType && resourceType !== "all") {
+    qs += `&filters[resourceType][$eq]=${encodeURIComponent(resourceType)}`;
+  }
+  return fetchFromStrapi(`/resources${qs}`);
+}
+
+/**
+ * Create a resource with file upload (multipart/form-data).
+ * Strapi expects: data (JSON string) + files.file (the uploaded file).
+ */
+export async function createResource({
+  name,
+  resourceType,
+  communityId,
+  file,
+}) {
+  const jwt = (await import("./auth-store")).useAuthStore.getState().jwt;
+  const { getBackendApiUrl } = await import("./url-helpers");
+  const baseUrl = getBackendApiUrl();
+  const headers = { Authorization: `Bearer ${jwt}` };
+
+  // Step 1: Upload file via Strapi's upload endpoint
+  const uploadForm = new FormData();
+  uploadForm.append("files", file, file.name);
+
+  const uploadRes = await fetch(`${baseUrl}/upload`, {
+    method: "POST",
+    headers,
+    body: uploadForm,
+  });
+
+  if (!uploadRes.ok) {
+    const err = await uploadRes.json().catch(() => ({}));
+    throw new Error(
+      err?.error?.message || `File upload failed (${uploadRes.status})`,
+    );
+  }
+
+  const uploaded = await uploadRes.json();
+  const fileId = uploaded?.[0]?.id;
+  if (!fileId) throw new Error("File upload returned no file ID");
+
+  // Step 2: Create the resource record with the uploaded file ID
+  const createRes = await fetch(`${baseUrl}/resources`, {
+    method: "POST",
+    headers: { ...headers, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      data: {
+        name,
+        resourceType,
+        file: fileId,
+        community: { connect: [communityId] },
+      },
+    }),
+  });
+
+  if (!createRes.ok) {
+    const err = await createRes.json().catch(() => ({}));
+    throw new Error(
+      err?.error?.message || `Resource creation failed (${createRes.status})`,
+    );
+  }
+
+  return createRes.json();
+}
+
+/**
  * Update authenticated user profile
  */
 export async function updateUserProfile(userData) {
@@ -406,6 +470,19 @@ export async function fetchMyCollaborations(page = 1, pageSize = 6) {
     return response;
   } catch (error) {
     console.error("Error fetching collaborations:", error);
+    return null;
+  }
+}
+
+/**
+ * Fetch the current authenticated user's profile with all relations
+ */
+export async function fetchUserProfile() {
+  try {
+    const response = await apiClient.get("/auth/me");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
     return null;
   }
 }

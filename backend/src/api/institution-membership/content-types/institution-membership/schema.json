@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "institution_memberships",
+  "info": {
+    "singularName": "institution-membership",
+    "pluralName": "institution-memberships",
+    "displayName": "Institution Membership",
+    "description": "Join table for User and Institution affiliations"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "institutionMemberships"
+    },
+    "institution": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::institution.institution",
+      "inversedBy": "memberships"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": ["member", "owner"],
+      "default": "member",
+      "required": true
+    },
+    "verificationStatus": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

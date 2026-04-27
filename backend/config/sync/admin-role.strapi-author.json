@@ -15,8 +15,7 @@
           "name",
           "type",
           "country",
-          "verified",
-          "users"
+          "verified"
         ]
       },
       "conditions": [
@@ -34,8 +33,7 @@
           "name",
           "type",
           "country",
-          "verified",
-          "users"
+          "verified"
         ]
       },
       "conditions": [
@@ -53,8 +51,7 @@
           "name",
           "type",
           "country",
-          "verified",
-          "users"
+          "verified"
         ]
       },
       "conditions": [

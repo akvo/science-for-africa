@@ -20,15 +20,17 @@ describe("Onboarding Contract Transformation (Smart Client)", () => {
     // Should preserve individual fields
     expect(payload.userType).toBe("individual");
     expect(payload.educationLevel).toBe("Doctorate (PhD)");
-    expect(payload.educationInstitutionName).toBe("University of Nairobi");
+    expect(payload.highestEducationInstitution).toEqual({
+      id: 1,
+      name: "University of Nairobi",
+    });
     expect(payload.orcidId).toBe("0000-0001-2345-6789");
 
     // Should map interests to components
     expect(payload.interests[0]).toEqual({ name: "Science" });
 
-    // Should map affiliation name correctly
-    expect(payload.institutionName).toBe("SFA");
-    expect(payload.institution).toBeUndefined();
+    // Should preserve affiliation object
+    expect(payload.affiliationInstitution).toEqual({ id: null, name: "SFA" });
   });
 
   it("should strip individual-specific fields for institutional accounts", () => {
@@ -53,7 +55,7 @@ describe("Onboarding Contract Transformation (Smart Client)", () => {
     expect(payload.educationLevel).toBeUndefined();
     expect(payload.orcidId).toBeUndefined();
     expect(payload.position).toBeUndefined();
-    expect(payload.educationInstitutionName).toBeUndefined();
+    expect(payload.highestEducationInstitution).toBeUndefined();
   });
 
   it("should strip ANY empty string field to prevent enumeration validation failure", () => {
@@ -78,7 +80,6 @@ describe("Onboarding Contract Transformation (Smart Client)", () => {
 
     const payload = transformProfileUpdatePayload(rawData);
 
-    expect(payload.institution).toBe(42);
-    expect(payload.institutionName).toBeUndefined();
+    expect(payload.affiliationInstitution.id).toBe(42);
   });
 });

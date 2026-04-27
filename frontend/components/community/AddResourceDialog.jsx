@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import { useTranslation } from "next-i18next";
 import {
   Dialog,
   DialogContent,
@@ -21,10 +22,10 @@ import { Upload, Loader2, CheckCircle, XIcon } from "lucide-react";
 import { createResource } from "@/lib/strapi";
 
 const RESOURCE_TYPES = [
-  { value: "report", label: "Report" },
-  { value: "publication", label: "Publication" },
-  { value: "practice-note", label: "Practice note" },
-  { value: "case-study", label: "Case study" },
+  { value: "report", i18nKey: "resources.report" },
+  { value: "publication", i18nKey: "resources.publication" },
+  { value: "practice-note", i18nKey: "resources.practice_note" },
+  { value: "case-study", i18nKey: "resources.case_study" },
 ];
 
 export default function AddResourceDialog({
@@ -33,6 +34,7 @@ export default function AddResourceDialog({
   communityDocumentId,
   onSuccess,
 }) {
+  const { t } = useTranslation("common");
   const [resourceType, setResourceType] = useState("report");
   const [name, setName] = useState("");
   const [file, setFile] = useState(null);
@@ -84,7 +86,7 @@ export default function AddResourceDialog({
       setShowSuccess(true);
       onSuccess?.();
     } catch (err) {
-      setError(err.message || "Failed to upload resource");
+      setError(err.message || t("resources.upload_failed"));
     } finally {
       setSubmitting(false);
     }
@@ -101,10 +103,10 @@ export default function AddResourceDialog({
             </div>
             <div className="flex-1 space-y-1">
               <h2 className="text-lg font-bold text-brand-gray-900">
-                Resource has been published
+                {t("resources.published_title")}
               </h2>
               <p className="text-sm text-brand-gray-500">
-                Lorem ipsum dolor sit amet consectetur.
+                {t("resources.published_description")}
               </p>
             </div>
             <button
@@ -118,14 +120,14 @@ export default function AddResourceDialog({
           <div className="flex items-center justify-between">
             <label className="flex items-center gap-2 text-sm text-brand-gray-600 cursor-pointer">
               <input type="checkbox" className="rounded border-brand-gray-300" />
-              Don&apos;t show again
+              {t("resources.dont_show_again")}
             </label>
             <Button
               size="md"
               className="rounded-full px-8"
               onClick={() => handleClose(false)}
             >
-              Access
+              {t("resources.access")}
             </Button>
           </div>
         </DialogContent>
@@ -138,9 +140,9 @@ export default function AddResourceDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent size="md" showCloseButton={true}>
         <DialogHeader>
-          <DialogTitle>Upload a resource</DialogTitle>
+          <DialogTitle>{t("resources.upload_title")}</DialogTitle>
           <DialogDescription>
-            Lorem ipsum dolor sit amet consectetur.
+            {t("resources.upload_description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -148,18 +150,18 @@ export default function AddResourceDialog({
           {/* Resource Type */}
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-brand-gray-700">
-              Select resource type
+              {t("resources.select_type")}
             </label>
             <Select value={resourceType} onValueChange={setResourceType}>
               <SelectTrigger className="w-full">
                 <SelectValue>
-                  {RESOURCE_TYPES.find((t) => t.value === resourceType)?.label}
+                  {t(RESOURCE_TYPES.find((rt) => rt.value === resourceType)?.i18nKey)}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent alignItemWithTrigger={false}>
-                {RESOURCE_TYPES.map((t) => (
-                  <SelectItem key={t.value} value={t.value}>
-                    {t.label}
+                {RESOURCE_TYPES.map((rt) => (
+                  <SelectItem key={rt.value} value={rt.value}>
+                    {t(rt.i18nKey)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -169,10 +171,10 @@ export default function AddResourceDialog({
           {/* Resource Name */}
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-brand-gray-700">
-              Resource name<span className="text-red-500">*</span>
+              {t("resources.resource_name")}<span className="text-red-500">*</span>
             </label>
             <Input
-              placeholder="Type anything"
+              placeholder={t("resources.name_placeholder")}
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="h-11"
@@ -182,7 +184,7 @@ export default function AddResourceDialog({
           {/* File Upload */}
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-brand-gray-700">
-              Upload file
+              {t("resources.upload_file")}
             </label>
             <div
               className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-8 text-center transition-colors cursor-pointer ${
@@ -216,12 +218,12 @@ export default function AddResourceDialog({
                 <>
                   <p className="text-sm text-brand-gray-600">
                     <span className="font-semibold text-primary-600">
-                      Click to upload
+                      {t("resources.click_to_upload")}
                     </span>{" "}
-                    or drag and drop
+                    {t("resources.or_drag_drop")}
                   </p>
                   <p className="mt-1 text-xs text-brand-gray-400">
-                    SVG, PNG, JPG or GIF (max. 800x400px)
+                    {t("resources.file_hint")}
                   </p>
                 </>
               )}
@@ -237,7 +239,7 @@ export default function AddResourceDialog({
           <DialogClose
             render={
               <Button variant="outline" size="md" className="rounded-full">
-                Cancel
+                {t("resources.cancel")}
               </Button>
             }
           />
@@ -250,7 +252,7 @@ export default function AddResourceDialog({
             {submitting ? (
               <Loader2 className="size-4 animate-spin mr-2" />
             ) : null}
-            Publish
+            {t("resources.publish")}
           </Button>
         </DialogFooter>
       </DialogContent>

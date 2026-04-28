@@ -6,6 +6,6 @@ module.exports = {
     locales: ["en", "fr"],
     fallbackLng: "en",
   },
-  localePath: path.resolve("./public/locales"),
+  localePath: path.resolve(__dirname, "public/locales"),
   reloadOnPrerender: process.env.NODE_ENV === "development",
 };

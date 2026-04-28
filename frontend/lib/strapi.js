@@ -276,6 +276,32 @@ export async function fetchCommunityByName(name) {
 }
 
 /**
+ * Join a community (authenticated)
+ */
+export async function joinCommunity(documentId) {
+  try {
+    const response = await apiClient.post(`/communities/${documentId}/join`);
+    return response.data;
+  } catch (error) {
+    console.error("Error joining community:", error);
+    return error;
+  }
+}
+
+/**
+ * Leave a community (authenticated)
+ */
+export async function leaveCommunity(documentId) {
+  try {
+    const response = await apiClient.post(`/communities/${documentId}/leave`);
+    return response.data;
+  } catch (error) {
+    console.error("Error leaving community:", error);
+    return error;
+  }
+}
+
+/**
  * Fetch collaboration calls for a given community (by community name).
  * Returns them newest-first.
  */

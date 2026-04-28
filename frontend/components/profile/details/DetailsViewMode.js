@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ViewRow } from "./SharedComponents";
+import { getStrapiMedia } from "@/lib/strapi";
 
 const DetailsViewMode = ({ user, t, onEdit }) => {
   return (
@@ -45,7 +46,7 @@ const DetailsViewMode = ({ user, t, onEdit }) => {
             <Avatar className="size-14 rounded-full border border-brand-gray-100 shadow-sm relative overflow-hidden">
               {user?.profilePhoto?.url ? (
                 <Image
-                  src={user.profilePhoto.url}
+                  src={getStrapiMedia(user.profilePhoto.url)}
                   alt="Avatar"
                   fill
                   className="object-cover"

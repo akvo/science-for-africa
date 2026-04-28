@@ -96,6 +96,16 @@
       "locale": null
     },
     {
+      "documentId": "bsybqd9ir99qp14yfni8yn5h",
+      "action": "api::community.community.join",
+      "locale": null
+    },
+    {
+      "documentId": "hn503emr029oegbn11fy8lrr",
+      "action": "api::community.community.leave",
+      "locale": null
+    },
+    {
       "documentId": "t98wfv4ar1wdd04yqdjduh6a",
       "action": "api::institution.institution.find",
       "locale": null

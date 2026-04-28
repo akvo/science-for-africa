@@ -248,6 +248,21 @@
           "sortable": false
         }
       },
+      "members": {
+        "edit": {
+          "label": "members",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "username"
+        },
+        "list": {
+          "label": "members",
+          "searchable": false,
+          "sortable": false
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -316,12 +331,7 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "name",
-        "slug",
-        "handle"
-      ],
+      "list": ["id", "name", "slug", "handle"],
       "edit": [
         [
           {
@@ -404,6 +414,10 @@
         [
           {
             "name": "memberships",
+            "size": 6
+          },
+          {
+            "name": "members",
             "size": 6
           }
         ]

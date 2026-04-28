@@ -48,6 +48,45 @@
     "access": "Accéder",
     "upload_failed": "Échec du téléversement de la ressource"
   },
+  "community": {
+    "explore": "Explorer les communautés",
+    "explore_description": "Lorem ipsum dolor sit amet consectetur. In et pellentesque ut fermentum bibendum mi imperdiet.",
+    "create_community": "Créer une communauté",
+    "loading_communities": "Chargement des communautés...",
+    "no_communities": "Aucune communauté trouvée.",
+    "subscribers": "Abonnés",
+    "posts": "Publications",
+    "join": "Rejoindre",
+    "joined": "Membre",
+    "create_post": "Créer un post",
+    "sort_by": "Trier par",
+    "loading": "Chargement de la communauté...",
+    "not_found": "Communauté introuvable.",
+    "created": "Créée le",
+    "moderators": "Modérateurs",
+    "sub_communities": "Sous-communautés",
+    "see_all": "Voir tout",
+    "community_rules": "Règles de la communauté",
+    "tab_feed": "Fil d'actualité",
+    "tab_discussions": "Discussions",
+    "tab_collaboration": "Appels à collaboration",
+    "tab_resources": "Ressources",
+    "coming_soon": "contenu à venir.",
+    "left_nav": {
+      "trending": "Tendances",
+      "communities": "Communautés",
+      "discussions": "Discussions actives",
+      "collaboration": "Hub de collaboration",
+      "events": "Événements"
+    }
+  },
+  "collaboration": {
+    "all": "Tous",
+    "active": "Actif",
+    "completed": "Terminé",
+    "create": "Créer",
+    "no_calls": "Aucun appel à collaboration à afficher."
+  },
   "seo": {
     "description": "Faire progresser l'avenir de la science en Afrique. Rejoignez la communauté de scientifiques, de chercheurs et d'innovateurs.",
     "home_title": "Système de Conception | Guide de Style",

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Meta from "@/components/seo/Meta";
 import { ArrowLeft, ChevronDown } from "lucide-react";
@@ -41,6 +42,7 @@ function mapCallFromApi(c) {
  * a client-side hook) without changing the component tree.
  */
 export default function CommunityDetailPage() {
+  const { t } = useTranslation("common");
   const router = useRouter();
   const openCollaborationDialog = useCollaborationStore((s) => s.open);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -133,7 +135,7 @@ export default function CommunityDetailPage() {
           <CommunityLeftNav activeKey="communities" />
         </aside>
         <div className="flex flex-1 items-center justify-center py-20 text-sm text-brand-gray-500">
-          Loading community...
+          {t("community.loading")}
         </div>
       </div>
     );
@@ -146,7 +148,7 @@ export default function CommunityDetailPage() {
           <CommunityLeftNav activeKey="communities" />
         </aside>
         <div className="flex flex-1 items-center justify-center py-20 text-sm text-brand-gray-500">
-          Community not found.
+          {t("community.not_found")}
         </div>
       </div>
     );
@@ -181,7 +183,7 @@ export default function CommunityDetailPage() {
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="md" className="gap-2">
                   <ChevronDown className="size-4" />
-                  Sort by
+                  {t("community.sort_by")}
                 </Button>
               </div>
             </div>
@@ -195,26 +197,26 @@ export default function CommunityDetailPage() {
                 variant="line"
                 className="!h-auto w-full justify-start gap-8 border-y border-brand-gray-100 bg-transparent px-0 py-0 lg:pl-6 lg:-mr-px lg:w-[calc(100%+1px)]"
               >
-                {COMMUNITY_TABS.map((t) => {
-                  const Icon = t.icon;
+                {COMMUNITY_TABS.map((tab) => {
+                  const Icon = tab.icon;
                   return (
                     <TabsTrigger
-                      key={t.value}
-                      value={t.value}
+                      key={tab.value}
+                      value={tab.value}
                       className="-mb-px flex-none gap-2 px-1 pt-2 pb-3 after:-bottom-px after:inset-x-0 after:h-0.5 hover:text-primary-500 data-active:text-primary-500 group-data-[variant=line]/tabs-list:data-active:text-primary-500 after:bg-primary-500"
                     >
                       {Icon ? <Icon className="size-4" /> : null}
-                      {t.label}
+                      {t(tab.i18nKey)}
                     </TabsTrigger>
                   );
                 })}
               </TabsList>
 
               <TabsContent value="feed" className="pt-2">
-                <EmptyTab label="Feed" />
+                <EmptyTab label={t("community.tab_feed")} comingSoon={t("community.coming_soon")} />
               </TabsContent>
               <TabsContent value="discussions" className="pt-2">
-                <EmptyTab label="Discussions" />
+                <EmptyTab label={t("community.tab_discussions")} comingSoon={t("community.coming_soon")} />
               </TabsContent>
               <TabsContent value="collaboration-calls" className="pt-2">
                 <CollaborationCallsList
@@ -240,10 +242,10 @@ export default function CommunityDetailPage() {
   );
 }
 
-function EmptyTab({ label }) {
+function EmptyTab({ label, comingSoon }) {
   return (
     <div className="rounded-xl border border-dashed border-brand-gray-200 p-10 text-center text-sm text-brand-gray-500">
-      {label} content coming soon.
+      {label} {comingSoon}
     </div>
   );
 }

@@ -75,6 +75,19 @@ export async function uploadFile(file) {
 }
 
 /**
+ * Returns the full URL for a Strapi media object/URL
+ */
+export function getStrapiMedia(url) {
+  if (!url) return null;
+  if (url.startsWith("http") || url.startsWith("data:") || url.startsWith("/"))
+    return url;
+
+  // Strapi returns relative paths like uploads/file.png (without leading slash in some cases)
+  // or /uploads/file.png. Standardize to leading slash.
+  return url.startsWith("/") ? url : `/${url}`;
+}
+
+/**
  * Register a new user
  */
 export async function registerUser(userData) {

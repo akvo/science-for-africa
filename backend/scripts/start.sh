@@ -13,6 +13,8 @@ echo "🔄 Importing configuration..."
 npm run config-sync -- import --yes
 
 if [ "${NODE_ENV:-development}" = "production" ]; then
+    echo "🏗️ Building admin panel with URL: ${BACKEND_URL:-http://localhost/cms}..."
+    npm run build
     echo "✅ Starting Strapi in production mode..."
     npm run start
 else

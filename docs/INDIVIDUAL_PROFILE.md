@@ -145,11 +145,32 @@ The following features were identified in the initial discovery but are not part
 - **Path**: `/api/auth/me`
 - **Response**: `200 OK` with deep population of `memberships`, `collaborationInvites`, and Media.
 
-### Update Profile
-- **Method**: `PUT`
-- **Path**: `/api/auth/me` (Custom extended endpoint)
-- **Request Body**: `Multipart/form-data` for images or `application/json`
-- **Response**: `200 OK` with updated user object.
+### Update Profile (Two-Step Process)
+To update the profile photo or other media fields, follow the standard two-step upload pattern:
+
+1.  **Step 1: Upload File**
+    - **Method**: `POST`
+    - **Path**: `/api/upload`
+    - **Request Body**: `Multipart/form-data` (file)
+    - **Response**: `200 OK` with file object containing `id`.
+
+2.  **Step 2: Link to Profile**
+    - **Method**: `PUT`
+    - **Path**: `/api/auth/me`
+    - **Request Body**: `application/json` including the media field as a numeric ID (e.g., `{ "profilePhoto": 123 }`).
+    - **Response**: `200 OK` with updated user object.
+
+### Automated Media Cleanup
+The backend implements a `beforeUpdate` lifecycle hook on the `users-permissions.user` model to ensure that orphaned media files are automatically deleted from storage when:
+- A profile photo is replaced by a new one.
+- A profile photo is removed (set to `null`).
+
+This prevents storage bloat and ensures data integrity.
+
+### Next.js Image Proxying
+To ensure reliable image rendering across different environments (Docker, staging), the frontend implements a transparent proxy for media files:
+- **Rewrite**: `/uploads/:path*` is proxied to the backend origin.
+- **Helper**: `getStrapiMedia` returns relative URLs, leveraging the rewrite to bypass domain-related security issues in the Next.js image optimizer.
 
 ### Leave Community
 - **Method**: `DELETE`

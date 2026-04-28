@@ -20,7 +20,7 @@ import {
   ROLE_OPTIONS,
   EDUCATION_LEVEL_OPTIONS,
 } from "@/lib/onboarding-constants";
-import { fetchFromStrapi } from "@/lib/strapi";
+import { fetchFromStrapi, getStrapiMedia } from "@/lib/strapi";
 
 const profileSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -44,6 +44,7 @@ const profileSchema = z.object({
   language: z.string().optional().nullable(),
   careerStage: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
+  profilePhoto: z.any().optional(),
 });
 
 const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
@@ -135,7 +136,15 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
         return;
       }
       setPhotoPreview(URL.createObjectURL(file));
-      setValue("profilePhoto", file);
+      setValue("profilePhoto", file, { shouldDirty: true });
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    setPhotoPreview("REMOVE"); // Special value to indicate removal
+    setValue("profilePhoto", null, { shouldDirty: true });
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
@@ -202,9 +211,11 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
         >
           <div className="flex items-center gap-5">
             <div className="relative size-14 rounded-full bg-brand-teal-50 flex items-center justify-center text-brand-teal-600 shadow-inner overflow-hidden">
-              {photoPreview || user?.profilePhoto?.url ? (
+              {photoPreview === "REMOVE" ? (
+                <UserIcon size={24} />
+              ) : photoPreview || user?.profilePhoto?.url ? (
                 <Image
-                  src={photoPreview || user.profilePhoto.url}
+                  src={photoPreview || getStrapiMedia(user.profilePhoto.url)}
                   alt="Profile"
                   fill
                   className="object-cover"
@@ -213,7 +224,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                 <UserIcon size={24} />
               )}
             </div>
-            <div className="flex-1 w-full">
+            <div className="flex-1 w-full space-y-2">
               <input
                 type="file"
                 ref={fileInputRef}
@@ -243,6 +254,16 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                   {t("details.upload_hint")}
                 </p>
               </div>
+              {(photoPreview ||
+                (user?.profilePhoto?.url && photoPreview !== "REMOVE")) && (
+                <button
+                  type="button"
+                  onClick={handleRemovePhoto}
+                  className="text-xs font-bold text-brand-orange-600 hover:text-brand-orange-700 mt-2 flex items-center gap-1 transition-colors"
+                >
+                  {t("details.remove_photo")}
+                </button>
+              )}
             </div>
           </div>
         </FormRow>

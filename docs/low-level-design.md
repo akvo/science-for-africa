@@ -460,6 +460,10 @@ Push to main
 - **PostgreSQL** — runs as a containerised pod within the cluster (not a managed service). Configured via `DATABASE_*` env vars on the backend deployment
 - **Google Cloud Storage** — file uploads via `@strapi-community/strapi-provider-upload-google-cloud-storage`, configured via `GCS_*` env vars on the backend deployment
 
+**Critical Configuration Notes:**
+- **Strapi Build-time URL**: Strapi's admin panel is a React application built during the Docker build phase. It **must** know its public base path (e.g., `/cms`) at build time to correctly resolve asset paths (JS/CSS). This is passed via the `BACKEND_URL` build argument in the Dockerfile. Failure to provide this will result in a blank white page in production as assets will attempt to load from the root `/` instead of the subpath.
+- **Path Consistency**: The `BACKEND_URL` should be the base URL of the Strapi application (e.g., `https://domain.com/cms`). Do not include the `/api` suffix in the base `BACKEND_URL`, as Strapi appends this automatically for its REST endpoints.
+
 K8s manifests are managed within Akvo's infrastructure (via the `composite-actions` repo and cluster configuration), not stored in this application repo.
 
 ### 3.2 Azure Production (Kubernetes)

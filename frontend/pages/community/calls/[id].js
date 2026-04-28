@@ -1,3 +1,4 @@
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import {
@@ -568,4 +569,12 @@ function formatChatTime(date) {
   const ampm = hours >= 12 ? "pm" : "am";
   hours = hours % 12 || 12;
   return `${WEEKDAYS[d.getDay()]} ${hours}:${mins}${ampm}`;
+}
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+    },
+  };
 }

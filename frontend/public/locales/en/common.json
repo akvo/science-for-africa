@@ -69,6 +69,45 @@
     "access": "Access",
     "upload_failed": "Failed to upload resource"
   },
+  "community": {
+    "explore": "Explore communities",
+    "explore_description": "Lorem ipsum dolor sit amet consectetur. In et pellentesque ut fermentum bibendum mi imperdiet.",
+    "create_community": "Create community",
+    "loading_communities": "Loading communities...",
+    "no_communities": "No communities found.",
+    "subscribers": "Subscribers",
+    "posts": "Posts",
+    "join": "Join",
+    "joined": "Joined",
+    "create_post": "Create post",
+    "sort_by": "Sort by",
+    "loading": "Loading community...",
+    "not_found": "Community not found.",
+    "created": "Created",
+    "moderators": "Moderators",
+    "sub_communities": "Sub-Communities",
+    "see_all": "See all",
+    "community_rules": "Community rules",
+    "tab_feed": "Feed",
+    "tab_discussions": "Discussions",
+    "tab_collaboration": "Collaboration calls",
+    "tab_resources": "Resources",
+    "coming_soon": "content coming soon.",
+    "left_nav": {
+      "trending": "Trending now",
+      "communities": "Communities",
+      "discussions": "Active discussions",
+      "collaboration": "Collaboration Hub",
+      "events": "Events"
+    }
+  },
+  "collaboration": {
+    "all": "All",
+    "active": "Active",
+    "completed": "Completed",
+    "create": "Create",
+    "no_calls": "No collaboration calls to show."
+  },
   "seo": {
     "description": "Advancing Science for Africa's Future. Join the community of scientists, researchers, and innovators.",
     "home_title": "Design System | Style Guide",

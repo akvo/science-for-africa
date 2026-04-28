@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import { ArrowLeft, ArrowRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +18,7 @@ function formatCount(n) {
   return String(n);
 }
 
-function CommunityCard({ community, onJoin }) {
+function CommunityCard({ community, onJoin, t }) {
   const router = useRouter();
   const joined = community.isMember;
 
@@ -41,7 +42,7 @@ function CommunityCard({ community, onJoin }) {
               {community.name}
             </h3>
             <p className="text-xs text-brand-gray-500">
-              {formatCount(community.subscribers)} Subscribers
+              {formatCount(community.subscribers)} {t("community.subscribers")}
             </p>
           </div>
         </div>
@@ -54,7 +55,7 @@ function CommunityCard({ community, onJoin }) {
             onJoin?.(community);
           }}
         >
-          {joined ? "Joined" : "Join"}
+          {joined ? t("community.joined") : t("community.join")}
         </Button>
       </div>
 
@@ -68,6 +69,7 @@ function CommunityCard({ community, onJoin }) {
 }
 
 export default function CommunitiesPage() {
+  const { t } = useTranslation("common");
   const router = useRouter();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [communities, setCommunities] = useState([]);
@@ -155,11 +157,10 @@ export default function CommunitiesPage() {
         <div className="flex items-center justify-between gap-4 mb-6 lg:pl-6">
           <div>
             <h1 className="font-heading text-4xl font-bold text-brand-teal-800">
-              Explore communities
+              {t("community.explore")}
             </h1>
             <p className="mt-1 text-sm text-brand-gray-500">
-              Lorem ipsum dolor sit amet consectetur. In et pellentesque ut
-              fermentum bibendum mi imperdiet.
+              {t("community.explore_description")}
             </p>
           </div>
           <Button
@@ -169,7 +170,7 @@ export default function CommunitiesPage() {
             onClick={() => router.push("/community/create")}
           >
             <Plus className="size-4" />
-            Create community
+            {t("community.create_community")}
           </Button>
         </div>
 
@@ -220,11 +221,11 @@ export default function CommunitiesPage() {
 
         {loading ? (
           <div className="py-10 text-center text-sm text-brand-gray-500">
-            Loading communities...
+            {t("community.loading_communities")}
           </div>
         ) : filtered.length === 0 ? (
           <div className="rounded-xl border border-dashed border-brand-gray-200 p-10 text-center text-sm text-brand-gray-500">
-            No communities found.
+            {t("community.no_communities")}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 -mt-px [&>*:nth-child(3n+1)]:border-l-0">
@@ -233,6 +234,7 @@ export default function CommunitiesPage() {
                 key={community.documentId || community.id}
                 community={community}
                 onJoin={handleJoin}
+                t={t}
               />
             ))}
           </div>

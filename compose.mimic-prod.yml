@@ -15,16 +15,19 @@ services:
     image: soa-prod-frontend
     build: ./frontend
     environment:
-      NEXT_PUBLIC_BACKEND_URL: ${BACKEND_URL:-http://localhost/cms/api}
+      NEXT_PUBLIC_BACKEND_URL: ${BACKEND_URL:-http://localhost/cms}/api
 
   backend:
     image: soa-prod-backend
-    build: ./backend
+    build:
+      context: ./backend
+      args:
+        - BACKEND_URL=${BACKEND_URL:-http://localhost/cms}
     depends_on:
       db:
         condition: service_healthy
     environment:
-      BACKEND_URL: ${BACKEND_URL:-http://localhost/cms/api}
+      BACKEND_URL: ${BACKEND_URL:-http://localhost/cms}
       APP_KEYS: ${APP_KEYS:-mAzXoQi1qI3PzEhF1MNWPA==,dEkYXLPUuSlC26STB0ZyKA==}
       API_TOKEN_SALT: ${API_TOKEN_SALT:-Lniabeo/mh7ynqF/GTfpOw==}
       ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:-Hr+r0OSOTgUzfce6q9/AvA==}

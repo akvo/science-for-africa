@@ -428,6 +428,92 @@
           "sortable": true
         }
       },
+      "memberships": {
+        "edit": {
+          "label": "memberships",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "documentId"
+        },
+        "list": {
+          "label": "memberships",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "collaborationInvites": {
+        "edit": {
+          "label": "collaborationInvites",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "documentId"
+        },
+        "list": {
+          "label": "collaborationInvites",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "displayName": {
+        "edit": {
+          "label": "displayName",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "displayName",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "profilePhoto": {
+        "edit": {
+          "label": "profilePhoto",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "profilePhoto",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "pageCover": {
+        "edit": {
+          "label": "pageCover",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "pageCover",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "languagePreferences": {
+        "edit": {
+          "label": "languagePreferences",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "languagePreferences",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -634,6 +720,36 @@
         [
           {
             "name": "institutionMemberships",
+            "size": 6
+          },
+          {
+            "name": "memberships",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "collaborationInvites",
+            "size": 6
+          },
+          {
+            "name": "displayName",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "profilePhoto",
+            "size": 6
+          },
+          {
+            "name": "pageCover",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "languagePreferences",
             "size": 6
           }
         ]

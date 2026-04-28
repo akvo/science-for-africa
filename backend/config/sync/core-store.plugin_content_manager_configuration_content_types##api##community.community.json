@@ -233,6 +233,36 @@
           "sortable": false
         }
       },
+      "memberships": {
+        "edit": {
+          "label": "memberships",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "documentId"
+        },
+        "list": {
+          "label": "memberships",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "members": {
+        "edit": {
+          "label": "members",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "username"
+        },
+        "list": {
+          "label": "members",
+          "searchable": false,
+          "sortable": false
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -383,6 +413,16 @@
           },
           {
             "name": "moderators",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "memberships",
+            "size": 6
+          },
+          {
+            "name": "members",
             "size": 6
           }
         ]

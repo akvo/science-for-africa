@@ -11,6 +11,11 @@
       "locale": null
     },
     {
+      "documentId": "xsr7pyt294z43pg35eskjdl3",
+      "action": "api::auth.profile.getMe",
+      "locale": null
+    },
+    {
       "documentId": "kx7x8wmp2g5w7385pmtd97y0",
       "action": "api::auth.profile.me",
       "locale": null
@@ -36,13 +41,8 @@
       "locale": null
     },
     {
-      "documentId": "goetop0pg8r9v2qzbefaei0u",
+      "documentId": "vwdkscw3aonr8uu87sesbpsg",
       "action": "api::collaboration-call.collaboration-call.create-with-invites",
-      "locale": null
-    },
-    {
-      "documentId": "a1b2c3d4e5f6g7h8i9j0k1l2",
-      "action": "api::auth.auth.findUsers",
       "locale": null
     },
     {
@@ -76,6 +76,16 @@
       "locale": null
     },
     {
+      "documentId": "y2s2yk47tnrdijq1rab1j10e",
+      "action": "api::community-membership.community-membership.find",
+      "locale": null
+    },
+    {
+      "documentId": "sz5oss4p7piudv0dpe3rbyhj",
+      "action": "api::community-membership.community-membership.leave",
+      "locale": null
+    },
+    {
       "documentId": "c0m1a2u3t4h5f6i7n8d9c0m1",
       "action": "api::community.community.find",
       "locale": null
@@ -83,6 +93,16 @@
     {
       "documentId": "c0m2a3u4t5h6f7i8n9d0c1m2",
       "action": "api::community.community.findOne",
+      "locale": null
+    },
+    {
+      "documentId": "bsybqd9ir99qp14yfni8yn5h",
+      "action": "api::community.community.join",
+      "locale": null
+    },
+    {
+      "documentId": "hn503emr029oegbn11fy8lrr",
+      "action": "api::community.community.leave",
       "locale": null
     },
     {

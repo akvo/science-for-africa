@@ -222,7 +222,73 @@
       "locale": null
     },
     {
-      "documentId": "ouzp78420b6tun5m21bsevfd",
+      "documentId": "txhoiideehjy979okdbslyd9",
+      "action": "plugin::content-manager.explorer.create",
+      "actionParameters": {},
+      "subject": "api::community-membership.community-membership",
+      "properties": {
+        "fields": [
+          "user",
+          "community",
+          "role",
+          "joinedAt"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "sdx7lnoqcsbhl2lq40e2ygah",
+      "action": "plugin::content-manager.explorer.delete",
+      "actionParameters": {},
+      "subject": "api::community-membership.community-membership",
+      "properties": {},
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "atgz916v7qn0j575nqpfv7ul",
+      "action": "plugin::content-manager.explorer.publish",
+      "actionParameters": {},
+      "subject": "api::community-membership.community-membership",
+      "properties": {},
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "uz9uslth1twenskp3sx07ilr",
+      "action": "plugin::content-manager.explorer.read",
+      "actionParameters": {},
+      "subject": "api::community-membership.community-membership",
+      "properties": {
+        "fields": [
+          "user",
+          "community",
+          "role",
+          "joinedAt"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "hklt68m3bg26u83rxznuit3a",
+      "action": "plugin::content-manager.explorer.update",
+      "actionParameters": {},
+      "subject": "api::community-membership.community-membership",
+      "properties": {
+        "fields": [
+          "user",
+          "community",
+          "role",
+          "joinedAt"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "r4522oz6w8rxvqcn1kfx27gw",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "api::community.community",
@@ -242,7 +308,9 @@
           "parent",
           "subCommunities",
           "createdByUser",
-          "moderators"
+          "moderators",
+          "memberships",
+          "members"
         ]
       },
       "conditions": [],
@@ -267,7 +335,7 @@
       "locale": null
     },
     {
-      "documentId": "tl7n4f8ir70kkxx8tio30fu9",
+      "documentId": "u65zkb4j9kqjooqdpcnm7ic5",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "api::community.community",
@@ -287,14 +355,16 @@
           "parent",
           "subCommunities",
           "createdByUser",
-          "moderators"
+          "moderators",
+          "memberships",
+          "members"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "q3alljsxyrg73jf9hb2ptilv",
+      "documentId": "c6p7mayw2yw6m2ozvw8fjce6",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "api::community.community",
@@ -314,7 +384,9 @@
           "parent",
           "subCommunities",
           "createdByUser",
-          "moderators"
+          "moderators",
+          "memberships",
+          "members"
         ]
       },
       "conditions": [],
@@ -933,7 +1005,7 @@
       "locale": null
     },
     {
-      "documentId": "nmrqv40a0sekncmav3sby00q",
+      "documentId": "nkpxyevgb8kynmaac7mezrto",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -967,7 +1039,13 @@
           "otpExpiration",
           "lastOtpSentAt",
           "otpResendCount",
-          "otpResendWindowStart"
+          "otpResendWindowStart",
+          "memberships",
+          "collaborationInvites",
+          "displayName",
+          "profilePhoto",
+          "pageCover",
+          "languagePreferences"
         ]
       },
       "conditions": [],
@@ -992,7 +1070,7 @@
       "locale": null
     },
     {
-      "documentId": "p3afwh9j5hft7q696nq68skr",
+      "documentId": "slv3huiqsw9q56phns0hrzlr",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -1026,14 +1104,20 @@
           "otpExpiration",
           "lastOtpSentAt",
           "otpResendCount",
-          "otpResendWindowStart"
+          "otpResendWindowStart",
+          "memberships",
+          "collaborationInvites",
+          "displayName",
+          "profilePhoto",
+          "pageCover",
+          "languagePreferences"
         ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "e9755gmxp981so5srria93ya",
+      "documentId": "ggt8wtp2cvfc3xzxqfa53u86",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
@@ -1067,7 +1151,13 @@
           "otpExpiration",
           "lastOtpSentAt",
           "otpResendCount",
-          "otpResendWindowStart"
+          "otpResendWindowStart",
+          "memberships",
+          "collaborationInvites",
+          "displayName",
+          "profilePhoto",
+          "pageCover",
+          "languagePreferences"
         ]
       },
       "conditions": [],

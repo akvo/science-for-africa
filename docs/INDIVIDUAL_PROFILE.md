@@ -43,7 +43,7 @@ graph TD
     B -->|Mentorship| K[Mentorship Connection API]
 
     C -->|Update| L[PUT /api/auth/me]
-    D -->|Leave| M[DELETE /api/communities/:id/leave]
+    D -->|Leave| M[POST /api/communities/:id/leave]
     G -->|Remove| N[DELETE /api/saved-posts/:id]
 ```
 
@@ -153,7 +153,7 @@ The following features were identified in the initial discovery but are not part
 - **Response**: `200 OK` with updated user object.
 
 ### Leave Community
-- **Method**: `DELETE`
+- **Method**: `POST`
 - **Path**: `/api/communities/:id/leave`
 - **Response**: `200 OK` with success message.
 - **Action**: Permanent deletion of the `CommunityMembership` record for the current user.

@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CommunityLeftNav from "@/components/community/CommunityLeftNav";
-import { fetchCommunities } from "@/lib/strapi";
+import { fetchCommunities, joinCommunity, leaveCommunity } from "@/lib/strapi";
+import { useAuthStore } from "@/lib/auth-store";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const ALL_TAG = "All";
@@ -18,6 +19,7 @@ function formatCount(n) {
 
 function CommunityCard({ community, onJoin }) {
   const router = useRouter();
+  const joined = community.isMember;
 
   return (
     <div
@@ -44,15 +46,15 @@ function CommunityCard({ community, onJoin }) {
           </div>
         </div>
         <Button
-          variant="tertiary"
+          variant={joined ? "primary" : "tertiary"}
           size="sm"
-          className="flex-none bg-[#E8ECEF] text-black hover:bg-[#dde1e4]"
+          className={joined ? "flex-none" : "flex-none bg-[#E8ECEF] text-black hover:bg-[#dde1e4]"}
           onClick={(e) => {
             e.stopPropagation();
             onJoin?.(community);
           }}
         >
-          Join
+          {joined ? "Joined" : "Join"}
         </Button>
       </div>
 
@@ -67,6 +69,7 @@ function CommunityCard({ community, onJoin }) {
 
 export default function CommunitiesPage() {
   const router = useRouter();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [communities, setCommunities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTag, setActiveTag] = useState(ALL_TAG);
@@ -81,6 +84,24 @@ export default function CommunitiesPage() {
       setLoading(false);
     });
   }, []);
+
+  const handleJoin = async (community) => {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+    const action = community.isMember ? leaveCommunity : joinCommunity;
+    const res = await action(community.documentId);
+    if (res?.data) {
+      setCommunities((prev) =>
+        prev.map((c) =>
+          c.documentId === community.documentId
+            ? { ...c, isMember: res.data.isMember, subscribers: res.data.subscribers }
+            : c,
+        ),
+      );
+    }
+  };
 
   const updateScrollButtons = () => {
     const el = tagsScrollRef.current;
@@ -209,6 +230,7 @@ export default function CommunitiesPage() {
               <CommunityCard
                 key={community.documentId || community.id}
                 community={community}
+                onJoin={handleJoin}
               />
             ))}
           </div>

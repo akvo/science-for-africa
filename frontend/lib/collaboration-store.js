@@ -18,7 +18,15 @@ export const useCollaborationStore = create(
         mentors: [],
       },
 
-      open: () => set({ isOpen: true, step: 1 }),
+      open: (communityName) =>
+        set((state) => ({
+          isOpen: true,
+          step: 1,
+          formData: {
+            ...state.formData,
+            communityName: communityName || "",
+          },
+        })),
       close: () =>
         set({
           isOpen: false,

@@ -5,6 +5,7 @@ import { useTranslation } from "next-i18next";
 import { Button } from "@/components/ui/button";
 import LocaleSwitcher from "./LocaleSwitcher";
 import { useAuthStore } from "@/lib/auth-store";
+import { getStrapiMedia } from "@/lib/strapi";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -172,7 +173,9 @@ const Navbar = () => {
                       size="md"
                       className="cursor-pointer border-2 border-white shadow-sm hover:ring-2 hover:ring-brand-teal-100 transition-all"
                     >
-                      <AvatarImage src={user?.avatar?.url} />
+                      <AvatarImage
+                        src={getStrapiMedia(user?.profilePhoto?.url)}
+                      />
                       <AvatarFallback>
                         {getInitials(user?.fullName || user?.username)}
                       </AvatarFallback>
@@ -186,7 +189,9 @@ const Navbar = () => {
                     {/* Identity Header */}
                     <div className="flex items-center gap-4 px-5 py-4 bg-white">
                       <Avatar size="lg" className="shrink-0">
-                        <AvatarImage src={user?.avatar?.url} />
+                        <AvatarImage
+                          src={getStrapiMedia(user?.profilePhoto?.url)}
+                        />
                         <AvatarFallback className="bg-brand-teal-50 text-brand-teal-900 font-bold text-lg">
                           {getInitials(user?.fullName || user?.username)}
                         </AvatarFallback>
@@ -329,7 +334,9 @@ const Navbar = () => {
                       size="sm"
                       className="group-hover:ring-2 group-hover:ring-brand-teal-100 transition-all"
                     >
-                      <AvatarImage src={user?.avatar?.url} />
+                      <AvatarImage
+                        src={getStrapiMedia(user?.profilePhoto?.url)}
+                      />
                       <AvatarFallback>
                         {getInitials(user?.fullName || user?.username)}
                       </AvatarFallback>

@@ -12,8 +12,9 @@ export default function StepSuccess() {
   };
 
   const handleAccessPage = () => {
+    const callId = formData.createdCallDocumentId;
     close();
-    router.push("/community");
+    router.push(callId ? `/community/calls/${callId}` : "/community");
   };
 
   return (

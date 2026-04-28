@@ -363,6 +363,8 @@ const seed = async (strapi) => {
     "api::resource.resource.findOne",
     "api::resource.resource.create",
     "plugin::upload.content-api.upload",
+    "api::community.community.join",
+    "api::community.community.leave",
   ];
 
   for (const action of collaborationActions) {

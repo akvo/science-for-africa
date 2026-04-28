@@ -356,9 +356,6 @@ function ChatHeader({ call, isActive, onBack }) {
             {datePrefix}: {formatShortDate(call.endDate)}
           </span>
         </div>
-        <Button size="sm" variant="outline" className="rounded-full">
-          Request to join
-        </Button>
       </div>
     </div>
   );

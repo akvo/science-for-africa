@@ -7,7 +7,7 @@ import { Plus, Mail, Info, Loader2 } from "lucide-react";
 import { createCollaborationCall } from "@/lib/strapi";
 
 export default function StepInviteUsers() {
-  const { formData, addInviteEmail, removeInviteEmail, nextStep, prevStep } =
+  const { formData, addInviteEmail, removeInviteEmail, updateFormData, nextStep, prevStep } =
     useCollaborationStore();
 
   const [emailInputs, setEmailInputs] = useState(() => {
@@ -64,6 +64,7 @@ export default function StepInviteUsers() {
       });
 
       if (result && !result.error) {
+        updateFormData({ createdCallDocumentId: result.data?.documentId || result.documentId });
         nextStep();
       } else {
         setError(result?.error || "Failed to create collaboration call");
@@ -92,6 +93,7 @@ export default function StepInviteUsers() {
       });
 
       if (result && !result.error) {
+        updateFormData({ createdCallDocumentId: result.data?.documentId || result.documentId });
         nextStep();
       } else {
         setError(result?.error || "Failed to create collaboration call");

@@ -18,7 +18,7 @@ import ResourcesList from "@/components/community/ResourcesList";
 import CreateCollaborationDialog from "@/components/collaboration/CreateCollaborationDialog";
 import { useCollaborationStore } from "@/lib/collaboration-store";
 import { useAuthStore } from "@/lib/auth-store";
-import { fetchCommunity, fetchCollaborationCalls } from "@/lib/strapi";
+import { fetchCommunity, fetchCollaborationCalls, joinCommunity, leaveCommunity } from "@/lib/strapi";
 import { COMMUNITY_TABS } from "@/lib/community-mock-data";
 
 function mapCallFromApi(c) {
@@ -44,18 +44,37 @@ export default function CommunityDetailPage() {
   const router = useRouter();
   const openCollaborationDialog = useCollaborationStore((s) => s.open);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const user = useAuthStore((s) => s.user);
+
+  const [community, setCommunity] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [calls, setCalls] = useState([]);
+  const [isMember, setIsMember] = useState(false);
+  const { slug } = router.query;
 
   const openCollaboration = () => {
     if (!isAuthenticated) {
       router.push("/login");
       return;
     }
-    openCollaborationDialog();
+    openCollaborationDialog(community?.name);
   };
-  const [community, setCommunity] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [calls, setCalls] = useState([]);
-  const { slug } = router.query;
+
+  const handleJoin = async () => {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+    const action = isMember ? leaveCommunity : joinCommunity;
+    const res = await action(community.documentId);
+    if (res?.data) {
+      setIsMember(res.data.isMember);
+      setCommunity((prev) => ({
+        ...prev,
+        stats: { ...prev.stats, subscribers: res.data.subscribers },
+      }));
+    }
+  };
 
   useEffect(() => {
     if (!slug) return;
@@ -64,7 +83,7 @@ export default function CommunityDetailPage() {
       if (items.length > 0) {
         const c = items[0];
         // Normalise shape for existing components
-        setCommunity({
+        const normalized = {
           ...c,
           about: c.description,
           stats: { subscribers: c.subscribers || 0, posts: c.posts || 0 },
@@ -77,7 +96,11 @@ export default function CommunityDetailPage() {
             id: m.documentId || m.id,
             name: m.username || m.email,
           })),
-        });
+        };
+        setCommunity(normalized);
+        if (c.isMember !== undefined) {
+          setIsMember(c.isMember);
+        }
       }
       setLoading(false);
     });
@@ -140,6 +163,8 @@ export default function CommunityDetailPage() {
         <CommunityHeader
           community={community}
           onCreatePost={openCollaboration}
+          isJoined={isMember}
+          onJoin={handleJoin}
         />
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">

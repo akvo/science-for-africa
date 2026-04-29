@@ -1,16 +1,15 @@
+import { useTranslation } from "next-i18next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
-/**
- * Community detail header: banner, avatar, name, handle, and primary actions.
- * Reusable for any forum / community detail page.
- */
 export default function CommunityHeader({
   community,
   onCreatePost,
   onJoin,
   isJoined = false,
 }) {
+  const { t } = useTranslation("common");
+
   return (
     <div className="w-full">
       <div
@@ -52,10 +51,10 @@ export default function CommunityHeader({
 
         <div className="flex items-center gap-2">
           <Button variant="outline" size="md" onClick={onCreatePost}>
-            Create post
+            {t("community.create_post")}
           </Button>
           <Button variant="primary" size="md" onClick={onJoin}>
-            {isJoined ? "Joined" : "Join"}
+            {isJoined ? t("community.joined") : t("community.join")}
           </Button>
         </div>
       </div>

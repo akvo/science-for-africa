@@ -36,6 +36,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=node:node /app/.next/standalone ./
 COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 
+# next-i18next requires the config file and locale files at runtime
+COPY --from=builder /app/next-i18next.config.js ./next-i18next.config.js
+
 # Use custom entrypoint to populate ENV variables for client scripts
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]

@@ -267,10 +267,6 @@ const synchronizeTranslations = async (strapi, uid) => {
  * Seeder Utility
  */
 const seed = async (strapi) => {
-  if (process.env.NODE_ENV !== "development") {
-    return;
-  }
-
   strapi.log.info("Checking if database needs seeding...");
 
   // 1. Seed Interests
@@ -303,22 +299,24 @@ const seed = async (strapi) => {
     strapi.log.info(`Seeded ${INSTITUTIONS.length} Institutions.`);
   }
 
-  // 3. Seed Communities
-  const communityCount = await strapi.db
-    .query("api::community.community")
-    .count();
-  if (communityCount === 0) {
-    strapi.log.info("Seeding Communities...");
-    for (const data of COMMUNITIES) {
+  // 3. Seed Communities (upsert by slug — skip existing ones)
+  for (const data of COMMUNITIES) {
+    const existing = await strapi.db
+      .query("api::community.community")
+      .findOne({ where: { slug: data.slug } });
+    if (!existing) {
+      strapi.log.info(`Seeding community: ${data.name}`);
       await strapi.db.query("api::community.community").create({ data });
     }
-    strapi.log.info(`Seeded ${COMMUNITIES.length} communities.`);
   }
 
   // 3b. Synchronize French Translations for critical collections
   strapi.log.info("Synchronizing French translations...");
   await synchronizeTranslations(strapi, "api::interest.interest");
   await synchronizeTranslations(strapi, "api::institution.institution");
+
+  // Permissions must be synchronized in ALL environments
+  strapi.log.info("Synchronizing permissions...");
 
   // 4. Set Permissions (Ensure Public and Authenticated can search)
   const roles = ["public", "authenticated"];

@@ -103,7 +103,7 @@ The email verification flow: after registration, the user lands on a verificatio
 | Tool | Purpose |
 |---|---|
 | Docker & Docker Compose | Containerised development and mimic-prod environments |
-| Nginx 1.26 (Alpine) | Reverse proxy — routes `/` → frontend:3000, `/cms/` → backend:1337 |
+| Nginx 1.26 (Alpine) | Reverse proxy — routes `/` → frontend:3000, `/cms/` → backend:1337 with path rewrite |
 | GitHub Actions | CI/CD — build, push to container registry, Kubernetes rollout |
 | Mailpit | Dev-only email testing (SMTP mock on port 1025, web inspector on port 8025) |
 | PgAdmin 4 | Dev-only database inspection (port 5050) |
@@ -452,7 +452,7 @@ Push to main
 - `GH_PAT` — access to `akvo/composite-actions` repo
 
 **Kubernetes deployments:**
-1. **nginx** — reverse proxy, routes `/` and `/cms/`. Note: Nginx must NOT strip the `/cms/` prefix when proxying to Strapi, as Strapi (configured with a subpath) handles its own routing.
+1. **nginx** — reverse proxy, routes `/` and `/cms/`
 2. **frontend** — Next.js production build (Node 20 Alpine, port 3000)
 3. **backend** — Strapi production build (Node 22 Alpine, port 1337)
 
@@ -462,7 +462,7 @@ Push to main
 
 **Critical Configuration Notes:**
 - **Strapi Build-time URL**: Strapi's admin panel is a React application built during the Docker build phase. It **must** know its public base path (e.g., `/cms`) at build time to correctly resolve asset paths (JS/CSS). This is passed via the `BACKEND_URL` build argument in the Dockerfile. Failure to provide this will result in a blank white page in production as assets will attempt to load from the root `/` instead of the subpath.
-- **Path Consistency**: The `BACKEND_URL` should be the base URL of the Strapi application (e.g., `https://domain.com/cms`). Do not include the `/api` suffix in the base `BACKEND_URL`, as Strapi appends this automatically for its REST endpoints. **Important**: When hosting on a subpath like `/cms`, ensure that the proxy (Nginx) does NOT use a rewrite rule to strip the prefix, as Strapi expects the full path for its internal routing.
+- **Path Consistency**: The `BACKEND_URL` should be the base URL of the Strapi application (e.g., `https://domain.com/cms`). Do not include the `/api` suffix in the base `BACKEND_URL`, as Strapi appends this automatically for its REST endpoints.
 
 K8s manifests are managed within Akvo's infrastructure (via the `composite-actions` repo and cluster configuration), not stored in this application repo.
 

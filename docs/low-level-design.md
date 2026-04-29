@@ -30,6 +30,7 @@ To maintain DRY principles and UI consistency, common patterns are extracted int
 | `LoadingState` | Centered spinner with optional message for tab/page initialization. |
 | `EmptyState` | Standardized "No results" view with icon, title, description, and CTA button. |
 | `VerificationBadge` | Subtle badge showing "Pending" status for unverified users/institutions. |
+| `ResourceTable` | Shared table-based display for resources with status tracking and file actions. |
 
 
 ### 1.2 Backend
@@ -326,6 +327,7 @@ erDiagram
         string externalUrl
         integer downloadCount
         date publicationDate
+        enum status
     }
 
     Event {
@@ -451,6 +453,8 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 **InstitutionMembership as explicit join table.** Similar to communities, users are linked to institutions via a dedicated membership entity. This supports multi-institutional profiles and stores metadata like affiliation type (member/owner) and verification status, which were previously rigid fields on the User entity.
 
 **Formalized Education.** Educational background is linked directly to the Institution collection via the `highestEducationInstitution` field, replacing unstructured string data.
+
+**Resource Visibility & Moderation.** Resources only appear in public community lists when `status` is `approved`. Users can see their own `pending` or `declined` uploads in their profile. This is enforced at the controller layer by overwriting the core `find` and `findOne` methods to apply user-contextual filters.
 
 ## 3. Deployment & Infrastructure
 

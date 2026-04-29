@@ -105,8 +105,7 @@ export default function ResourceTable({
                       {onRemove && (
                         <Button
                           variant="ghost"
-                          size="sm"
-                          className="text-[#3E7C85] hover:text-[#2d5c63] hover:bg-transparent font-semibold px-2"
+                          className="text-primary-600 hover:text-primary-700 hover:bg-transparent font-semibold px-2 text-sm"
                           onClick={() => onRemove(resource)}
                         >
                           {t("common:resources.actions.remove")}
@@ -116,8 +115,7 @@ export default function ResourceTable({
                       {onView && (
                         <Button
                           variant="outline"
-                          size="sm"
-                          className="rounded-full border-[#3E7C85] text-[#3E7C85] hover:bg-[#3E7C85] hover:text-white px-4 font-semibold"
+                          className="rounded-full border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white px-4 font-semibold text-sm"
                           onClick={() => onView(resource)}
                         >
                           {t("common:resources.actions.view")}
@@ -127,8 +125,7 @@ export default function ResourceTable({
                       {onDownload && (
                         <Button
                           variant="outline"
-                          size="sm"
-                          className="rounded-full border-[#3E7C85] text-[#3E7C85] hover:bg-[#3E7C85] hover:text-white px-4 font-semibold"
+                          className="rounded-full border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white px-4 font-semibold text-sm"
                           onClick={() => onDownload(resource)}
                         >
                           {t("common:resources.actions.download")}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { Plus, File } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -93,17 +93,29 @@ export default function ResourcesList({
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const loadResources = () => {
+  const loadResources = useCallback(() => {
     if (!communityDocumentId) return;
     setLoading(true);
     fetchResources(communityDocumentId).then((res) => {
       setResources(Array.isArray(res?.data) ? res.data : []);
       setLoading(false);
     });
-  };
+  }, [communityDocumentId]);
 
   useEffect(() => {
-    loadResources();
+    let ignore = false;
+    if (!communityDocumentId) return;
+
+    fetchResources(communityDocumentId).then((res) => {
+      if (!ignore) {
+        setResources(Array.isArray(res?.data) ? res.data : []);
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      ignore = true;
+    };
   }, [communityDocumentId]);
 
   const filtered = useMemo(() => {
@@ -155,11 +167,7 @@ export default function ResourcesList({
       ) : (
         <div className="flex flex-col divide-y divide-brand-gray-100 border-b border-brand-gray-100">
           {filtered.map((r) => (
-            <ResourceCard
-              key={r.documentId || r.id}
-              resource={r}
-              t={t}
-            />
+            <ResourceCard key={r.documentId || r.id} resource={r} t={t} />
           ))}
         </div>
       )}

@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "next-i18next";
-import { Plus } from "lucide-react";
+import { Plus, File } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn, getFullFileUrl, downloadFile } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { fetchResources } from "@/lib/strapi";
 import AddResourceDialog from "./AddResourceDialog";
-import ResourceTable from "@/components/shared/ResourceTable";
 
 const RESOURCE_FILTER_KEYS = [
   { key: "all", i18nKey: "resources.all" },
@@ -14,6 +13,74 @@ const RESOURCE_FILTER_KEYS = [
   { key: "practice-note", i18nKey: "resources.practice_note" },
   { key: "case-study", i18nKey: "resources.case_study" },
 ];
+
+const TYPE_LABEL_KEYS = {
+  report: "resources.report",
+  publication: "resources.publication",
+  "practice-note": "resources.practice_note",
+  "case-study": "resources.case_study",
+};
+
+function getFullFileUrl(url) {
+  if (!url) return null;
+  if (url.startsWith("http")) return url;
+  // Strapi returns relative paths like /uploads/file.pdf — prepend backend origin
+  const backendOrigin = (
+    process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api"
+  ).replace(/\/api\/?$/, "");
+  return `${backendOrigin}${url}`;
+}
+
+function ResourceCard({ resource, t }) {
+  const fileUrl = getFullFileUrl(resource.file?.url);
+  return (
+    <div className="flex items-center gap-4 px-6 py-5">
+      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand-gray-100">
+        <File className="size-6 text-primary-500" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm text-brand-gray-500">
+          {t(TYPE_LABEL_KEYS[resource.resourceType]) || resource.resourceType}
+        </p>
+        <p className="text-base font-semibold text-brand-gray-900 truncate">
+          {resource.name}
+        </p>
+      </div>
+      {fileUrl && (
+        <div className="flex items-center gap-2 shrink-0">
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-transparent bg-[#E8ECEF] hover:bg-[#dde2e6]"
+            onClick={() => window.open(fileUrl, "_blank")}
+          >
+            {t("resources.view")}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-transparent bg-[#E8ECEF] hover:bg-[#dde2e6]"
+            onClick={async () => {
+              try {
+                const res = await fetch(fileUrl);
+                const blob = await res.blob();
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(blob);
+                a.download = resource.file?.name || resource.name;
+                a.click();
+                URL.revokeObjectURL(a.href);
+              } catch {
+                window.open(fileUrl, "_blank");
+              }
+            }}
+          >
+            {t("resources.download")}
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function ResourcesList({
   communityDocumentId,
@@ -26,29 +93,17 @@ export default function ResourcesList({
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const loadResources = useCallback(() => {
+  const loadResources = () => {
     if (!communityDocumentId) return;
     setLoading(true);
     fetchResources(communityDocumentId).then((res) => {
       setResources(Array.isArray(res?.data) ? res.data : []);
       setLoading(false);
     });
-  }, [communityDocumentId]);
+  };
 
   useEffect(() => {
-    let ignore = false;
-    if (!communityDocumentId) return;
-
-    fetchResources(communityDocumentId).then((res) => {
-      if (!ignore) {
-        setResources(Array.isArray(res?.data) ? res.data : []);
-        setLoading(false);
-      }
-    });
-
-    return () => {
-      ignore = true;
-    };
+    loadResources();
   }, [communityDocumentId]);
 
   const filtered = useMemo(() => {
@@ -56,19 +111,9 @@ export default function ResourcesList({
     return resources.filter((r) => r.resourceType === filter);
   }, [resources, filter]);
 
-  const handleView = (resource) => {
-    const url = getFullFileUrl(resource.file?.url);
-    if (url) window.open(url, "_blank");
-  };
-
-  const handleDownload = (resource) => {
-    const url = getFullFileUrl(resource.file?.url);
-    if (url) downloadFile(url, resource.file?.name || resource.name);
-  };
-
   return (
-    <section className={cn("flex flex-col gap-6", className)}>
-      <div className="flex flex-wrap items-center gap-2 border-b border-brand-gray-100 pb-4 lg:px-0">
+    <section className={cn("flex flex-col", className)}>
+      <div className="flex items-center gap-2 border-b border-brand-gray-100 pb-4 lg:px-6">
         {RESOURCE_FILTER_KEYS.map((f) => {
           const isActive = filter === f.key;
           return (
@@ -108,12 +153,15 @@ export default function ResourcesList({
           {t("resources.no_resources")}
         </div>
       ) : (
-        <ResourceTable
-          resources={filtered}
-          onView={handleView}
-          onDownload={handleDownload}
-          t={t}
-        />
+        <div className="flex flex-col divide-y divide-brand-gray-100 border-b border-brand-gray-100">
+          {filtered.map((r) => (
+            <ResourceCard
+              key={r.documentId || r.id}
+              resource={r}
+              t={t}
+            />
+          ))}
+        </div>
       )}
 
       <AddResourceDialog

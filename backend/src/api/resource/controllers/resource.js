@@ -7,28 +7,43 @@ module.exports = createCoreController(
   ({ strapi }) => ({
     async find(ctx) {
       const user = ctx.state.user;
-      const { filters = {} } = ctx.query;
+      const { filters = {}, populate, sort, pagination } = ctx.query;
 
-      // If unauthenticated or a regular user, apply status filter
-      // We allow administrators (if they use this endpoint) or the owner to see all statuses
+      // Construct the base filter
+      let queryFilters = { ...filters };
+
       if (!user) {
         // Unauthenticated: only approved
-        ctx.query.filters = {
-          ...filters,
-          status: { $eq: "approved" },
-        };
+        queryFilters.status = { $eq: "approved" };
       } else {
         // Authenticated: show approved OR owned by current user
-        ctx.query.filters = {
-          ...filters,
+        queryFilters = {
+          ...queryFilters,
           $or: [
             { status: { $eq: "approved" } },
-            { uploadedBy: { id: { $eq: user.id } } },
+            { uploadedBy: { documentId: { $eq: user.documentId } } },
           ],
         };
       }
 
-      return await super.find(ctx);
+      // Use core service find for paginated results in Strapi v5
+      const { results, pagination: resPagination } = await strapi
+        .service("api::resource.resource")
+        .find({
+          filters: queryFilters,
+          populate: populate || ["file", "uploadedBy"],
+          sort: sort || "createdAt:desc",
+          pagination: {
+            page: parseInt(pagination?.page) || 1,
+            pageSize: parseInt(pagination?.pageSize) || 25,
+          },
+          locale: ctx.query.locale,
+        });
+
+      return {
+        data: results,
+        meta: { pagination: resPagination },
+      };
     },
 
     async findOne(ctx) {
@@ -39,19 +54,21 @@ module.exports = createCoreController(
         .documents("api::resource.resource")
         .findOne({
           documentId: id,
-          populate: ["uploadedBy"],
+          populate: ["file", "uploadedBy"],
+          locale: ctx.query.locale,
         });
 
       if (!resource) return ctx.notFound();
 
-      const isOwner = user && resource.uploadedBy?.id === user.id;
+      const isOwner =
+        user && resource.uploadedBy?.documentId === user.documentId;
       const isApproved = resource.status === "approved";
 
       if (!isOwner && !isApproved) {
         return ctx.forbidden("This resource is pending approval.");
       }
 
-      return await super.findOne(ctx);
+      return { data: resource };
     },
   }),
 );

@@ -339,7 +339,7 @@ export async function fetchResources(communityId, resourceType) {
  * Create a resource with file upload (multipart/form-data).
  * Strapi expects: data (JSON string) + files.file (the uploaded file).
  */
-export async function createResource({ name, resourceType, communityId, file }) {
+export async function createResource({ name, resourceType, communityId, file, topics }) {
   const jwt = (await import("./auth-store")).useAuthStore.getState().jwt;
   const { getBackendApiUrl } = await import("./url-helpers");
   const baseUrl = getBackendApiUrl();
@@ -374,6 +374,7 @@ export async function createResource({ name, resourceType, communityId, file }) 
         resourceType,
         file: fileId,
         community: { connect: [communityId] },
+        topics: topics || [],
       },
     }),
   });
@@ -384,6 +385,34 @@ export async function createResource({ name, resourceType, communityId, file }) 
   }
 
   return createRes.json();
+}
+
+/**
+ * Fetch a single resource by documentId (with uploadedBy populated).
+ */
+export async function fetchResource(documentId) {
+  return fetchFromStrapi(
+    `/resources/${documentId}?populate[file]=true&populate[uploadedBy]=true&populate[community]=true`,
+  );
+}
+
+/**
+ * Fetch comments for a resource (by resource documentId).
+ */
+export async function fetchResourceComments(resourceDocumentId) {
+  return fetchFromStrapi(
+    `/resource-comments?filters[resource][documentId][$eq]=${encodeURIComponent(resourceDocumentId)}&populate[author]=true&sort=createdAt:asc`,
+  );
+}
+
+/**
+ * Post a comment on a resource.
+ */
+export async function postResourceComment(resourceDocumentId, text) {
+  return postToStrapi("/resource-comments", {
+    text,
+    resource: { connect: [resourceDocumentId] },
+  });
 }
 
 /**

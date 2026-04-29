@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "resource_comments",
+  "info": {
+    "singularName": "resource-comment",
+    "pluralName": "resource-comments",
+    "displayName": "Resource Comment",
+    "description": "User comments on community resources"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "text": {
+      "type": "text",
+      "required": true
+    },
+    "resource": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::resource.resource"
+    },
+    "author": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}

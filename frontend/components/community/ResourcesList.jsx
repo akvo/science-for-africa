@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { fetchResources } from "@/lib/strapi";
 import AddResourceDialog from "./AddResourceDialog";
+import ViewResourceDialog from "./ViewResourceDialog";
 
 const RESOURCE_FILTER_KEYS = [
   { key: "all", i18nKey: "resources.all" },
@@ -31,7 +32,7 @@ function getFullFileUrl(url) {
   return `${backendOrigin}${url}`;
 }
 
-function ResourceCard({ resource, t }) {
+function ResourceCard({ resource, t, onView }) {
   const fileUrl = getFullFileUrl(resource.file?.url);
   return (
     <div className="flex items-center gap-4 px-6 py-5">
@@ -46,16 +47,16 @@ function ResourceCard({ resource, t }) {
           {resource.name}
         </p>
       </div>
-      {fileUrl && (
-        <div className="flex items-center gap-2 shrink-0">
-          <Button
-            variant="outline"
-            size="sm"
-            className="border-transparent bg-[#E8ECEF] hover:bg-[#dde2e6]"
-            onClick={() => window.open(fileUrl, "_blank")}
-          >
-            {t("resources.view")}
-          </Button>
+      <div className="flex items-center gap-2 shrink-0">
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-transparent bg-[#E8ECEF] hover:bg-[#dde2e6]"
+          onClick={() => onView?.(resource)}
+        >
+          {t("resources.view")}
+        </Button>
+        {fileUrl && (
           <Button
             variant="outline"
             size="sm"
@@ -76,8 +77,8 @@ function ResourceCard({ resource, t }) {
           >
             {t("resources.download")}
           </Button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
@@ -92,6 +93,7 @@ export default function ResourcesList({
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [viewResource, setViewResource] = useState(null);
 
   const loadResources = useCallback(() => {
     if (!communityDocumentId) return;
@@ -167,7 +169,7 @@ export default function ResourcesList({
       ) : (
         <div className="flex flex-col divide-y divide-brand-gray-100 border-b border-brand-gray-100">
           {filtered.map((r) => (
-            <ResourceCard key={r.documentId || r.id} resource={r} t={t} />
+            <ResourceCard key={r.documentId || r.id} resource={r} t={t} onView={setViewResource} />
           ))}
         </div>
       )}
@@ -177,6 +179,12 @@ export default function ResourcesList({
         onOpenChange={setDialogOpen}
         communityDocumentId={communityDocumentId}
         onSuccess={loadResources}
+      />
+
+      <ViewResourceDialog
+        open={!!viewResource}
+        onOpenChange={(open) => { if (!open) setViewResource(null); }}
+        resource={viewResource}
       />
     </section>
   );

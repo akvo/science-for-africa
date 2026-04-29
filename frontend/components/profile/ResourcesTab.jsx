@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "next-i18next";
 import { FileSearch } from "lucide-react";
 import { fetchMyResources, deleteResource } from "@/lib/strapi";

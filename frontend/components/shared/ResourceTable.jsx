@@ -1,6 +1,5 @@
-import React from "react";
-import { File, Trash2, Eye, Download } from "lucide-react";
-import { formatFileSize, getFullFileUrl } from "@/lib/utils";
+import { File } from "lucide-react";
+import { formatFileSize } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";

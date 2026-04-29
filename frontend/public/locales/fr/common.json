@@ -50,7 +50,24 @@
     "published_description": "Lorem ipsum dolor sit amet consectetur.",
     "dont_show_again": "Ne plus afficher",
     "access": "Accéder",
-    "upload_failed": "Échec du téléversement de la ressource"
+    "upload_failed": "Échec du téléversement de la ressource",
+    "table": {
+      "file_name": "Nom du fichier",
+      "file_size": "Taille du fichier",
+      "date_uploaded": "Date de téléversement",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "status": {
+      "pending": "En attente",
+      "approved": "Approuvé",
+      "declined": "Refusé"
+    },
+    "actions": {
+      "view": "Voir",
+      "remove": "Supprimer",
+      "download": "Télécharger"
+    }
   },
   "seo": {
     "description": "Faire progresser l'avenir de la science en Afrique. Rejoignez la communauté de scientifiques, de chercheurs et d'innovateurs.",

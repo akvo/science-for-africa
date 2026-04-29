@@ -509,3 +509,34 @@ export async function fetchUserProfile() {
     return null;
   }
 }
+/**
+ * Delete a resource record by documentId
+ */
+export async function deleteResource(documentId) {
+  try {
+    const response = await apiClient.delete(`/resources/${documentId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting resource:", error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch resources uploaded by the current authenticated user
+ */
+export async function fetchMyResources() {
+  try {
+    const user = (await import("./auth-store")).useAuthStore.getState().user;
+    if (!user?.id) return null;
+
+    // Filter specifically for resources uploaded by the current user
+    const response = await fetchFromStrapi(
+      `/resources?filters[uploadedBy][id][$eq]=${user.id}&populate[file]=true&populate[uploadedBy]=true&sort=createdAt:desc`,
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching my resources:", error);
+    return null;
+  }
+}

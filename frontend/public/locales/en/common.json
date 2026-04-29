@@ -53,7 +53,24 @@
     "published_description": "Lorem ipsum dolor sit amet consectetur.",
     "dont_show_again": "Don't show again",
     "access": "Access",
-    "upload_failed": "Failed to upload resource"
+    "upload_failed": "Failed to upload resource",
+    "table": {
+      "file_name": "File name",
+      "file_size": "File size",
+      "date_uploaded": "Date uploaded",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "declined": "Declined"
+    },
+    "actions": {
+      "view": "View",
+      "remove": "Remove",
+      "download": "Download"
+    }
   },
   "common": {
     "loading": "Loading...",

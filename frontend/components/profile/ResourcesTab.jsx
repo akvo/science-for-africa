@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "next-i18next";
 import { FileSearch } from "lucide-react";
 import { fetchMyResources, deleteResource } from "@/lib/strapi";
-import { getFullFileUrl, downloadFile } from "@/lib/utils";
+import { getFullFileUrl } from "@/lib/utils";
 import ResourceTable from "@/components/shared/ResourceTable";
 import EmptyState from "@/components/shared/EmptyState";
 import ConfirmationModal from "@/components/shared/ConfirmationModal";
@@ -36,11 +36,6 @@ export default function ResourcesTab() {
   const handleView = (resource) => {
     const url = getFullFileUrl(resource.file?.url);
     if (url) window.open(url, "_blank");
-  };
-
-  const handleDownload = (resource) => {
-    const url = getFullFileUrl(resource.file?.url);
-    if (url) downloadFile(url, resource.file?.name || resource.name);
   };
 
   const initiateDelete = (resource) => {
@@ -92,21 +87,9 @@ export default function ResourcesTab() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-1">
-        <h2 className="text-xl font-bold text-brand-gray-900">
-          {t("profile:resources.title", { defaultValue: "My Resources" })}
-        </h2>
-        <p className="text-sm text-brand-gray-500">
-          {t("profile:resources.description", {
-            defaultValue: "Manage your uploaded documents and resources.",
-          })}
-        </p>
-      </div>
-
       <ResourceTable
         resources={resources}
         onView={handleView}
-        onDownload={handleDownload}
         onRemove={initiateDelete}
         showStatus={true}
         t={t}

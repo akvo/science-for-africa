@@ -452,7 +452,7 @@ Push to main
 - `GH_PAT` — access to `akvo/composite-actions` repo
 
 **Kubernetes deployments:**
-1. **nginx** — reverse proxy, routes `/` and `/cms/`. Note: Nginx is configured to strip the `/cms/` prefix using a rewrite rule. To ensure Strapi generates correct asset paths, Nginx must also send the `X-Forwarded-Prefix: /cms` header.
+1. **nginx** — reverse proxy, routes `/` and `/cms/`. Note: Nginx is configured to strip the `/cms/` prefix using a rewrite rule. Strapi must be configured with a **relative** `url: /cms` in `server.js` to handle this mismatch while correctly generating asset paths.
 2. **frontend** — Next.js production build (Node 20 Alpine, port 3000)
 3. **backend** — Strapi production build (Node 22 Alpine, port 1337)
 
@@ -462,7 +462,7 @@ Push to main
 
 **Critical Configuration Notes:**
 - **Strapi Build-time URL**: Strapi's admin panel is a React application built during the Docker build phase. It **must** know its public base path (e.g., `/cms`) at build time to correctly resolve asset paths (JS/CSS). This is passed via the `BACKEND_URL` build argument in the Dockerfile. Failure to provide this will result in a blank white page in production as assets will attempt to load from the root `/` instead of the subpath.
-- **Path Consistency**: The `BACKEND_URL` should be the base URL of the Strapi application (e.g., `https://domain.com/cms`). **Important**: When using an Nginx rewrite to strip the `/cms` prefix, Nginx MUST send the `X-Forwarded-Prefix: /cms` header. This tells Strapi v5 about its public subpath, allowing it to generate valid asset links (like `/cms/admin/strapi-xxx.js`) while correctly matching the stripped incoming paths.
+- **Path Consistency**: The `BACKEND_URL` in Kubernetes secrets should be the full absolute URL, but Strapi's internal `url` configuration in `server.js` should be hardcoded to the relative path `/cms`. This ensures that Strapi ignores the prefix in incoming requests (supporting the Nginx rewrite) while still using it for relative asset resolution and link generation.
 
 K8s manifests are managed within Akvo's infrastructure (via the `composite-actions` repo and cluster configuration), not stored in this application repo.
 

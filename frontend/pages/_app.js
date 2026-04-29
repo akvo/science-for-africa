@@ -7,6 +7,7 @@ const inter = Inter({
 });
 
 import MainLayout from "@/components/layout/MainLayout";
+import { Toaster } from "sonner";
 
 function App({ Component, pageProps }) {
   return (
@@ -14,6 +15,7 @@ function App({ Component, pageProps }) {
       <MainLayout>
         <Component {...pageProps} />
       </MainLayout>
+      <Toaster position="bottom-right" richColors />
     </div>
   );
 }

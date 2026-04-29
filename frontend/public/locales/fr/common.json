@@ -13,8 +13,7 @@
     "profile": "Profil",
     "settings": "Paramètres",
     "logout": "Se déconnecter",
-    "publish": "Publier",
-    "back": "Retour"
+    "publish": "Publier"
   },
   "common": {
     "loading": "Chargement...",

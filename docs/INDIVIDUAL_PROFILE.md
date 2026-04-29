@@ -48,12 +48,23 @@ graph TD
 
 ### Database Schema / Data Structure
 - **User Entity**: Extension of current schema to include:
+    - `fullName` (string)
     - `displayName` (string)
+
     - `profilePhoto` (Media Relation)
     - `pageCover` (Media Relation)
     - `languagePreferences` (Enum: en, fr)
     - `biography` (Text, 275 char limit)
-    - `full_name` (Auto-synced from first/last name)
+    - `roleType` (Enum: professional roles)
+    - `careerStage` (Enum: career stages)
+    - `educationLevel` (string)
+    - `educationInstitutionName` (string)
+    - `institutionName` (string)
+    - `orcidId` (string)
+    - `interests` (Component: user.interest, repeatable)
+    - `onboardingComplete` (boolean)
+    - `full_name` (Auto-synced from first/last name - legacy reference)
+
     - `memberships` (One-to-Many to `CommunityMembership`)
     - `collaborationInvites` (One-to-Many to `CollaborationInvite`)
 - **Community**: (Branch 31 Merged)
@@ -70,10 +81,10 @@ graph TD
 
 ### User Acceptance Criteria (UAC Baseline)
 #### Core Profile
-- [ ] **Profile Customization**: Within "Details" tab, user can update display name, professional bio (character limited), profile photo, and page cover.
-- [ ] **View Details**: See Full Name, Email, Role, Education, Institutional Organization, optional description, language preferences, and unique ORCID identifier.
-- [ ] **Edit Mode**: "Edit" button transforms fields into inputs with "Save" and "Cancel" buttons.
-- [ ] **Validation**: Real-time "characters left" counter for bio; file type/size validation for images.
+- [x] **Profile Customization**: Within "Details" tab, user can update display name, professional bio (character limited), profile photo, and page cover.
+- [x] **View Details**: See Full Name, Email, Role, Education, Institutional Organization, optional description, language preferences, and unique ORCID identifier.
+- [x] **Edit Mode**: "Edit" button transforms fields into inputs with "Save" and "Cancel" buttons.
+- [x] **Validation**: Real-time "characters left" counter for bio; file type/size validation for images.
 
 #### Community Oversight
 - [ ] **Communities Tab**: Displays a grid of joined communities and sub-communities.
@@ -104,22 +115,22 @@ The following features were identified in the initial discovery but are not part
 - **Notification Preferences**: Granular control over platform alerts.
 
 ### Technical Acceptance Criteria (Tech AC)
-- [ ] **API Security**: Endpoints restricted to authenticated owner of the profile.
+- [x] **API Security**: Endpoints restricted to authenticated owner of the profile.
 - [ ] **Optimistic UI**: Joined/Leave/Saved status updates immediately on frontend.
 - [ ] **Image Optimization**: Profile photos and covers are optimized/resized on upload.
-- [ ] **I18n**: Support for multi-language display (English/French).
+- [x] **I18n**: Support for multi-language display (English/French) via dedicated `profile` namespace.
 
 ---
 
 ## 🔧 Implementation Details
 
 ### Phase 1: Foundation & Data Layer
-- [ ] Update Strapi User Schema with missing fields (`displayName`, `profilePhoto`, `pageCover`, etc.).
-- [ ] Implement/Harden `/api/auth/me` PUT endpoint.
-- [ ] Create basic Profile Layout in Next.js with Tab navigation.
+- [x] Update Strapi User Schema with missing fields (`displayName`, `profilePhoto`, `pageCover`, etc.).
+- [x] Implement/Harden `/api/auth/me` PUT endpoint.
+- [x] Create basic Profile Layout in Next.js with Tab navigation.
 
 ### Phase 2: Core Tabs (MVP)
-- [ ] **Details Tab**: Implement View/Edit flows for identity management.
+- [x] **Details Tab**: Implement View/Edit flows for identity management.
 - [ ] **Communities Tab**: Implement grid view, sub-community support, and "Leave" logic.
 - [ ] **Collaboration Tab**: Implement tracking for active/completed projects.
 - [ ] **Resources Tab**: Implement document access and download functionality.
@@ -134,11 +145,32 @@ The following features were identified in the initial discovery but are not part
 - **Path**: `/api/auth/me`
 - **Response**: `200 OK` with deep population of `memberships`, `collaborationInvites`, and Media.
 
-### Update Profile
-- **Method**: `PUT`
-- **Path**: `/api/auth/me` (Custom extended endpoint)
-- **Request Body**: `Multipart/form-data` for images or `application/json`
-- **Response**: `200 OK` with updated user object.
+### Update Profile (Two-Step Process)
+To update the profile photo or other media fields, follow the standard two-step upload pattern:
+
+1.  **Step 1: Upload File**
+    - **Method**: `POST`
+    - **Path**: `/api/upload`
+    - **Request Body**: `Multipart/form-data` (file)
+    - **Response**: `200 OK` with file object containing `id`.
+
+2.  **Step 2: Link to Profile**
+    - **Method**: `PUT`
+    - **Path**: `/api/auth/me`
+    - **Request Body**: `application/json` including the media field as a numeric ID (e.g., `{ "profilePhoto": 123 }`).
+    - **Response**: `200 OK` with updated user object.
+
+### Automated Media Cleanup
+The backend implements a `beforeUpdate` lifecycle hook on the `users-permissions.user` model to ensure that orphaned media files are automatically deleted from storage when:
+- A profile photo is replaced by a new one.
+- A profile photo is removed (set to `null`).
+
+This prevents storage bloat and ensures data integrity.
+
+### Next.js Image Proxying
+To ensure reliable image rendering across different environments (Docker, staging), the frontend implements a transparent proxy for media files:
+- **Rewrite**: `/uploads/:path*` is proxied to the backend origin.
+- **Helper**: `getStrapiMedia` returns relative URLs, leveraging the rewrite to bypass domain-related security issues in the Next.js image optimizer.
 
 ### Leave Community
 - **Method**: `DELETE`

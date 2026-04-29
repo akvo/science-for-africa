@@ -60,6 +60,34 @@ export async function postToStrapi(endpoint, data, wrapInData = true) {
 }
 
 /**
+ * Upload a file to Strapi
+ */
+export async function uploadFile(file) {
+  try {
+    const formData = new FormData();
+    formData.append("files", file);
+    const response = await apiClient.post("/upload", formData);
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading file to Strapi:", error);
+    return null;
+  }
+}
+
+/**
+ * Returns the full URL for a Strapi media object/URL
+ */
+export function getStrapiMedia(url) {
+  if (!url) return null;
+  if (url.startsWith("http") || url.startsWith("data:") || url.startsWith("/"))
+    return url;
+
+  // Strapi returns relative paths like uploads/file.png (without leading slash in some cases)
+  // or /uploads/file.png. Standardize to leading slash.
+  return url.startsWith("/") ? url : `/${url}`;
+}
+
+/**
  * Register a new user
  */
 export async function registerUser(userData) {
@@ -71,6 +99,22 @@ export async function registerUser(userData) {
  */
 export async function loginUser(credentials) {
   return postToStrapi("/auth/local", credentials, false);
+}
+
+/**
+ * Get current user profile with population
+ */
+export async function getMe(membershipLimit = 4) {
+  try {
+    // Call custom auth endpoint which supports dynamic population limits
+    const response = await apiClient.get(
+      `/auth/me${membershipLimit ? `?membershipLimit=${membershipLimit}` : ""}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+    return null;
+  }
 }
 
 /**
@@ -163,6 +207,11 @@ export function transformProfileUpdatePayload(userData) {
     delete data.educationInstitution;
   }
 
+  if (data.language) {
+    data.languagePreferences = data.language;
+    delete data.language;
+  }
+
   if (data.userType === "institution") {
     delete data.educationLevel;
     delete data.educationTopic;
@@ -173,7 +222,15 @@ export function transformProfileUpdatePayload(userData) {
 
   // Cleanup empty strings
   Object.keys(data).forEach((key) => {
-    if (data[key] === "") {
+    const identityFields = [
+      "fullName",
+      "username",
+      "email",
+      "firstName",
+      "lastName",
+      "roleType",
+    ];
+    if (data[key] === "" && !identityFields.includes(key)) {
       delete data[key];
     }
   });

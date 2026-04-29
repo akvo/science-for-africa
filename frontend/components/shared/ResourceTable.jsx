@@ -7,10 +7,10 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
 const TYPE_LABEL_KEYS = {
-  report: "resources.report",
-  publication: "resources.publication",
-  "practice-note": "resources.practice_note",
-  "case-study": "resources.case_study",
+  report: "common:resources.report",
+  publication: "common:resources.publication",
+  "practice-note": "common:resources.practice_note",
+  "case-study": "common:resources.case_study",
 };
 
 const STATUS_STYLES = {
@@ -35,22 +35,22 @@ export default function ResourceTable({
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-brand-gray-50 border-b border-brand-gray-200">
-              <th className="px-6 py-3.5 text-xs font-semibold text-brand-gray-500 uppercase tracking-wider">
-                {t("resources.table.file_name")}
+              <th className="w-full px-6 py-3.5 text-sm font-semibold text-brand-gray-500 tracking-wider whitespace-nowrap">
+                {t("common:resources.table.file_name")}
               </th>
-              <th className="px-6 py-3.5 text-xs font-semibold text-brand-gray-500 uppercase tracking-wider text-right lg:text-left">
-                {t("resources.table.file_size")}
+              <th className="px-6 py-3.5 text-sm font-semibold text-brand-gray-500 tracking-wider text-right lg:text-left whitespace-nowrap">
+                {t("common:resources.table.file_size")}
               </th>
-              <th className="hidden lg:table-cell px-6 py-3.5 text-xs font-semibold text-brand-gray-500 uppercase tracking-wider">
-                {t("resources.table.date_uploaded")}
+              <th className="hidden lg:table-cell px-6 py-3.5 text-sm font-semibold text-brand-gray-500 tracking-wider whitespace-nowrap">
+                {t("common:resources.table.date_uploaded")}
               </th>
               {showStatus && (
-                <th className="px-6 py-3.5 text-xs font-semibold text-brand-gray-500 uppercase tracking-wider">
-                  {t("resources.table.status")}
+                <th className="px-6 py-3.5 text-sm font-semibold text-brand-gray-500 tracking-wider whitespace-nowrap">
+                  {t("common:resources.table.status")}
                 </th>
               )}
-              <th className="px-6 py-3.5 text-xs font-semibold text-brand-gray-500 uppercase tracking-wider text-right">
-                {t("resources.table.actions")}
+              <th className="px-6 py-3.5 text-sm font-semibold text-brand-gray-500 tracking-wider text-right whitespace-nowrap">
+                {t("common:resources.table.actions")}
               </th>
             </tr>
           </thead>
@@ -67,15 +67,15 @@ export default function ResourceTable({
                 >
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-4">
-                      <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand-gray-100">
-                        <File className="size-5 text-primary-500" />
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand-gray-100">
+                        <File className="size-6 text-primary-500" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs text-brand-gray-500 mb-0.5">
+                        <p className="text-sm text-brand-gray-500 mb-0.5">
                           {t(TYPE_LABEL_KEYS[resource.resourceType]) ||
                             resource.resourceType}
                         </p>
-                        <p className="text-sm font-semibold text-brand-gray-900 truncate max-w-50 lg:max-w-md">
+                        <p className="text-base font-semibold text-brand-gray-900 truncate max-w-50 sm:max-w-md lg:max-w-xl">
                           {resource.name}
                         </p>
                       </div>
@@ -96,7 +96,7 @@ export default function ResourceTable({
                           STATUS_STYLES[status],
                         )}
                       >
-                        {t(`resources.status.${status}`)}
+                        {t(`common:resources.status.${status}`)}
                       </Badge>
                     </td>
                   )}
@@ -106,39 +106,32 @@ export default function ResourceTable({
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-brand-gray-500 hover:text-red-600 hover:bg-red-50"
+                          className="text-[#3E7C85] hover:text-[#2d5c63] hover:bg-transparent font-semibold px-2"
                           onClick={() => onRemove(resource)}
                         >
-                          <span className="hidden sm:inline mr-1">
-                            {t("resources.actions.remove")}
-                          </span>
-                          <Trash2 className="size-4" />
+                          {t("common:resources.actions.remove")}
                         </Button>
                       )}
 
-                      {onDownload ? (
+                      {onView && (
                         <Button
                           variant="outline"
                           size="sm"
-                          className="rounded-full border-brand-gray-200 text-brand-gray-700 hover:bg-brand-gray-50"
-                          onClick={() => onDownload(resource)}
-                        >
-                          <span className="hidden sm:inline mr-1">
-                            {t("resources.actions.download")}
-                          </span>
-                          <Download className="size-4" />
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="rounded-full border-brand-gray-200 text-brand-gray-700 hover:bg-brand-gray-50 px-4"
+                          className="rounded-full border-[#3E7C85] text-[#3E7C85] hover:bg-[#3E7C85] hover:text-white px-4 font-semibold"
                           onClick={() => onView(resource)}
                         >
-                          <span className="hidden sm:inline mr-1">
-                            {t("resources.actions.view")}
-                          </span>
-                          <Eye className="size-4 lg:hidden" />
+                          {t("common:resources.actions.view")}
+                        </Button>
+                      )}
+
+                      {onDownload && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="rounded-full border-[#3E7C85] text-[#3E7C85] hover:bg-[#3E7C85] hover:text-white px-4 font-semibold"
+                          onClick={() => onDownload(resource)}
+                        >
+                          {t("common:resources.actions.download")}
                         </Button>
                       )}
                     </div>

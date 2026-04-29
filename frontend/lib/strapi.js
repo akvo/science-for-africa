@@ -445,6 +445,8 @@ export async function createResource({
   if (!fileId) throw new Error("File upload returned no file ID");
 
   // Step 2: Create the resource record with the uploaded file ID
+  const user = (await import("./auth-store")).useAuthStore.getState().user;
+  
   const createRes = await fetch(`${baseUrl}/resources`, {
     method: "POST",
     headers: { ...headers, "Content-Type": "application/json" },
@@ -454,6 +456,7 @@ export async function createResource({
         resourceType,
         file: fileId,
         community: { connect: [communityId] },
+        uploadedBy: user?.documentId ? { connect: [user.documentId] } : undefined,
       },
     }),
   });
@@ -532,7 +535,7 @@ export async function fetchMyResources() {
 
     // Filter specifically for resources uploaded by the current user
     const response = await fetchFromStrapi(
-      `/resources?filters[uploadedBy][id][$eq]=${user.id}&populate[file]=true&populate[uploadedBy]=true&sort=createdAt:desc`,
+      `/resources?filters[uploadedBy][documentId][$eq]=${user.documentId}&populate[file]=true&populate[uploadedBy]=true&sort=createdAt:desc`,
     );
     return response;
   } catch (error) {

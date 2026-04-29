@@ -46,6 +46,7 @@ jobs:
           service-name: "backend"
           dockerfile-location: "backend"
           cluster-name: "test"
+          build-args: "BACKEND_URL=https://science-of-africa.akvotest.org/cms"
 
       - name: Docker Push Nginx
         uses: ./composite-actions/.github/actions/docker-push

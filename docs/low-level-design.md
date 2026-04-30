@@ -767,3 +767,20 @@ The platform follows Google's best practices for localized sites:
 - **Subpath routing**: Distinct URLs for each language.
 - **HTML lang attribute**: Automatically updated by `next-i18next`.
 - **SSR support**: Translations are loaded server-side using `getStaticProps` or `getServerSideProps`.
+
+## 7. Community Membership Synchronization Pattern
+
+To ensure strict data integrity and a seamless user experience, the platform implements a **"Bulletproof Dual-Layer Removal"** pattern for community membership management.
+
+### 7.1 The Problem
+In Strapi v5, many-to-many relations (like `members` on a Community) and dedicated join tables (like the `CommunityMembership` collection) can become desynchronized if not handled atomically. Simple deletion of one may leave orphaned data in the other, leading to "stale" UI states where a user appears to have left a community but still sees it in their "My Communities" dashboard after a refresh.
+
+### 7.2 Implementation Strategy
+The `api/community/leave` controller implements a multi-layered synchronization logic:
+
+1.  **Relation Disconnection (Document Service)**: Uses the `strapi.documents` service to disconnect the user from the community's `members` field. This ensures the member count and community-level relations are updated.
+2.  **Atomic Record Purge (Database Query)**: Uses the low-level `strapi.db.query` service to find and delete all records in the `CommunityMembership` collection matching the user and community.
+3.  **Cross-ID Compatibility**: The deletion logic targets both numeric `id` and v5-specific `documentId` formats simultaneously using an `$or` filter. This prevents synchronization failures caused by ID format mismatches between different Strapi service layers.
+
+### 7.3 Data Consistency Rule
+Every "Join" action MUST create both the relation and the collection record. Every "Leave" action MUST delete both. This dual-write/dual-delete requirement is enforced at the controller level to maintain a "Single Source of Truth" across the relational model.

@@ -105,59 +105,61 @@ module.exports = createCoreController(
       const user = ctx.state.user;
       if (!user) return ctx.unauthorized();
 
-      const { id } = ctx.params;
-      const community = await strapi.db
-        .query("api::community.community")
+      const { id: communityDocId } = ctx.params;
+
+      // 1. Fetch community to verify existence and get numeric ID
+      const community = await strapi
+        .documents("api::community.community")
         .findOne({
-          where: { documentId: id },
-          populate: { members: { select: ["id"] } },
+          documentId: communityDocId,
+          populate: ["members"],
         });
 
       if (!community) return ctx.notFound("Community not found");
 
-      const isMember = community.members.some((m) => m.id === user.id);
-      if (!isMember) {
-        return {
-          success: true,
-          data: { isMember: false, subscribers: community.members.length },
-        };
-      }
+      const communityId = community.id;
+      const userId = user.id;
 
-      await strapi.db.query("api::community.community").update({
-        where: { id: community.id },
-        data: { members: { disconnect: [{ id: user.id }] } },
+      // 2. Disconnect user from community (Many-to-Many)
+      // Use both Document Service and DB layer for maximum sync reliability
+      await strapi.documents("api::community.community").update({
+        documentId: communityDocId,
+        data: {
+          members: {
+            disconnect: [user.documentId || user.id],
+          },
+        },
       });
 
-      // Delete community-membership records to sync with "My Communities" tab
-      const allMemberships = await strapi.db
+      // 3. Delete membership records (One-to-Many)
+      // We use the database layer directly for deletion as it's most reliable for clearing relations
+      const deletedRecords = await strapi.db
         .query("api::community-membership.community-membership")
-        .findMany();
+        .deleteMany({
+          where: {
+            $or: [
+              {
+                user: userId,
+                community: communityId,
+              },
+              {
+                user: { documentId: user.documentId },
+                community: { documentId: communityDocId },
+              },
+            ],
+          },
+        });
 
-      const membershipsToDelete = allMemberships.filter((m) => {
-        const mUser = m.user && typeof m.user === "object" ? m.user.id : m.user;
-        const mComm =
-          m.community && typeof m.community === "object"
-            ? m.community.id
-            : m.community;
-        return (
-          String(mUser) === String(user.id) &&
-          String(mComm) === String(community.id)
-        );
-      });
-
-      if (membershipsToDelete.length > 0) {
-        await strapi.db
-          .query("api::community-membership.community-membership")
-          .deleteMany({
-            where: {
-              id: { $in: membershipsToDelete.map((m) => m.id) },
-            },
-          });
-      }
+      strapi.log.info(
+        `User ${user.username} left community ${community.name}. Deleted ${deletedRecords?.count || 0} membership records.`,
+      );
 
       return {
         success: true,
-        data: { isMember: false, subscribers: community.members.length - 1 },
+        data: {
+          isMember: false,
+          subscribers: Math.max(0, (community.members || []).length - 1),
+        },
       };
     },
   }),

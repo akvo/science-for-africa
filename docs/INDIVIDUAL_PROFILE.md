@@ -180,8 +180,8 @@ To ensure reliable image rendering across different environments (Docker, stagin
 ### Leave Community
 - **Method**: `POST`
 - **Path**: `/api/communities/:id/leave`
-- **Response**: `200 OK` with success message.
-- **Action**: Permanent deletion of the `CommunityMembership` record for the current user.
+- **Response**: `200 OK` with `{ success: true }`.
+- **Action**: Permanent deletion of the `CommunityMembership` record for the current user and removal from the community's `members` relation.
 
 ---
 

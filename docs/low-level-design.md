@@ -470,6 +470,12 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 **Formalized Education.** Educational background is linked directly to the Institution collection via the `highestEducationInstitution` field, replacing unstructured string data.
 
 **Resource Visibility & Moderation.** Resources only appear in public community lists when `status` is `approved`. Users can see their own `pending` or `declined` uploads in their profile. This is enforced at the controller layer by overwriting the core `find` and `findOne` methods to apply user-contextual filters.
++
++**Community Membership Synchronization Pattern.** To ensure data consistency between the primary `Community` entity (which tracks `members` for counts and listing) and the `CommunityMembership` collection (which drives the "My Communities" profile tab), the backend implements a dual-write pattern in the `join` and `leave` controllers.
++- **Join**: Creates a `CommunityMembership` record AND links the user to the community's `members` relation.
++- **Leave**: Deletes the `CommunityMembership` record (using a robust ID/Object manual filter to handle Strapi v5 variations) AND removes the user from the community's `members` relation.
++This pattern prevents stale membership listings in the user profile even if the direct relation is somehow decoupled.
++
 
 ## 3. Deployment & Infrastructure
 

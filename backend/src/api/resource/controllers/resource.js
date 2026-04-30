@@ -70,5 +70,38 @@ module.exports = createCoreController(
 
       return { data: resource };
     },
+
+    async delete(ctx) {
+      const { id } = ctx.params;
+      const user = ctx.state.user;
+
+      if (!user) return ctx.unauthorized();
+
+      // 1. Fetch resource with owner
+      const resource = await strapi
+        .documents("api::resource.resource")
+        .findOne({
+          documentId: id,
+          populate: ["uploadedBy"],
+        });
+
+      if (!resource) return ctx.notFound();
+
+      // 2. Ownership check
+      const ownerId = resource.uploadedBy?.documentId;
+      const currentUserId = user.documentId;
+
+      const isOwner = ownerId === currentUserId;
+      if (!isOwner) {
+        return ctx.forbidden("You can only delete your own resources.");
+      }
+
+      // 3. Delete the resource
+      await strapi.documents("api::resource.resource").delete({
+        documentId: id,
+      });
+
+      return { success: true };
+    },
   }),
 );

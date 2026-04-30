@@ -600,6 +600,7 @@ const seed = async (strapi) => {
     "api::resource.resource.find",
     "api::resource.resource.findOne",
     "api::resource.resource.create",
+    "api::resource.resource.delete",
     "plugin::upload.content-api.upload",
     "api::community.community.join",
     "api::community.community.leave",

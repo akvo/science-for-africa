@@ -131,6 +131,11 @@
       "locale": null
     },
     {
+      "documentId": "delresource001",
+      "action": "api::resource.resource.delete",
+      "locale": null
+    },
+    {
       "documentId": "gixnkyyj5z4cm7hyae3q7v47",
       "action": "plugin::upload.content-api.upload",
       "locale": null

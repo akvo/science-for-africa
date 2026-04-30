@@ -26,6 +26,7 @@ const TABS = [
     href: "/profile/communities",
   },
   { id: "resources", label: "tabs.resources", href: "/profile/resources" },
+  { id: "content", label: "tabs.content", href: "/profile/content" },
   { id: "saved", label: "tabs.saved", href: "/profile/saved" },
   { id: "events", label: "tabs.events", href: "/profile/events" },
   {

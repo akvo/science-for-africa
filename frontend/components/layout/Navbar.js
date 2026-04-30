@@ -27,6 +27,7 @@ const PROFILE_MENU_ITEMS = [
   { key: "my_events", href: "/coming-soon" },
   { key: "courses", href: "/coming-soon" },
 ];
+
 const Navbar = () => {
   const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState(false);

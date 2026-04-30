@@ -14,12 +14,10 @@ async function augmentWithCounts(strapi, item, userId) {
     .query("api::collaboration-call.collaboration-call")
     .count({ where: { communityName: item.name } });
 
-  const full = await strapi.db
-    .query("api::community.community")
-    .findOne({
-      where: { documentId: item.documentId },
-      populate: { members: { select: ["id"] } },
-    });
+  const full = await strapi.db.query("api::community.community").findOne({
+    where: { documentId: item.documentId },
+    populate: { members: { select: ["id"] } },
+  });
   const members = full?.members || [];
 
   const augmented = { ...item, posts: postsCount, subscribers: members.length };
@@ -72,6 +70,7 @@ module.exports = createCoreController(
       const alreadyMember = community.members.some((m) => m.id === user.id);
       if (alreadyMember) {
         return {
+          success: true,
           data: { isMember: true, subscribers: community.members.length },
         };
       }
@@ -81,7 +80,20 @@ module.exports = createCoreController(
         data: { members: { connect: [{ id: user.id }] } },
       });
 
+      // Create community-membership record for the "My Communities" tab
+      await strapi
+        .documents("api::community-membership.community-membership")
+        .create({
+          data: {
+            user: user.id,
+            community: community.id,
+            role: "Member",
+          },
+          status: "published",
+        });
+
       return {
+        success: true,
         data: { isMember: true, subscribers: community.members.length + 1 },
       };
     },
@@ -106,6 +118,7 @@ module.exports = createCoreController(
       const isMember = community.members.some((m) => m.id === user.id);
       if (!isMember) {
         return {
+          success: true,
           data: { isMember: false, subscribers: community.members.length },
         };
       }
@@ -115,7 +128,35 @@ module.exports = createCoreController(
         data: { members: { disconnect: [{ id: user.id }] } },
       });
 
+      // Delete community-membership records to sync with "My Communities" tab
+      const allMemberships = await strapi.db
+        .query("api::community-membership.community-membership")
+        .findMany();
+
+      const membershipsToDelete = allMemberships.filter((m) => {
+        const mUser = m.user && typeof m.user === "object" ? m.user.id : m.user;
+        const mComm =
+          m.community && typeof m.community === "object"
+            ? m.community.id
+            : m.community;
+        return (
+          String(mUser) === String(user.id) &&
+          String(mComm) === String(community.id)
+        );
+      });
+
+      if (membershipsToDelete.length > 0) {
+        await strapi.db
+          .query("api::community-membership.community-membership")
+          .deleteMany({
+            where: {
+              id: { $in: membershipsToDelete.map((m) => m.id) },
+            },
+          });
+      }
+
       return {
+        success: true,
         data: { isMember: false, subscribers: community.members.length - 1 },
       };
     },

@@ -87,7 +87,7 @@ describe("Community Membership API", () => {
 
     // 3. Leave via custom route
     const response = await request(strapi.server.httpServer)
-      .delete(`/api/communities/${community.documentId}/leave`)
+      .post(`/api/communities/${community.documentId}/leave`)
       .set("Authorization", `Bearer ${jwt}`);
 
     expect(response.status).toBe(200);

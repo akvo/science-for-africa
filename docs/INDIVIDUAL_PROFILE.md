@@ -11,8 +11,9 @@ Provide a centralized hub for registered individual users to manage their profes
 ### User Experience
 Users access their profile via the user dropdown in the Navbar. The profile is organized into logical tabs based on the [Figma Design](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa):
 - **Details**: Identity management and core professional info. ([Design](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=130-5796&m=dev), [Edit](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=179-12861&m=dev))
-- **Communities**: Oversight of joined groups. ([Design](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=175-4875&m=dev), [Empty State](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=299-12849&m=dev))
-- **Collaboration**: Tracking of active and completed projects. ([Design](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=696-37828&m=dev), [Empty State](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=179-9917&m=dev))
+- [x] **Communities Tab**: Displays a grid of joined communities and sub-communities with title, description, and subscribers.
+- [x] **Community Actions**: Ability to "Leave" a community with a shadcn-based confirmation modal.
+- [x] **Badges**: Show "Joined" status badges (pills) matching the design spec.
 - **Resources**: Access to saved documents.
 
 ---
@@ -42,21 +43,38 @@ graph TD
     B -->|Mentorship| K[Mentorship Connection API]
 
     C -->|Update| L[PUT /api/auth/me]
-    D -->|Leave| M[DELETE /api/communities/:id/leave]
+    D -->|Leave| M[POST /api/communities/:id/leave]
     G -->|Remove| N[DELETE /api/saved-posts/:id]
 ```
 
 ### Database Schema / Data Structure
 - **User Entity**: Extension of current schema to include:
-    - `displayName` (optional)
-    - `profilePhoto` (Media)
-    - `pageCover` (Media)
-    - `role` (enum/string)
-    - `languagePreferences` (JSON/Enum)
-- **SavedPost**: (Existing) Relation between User and Post.
-- **CommunityMembership**: (Existing) Relation between User and Community with Role.
-- **EventRegistration**: (Existing) Relation between User and Event.
-- **CollaborationMentor**: (Existing) Relation between User and CollaborationCall.
+    - `fullName` (string)
+    - `displayName` (string)
+
+    - `profilePhoto` (Media Relation)
+    - `pageCover` (Media Relation)
+    - `languagePreferences` (Enum: en, fr)
+    - `biography` (Text, 275 char limit)
+    - `roleType` (Enum: professional roles)
+    - `careerStage` (Enum: career stages)
+    - `educationLevel` (string)
+    - `highestEducationInstitution` (Relation to `Institution`)
+    - `institutionMemberships` (Relation to `InstitutionMembership`)
+    - `orcidId` (string)
+    - `interests` (Component: user.interest, repeatable)
+    - `onboardingComplete` (boolean)
+    - `full_name` (Auto-synced from first/last name - legacy reference)
+
+    - `memberships` (One-to-Many to `CommunityMembership`)
+    - `collaborationInvites` (One-to-Many to `CollaborationInvite`)
+- **Community**: (Branch 31 Merged)
+    - `avatarUrl` (String)
+    - `bannerUrl` (String)
+    - `handle` (String)
+    - `subscribers` / `posts` (Integers)
+- **CommunityMembership**: Relation between User and Community with Role.
+- **CollaborationInvite**: Relation between User and CollaborationCall with InviteStatus.
 
 ---
 
@@ -64,20 +82,21 @@ graph TD
 
 ### User Acceptance Criteria (UAC Baseline)
 #### Core Profile
-- [ ] **Profile Customization**: Within "Details" tab, user can update display name, professional bio (character limited), profile photo, and page cover.
-- [ ] **View Details**: See Full Name, Email, Role, Education, Institutional Organization, optional description, language preferences, and unique ORCID identifier.
-- [ ] **Edit Mode**: "Edit" button transforms fields into inputs with "Save" and "Cancel" buttons.
-- [ ] **Validation**: Real-time "characters left" counter for bio; file type/size validation for images.
+- [x] **Profile Customization**: Within "Details" tab, user can update display name, professional bio (character limited), profile photo, and page cover.
+- [x] **View Details**: See Full Name, Email, Role, Education Level, Highest Educational Institution, Institutional Affiliation, language preferences, and unique ORCID identifier.
+- [x] **Edit Mode**: "Edit" button transforms fields into validated inputs and searchable dropdowns for institutions.
+- [x] **Institution Selection**: Standardized dropdown selection for both Affiliation and Education, with a "Request Institution" workflow for unlisted entries.
+- [x] **Validation**: Real-time "characters left" counter for bio; file type/size validation for images.
 
 #### Community Oversight
-- [ ] **Communities Tab**: Displays a grid of joined communities and sub-communities.
-- [ ] **Community Actions**: Ability to "View" a community or "Leave" it.
-- [ ] **Badges**: Show "Joined" status badges where appropriate.
+- [x] **Communities Tab**: Displays a grid of joined communities and sub-communities.
+- [x] **Community Actions**: Ability to "View" a community or "Leave" it.
+- [x] **Badges**: Show "Joined" status badges where appropriate.
 
 #### Collaboration Tracking
-- [ ] **Collaboration Tab**: Monitor involvement in active and completed collaboration spaces.
-- [ ] **Project Details**: Display project objectives and relevant tags.
-- [ ] **Status Badges**: Clear "Active" (green) or "Completed" (red) indicators.
+- [x] **Collaboration Tab**: Monitor involvement in active and completed collaboration spaces.
+- [x] **Project Details**: Display project objectives and relevant tags.
+- [x] **Status Badges**: Clear "Active" (green) or "Completed" (red) indicators.
 
 #### Resource & Activity
 - [ ] **Resources Tab**: Access and download technical documents or reports saved or associated with the profile.
@@ -98,40 +117,68 @@ The following features were identified in the initial discovery but are not part
 - **Notification Preferences**: Granular control over platform alerts.
 
 ### Technical Acceptance Criteria (Tech AC)
-- [ ] **API Security**: Endpoints restricted to authenticated owner of the profile.
-- [ ] **Optimistic UI**: Joined/Leave/Saved status updates immediately on frontend.
+- [x] **API Security**: Endpoints restricted to authenticated owner of the profile via custom Document Service controllers.
+- [x] **Optimistic UI**: Joined/Leave/Saved status updates immediately on frontend with professional toast feedback.
 - [ ] **Image Optimization**: Profile photos and covers are optimized/resized on upload.
-- [ ] **I18n**: Support for multi-language display (English/French).
+- [x] **I18n**: Support for multi-language display (English/French) via dedicated `profile` namespace.
 
 ---
 
 ## 🔧 Implementation Details
 
 ### Phase 1: Foundation & Data Layer
-- [ ] Update Strapi User Schema with missing fields (`displayName`, `profilePhoto`, `pageCover`, etc.).
-- [ ] Implement/Harden `/api/auth/me` PUT endpoint.
-- [ ] Create basic Profile Layout in Next.js with Tab navigation.
+- [x] Update Strapi User Schema with missing fields (`displayName`, `profilePhoto`, `pageCover`, etc.).
+- [x] Implement/Harden `/api/auth/me` PUT endpoint.
+- [x] Create basic Profile Layout in Next.js with Tab navigation.
 
 ### Phase 2: Core Tabs (MVP)
-- [ ] **Details Tab**: Implement View/Edit flows for identity management.
-- [ ] **Communities Tab**: Implement grid view, sub-community support, and "Leave" logic.
-- [ ] **Collaboration Tab**: Implement tracking for active/completed projects.
+- [x] **Details Tab**: Implement View/Edit flows for identity management.
+- [x] **Communities Tab**: Implement grid view, sub-community support, and "Leave" logic.
+- [x] **Collaboration Tab**: Implement tracking for active/completed projects.
 - [ ] **Resources Tab**: Implement document access and download functionality.
-- [ ] **Empty States**: Implement for all tabs.
+- [x] **Empty States**: Implement for all implemented tabs.
 
 ---
 
 ## 📡 API Reference
 
-### Update Profile
-- **Method**: `PUT`
-- **Path**: `/api/auth/me` (Custom extended endpoint)
-- **Request Body**: `Multipart/form-data` for images or `application/json`
-- **Response**: `200 OK` with updated user object.
+### Fetch Profile
+- **Method**: `GET`
+- **Path**: `/api/auth/me`
+- **Response**: `200 OK` with deep population of `memberships`, `collaborationInvites`, and Media.
+
+### Update Profile (Two-Step Process)
+To update the profile photo or other media fields, follow the standard two-step upload pattern:
+
+1.  **Step 1: Upload File**
+    - **Method**: `POST`
+    - **Path**: `/api/upload`
+    - **Request Body**: `Multipart/form-data` (file)
+    - **Response**: `200 OK` with file object containing `id`.
+
+2.  **Step 2: Link to Profile**
+    - **Method**: `PUT`
+    - **Path**: `/api/auth/me`
+    - **Request Body**: `application/json` including the media field as a numeric ID (e.g., `{ "profilePhoto": 123 }`).
+    - **Response**: `200 OK` with updated user object.
+
+### Automated Media Cleanup
+The backend implements a `beforeUpdate` lifecycle hook on the `users-permissions.user` model to ensure that orphaned media files are automatically deleted from storage when:
+- A profile photo is replaced by a new one.
+- A profile photo is removed (set to `null`).
+
+This prevents storage bloat and ensures data integrity.
+
+### Next.js Image Proxying
+To ensure reliable image rendering across different environments (Docker, staging), the frontend implements a transparent proxy for media files:
+- **Rewrite**: `/uploads/:path*` is proxied to the backend origin.
+- **Helper**: `getStrapiMedia` returns relative URLs, leveraging the rewrite to bypass domain-related security issues in the Next.js image optimizer.
 
 ### Leave Community
-- **Method**: `DELETE`
+- **Method**: `POST`
 - **Path**: `/api/communities/:id/leave`
+- **Response**: `200 OK` with success message.
+- **Action**: Permanent deletion of the `CommunityMembership` record for the current user.
 
 ---
 

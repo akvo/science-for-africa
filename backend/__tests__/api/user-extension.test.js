@@ -73,4 +73,16 @@ describe("User Extension", () => {
     expect(user.educationTopic).toBe("Computer Science");
     expect(user.orcidId).toBe("1234-5678-9012-3456");
   });
+
+  it("should have new individual profile fields available", async () => {
+    const user = await createMockUser({
+      username: "individual",
+      email: "ind@example.com",
+      displayName: "John D.",
+      languagePreferences: "fr",
+    });
+
+    expect(user.displayName).toBe("John D.");
+    expect(user.languagePreferences).toBe("fr");
+  });
 });

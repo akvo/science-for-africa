@@ -159,6 +159,40 @@ const COMMUNITIES = [
     description:
       "Explore the latest trends in health, fitness, and mental well-being.",
     tags: ["Research", "Science", "Health", "Technology"],
+    subscribers: 63716,
+    posts: 323,
+    subCommunities: [
+      {
+        name: "Health and Wellness",
+        slug: "health-and-wellness",
+        initials: "HW",
+        description:
+          "Explore the latest trends in health, fitness, and mental well-being.",
+        subscribers: 150000,
+        posts: 89,
+        tags: ["Health", "Wellness", "Fitness"],
+      },
+      {
+        name: "Travel and Adventure",
+        slug: "travel-and-adventure",
+        initials: "TA",
+        description:
+          "Discover breathtaking destinations and tips for your next journey.",
+        subscribers: 95000,
+        posts: 56,
+        tags: ["Travel", "Adventure", "Photography"],
+      },
+      {
+        name: "Arts and Culture",
+        slug: "arts-and-culture",
+        initials: "AC",
+        description:
+          "Dive into the world of creativity, from art history to modern expression.",
+        subscribers: 75000,
+        posts: 41,
+        tags: ["Art", "Culture", "Creativity"],
+      },
+    ],
   },
   {
     name: "Community of Innovators",
@@ -168,6 +202,20 @@ const COMMUNITIES = [
     description:
       "Lorem ipsum dolor sit amet consectetur. Eu dis pellentesque in elit auctor.",
     tags: ["Innovation", "Technology", "Startups", "AI"],
+    subscribers: 218000,
+    posts: 198,
+    subCommunities: [
+      {
+        name: "Science and Technology",
+        slug: "science-and-technology",
+        initials: "ST",
+        description:
+          "Lorem ipsum dolor sit amet consectetur. Eu dis pellentesque in elit auctor.",
+        subscribers: 218000,
+        posts: 112,
+        tags: ["Science", "Technology"],
+      },
+    ],
   },
   {
     name: "Community of Educators",
@@ -177,6 +225,53 @@ const COMMUNITIES = [
     description:
       "Lorem ipsum dolor sit amet consectetur. Nunc et posuere cras bibendum cras. Diam felis sagittis suspendisse scelerisque quam.",
     tags: ["Education", "Teaching", "Curriculum", "STEM"],
+    subscribers: 41500,
+    posts: 87,
+    subCommunities: [
+      {
+        name: "Science and Technology",
+        slug: "educators-science-and-technology",
+        initials: "ST",
+        description:
+          "Lorem ipsum dolor sit amet consectetur. Eu dis pellentesque in elit auctor.",
+        subscribers: 218000,
+        posts: 75,
+        tags: ["Science", "Technology", "Education"],
+      },
+    ],
+  },
+];
+
+const COLLABORATION_CALLS = [
+  {
+    title: "Bio-Diversity Research Project",
+    description:
+      "Join our cross-border research team to study biodiversity patterns across East Africa.",
+    startDate: "2024-01-01T00:00:00.000Z",
+    endDate: "2024-12-31T23:59:59.000Z",
+    status: "Active",
+    topics: ["Biodiversity", "Ecology", "East Africa"],
+    communityName: "Community of Researchers",
+  },
+  {
+    title: "Climate Change Impact Study",
+    description:
+      "A collaborative study on the socioeconomic impacts of climate change on small-scale farmers.",
+    startDate: "2024-03-01T00:00:00.000Z",
+    endDate: "2025-02-28T23:59:59.000Z",
+    status: "Active",
+    topics: ["Climate Change", "Agriculture", "Socioeconomic"],
+    communityName: "Community of Innovators",
+  },
+  {
+    title: "Global Health Initiative",
+    description:
+      "Past collaboration focusing on vaccine distribution strategies in sub-Saharan Africa.",
+    startDate: "2023-01-01T00:00:00.000Z",
+    endDate: "2023-12-31T23:59:59.000Z",
+    status: "Completed",
+    topics: ["Public Health", "Vaccines", "Africa"],
+    communityName: "Health and Wellness",
   },
 ];
 
@@ -262,7 +357,6 @@ const synchronizeTranslations = async (strapi, uid) => {
     );
   }
 };
-
 /**
  * Seeder Utility
  */
@@ -304,10 +398,151 @@ const seed = async (strapi) => {
     const existing = await strapi.db
       .query("api::community.community")
       .findOne({ where: { slug: data.slug } });
+
     if (!existing) {
       strapi.log.info(`Seeding community: ${data.name}`);
-      await strapi.db.query("api::community.community").create({ data });
+      const { subCommunities, ...parentData } = data;
+      const parent = await strapi.db
+        .query("api::community.community")
+        .create({ data: parentData });
+
+      if (subCommunities && subCommunities.length) {
+        for (const sub of subCommunities) {
+          await strapi.db.query("api::community.community").create({
+            data: { ...sub, parent: parent.id },
+          });
+        }
+      }
     }
+  }
+
+  // 4. Seed memberships for existing users (Development only)
+  const users = await strapi.db
+    .query("plugin::users-permissions.user")
+    .findMany();
+
+  if (users.length > 0) {
+    const allCommunities = await strapi.db
+      .query("api::community.community")
+      .findMany();
+
+    if (allCommunities.length > 0) {
+      strapi.log.info(
+        `Checking community memberships for ${users.length} users...`,
+      );
+      for (const user of users) {
+        const membershipCount = await strapi.db
+          .query("api::community-membership.community-membership")
+          .count({ where: { user: user.id } });
+
+        if (membershipCount === 0) {
+          // Shuffle and pick 1-3 random communities
+          const shuffled = [...allCommunities].sort(() => 0.5 - Math.random());
+          const count = Math.min(
+            Math.floor(Math.random() * 3) + 1,
+            shuffled.length,
+          );
+          const selected = shuffled.slice(0, count);
+
+          strapi.log.info(
+            `Joining ${user.username} to ${selected.length} random communities...`,
+          );
+
+          for (const community of selected) {
+            await strapi.db
+              .query("api::community-membership.community-membership")
+              .create({
+                data: {
+                  user: user.id,
+                  community: community.id,
+                  role: "Member",
+                  joinedAt: new Date(),
+                },
+              });
+          }
+        }
+      }
+    }
+  }
+
+  // 5. Seed Collaboration Calls and Invites (Development only)
+  strapi.log.info("Ensuring collaboration calls and invites exist...");
+
+  const allCalls = [];
+  for (const data of COLLABORATION_CALLS) {
+    let call = await strapi.db
+      .query("api::collaboration-call.collaboration-call")
+      .findOne({ where: { title: data.title } });
+
+    if (!call) {
+      strapi.log.info(`Creating collaboration call: ${data.title}`);
+      call = await strapi.db
+        .query("api::collaboration-call.collaboration-call")
+        .create({
+          data: {
+            ...data,
+            createdByUser: users[0]?.id, // Default to first user as creator
+          },
+        });
+    }
+    allCalls.push(call);
+  }
+
+  // Ensure every user has an invite for every call
+  let inviteCreatedCount = 0;
+  for (const user of users) {
+    for (const call of allCalls) {
+      const inviteCount = await strapi.db
+        .query("api::collaboration-invite.collaboration-invite")
+        .count({
+          where: {
+            invitedUser: user.id,
+            collaborationCall: call.id,
+          },
+        });
+
+      if (inviteCount === 0) {
+        await strapi.db
+          .query("api::collaboration-invite.collaboration-invite")
+          .create({
+            data: {
+              invitedUser: user.id,
+              collaborationCall: call.id,
+              email: user.email,
+              inviteStatus: "Accepted",
+              role: "Collaborator",
+              invitedAt: new Date(),
+            },
+          });
+        inviteCreatedCount++;
+      } else {
+        // Check if status is missing and update if necessary
+        const existing = await strapi.db
+          .query("api::collaboration-invite.collaboration-invite")
+          .findOne({
+            where: {
+              invitedUser: user.id,
+              collaborationCall: call.id,
+              inviteStatus: { $null: true },
+            },
+          });
+
+        if (existing) {
+          await strapi.db
+            .query("api::collaboration-invite.collaboration-invite")
+            .update({
+              where: { id: existing.id },
+              data: { inviteStatus: "Accepted" },
+            });
+        }
+      }
+    }
+  }
+
+  if (inviteCreatedCount > 0) {
+    strapi.log.info(
+      `Created ${inviteCreatedCount} new collaboration invites for ${users.length} users.`,
+    );
   }
 
   // 3b. Synchronize French Translations for critical collections
@@ -345,9 +580,12 @@ const seed = async (strapi) => {
 
   // 5. Collaboration Call and Profile permissions (Authenticated only)
   const collaborationActions = [
+    "api::auth.profile.getMe",
     "api::auth.profile.update",
     "api::auth.profile.me",
     "api::auth.profile.findUsers",
+    "api::community-membership.community-membership.find",
+    "api::community-membership.community-membership.leave",
     "api::collaboration-call.collaboration-call.createWithInvites",
     "api::collaboration-call.collaboration-call.create-with-invites",
     "api::collaboration-call.collaboration-call.create",

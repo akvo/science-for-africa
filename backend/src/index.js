@@ -228,8 +228,40 @@ module.exports = {
         }
       },
       async beforeUpdate(event) {
-        const { data } = event.params;
-        // Deprecated: verificationStatus moved to InstitutionMembership
+        const { data, where } = event.params;
+
+        // 1. Handle profilePhoto cleanup (Delete orphaned files from Media Library)
+        if (data.profilePhoto !== undefined) {
+          try {
+            const currentUser = await strapi.db
+              .query("plugin::users-permissions.user")
+              .findOne({
+                where,
+                populate: { profilePhoto: true },
+              });
+
+            const oldPhotoId = currentUser?.profilePhoto?.id;
+            const newPhotoId =
+              typeof data.profilePhoto === "object"
+                ? data.profilePhoto?.id
+                : data.profilePhoto;
+
+            if (oldPhotoId && oldPhotoId !== newPhotoId) {
+              const file =
+                await strapi.plugins.upload.services.upload.findOne(oldPhotoId);
+              if (file) {
+                await strapi.plugins.upload.services.upload.remove(file);
+                strapi.log.info(
+                  `[CLEANUP] Deleted orphaned profile photo: ${oldPhotoId}`,
+                );
+              }
+            }
+          } catch (err) {
+            strapi.log.error(
+              `[CLEANUP-ERR] Failed to cleanup profile photo: ${err.message}`,
+            );
+          }
+        }
 
         if (data.firstName || data.lastName) {
           data.fullName =

@@ -60,6 +60,34 @@ export async function postToStrapi(endpoint, data, wrapInData = true) {
 }
 
 /**
+ * Upload a file to Strapi
+ */
+export async function uploadFile(file) {
+  try {
+    const formData = new FormData();
+    formData.append("files", file);
+    const response = await apiClient.post("/upload", formData);
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading file to Strapi:", error);
+    return null;
+  }
+}
+
+/**
+ * Returns the full URL for a Strapi media object/URL
+ */
+export function getStrapiMedia(url) {
+  if (!url) return null;
+  if (url.startsWith("http") || url.startsWith("data:") || url.startsWith("/"))
+    return url;
+
+  // Strapi returns relative paths like uploads/file.png (without leading slash in some cases)
+  // or /uploads/file.png. Standardize to leading slash.
+  return url.startsWith("/") ? url : `/${url}`;
+}
+
+/**
  * Register a new user
  */
 export async function registerUser(userData) {
@@ -71,6 +99,22 @@ export async function registerUser(userData) {
  */
 export async function loginUser(credentials) {
   return postToStrapi("/auth/local", credentials, false);
+}
+
+/**
+ * Get current user profile with population
+ */
+export async function getMe(membershipLimit = 4) {
+  try {
+    // Call custom auth endpoint which supports dynamic population limits
+    const response = await apiClient.get(
+      `/auth/me${membershipLimit ? `?membershipLimit=${membershipLimit}` : ""}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+    return null;
+  }
 }
 
 /**
@@ -154,13 +198,34 @@ export function transformProfileUpdatePayload(userData) {
     );
   }
 
-  // We now pass affiliationInstitution and educationInstitution as objects
+  // We now pass affiliationInstitution and highestEducationInstitution as objects
   // The backend handles creation/lookup.
-  // Note: OnboardingStep3 uses 'educationInstitution' in store,
-  // but backend uses 'highestEducationInstitution'.
+
+  // Onboarding uses 'educationInstitution', while profile edit uses 'highestEducationInstitution'
   if (data.educationInstitution) {
     data.highestEducationInstitution = data.educationInstitution;
     delete data.educationInstitution;
+  }
+
+  // Cleanup highestEducationInstitution if empty
+  if (data.highestEducationInstitution) {
+    const { id, name } = data.highestEducationInstitution;
+    if (!id && !name) {
+      delete data.highestEducationInstitution;
+    }
+  }
+
+  // Cleanup affiliationInstitution if empty
+  if (data.affiliationInstitution) {
+    const { id, name } = data.affiliationInstitution;
+    if (!id && !name) {
+      delete data.affiliationInstitution;
+    }
+  }
+
+  if (data.language) {
+    data.languagePreferences = data.language;
+    delete data.language;
   }
 
   if (data.userType === "institution") {
@@ -173,7 +238,15 @@ export function transformProfileUpdatePayload(userData) {
 
   // Cleanup empty strings
   Object.keys(data).forEach((key) => {
-    if (data[key] === "") {
+    const identityFields = [
+      "fullName",
+      "username",
+      "email",
+      "firstName",
+      "lastName",
+      "roleType",
+    ];
+    if (data[key] === "" && !identityFields.includes(key)) {
       delete data[key];
     }
   });
@@ -324,6 +397,22 @@ export async function postChatMessage(callDocumentId, text) {
 }
 
 /**
+/**
+ * Fetch current user's community memberships (paginated)
+ */
+export async function fetchMyCommunityMemberships(page = 1, pageSize = 6) {
+  try {
+    const response = await fetchFromStrapi(
+      `/community-memberships?populate=community&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching memberships:", error);
+    return null;
+  }
+}
+
+/**
  * Fetch resources for a community (by community documentId).
  * Optionally filter by resourceType.
  */
@@ -339,7 +428,13 @@ export async function fetchResources(communityId, resourceType) {
  * Create a resource with file upload (multipart/form-data).
  * Strapi expects: data (JSON string) + files.file (the uploaded file).
  */
-export async function createResource({ name, resourceType, communityId, file, topics }) {
+export async function createResource({
+  name,
+  resourceType,
+  communityId,
+  file,
+  topics,
+}) {
   const jwt = (await import("./auth-store")).useAuthStore.getState().jwt;
   const { getBackendApiUrl } = await import("./url-helpers");
   const baseUrl = getBackendApiUrl();
@@ -357,7 +452,9 @@ export async function createResource({ name, resourceType, communityId, file, to
 
   if (!uploadRes.ok) {
     const err = await uploadRes.json().catch(() => ({}));
-    throw new Error(err?.error?.message || `File upload failed (${uploadRes.status})`);
+    throw new Error(
+      err?.error?.message || `File upload failed (${uploadRes.status})`,
+    );
   }
 
   const uploaded = await uploadRes.json();
@@ -381,7 +478,9 @@ export async function createResource({ name, resourceType, communityId, file, to
 
   if (!createRes.ok) {
     const err = await createRes.json().catch(() => ({}));
-    throw new Error(err?.error?.message || `Resource creation failed (${createRes.status})`);
+    throw new Error(
+      err?.error?.message || `Resource creation failed (${createRes.status})`,
+    );
   }
 
   return createRes.json();
@@ -427,6 +526,20 @@ export async function updateUserProfile(userData) {
   } catch (error) {
     console.error("Error updating profile:", error);
     return error;
+  }
+}
+/**
+ * Fetch current user's collaboration invites (paginated)
+ */
+export async function fetchMyCollaborations(page = 1, pageSize = 6) {
+  try {
+    const response = await fetchFromStrapi(
+      `/collaboration-invites?filters[inviteStatus]=Accepted&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching collaborations:", error);
+    return null;
   }
 }
 

@@ -5,6 +5,7 @@ import { useTranslation } from "next-i18next";
 import { Button } from "@/components/ui/button";
 import LocaleSwitcher from "./LocaleSwitcher";
 import { useAuthStore } from "@/lib/auth-store";
+import { getStrapiMedia } from "@/lib/strapi";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -13,19 +14,19 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  User,
-  LogOut,
-  Settings,
-  Plus,
-  Users,
-  FileText,
-  Bookmark,
-  Calendar,
-  Award,
-  HelpCircle,
-} from "lucide-react";
+import { LogOut, Plus } from "lucide-react";
 import Image from "next/image";
+
+import VerificationBadge from "@/components/shared/VerificationBadge";
+
+const PROFILE_MENU_ITEMS = [
+  { key: "details", href: "/profile" },
+  { key: "communities", href: "/coming-soon" },
+  { key: "content", href: "/coming-soon" },
+  { key: "saved_posts", href: "/coming-soon" },
+  { key: "my_events", href: "/coming-soon" },
+  { key: "courses", href: "/coming-soon" },
+];
 
 const Navbar = () => {
   const { t } = useTranslation("common");
@@ -173,7 +174,9 @@ const Navbar = () => {
                       size="md"
                       className="cursor-pointer border-2 border-white shadow-sm hover:ring-2 hover:ring-brand-teal-100 transition-all"
                     >
-                      <AvatarImage src={user?.avatar?.url} />
+                      <AvatarImage
+                        src={getStrapiMedia(user?.profilePhoto?.url)}
+                      />
                       <AvatarFallback>
                         {getInitials(user?.fullName || user?.username)}
                       </AvatarFallback>
@@ -187,15 +190,22 @@ const Navbar = () => {
                     {/* Identity Header */}
                     <div className="flex items-center gap-4 px-5 py-4 bg-white">
                       <Avatar size="lg" className="shrink-0">
-                        <AvatarImage src={user?.avatar?.url} />
+                        <AvatarImage
+                          src={getStrapiMedia(user?.profilePhoto?.url)}
+                        />
                         <AvatarFallback className="bg-brand-teal-50 text-brand-teal-900 font-bold text-lg">
                           {getInitials(user?.fullName || user?.username)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col min-w-0">
-                        <p className="text-md font-bold text-brand-teal-900 truncate capitalize">
-                          {user?.fullName || user?.username}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-md font-bold text-brand-teal-900 truncate capitalize">
+                            {user?.fullName || user?.username}
+                          </p>
+                          <div className="shrink-0">
+                            <VerificationBadge verified={user?.verified} />
+                          </div>
+                        </div>
                         <p className="text-sm font-medium text-brand-gray-500 truncate mt-0.5 capitalize">
                           {user?.userType || t("navbar.researcher_placeholder")}
                         </p>
@@ -206,32 +216,7 @@ const Navbar = () => {
 
                     {/* Personal Management Section */}
                     <div className="py-2">
-                      {[
-                        {
-                          key: "details",
-                          href: "/coming-soon",
-                        },
-                        {
-                          key: "communities",
-                          href: "/coming-soon",
-                        },
-                        {
-                          key: "content",
-                          href: "/coming-soon",
-                        },
-                        {
-                          key: "saved_posts",
-                          href: "/coming-soon",
-                        },
-                        {
-                          key: "my_events",
-                          href: "/coming-soon",
-                        },
-                        {
-                          key: "courses",
-                          href: "/coming-soon",
-                        },
-                      ].map((item) => (
+                      {PROFILE_MENU_ITEMS.map((item) => (
                         <DropdownMenuItem
                           key={item.key}
                           asChild
@@ -350,15 +335,22 @@ const Navbar = () => {
                       size="sm"
                       className="group-hover:ring-2 group-hover:ring-brand-teal-100 transition-all"
                     >
-                      <AvatarImage src={user?.avatar?.url} />
+                      <AvatarImage
+                        src={getStrapiMedia(user?.profilePhoto?.url)}
+                      />
                       <AvatarFallback>
                         {getInitials(user?.fullName || user?.username)}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col min-w-0">
-                      <p className="text-sm font-bold text-brand-teal-900 truncate capitalize">
-                        {user?.fullName || user?.username}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-bold text-brand-teal-900 truncate capitalize">
+                          {user?.fullName || user?.username}
+                        </p>
+                        <div className="shrink-0">
+                          <VerificationBadge verified={user?.verified} />
+                        </div>
+                      </div>
                       <p className="text-xs text-brand-gray-500 truncate capitalize">
                         {user?.userType || t("navbar.researcher_placeholder")}
                       </p>
@@ -366,13 +358,8 @@ const Navbar = () => {
                   </Link>
                   <div className="grid grid-cols-2 gap-2 mt-2">
                     {[
-                      { key: "details" },
-                      { key: "communities" },
-                      { key: "content" },
-                      { key: "saved_posts" },
-                      { key: "my_events" },
-                      { key: "courses" },
-                      { key: "faq" },
+                      ...PROFILE_MENU_ITEMS,
+                      { key: "faq", href: "/coming-soon" },
                     ].map((item) => (
                       <Button
                         key={item.key}
@@ -382,7 +369,7 @@ const Navbar = () => {
                         asChild
                         onClick={() => setIsOpen(false)}
                       >
-                        <Link href="/coming-soon">
+                        <Link href={item.href}>
                           <span className="text-xs truncate text-black font-medium">
                             {t(`navbar.profile_dropdown.${item.key}`)}
                           </span>

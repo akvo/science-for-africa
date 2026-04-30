@@ -6,7 +6,7 @@
 
 module.exports = ({ strapi }) => ({
   /**
-   * Updates the profile of the currently authenticated user
+   * Returns the profile of the currently authenticated user with deep population
    */
   async me(ctx) {
     const user = ctx.state.user;
@@ -15,10 +15,14 @@ module.exports = ({ strapi }) => ({
     }
 
     try {
+      const membershipLimit = ctx.query.membershipLimit
+        ? parseInt(ctx.query.membershipLimit)
+        : undefined;
+
       const profile = await strapi
         .documents("plugin::users-permissions.user")
         .findOne({
-          documentId: user.documentId || user.id, // User-permissions might use id or documentId
+          documentId: user.documentId || user.id,
           populate: {
             highestEducationInstitution: true,
             institutionMemberships: {
@@ -27,8 +31,36 @@ module.exports = ({ strapi }) => ({
               },
             },
             interests: true,
+            profilePhoto: true,
+            pageCover: true,
+            memberships: {
+              populate: {
+                community: true,
+              },
+            },
           },
         });
+
+      // Apply membership limit if requested to reduce frontend payload size
+      if (membershipLimit && profile.memberships) {
+        profile.memberships = profile.memberships.slice(0, membershipLimit);
+      }
+
+      // Manually fetch collaboration invites since programmatic relations can be tricky for population
+      const invites = await strapi
+        .documents("api::collaboration-invite.collaboration-invite")
+        .findMany({
+          filters: {
+            invitedUser: user.id,
+            inviteStatus: "Accepted",
+          },
+          populate: ["collaborationCall"],
+          status: "published",
+        });
+
+      if (profile) {
+        profile.collaborationInvites = invites;
+      }
 
       return profile;
     } catch (error) {
@@ -55,6 +87,7 @@ module.exports = ({ strapi }) => ({
             "lastName",
             "position",
             "roleType",
+            "verified",
           ],
           populate: {
             highestEducationInstitution: true,
@@ -82,6 +115,44 @@ module.exports = ({ strapi }) => ({
       return ctx.unauthorized();
     }
 
+    // Whitelist allowed fields to prevent arbitrary updates
+    const allowedFields = [
+      "displayName",
+      "biography",
+      "firstName",
+      "lastName",
+      "fullName",
+      "position",
+      "interests",
+      "educationTopic",
+      "educationLevel",
+      "languagePreferences",
+      "orcidId",
+      "socialLinks",
+      "profilePhoto",
+      "pageCover",
+      "institution",
+      "onboardingComplete",
+      "userType",
+      "institutionName",
+      "educationInstitutionName",
+      "roleType",
+      "highestEducationInstitution",
+      "affiliationInstitution",
+    ];
+
+    const data = {};
+    allowedFields.forEach((field) => {
+      if (body[field] !== undefined) {
+        data[field] = body[field];
+      }
+    });
+
+    // Validation: Biography character limit (Baseline UAC Requirement)
+    if (data.biography && data.biography.length > 275) {
+      return ctx.badRequest("Biography must be 275 characters or less.");
+    }
+
     try {
       // 0. Fetch the full user record with numeric ID and documentId
       const user = await strapi.db
@@ -103,8 +174,6 @@ module.exports = ({ strapi }) => ({
       if (!user) {
         return ctx.unauthorized("User record not found");
       }
-
-      const data = { ...body };
 
       // 1. Handle highestEducationInstitution (on-the-fly creation)
       if (
@@ -141,7 +210,10 @@ module.exports = ({ strapi }) => ({
           data.highestEducationInstitution = inst.id;
         } else if (targetId) {
           // Resolve numeric ID if needed
-          if (typeof targetId === "string") {
+          const numericId = parseInt(targetId);
+          if (!isNaN(numericId) && String(numericId) === String(targetId)) {
+            data.highestEducationInstitution = numericId;
+          } else if (typeof targetId === "string") {
             const inst = await strapi.db
               .query("api::institution.institution")
               .findOne({ where: { documentId: targetId } });
@@ -183,10 +255,14 @@ module.exports = ({ strapi }) => ({
               .findOne({ where: { documentId: created.documentId } });
           }
         } else if (targetId) {
+          const numericId = parseInt(targetId);
+          const isNumeric =
+            !isNaN(numericId) && String(numericId) === String(targetId);
+
           inst = await strapi.db.query("api::institution.institution").findOne({
             where: {
               $or: [
-                { id: typeof targetId === "number" ? targetId : -1 },
+                { id: isNumeric ? numericId : -1 },
                 { documentId: typeof targetId === "string" ? targetId : "" },
               ],
             },
@@ -254,6 +330,8 @@ module.exports = ({ strapi }) => ({
                 },
               },
               interests: true,
+              profilePhoto: true,
+              pageCover: true,
             },
           });
 
@@ -267,6 +345,13 @@ module.exports = ({ strapi }) => ({
         throw err;
       }
     } catch (error) {
+      console.error("[AUTH-ERR] UpdateMe Full Error:", error);
+      if (error.details && error.details.errors) {
+        console.error(
+          "[AUTH-ERR] Validation Details:",
+          JSON.stringify(error.details.errors, null, 2),
+        );
+      }
       strapi.log.error("UpdateMe Error: " + error.message);
       return ctx.internalServerError(error.message);
     }

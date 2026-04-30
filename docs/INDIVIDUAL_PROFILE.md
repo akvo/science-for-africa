@@ -59,8 +59,8 @@ graph TD
     - `roleType` (Enum: professional roles)
     - `careerStage` (Enum: career stages)
     - `educationLevel` (string)
-    - `educationInstitutionName` (string)
-    - `institutionName` (string)
+    - `highestEducationInstitution` (Relation to `Institution`)
+    - `institutionMemberships` (Relation to `InstitutionMembership`)
     - `orcidId` (string)
     - `interests` (Component: user.interest, repeatable)
     - `onboardingComplete` (boolean)
@@ -83,8 +83,9 @@ graph TD
 ### User Acceptance Criteria (UAC Baseline)
 #### Core Profile
 - [x] **Profile Customization**: Within "Details" tab, user can update display name, professional bio (character limited), profile photo, and page cover.
-- [x] **View Details**: See Full Name, Email, Role, Education, Institutional Organization, optional description, language preferences, and unique ORCID identifier.
-- [x] **Edit Mode**: "Edit" button transforms fields into inputs with "Save" and "Cancel" buttons.
+- [x] **View Details**: See Full Name, Email, Role, Education Level, Highest Educational Institution, Institutional Affiliation, language preferences, and unique ORCID identifier.
+- [x] **Edit Mode**: "Edit" button transforms fields into validated inputs and searchable dropdowns for institutions.
+- [x] **Institution Selection**: Standardized dropdown selection for both Affiliation and Education, with a "Request Institution" workflow for unlisted entries.
 - [x] **Validation**: Real-time "characters left" counter for bio; file type/size validation for images.
 
 #### Community Oversight

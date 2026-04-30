@@ -3,13 +3,8 @@ import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Meta from "@/components/seo/Meta";
-import { ArrowLeft, ChevronDown } from "lucide-react";
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from "@/components/ui/tabs";
+import { ArrowLeft, ChevronDown, Plus } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import CommunityLeftNav from "@/components/community/CommunityLeftNav";
 import CommunityHeader from "@/components/community/CommunityHeader";
@@ -131,7 +126,7 @@ export default function CommunityDetailPage() {
   if (loading) {
     return (
       <div className="flex flex-col lg:flex-row">
-        <aside className="w-full lg:w-[260px] lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4">
+        <aside className="w-full lg:w-65 lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4">
           <CommunityLeftNav activeKey="communities" />
         </aside>
         <div className="flex flex-1 items-center justify-center py-20 text-sm text-brand-gray-500">
@@ -144,7 +139,7 @@ export default function CommunityDetailPage() {
   if (!community) {
     return (
       <div className="flex flex-col lg:flex-row">
-        <aside className="w-full lg:w-[260px] lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4">
+        <aside className="w-full lg:w-65 lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4">
           <CommunityLeftNav activeKey="communities" />
         </aside>
         <div className="flex flex-1 items-center justify-center py-20 text-sm text-brand-gray-500">
@@ -157,7 +152,7 @@ export default function CommunityDetailPage() {
   return (
     <div className="flex flex-col lg:flex-row">
       <Meta title={community?.name} />
-      <aside className="w-full lg:w-[260px] lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4 lg:sticky lg:top-28.5 lg:self-start lg:h-[calc(100vh-114px)] lg:overflow-y-auto">
+      <aside className="w-full lg:w-65 lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4 lg:sticky lg:top-28.5 lg:self-start lg:h-[calc(100vh-114px)] lg:overflow-y-auto">
         <CommunityLeftNav activeKey="communities" />
       </aside>
 

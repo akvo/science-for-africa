@@ -21,6 +21,17 @@ Please note that this document outlines parts of the solution beyond the MVP del
 | Sonner | 2 | Toast notifications |
 | Jest + React Testing Library | 30 / - | Unit and integration testing |
 
+#### 1.1.1 Shared Components
+
+To maintain DRY principles and UI consistency, common patterns are extracted into `@/components/shared/`:
+
+| Component | Purpose |
+|---|---|
+| `LoadingState` | Centered spinner with optional message for tab/page initialization. |
+| `EmptyState` | Standardized "No results" view with icon, title, description, and CTA button. |
+| `VerificationBadge` | Subtle badge showing "Pending" status for unverified users/institutions. |
+
+
 ### 1.2 Backend
 
 | Technology | Version | Purpose |
@@ -47,12 +58,14 @@ Beyond Strapi's auto-generated CRUD, we will create custom endpoints with hand-w
 
 | Endpoint | Method | Justification |
 |---|---|---|
-| `/api/auth/me` | `PUT` | **Custom Extension**: Profile update with custom fields (bio, orcidId, careerStage, socialLinks, notificationPreferences) beyond the standard user schema. Provided because Strapi lacks a standard "update self" endpoint. |
+| `/api/auth/me` | `GET` | **Custom Extension**: Returns the currently authenticated user with deep population of media, memberships, and collaboration involvement. Supports optional `membershipLimit` query parameter for optimized sidebar loading. |
+
+| `/api/auth/me` | `PUT` | **Custom Extension**: Profile update with whitelisting and character limit validation for `biography`. |
 | `/api/auth/verify-otp` | `POST` | **Custom Extension**: Verifies email using a 6-digit number. Confirms user and returns JWT. |
 | `/api/auth/resend-otp` | `POST` | **Custom Extension**: Enforced 60s cooldown and 3/hr limit. Generates new code and sends dual-path email (Link + Code). |
 | `/api/posts/:id/moderate` | `PUT` | Moderation action (approve/decline) — wraps status update + notification trigger to post author |
 | `/api/communities/:id/join` | `POST` | Join community — side effects: increment memberCount, create CommunityMembership with `member` role, notify community admins |
-| `/api/communities/:id/leave` | `DELETE` | Leave community — decrement memberCount, remove CommunityMembership |
+| `/api/communities/:id/leave` | `POST` | Leave community — decrement memberCount, remove CommunityMembership |
 | `/api/search` | `GET` | Cross-entity search aggregation (users, communities, threads, resources) before Elasticsearch is introduced |
 | `/api/notifications/dispatch` | `POST` | Internal endpoint for lifecycle hooks to trigger email notifications via Strapi email plugin |
 
@@ -126,6 +139,7 @@ erDiagram
     User ||--o{ CollaborationMentor : "mentors"
     User ||--o{ EventRegistration : "registers"
     User ||--o{ Resource : "uploads"
+    User ||--o{ ResourceComment : "writes"
     User }o--o{ Tag : "tagged_with"
 
     Institution ||--o{ InstitutionMembership : "has_members"
@@ -164,6 +178,7 @@ erDiagram
 
     Resource }o--|| Community : "belongs_to"
     Resource }o--|| User : "uploaded_by"
+    Resource ||--o{ ResourceComment : "has_comments"
     Resource }o--o{ Tag : "tagged_with"
 
     Event }o--|| Community : "hosted_by"
@@ -174,6 +189,9 @@ erDiagram
 
     CollaborationMentor }o--|| CollaborationCall : "collaboration"
     CollaborationMentor }o--|| User : "mentor"
+
+    ResourceComment }o--|| Resource : "belongs_to"
+    ResourceComment }o--|| User : "authored_by"
 
     SavedPost }o--|| User : "saved_by"
     SavedPost }o--|| Post : "post"
@@ -189,15 +207,22 @@ erDiagram
         string email UK
         string password
         string fullName
-        text bio
+        string displayName
+        text biography
+        enum languagePreferences
+
         string orcidId
+        string roleType
         enum careerStage
+        string educationLevel
         string highestEducationInstitution FK
         boolean mentorAvailability
         json notificationPreferences
         boolean confirmed
         boolean blocked
         boolean onboardingComplete
+        boolean verified
+        json interests
         string otpCode
         datetime otpExpiration
         datetime lastOtpSentAt
@@ -228,13 +253,15 @@ erDiagram
         string id PK
         string name UK
         string slug UK
+        string handle UK
         text description
         enum type
         enum privacy
         enum status
-        media logo
-        media banner
-        integer memberCount
+        string avatarUrl
+        string bannerUrl
+        integer subscribers
+        integer posts
     }
 
     CommunityMembership {
@@ -358,6 +385,15 @@ erDiagram
         datetime resolvedAt
     }
 
+    ResourceComment {
+        string id PK
+        text text
+        string resource FK
+        string author FK
+        datetime createdAt
+        datetime updatedAt
+    }
+
     Notification {
         string id PK
         string recipient FK
@@ -409,6 +445,7 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 | **Tag** | Cross-entity taxonomy (expertise, region, topic) — applied to Resources, Threads, Users, Communities |
 | **Report** | Content flagging for moderation (Spam / Harassment / Misinformation / Other) |
 | **Notification** | Email notification log with delivery status |
+| **ResourceComment** | User comments on resources |
 | **SavedPost** | User bookmarks |
 | **Follow** | User-to-user following |
 

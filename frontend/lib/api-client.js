@@ -47,8 +47,13 @@ apiClient.interceptors.request.use(
     }
 
     // Inject locale parameter from window/url if on client
-    // Skip for public auth endpoints as Strapi built-in auth logic may reject unknown query params
-    if (typeof window !== "undefined" && !isPublicAuthEndpoint) {
+    // Skip for public auth endpoints and upload as Strapi built-in logic may reject unknown query params
+    const skipLocaleEndpoints = ["upload"];
+    if (
+      typeof window !== "undefined" &&
+      !isPublicAuthEndpoint &&
+      !skipLocaleEndpoints.includes(normalizedUrl)
+    ) {
       const pathParts = window.location.pathname.split("/");
       // Check if first part of path is a supported locale (e.g. 'fr')
       const supportedLocales = ["en", "fr"];
@@ -62,8 +67,13 @@ apiClient.interceptors.request.use(
       };
     }
 
-    // Force Content-Type for POST/PUT/PATCH to ensure body parsing works consistently
-    if (["POST", "PUT", "PATCH"].includes(config.method?.toUpperCase())) {
+    // Handle Content-Type for uploads and JSON
+    if (config.data instanceof FormData) {
+      // Must delete Content-Type to allow Axios to set it automatically with the correct multipart boundary
+      delete config.headers["Content-Type"];
+    } else if (
+      ["POST", "PUT", "PATCH"].includes(config.method?.toUpperCase())
+    ) {
       config.headers["Content-Type"] = "application/json";
     }
 

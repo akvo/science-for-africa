@@ -139,6 +139,36 @@
     "otpResendWindowStart": {
       "type": "datetime",
       "private": true
+    },
+    "memberships": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::community-membership.community-membership",
+      "mappedBy": "user"
+    },
+    "collaborationInvites": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::collaboration-invite.collaboration-invite",
+      "mappedBy": "invitedUser"
+    },
+    "displayName": {
+      "type": "string"
+    },
+    "profilePhoto": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "pageCover": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "languagePreferences": {
+      "type": "enumeration",
+      "enum": ["en", "fr"],
+      "default": "en"
     }
   }
 }

@@ -77,6 +77,8 @@
   "communities": {
     "description": "Manage your community memberships and explore new ones.",
     "joined": "Joined",
+    "leave_title": "Leave Community",
+    "leave_btn": "Leave",
     "leave_confirm": "Are you sure you want to leave {{name}}?",
     "leave_success": "You have left {{name}} successfully.",
     "leave_error": "Failed to leave community. Please try again.",

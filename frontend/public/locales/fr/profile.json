@@ -70,6 +70,19 @@
     "communities": "Communautés",
     "see_all": "Voir tout"
   },
+  "communities": {
+    "description": "Gérez vos adhésions à la communauté et explorez-en de nouvelles.",
+    "joined": "Rejoint",
+    "leave_title": "Quitter la communauté",
+    "leave_btn": "Quitter",
+    "leave_confirm": "Êtes-vous sûr de vouloir quitter {{name}} ?",
+    "leave_success": "Vous avez quitté {{name}} avec succès.",
+    "leave_error": "Échec de la sortie de la communauté. Veuillez réessayer.",
+    "empty_title": "Vous n'avez pas encore de communautés",
+    "empty_description": "Rejoignez des communautés pour entrer en contact avec d'autres chercheurs et participer à des discussions.",
+    "explore": "Explorer les communautés",
+    "no_description": "Aucune description disponible."
+  },
   "resources": {
     "title": "Mes ressources",
     "description": "Accédez et gérez vos documents techniques et rapports téléchargés.",

@@ -11,8 +11,9 @@ Provide a centralized hub for registered individual users to manage their profes
 ### User Experience
 Users access their profile via the user dropdown in the Navbar. The profile is organized into logical tabs based on the [Figma Design](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa):
 - **Details**: Identity management and core professional info. ([Design](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=130-5796&m=dev), [Edit](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=179-12861&m=dev))
-- **Communities**: Oversight of joined groups. ([Design](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=175-4875&m=dev), [Empty State](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=299-12849&m=dev))
-- **Collaboration**: Tracking of active and completed projects. ([Design](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=696-37828&m=dev), [Empty State](https://www.figma.com/design/9pJSajNx54DrJ1rafYOr6e/Science-for-Africa?node-id=179-9917&m=dev))
+- [x] **Communities Tab**: Displays a grid of joined communities and sub-communities with title, description, and subscribers.
+- [x] **Community Actions**: Ability to "Leave" a community with a shadcn-based confirmation modal.
+- [x] **Badges**: Show "Joined" status badges (pills) matching the design spec.
 - **Resources**: Access to saved documents.
 
 ---
@@ -42,7 +43,7 @@ graph TD
     B -->|Mentorship| K[Mentorship Connection API]
 
     C -->|Update| L[PUT /api/auth/me]
-    D -->|Leave| M[DELETE /api/communities/:id/leave]
+    D -->|Leave| M[POST /api/communities/:id/leave]
     G -->|Remove| N[DELETE /api/saved-posts/:id]
 ```
 
@@ -87,14 +88,14 @@ graph TD
 - [x] **Validation**: Real-time "characters left" counter for bio; file type/size validation for images.
 
 #### Community Oversight
-- [ ] **Communities Tab**: Displays a grid of joined communities and sub-communities.
-- [ ] **Community Actions**: Ability to "View" a community or "Leave" it.
-- [ ] **Badges**: Show "Joined" status badges where appropriate.
+- [x] **Communities Tab**: Displays a grid of joined communities and sub-communities.
+- [x] **Community Actions**: Ability to "View" a community or "Leave" it.
+- [x] **Badges**: Show "Joined" status badges where appropriate.
 
 #### Collaboration Tracking
-- [ ] **Collaboration Tab**: Monitor involvement in active and completed collaboration spaces.
-- [ ] **Project Details**: Display project objectives and relevant tags.
-- [ ] **Status Badges**: Clear "Active" (green) or "Completed" (red) indicators.
+- [x] **Collaboration Tab**: Monitor involvement in active and completed collaboration spaces.
+- [x] **Project Details**: Display project objectives and relevant tags.
+- [x] **Status Badges**: Clear "Active" (green) or "Completed" (red) indicators.
 
 #### Resource & Activity
 - [ ] **Resources Tab**: Access and download technical documents or reports saved or associated with the profile.
@@ -115,8 +116,8 @@ The following features were identified in the initial discovery but are not part
 - **Notification Preferences**: Granular control over platform alerts.
 
 ### Technical Acceptance Criteria (Tech AC)
-- [x] **API Security**: Endpoints restricted to authenticated owner of the profile.
-- [ ] **Optimistic UI**: Joined/Leave/Saved status updates immediately on frontend.
+- [x] **API Security**: Endpoints restricted to authenticated owner of the profile via custom Document Service controllers.
+- [x] **Optimistic UI**: Joined/Leave/Saved status updates immediately on frontend with professional toast feedback.
 - [ ] **Image Optimization**: Profile photos and covers are optimized/resized on upload.
 - [x] **I18n**: Support for multi-language display (English/French) via dedicated `profile` namespace.
 
@@ -131,10 +132,10 @@ The following features were identified in the initial discovery but are not part
 
 ### Phase 2: Core Tabs (MVP)
 - [x] **Details Tab**: Implement View/Edit flows for identity management.
-- [ ] **Communities Tab**: Implement grid view, sub-community support, and "Leave" logic.
-- [ ] **Collaboration Tab**: Implement tracking for active/completed projects.
+- [x] **Communities Tab**: Implement grid view, sub-community support, and "Leave" logic.
+- [x] **Collaboration Tab**: Implement tracking for active/completed projects.
 - [ ] **Resources Tab**: Implement document access and download functionality.
-- [ ] **Empty States**: Implement for all tabs.
+- [x] **Empty States**: Implement for all implemented tabs.
 
 ---
 
@@ -173,7 +174,7 @@ To ensure reliable image rendering across different environments (Docker, stagin
 - **Helper**: `getStrapiMedia` returns relative URLs, leveraging the rewrite to bypass domain-related security issues in the Next.js image optimizer.
 
 ### Leave Community
-- **Method**: `DELETE`
+- **Method**: `POST`
 - **Path**: `/api/communities/:id/leave`
 - **Response**: `200 OK` with success message.
 - **Action**: Permanent deletion of the `CommunityMembership` record for the current user.

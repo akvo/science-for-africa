@@ -11,7 +11,7 @@
       "locale": null
     },
     {
-      "documentId": "xsr7pyt294z43pg35eskjdl3",
+      "documentId": "i8i6jcqp0oalk3kp6tne6vr7",
       "action": "api::auth.profile.getMe",
       "locale": null
     },
@@ -41,7 +41,7 @@
       "locale": null
     },
     {
-      "documentId": "vwdkscw3aonr8uu87sesbpsg",
+      "documentId": "b2cpwvf3vzycf0247eepw35l",
       "action": "api::collaboration-call.collaboration-call.create-with-invites",
       "locale": null
     },
@@ -76,12 +76,12 @@
       "locale": null
     },
     {
-      "documentId": "y2s2yk47tnrdijq1rab1j10e",
+      "documentId": "jpazzzttr9lnitz7k24r0aue",
       "action": "api::community-membership.community-membership.find",
       "locale": null
     },
     {
-      "documentId": "sz5oss4p7piudv0dpe3rbyhj",
+      "documentId": "suuutxtnp33vf0rv0j5kfhpx",
       "action": "api::community-membership.community-membership.leave",
       "locale": null
     },

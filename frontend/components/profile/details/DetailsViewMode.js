@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ViewRow } from "./SharedComponents";
+import VerificationBadge from "@/components/shared/VerificationBadge";
 import { getStrapiMedia } from "@/lib/strapi";
 
 const DetailsViewMode = ({ user, t, onEdit }) => {
@@ -30,7 +31,12 @@ const DetailsViewMode = ({ user, t, onEdit }) => {
       </div>
 
       <div className="max-w-4xl">
-        <ViewRow label={t("details.full_name")} value={user?.fullName} t={t} />
+        <ViewRow
+          label={t("details.full_name")}
+          value={user?.fullName}
+          t={t}
+          badge={<VerificationBadge verified={user?.verified} type="user" />}
+        />
         <ViewRow label={t("details.email")} value={user?.email} t={t} />
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-4 pb-9 border-b border-brand-gray-100 items-center">
@@ -93,12 +99,12 @@ const DetailsViewMode = ({ user, t, onEdit }) => {
           }
           t={t}
           badge={
-            <Badge
-              variant="outline"
-              className="border-brand-orange-200 text-brand-orange-600 bg-brand-orange-50 font-bold tracking-tight text-[10px] px-2 py-0"
-            >
-              Pending
-            </Badge>
+            (user?.institution || user?.institutionName) && (
+              <VerificationBadge
+                verified={user?.institution?.verified}
+                type="institution"
+              />
+            )
           }
         />
 

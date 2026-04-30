@@ -19,6 +19,11 @@
     "loading": "Chargement...",
     "back": "Retour"
   },
+  "verification": {
+    "pending": "En attente",
+    "tooltip_user": "en attente de confirmation des détails du compte",
+    "tooltip_institution": "en attente de confirmation des détails de l'institution"
+  },
   "resources": {
     "all": "Tous",
     "report": "Rapport",

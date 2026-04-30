@@ -87,6 +87,7 @@ module.exports = ({ strapi }) => ({
             "lastName",
             "position",
             "roleType",
+            "verified",
           ],
           populate: {
             highestEducationInstitution: true,

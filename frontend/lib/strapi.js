@@ -381,6 +381,22 @@ export async function postChatMessage(callDocumentId, text) {
 }
 
 /**
+/**
+ * Fetch current user's community memberships (paginated)
+ */
+export async function fetchMyCommunityMemberships(page = 1, pageSize = 6) {
+  try {
+    const response = await fetchFromStrapi(
+      `/community-memberships?populate=community&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching memberships:", error);
+    return null;
+  }
+}
+
+/**
  * Fetch resources for a community (by community documentId).
  * Optionally filter by resourceType.
  */
@@ -464,6 +480,20 @@ export async function updateUserProfile(userData) {
   } catch (error) {
     console.error("Error updating profile:", error);
     return error;
+  }
+}
+/**
+ * Fetch current user's collaboration invites (paginated)
+ */
+export async function fetchMyCollaborations(page = 1, pageSize = 6) {
+  try {
+    const response = await fetchFromStrapi(
+      `/collaboration-invites?filters[inviteStatus]=Accepted&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching collaborations:", error);
+    return null;
   }
 }
 

@@ -331,12 +331,7 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "name",
-        "slug",
-        "handle"
-      ],
+      "list": ["id", "name", "slug", "handle"],
       "edit": [
         [
           {

@@ -242,6 +242,39 @@ const COMMUNITIES = [
   },
 ];
 
+const COLLABORATION_CALLS = [
+  {
+    title: "Bio-Diversity Research Project",
+    description:
+      "Join our cross-border research team to study biodiversity patterns across East Africa.",
+    startDate: "2024-01-01T00:00:00.000Z",
+    endDate: "2024-12-31T23:59:59.000Z",
+    status: "Active",
+    topics: ["Biodiversity", "Ecology", "East Africa"],
+    communityName: "Community of Researchers",
+  },
+  {
+    title: "Climate Change Impact Study",
+    description:
+      "A collaborative study on the socioeconomic impacts of climate change on small-scale farmers.",
+    startDate: "2024-03-01T00:00:00.000Z",
+    endDate: "2025-02-28T23:59:59.000Z",
+    status: "Active",
+    topics: ["Climate Change", "Agriculture", "Socioeconomic"],
+    communityName: "Community of Innovators",
+  },
+  {
+    title: "Global Health Initiative",
+    description:
+      "Past collaboration focusing on vaccine distribution strategies in sub-Saharan Africa.",
+    startDate: "2023-01-01T00:00:00.000Z",
+    endDate: "2023-12-31T23:59:59.000Z",
+    status: "Completed",
+    topics: ["Public Health", "Vaccines", "Africa"],
+    communityName: "Health and Wellness",
+  },
+];
+
 /**
  * Helper to synchronize French translations for a collection
  */
@@ -386,6 +419,115 @@ const seed = async (strapi) => {
     }
     strapi.log.info(
       `Seeded ${COMMUNITIES.length} parent communities with sub-communities.`,
+    );
+  }
+
+  // 4. Seed memberships for existing users (Development only)
+  const users = await strapi.db
+    .query("plugin::users-permissions.user")
+    .findMany();
+
+  if (users.length > 0) {
+    const allCommunities = await strapi.db
+      .query("api::community.community")
+      .findMany();
+
+    if (allCommunities.length > 0) {
+      strapi.log.info(
+        `Checking community memberships for ${users.length} users...`,
+      );
+      for (const user of users) {
+        const membershipCount = await strapi.db
+          .query("api::community-membership.community-membership")
+          .count({ where: { user: user.id } });
+
+        if (membershipCount === 0) {
+          // Shuffle and pick 1-3 random communities
+          const shuffled = [...allCommunities].sort(() => 0.5 - Math.random());
+          const count = Math.min(
+            Math.floor(Math.random() * 3) + 1,
+            shuffled.length,
+          );
+          const selected = shuffled.slice(0, count);
+
+          strapi.log.info(
+            `Joining ${user.username} to ${selected.length} random communities...`,
+          );
+
+          for (const community of selected) {
+            await strapi.db
+              .query("api::community-membership.community-membership")
+              .create({
+                data: {
+                  user: user.id,
+                  community: community.id,
+                  role: "Member",
+                  joinedAt: new Date(),
+                },
+              });
+          }
+        }
+      }
+    }
+  }
+
+  // 5. Seed Collaboration Calls and Invites (Development only)
+  strapi.log.info("Ensuring collaboration calls and invites exist...");
+
+  const allCalls = [];
+  for (const data of COLLABORATION_CALLS) {
+    let call = await strapi.db
+      .query("api::collaboration-call.collaboration-call")
+      .findOne({ where: { title: data.title } });
+
+    if (!call) {
+      strapi.log.info(`Creating collaboration call: ${data.title}`);
+      call = await strapi.db
+        .query("api::collaboration-call.collaboration-call")
+        .create({
+          data: {
+            ...data,
+            createdByUser: users[0]?.id, // Default to first user as creator
+          },
+        });
+    }
+    allCalls.push(call);
+  }
+
+  // Ensure every user has an invite for every call
+  let inviteCreatedCount = 0;
+  for (const user of users) {
+    for (const call of allCalls) {
+      const inviteCount = await strapi.db
+        .query("api::collaboration-invite.collaboration-invite")
+        .count({
+          where: {
+            invitedUser: user.id,
+            collaborationCall: call.id,
+          },
+        });
+
+      if (inviteCount === 0) {
+        await strapi.db
+          .query("api::collaboration-invite.collaboration-invite")
+          .create({
+            data: {
+              invitedUser: user.id,
+              collaborationCall: call.id,
+              email: user.email,
+              inviteStatus: "Accepted",
+              role: "Collaborator",
+              invitedAt: new Date(),
+            },
+          });
+        inviteCreatedCount++;
+      }
+    }
+  }
+
+  if (inviteCreatedCount > 0) {
+    strapi.log.info(
+      `Created ${inviteCreatedCount} new collaboration invites for ${users.length} users.`,
     );
   }
 

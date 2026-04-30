@@ -21,6 +21,17 @@ Please note that this document outlines parts of the solution beyond the MVP del
 | Sonner | 2 | Toast notifications |
 | Jest + React Testing Library | 30 / - | Unit and integration testing |
 
+#### 1.1.1 Shared Components
+
+To maintain DRY principles and UI consistency, common patterns are extracted into `@/components/shared/`:
+
+| Component | Purpose |
+|---|---|
+| `LoadingState` | Centered spinner with optional message for tab/page initialization. |
+| `EmptyState` | Standardized "No results" view with icon, title, description, and CTA button. |
+| `VerificationBadge` | Subtle badge showing "Pending" status for unverified users/institutions. |
+
+
 ### 1.2 Backend
 
 | Technology | Version | Purpose |
@@ -54,7 +65,7 @@ Beyond Strapi's auto-generated CRUD, we will create custom endpoints with hand-w
 | `/api/auth/resend-otp` | `POST` | **Custom Extension**: Enforced 60s cooldown and 3/hr limit. Generates new code and sends dual-path email (Link + Code). |
 | `/api/posts/:id/moderate` | `PUT` | Moderation action (approve/decline) — wraps status update + notification trigger to post author |
 | `/api/communities/:id/join` | `POST` | Join community — side effects: increment memberCount, create CommunityMembership with `member` role, notify community admins |
-| `/api/communities/:id/leave` | `DELETE` | Leave community — decrement memberCount, remove CommunityMembership |
+| `/api/communities/:id/leave` | `POST` | Leave community — decrement memberCount, remove CommunityMembership |
 | `/api/search` | `GET` | Cross-entity search aggregation (users, communities, threads, resources) before Elasticsearch is introduced |
 | `/api/notifications/dispatch` | `POST` | Internal endpoint for lifecycle hooks to trigger email notifications via Strapi email plugin |
 
@@ -205,6 +216,7 @@ erDiagram
         boolean confirmed
         boolean blocked
         boolean onboardingComplete
+        boolean verified
         json interests
         string otpCode
         datetime otpExpiration

@@ -33,8 +33,12 @@ const profileSchema = z.object({
   roleType: z.string().optional().nullable(),
   orcidId: z.string().optional().nullable(),
   educationLevel: z.string().optional().nullable(),
-  educationInstitutionName: z.string().optional().nullable(),
-  institutionType: z.string().optional().nullable(),
+  highestEducationInstitution: z
+    .object({
+      id: z.string().optional().nullable(),
+      name: z.string().optional().nullable(),
+    })
+    .optional(),
   affiliationInstitution: z
     .object({
       id: z.string().optional().nullable(),
@@ -54,10 +58,15 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
   const [loadingInstitutions, setLoadingInstitutions] = React.useState(false);
   const [showRequestInstitution, setShowRequestInstitution] =
     React.useState(false);
+  const [showRequestEducationInstitution, setShowRequestEducationInstitution] =
+    React.useState(false);
 
   React.useEffect(() => {
     if (user?.institutionName) {
       setShowRequestInstitution(true);
+    }
+    if (user?.educationInstitutionName) {
+      setShowRequestEducationInstitution(true);
     }
   }, [user]);
 
@@ -74,25 +83,84 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
     defaultValues: {
       fullName: user?.fullName || "",
       email: user?.email || "",
-      displayName: user?.displayName || "",
       biography: user?.biography || "",
       roleType: user?.roleType || "",
       orcidId: user?.orcidId || "",
       educationLevel: user?.educationLevel || "",
       language: user?.languagePreferences || "en",
-      educationInstitutionName: user?.educationInstitutionName || "",
+      highestEducationInstitution: {
+        id:
+          user?.highestEducationInstitution?.documentId ||
+          user?.highestEducationInstitution?.id?.toString() ||
+          "",
+        name:
+          user?.highestEducationInstitution?.name ||
+          user?.educationInstitutionName ||
+          "",
+      },
       affiliationInstitution: {
-        id: user?.institution?.id?.toString() || "",
-        name: user?.institutionName || "",
+        id:
+          user?.institutionMemberships?.[0]?.institution?.documentId ||
+          user?.institution?.documentId ||
+          user?.institutionMemberships?.[0]?.institution?.id?.toString() ||
+          user?.institution?.id?.toString() ||
+          "",
+        name:
+          user?.institutionMemberships?.[0]?.institution?.name ||
+          user?.institutionName ||
+          "",
       },
     },
   });
+
+  React.useEffect(() => {
+    if (user) {
+      reset({
+        fullName: user?.fullName || "",
+        email: user?.email || "",
+        biography: user?.biography || "",
+        roleType: user?.roleType || "",
+        orcidId: user?.orcidId || "",
+        educationLevel: user?.educationLevel || "",
+        language: user?.languagePreferences || "en",
+        highestEducationInstitution: {
+          id:
+            user?.highestEducationInstitution?.documentId ||
+            user?.highestEducationInstitution?.id?.toString() ||
+            "",
+          name:
+            user?.highestEducationInstitution?.name ||
+            user?.educationInstitutionName ||
+            "",
+        },
+        affiliationInstitution: {
+          id:
+            user?.institutionMemberships?.[0]?.institution?.documentId ||
+            user?.institution?.documentId ||
+            user?.institutionMemberships?.[0]?.institution?.id?.toString() ||
+            user?.institution?.id?.toString() ||
+            "",
+          name:
+            user?.institutionMemberships?.[0]?.institution?.name ||
+            user?.institutionName ||
+            "",
+        },
+      });
+    }
+  }, [user, reset]);
 
   const bioContent = watch("biography", "");
   const charsLeft = 275 - (bioContent?.length || 0);
 
   const selectedInstitutionId = watch("affiliationInstitution.id");
   const customInstitutionName = watch("affiliationInstitution.name");
+
+  const selectedEducationInstitutionId = watch(
+    "highestEducationInstitution.id",
+  );
+  const customEducationInstitutionName = watch(
+    "highestEducationInstitution.name",
+  );
 
   React.useEffect(() => {
     if (selectedInstitutionId && selectedInstitutionId !== "") {
@@ -106,6 +174,25 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
       setValue("affiliationInstitution.id", "");
     }
   }, [customInstitutionName, setValue]);
+
+  React.useEffect(() => {
+    if (
+      selectedEducationInstitutionId &&
+      selectedEducationInstitutionId !== ""
+    ) {
+      setValue("highestEducationInstitution.name", "");
+      setShowRequestEducationInstitution(false);
+    }
+  }, [selectedEducationInstitutionId, setValue]);
+
+  React.useEffect(() => {
+    if (
+      customEducationInstitutionName &&
+      customEducationInstitutionName !== ""
+    ) {
+      setValue("highestEducationInstitution.id", "");
+    }
+  }, [customEducationInstitutionName, setValue]);
 
   React.useEffect(() => {
     async function getInstitutions() {
@@ -343,15 +430,101 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                 />
               </div>
             </div>
-            <div className="w-full space-y-2">
-              <Label className="text-sm font-medium text-brand-gray-900">
-                {t("details.university_label")}
-              </Label>
-              <Input
-                {...register("educationInstitutionName")}
-                placeholder={t("details.university_placeholder")}
-                className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 placeholder:text-brand-gray-400"
-              />
+            <div className="w-full space-y-4">
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-brand-gray-900">
+                  {t("details.university_label")}
+                </Label>
+                <div className="relative group">
+                  <Controller
+                    name="highestEducationInstitution.id"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        value={field.value || ""}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
+                          <SelectValue>
+                            {field.value
+                              ? institutions.find(
+                                  (i) =>
+                                    (i.documentId || i.id.toString()) ===
+                                    field.value.toString(),
+                                )?.name ||
+                                (field.value ===
+                                (user?.highestEducationInstitution
+                                  ?.documentId ||
+                                  user?.highestEducationInstitution?.id?.toString())
+                                  ? user?.highestEducationInstitution?.name
+                                  : field.value)
+                              : t("details.university_placeholder")}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {loadingInstitutions ? (
+                            <div className="p-2 text-sm text-brand-gray-400 flex items-center gap-2">
+                              <Loader2 size={14} className="animate-spin" />
+                              Loading...
+                            </div>
+                          ) : (
+                            institutions.map((inst) => (
+                              <SelectItem
+                                key={inst.id}
+                                value={inst.documentId || inst.id.toString()}
+                              >
+                                {inst.name}
+                              </SelectItem>
+                            ))
+                          )}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {showRequestEducationInstitution ? (
+                <div className="animate-in slide-in-from-top-2 duration-300 space-y-4">
+                  <Input
+                    {...register("highestEducationInstitution.name")}
+                    placeholder={t("details.university_placeholder")}
+                    className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 w-full"
+                  />
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    onClick={() => {
+                      setShowRequestEducationInstitution(false);
+                      setValue("highestEducationInstitution.name", "");
+                    }}
+                    className="text-sm font-bold text-brand-teal-600 hover:bg-brand-teal-50 px-0 ml-auto flex"
+                  >
+                    Cancel Request
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-4">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={() => setShowRequestEducationInstitution(true)}
+                    className="px-8 rounded-full text-sm h-10 border-brand-teal-800 text-brand-teal-800 hover:bg-brand-teal-50 transition-all font-outfit"
+                  >
+                    {t("details.request_button")}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    onClick={() => {
+                      setValue("highestEducationInstitution.id", "");
+                    }}
+                    className="text-sm font-medium text-brand-gray-500 hover:text-brand-teal-600 hover:bg-transparent px-0"
+                  >
+                    {t("details.cancel_button")}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -377,8 +550,19 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                       <SelectValue>
                         {field.value
                           ? institutions.find(
-                              (i) => i.id.toString() === field.value.toString(),
-                            )?.name || field.value
+                              (i) =>
+                                (i.documentId || i.id.toString()) ===
+                                field.value.toString(),
+                            )?.name ||
+                            (field.value ===
+                            (user?.institutionMemberships?.[0]?.institution
+                              ?.documentId ||
+                              user?.institution?.documentId ||
+                              user?.institutionMemberships?.[0]?.institution?.id?.toString() ||
+                              user?.institution?.id?.toString())
+                              ? user?.institutionMemberships?.[0]?.institution
+                                  ?.name || user?.institutionName
+                              : field.value)
                           : t("details.affiliation_placeholder")}
                       </SelectValue>
                     </SelectTrigger>
@@ -390,7 +574,10 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                         </div>
                       ) : (
                         institutions.map((inst) => (
-                          <SelectItem key={inst.id} value={inst.id.toString()}>
+                          <SelectItem
+                            key={inst.id}
+                            value={inst.documentId || inst.id.toString()}
+                          >
                             {inst.name}
                           </SelectItem>
                         ))

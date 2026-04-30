@@ -13,6 +13,7 @@ jest.mock("next/router", () => ({
 // Mock the strapi lib
 jest.mock("../../lib/strapi", () => ({
   loginUser: jest.fn(),
+  fetchUserProfile: jest.fn(),
 }));
 
 // Mock next-i18next

@@ -361,10 +361,6 @@ const synchronizeTranslations = async (strapi, uid) => {
  * Seeder Utility
  */
 const seed = async (strapi) => {
-  if (process.env.NODE_ENV !== "development") {
-    return;
-  }
-
   strapi.log.info("Checking if database needs seeding...");
 
   // 1. Seed Interests
@@ -397,13 +393,14 @@ const seed = async (strapi) => {
     strapi.log.info(`Seeded ${INSTITUTIONS.length} Institutions.`);
   }
 
-  // 3. Seed Communities
-  const communityCount = await strapi.db
-    .query("api::community.community")
-    .count();
-  if (communityCount === 0) {
-    strapi.log.info("Seeding Communities...");
-    for (const data of COMMUNITIES) {
+  // 3. Seed Communities (upsert by slug — skip existing ones)
+  for (const data of COMMUNITIES) {
+    const existing = await strapi.db
+      .query("api::community.community")
+      .findOne({ where: { slug: data.slug } });
+
+    if (!existing) {
+      strapi.log.info(`Seeding community: ${data.name}`);
       const { subCommunities, ...parentData } = data;
       const parent = await strapi.db
         .query("api::community.community")
@@ -417,9 +414,6 @@ const seed = async (strapi) => {
         }
       }
     }
-    strapi.log.info(
-      `Seeded ${COMMUNITIES.length} parent communities with sub-communities.`,
-    );
   }
 
   // 4. Seed memberships for existing users (Development only)
@@ -555,6 +549,10 @@ const seed = async (strapi) => {
   strapi.log.info("Synchronizing French translations...");
   await synchronizeTranslations(strapi, "api::interest.interest");
   await synchronizeTranslations(strapi, "api::institution.institution");
+
+  // Permissions must be synchronized in ALL environments
+  strapi.log.info("Synchronizing permissions...");
+
   // 4. Set Permissions (Ensure Public and Authenticated can search)
   const roles = ["public", "authenticated"];
   const actions = [
@@ -603,6 +601,8 @@ const seed = async (strapi) => {
     "plugin::upload.content-api.upload",
     "api::community.community.join",
     "api::community.community.leave",
+    "api::resource-comment.resource-comment.find",
+    "api::resource-comment.resource-comment.create",
   ];
 
   for (const action of collaborationActions) {

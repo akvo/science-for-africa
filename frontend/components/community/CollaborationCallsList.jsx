@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "next-i18next";
 import { Plus } from "lucide-react";
 import CollaborationCallCard from "./CollaborationCallCard";
 import { Button } from "@/components/ui/button";
@@ -6,9 +7,9 @@ import { cn } from "@/lib/utils";
 import { COLLABORATION_CALL_STATUS } from "@/lib/community-mock-data";
 
 const FILTERS = [
-  { key: "all", label: "All" },
-  { key: COLLABORATION_CALL_STATUS.ACTIVE, label: "Active" },
-  { key: COLLABORATION_CALL_STATUS.COMPLETED, label: "Completed" },
+  { key: "all", i18nKey: "collaboration.all" },
+  { key: COLLABORATION_CALL_STATUS.ACTIVE, i18nKey: "collaboration.active" },
+  { key: COLLABORATION_CALL_STATUS.COMPLETED, i18nKey: "collaboration.completed" },
 ];
 
 /**
@@ -24,6 +25,7 @@ export default function CollaborationCallsList({
   onCreate,
   className,
 }) {
+  const { t } = useTranslation("common");
   const [filter, setFilter] = useState("all");
 
   const visibleCalls = useMemo(() => {
@@ -49,7 +51,7 @@ export default function CollaborationCallsList({
               )}
               aria-pressed={isActive}
             >
-              {f.label}
+              {t(f.i18nKey)}
             </button>
           );
         })}
@@ -61,14 +63,14 @@ export default function CollaborationCallsList({
             onClick={onCreate}
           >
             <Plus className="size-4" />
-            Create
+            {t("collaboration.create")}
           </Button>
         ) : null}
       </div>
 
       {visibleCalls.length === 0 ? (
         <div className="rounded-xl border border-dashed border-brand-gray-200 p-10 text-center text-sm text-brand-gray-500">
-          No collaboration calls to show.
+          {t("collaboration.no_calls")}
         </div>
       ) : (
         <div className="flex flex-col divide-y divide-brand-gray-100 border-b border-brand-gray-100">

@@ -1,40 +1,27 @@
 import Link from "next/link";
+import { useTranslation } from "next-i18next";
 import { cn } from "@/lib/utils";
 
-/**
- * Left side navigation for the Community / Forum area.
- *
- * Reusable across all forum pages. Pass `activeKey` to highlight
- * the current section. Items are configurable so future engineers
- * can extend without modifying this component.
- */
-const DEFAULT_ITEMS = [
-  { key: "trending", label: "Trending now", href: "/community/trending" },
-  { key: "communities", label: "Communities", href: "/community" },
-  {
-    key: "active-discussions",
-    label: "Active discussions",
-    href: "/community/discussions",
-  },
-  {
-    key: "collaboration-hub",
-    label: "Collaboration Hub",
-    href: "/community/collaboration-hub",
-  },
-  { key: "events", label: "Events", href: "/community/events" },
+const NAV_KEYS = [
+  { key: "trending", i18nKey: "community.left_nav.trending", href: "/community/trending" },
+  { key: "communities", i18nKey: "community.left_nav.communities", href: "/community" },
+  { key: "active-discussions", i18nKey: "community.left_nav.discussions", href: "/community/discussions" },
+  { key: "collaboration-hub", i18nKey: "community.left_nav.collaboration", href: "/community/collaboration-hub" },
+  { key: "events", i18nKey: "community.left_nav.events", href: "/community/events" },
 ];
 
 export default function CommunityLeftNav({
-  items = DEFAULT_ITEMS,
   activeKey,
   className,
 }) {
+  const { t } = useTranslation("common");
+
   return (
     <nav
       aria-label="Community navigation"
       className={cn("flex flex-col gap-1 text-sm", className)}
     >
-      {items.map((item) => {
+      {NAV_KEYS.map((item) => {
         const isActive = item.key === activeKey;
         return (
           <Link
@@ -47,7 +34,7 @@ export default function CommunityLeftNav({
                 : "text-brand-gray-700 hover:bg-brand-gray-50",
             )}
           >
-            {item.label}
+            {t(item.i18nKey)}
           </Link>
         );
       })}

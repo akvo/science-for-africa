@@ -11,14 +11,14 @@ import {
 } from "lucide-react";
 
 export const COMMUNITY_TABS = [
-  { value: "feed", label: "Feed", icon: Rss },
-  { value: "discussions", label: "Discussions", icon: MessageSquare },
+  { value: "feed", i18nKey: "community.tab_feed", icon: Rss },
+  { value: "discussions", i18nKey: "community.tab_discussions", icon: MessageSquare },
   {
     value: "collaboration-calls",
-    label: "Collaboration calls",
+    i18nKey: "community.tab_collaboration",
     icon: Handshake,
   },
-  { value: "resources", label: "Resources", icon: BookOpen },
+  { value: "resources", i18nKey: "community.tab_resources", icon: BookOpen },
 ];
 
 export const COLLABORATION_CALL_STATUS = {

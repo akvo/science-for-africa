@@ -18,14 +18,45 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Upload, Loader2, CheckCircle, XIcon } from "lucide-react";
 import { createResource } from "@/lib/strapi";
+import { cn } from "@/lib/utils";
 
 const RESOURCE_TYPES = [
   { value: "report", i18nKey: "resources.report" },
   { value: "publication", i18nKey: "resources.publication" },
   { value: "practice-note", i18nKey: "resources.practice_note" },
   { value: "case-study", i18nKey: "resources.case_study" },
+];
+
+const RESOURCE_TOPICS = [
+  "STI Policy & Governance",
+  "Research Funding & Financing",
+  "Cybersecurity",
+  "Open Science & Data Sharing",
+  "One Health",
+  "Science Diplomacy",
+  "Intellectual Property & Technology Transfer",
+  "Evidence-Based Policymaking",
+  "Public & Global Health",
+  "Epidemiology & Disease Surveillance",
+  "Biomedical Research",
+  "Digital Health",
+  "Health Systems Strengthening",
+  "Pharmaceutical & Vaccine Development",
+  "Agricultural Innovation",
+  "Climate Change & Adaptation",
+  "Biodiversity & Conservation",
+  "Water Security",
+  "Sustainable Energy",
+  "Artificial Intelligence & ML",
+  "Data Science & Analytics",
+  "FinTech & Digital Finance",
+  "ICT for Development (ICT4D)",
+  "Higher Education & Training",
+  "Migration & Mobility",
+  "Gender & Social Equity",
 ];
 
 export default function AddResourceDialog({
@@ -35,9 +66,11 @@ export default function AddResourceDialog({
   onSuccess,
 }) {
   const { t } = useTranslation("common");
+  const [step, setStep] = useState(1);
   const [resourceType, setResourceType] = useState("report");
   const [name, setName] = useState("");
   const [file, setFile] = useState(null);
+  const [selectedTopics, setSelectedTopics] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -45,9 +78,11 @@ export default function AddResourceDialog({
   const [dragActive, setDragActive] = useState(false);
 
   const reset = () => {
+    setStep(1);
     setResourceType("report");
     setName("");
     setFile(null);
+    setSelectedTopics([]);
     setSubmitting(false);
     setShowSuccess(false);
     setError("");
@@ -72,6 +107,12 @@ export default function AddResourceDialog({
     if (f) handleFile(f);
   }, []);
 
+  const toggleTopic = (topic) => {
+    setSelectedTopics((prev) =>
+      prev.includes(topic) ? prev.filter((t) => t !== topic) : [...prev, topic],
+    );
+  };
+
   const handlePublish = async () => {
     if (!name.trim() || !file) return;
     setSubmitting(true);
@@ -82,6 +123,7 @@ export default function AddResourceDialog({
         resourceType,
         communityId: communityDocumentId,
         file,
+        topics: selectedTopics,
       });
       setShowSuccess(true);
       onSuccess?.();
@@ -135,7 +177,73 @@ export default function AddResourceDialog({
     );
   }
 
-  // Upload form
+  // Step 2: Topic selection
+  if (step === 2) {
+    return (
+      <Dialog open={open} onOpenChange={handleClose}>
+        <DialogContent size="lg" showCloseButton={true}>
+          <DialogHeader>
+            <DialogTitle>{t("resources.upload_title")}</DialogTitle>
+            <DialogDescription>
+              {t("resources.choose_topic")}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="max-h-[400px] overflow-y-auto pr-2 -mr-2 scrollbar-thin scrollbar-thumb-brand-gray-200 scrollbar-track-transparent border-t border-brand-gray-100 pt-5">
+            <div className="flex flex-wrap gap-2">
+              {RESOURCE_TOPICS.map((topic) => {
+                const selected = selectedTopics.includes(topic);
+                return (
+                  <Badge
+                    key={topic}
+                    role="button"
+                    variant="outline"
+                    onClick={() => toggleTopic(topic)}
+                    className={cn(
+                      "px-3.5 py-4 text-sm font-normal rounded-full transition-all duration-300 cursor-pointer",
+                      selected
+                        ? "bg-primary-50 text-brand-gray-700 border-[#D0D5DD] shadow-[0_1px_2px_0_rgba(16,24,40,0.05),0_0_0_4px_var(--color-primary-50)] active:scale-95"
+                        : "bg-white text-brand-gray-700 border-brand-gray-200 shadow-none hover:bg-brand-teal-50 hover:border-brand-teal-200 active:scale-95",
+                    )}
+                  >
+                    {topic}
+                  </Badge>
+                );
+              })}
+            </div>
+          </div>
+
+          {error && (
+            <p className="text-sm text-red-600">{error}</p>
+          )}
+
+          <div className="flex justify-end gap-3 pt-4">
+            <Button
+              variant="outline"
+              size="md"
+              className="rounded-full min-w-[120px]"
+              onClick={() => setStep(1)}
+            >
+              {t("resources.back")}
+            </Button>
+            <Button
+              size="md"
+              className="rounded-full min-w-[120px]"
+              disabled={submitting}
+              onClick={handlePublish}
+            >
+              {submitting ? (
+                <Loader2 className="size-4 animate-spin mr-2" />
+              ) : null}
+              {t("resources.publish")}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  // Step 1: Upload form
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent size="md" showCloseButton={true}>
@@ -229,10 +337,6 @@ export default function AddResourceDialog({
               )}
             </div>
           </div>
-
-          {error && (
-            <p className="text-sm text-red-600">{error}</p>
-          )}
         </div>
 
         <DialogFooter variant="block">
@@ -246,13 +350,10 @@ export default function AddResourceDialog({
           <Button
             size="md"
             className="rounded-full"
-            disabled={!name.trim() || !file || submitting}
-            onClick={handlePublish}
+            disabled={!name.trim() || !file}
+            onClick={() => setStep(2)}
           >
-            {submitting ? (
-              <Loader2 className="size-4 animate-spin mr-2" />
-            ) : null}
-            {t("resources.publish")}
+            {t("resources.next")}
           </Button>
         </DialogFooter>
       </DialogContent>

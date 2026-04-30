@@ -71,7 +71,7 @@ const CollaborationCard = ({ invite, index }) => {
           </div>
         </div>
 
-        <Link href={`/collaboration/${call.documentId || call.id}`}>
+        <Link href={`/community/calls/${call.documentId || call.id}`}>
           <Button
             variant="outline"
             size="sm"

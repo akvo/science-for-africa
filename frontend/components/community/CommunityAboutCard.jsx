@@ -1,33 +1,18 @@
+import { useTranslation } from "next-i18next";
 import { ChevronDown } from "lucide-react";
 
-/**
- * Right-rail "About community" card.
- * Pure presentational — pass a `community` shaped object.
- */
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+const MONTHS_EN = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
 ];
 
 function formatCreatedAt(value) {
   const d = new Date(value);
   if (Number.isNaN(d.getTime())) return "";
-  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+  return `${MONTHS_EN[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 }
 
 function formatNumber(n) {
-  // Deterministic thousands separator (locale-independent) to avoid
-  // SSR/CSR hydration mismatches.
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
@@ -38,6 +23,7 @@ function formatCount(n) {
 }
 
 export default function CommunityAboutCard({ community }) {
+  const { t } = useTranslation("common");
   const stats = community.stats || {};
   const moderators = community.moderators || [];
   const subCommunities = community.subCommunities || [];
@@ -52,7 +38,7 @@ export default function CommunityAboutCard({ community }) {
         <p className="mt-2 text-sm text-brand-gray-600">{community.about}</p>
         {community.createdAt ? (
           <p className="mt-3 text-xs text-brand-gray-500">
-            Created {formatCreatedAt(community.createdAt)}
+            {t("community.created")} {formatCreatedAt(community.createdAt)}
           </p>
         ) : null}
       </div>
@@ -60,14 +46,16 @@ export default function CommunityAboutCard({ community }) {
       <div className="flex items-center gap-6 border-t border-brand-gray-100 pt-4">
         <div>
           <div className="text-xs uppercase text-brand-gray-500">
-            Subscribers
+            {t("community.subscribers")}
           </div>
           <div className="text-base font-semibold text-brand-gray-900">
-            {stats.subscribers? formatNumber(stats.subscribers) : 0}
+            {stats.subscribers ? formatNumber(stats.subscribers) : 0}
           </div>
         </div>
         <div>
-          <div className="text-xs uppercase text-brand-gray-500">Posts</div>
+          <div className="text-xs uppercase text-brand-gray-500">
+            {t("community.posts")}
+          </div>
           <div className="text-base font-semibold text-brand-gray-900">
             {stats.posts ? formatNumber(stats.posts) : 0}
           </div>
@@ -77,7 +65,7 @@ export default function CommunityAboutCard({ community }) {
       {moderators.length ? (
         <div className="border-t border-brand-gray-100 pt-4">
           <h3 className="mb-2 text-sm font-semibold text-brand-gray-900">
-            Moderators
+            {t("community.moderators")}
           </h3>
           <ul className="text-sm text-brand-gray-600">
             {moderators.map((m) => (
@@ -91,13 +79,13 @@ export default function CommunityAboutCard({ community }) {
         <div className="border-t border-brand-gray-100 pt-4">
           <div className="mb-2 flex items-center justify-between">
             <h3 className="text-sm font-semibold text-brand-gray-900">
-              Sub-Communities
+              {t("community.sub_communities")}
             </h3>
             <button
               type="button"
               className="text-xs font-medium text-brand-teal-700 hover:underline"
             >
-              See all
+              {t("community.see_all")}
             </button>
           </div>
           <ul className="flex flex-col gap-2">
@@ -107,7 +95,7 @@ export default function CommunityAboutCard({ community }) {
                   {sc.name}
                 </div>
                 <div className="text-xs text-brand-gray-500">
-                  {formatCount(sc.subscribers)} Subscribers
+                  {formatCount(sc.subscribers)} {t("community.subscribers")}
                 </div>
               </li>
             ))}
@@ -118,7 +106,7 @@ export default function CommunityAboutCard({ community }) {
       {rules.length ? (
         <div className="border-t border-brand-gray-100 pt-4">
           <h3 className="mb-3 text-sm font-semibold text-brand-gray-900">
-            Community rules
+            {t("community.community_rules")}
           </h3>
           <ol className="flex flex-col">
             {rules.map((r, i) => (

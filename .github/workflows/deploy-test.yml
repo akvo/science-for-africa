@@ -52,7 +52,7 @@ jobs:
         with:
           app-name: "science-of-africa"
           service-name: "nginx"
-          gcloud-sa:  ${{ secrets.GCLOUD_SERVICE_ACCOUNT_REGISTRY }}
+          gcloud-sa: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_REGISTRY }}
           cluster-name: "test"
 
       - name: Docker Push Frontend
@@ -60,7 +60,7 @@ jobs:
         with:
           app-name: "science-of-africa"
           service-name: "frontend"
-          gcloud-sa:  ${{ secrets.GCLOUD_SERVICE_ACCOUNT_REGISTRY }}
+          gcloud-sa: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_REGISTRY }}
           cluster-name: "test"
 
       - name: Docker Push Backend
@@ -68,9 +68,8 @@ jobs:
         with:
           app-name: "science-of-africa"
           service-name: "backend"
-          gcloud-sa:  ${{ secrets.GCLOUD_SERVICE_ACCOUNT_REGISTRY }}
+          gcloud-sa: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_REGISTRY }}
           cluster-name: "test"
-
 
   rollout:
     name: Rollout to the server
@@ -98,8 +97,7 @@ jobs:
           container-name: "nginx"
           cluster-name: "test"
           namespace-name: "science-of-africa-namespace"
-          gcloud-sa:  ${{ secrets.GCLOUD_SERVICE_ACCOUNT_K8S }}
-
+          gcloud-sa: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_K8S }}
 
       - name: Rollout Frontend
         uses: ./composite-actions/.github/actions/k8s-rollout
@@ -109,7 +107,7 @@ jobs:
           container-name: "frontend"
           cluster-name: "test"
           namespace-name: "science-of-africa-namespace"
-          gcloud-sa:  ${{ secrets.GCLOUD_SERVICE_ACCOUNT_K8S }}
+          gcloud-sa: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_K8S }}
 
       - name: Rollout Backend
         uses: ./composite-actions/.github/actions/k8s-rollout
@@ -119,4 +117,4 @@ jobs:
           container-name: "backend"
           cluster-name: "test"
           namespace-name: "science-of-africa-namespace"
-          gcloud-sa:  ${{ secrets.GCLOUD_SERVICE_ACCOUNT_K8S }}
+          gcloud-sa: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_K8S }}

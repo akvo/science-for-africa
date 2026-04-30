@@ -140,6 +140,7 @@ erDiagram
     User ||--o{ CollaborationMentor : "mentors"
     User ||--o{ EventRegistration : "registers"
     User ||--o{ Resource : "uploads"
+    User ||--o{ ResourceComment : "writes"
     User }o--o{ Tag : "tagged_with"
 
     Institution ||--o{ InstitutionMembership : "has_members"
@@ -178,6 +179,7 @@ erDiagram
 
     Resource }o--|| Community : "belongs_to"
     Resource }o--|| User : "uploaded_by"
+    Resource ||--o{ ResourceComment : "has_comments"
     Resource }o--o{ Tag : "tagged_with"
 
     Event }o--|| Community : "hosted_by"
@@ -188,6 +190,9 @@ erDiagram
 
     CollaborationMentor }o--|| CollaborationCall : "collaboration"
     CollaborationMentor }o--|| User : "mentor"
+
+    ResourceComment }o--|| Resource : "belongs_to"
+    ResourceComment }o--|| User : "authored_by"
 
     SavedPost }o--|| User : "saved_by"
     SavedPost }o--|| Post : "post"
@@ -382,6 +387,15 @@ erDiagram
         datetime resolvedAt
     }
 
+    ResourceComment {
+        string id PK
+        text text
+        string resource FK
+        string author FK
+        datetime createdAt
+        datetime updatedAt
+    }
+
     Notification {
         string id PK
         string recipient FK
@@ -433,6 +447,7 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 | **Tag** | Cross-entity taxonomy (expertise, region, topic) — applied to Resources, Threads, Users, Communities |
 | **Report** | Content flagging for moderation (Spam / Harassment / Misinformation / Other) |
 | **Notification** | Email notification log with delivery status |
+| **ResourceComment** | User comments on resources |
 | **SavedPost** | User bookmarks |
 | **Follow** | User-to-user following |
 
@@ -478,13 +493,17 @@ Push to main
 - `GH_PAT` — access to `akvo/composite-actions` repo
 
 **Kubernetes deployments:**
-1. **nginx** — reverse proxy, routes `/` and `/cms/`
+1. **nginx** — reverse proxy, routes `/` and `/cms/`. Note: Nginx is configured to strip the `/cms/` prefix using a rewrite rule. Strapi must be configured with a **relative** `url: /cms` in `server.js` to handle this mismatch while correctly generating asset paths.
 2. **frontend** — Next.js production build (Node 20 Alpine, port 3000)
 3. **backend** — Strapi production build (Node 22 Alpine, port 1337)
 
 **Data & storage:**
 - **PostgreSQL** — runs as a containerised pod within the cluster (not a managed service). Configured via `DATABASE_*` env vars on the backend deployment
 - **Google Cloud Storage** — file uploads via `@strapi-community/strapi-provider-upload-google-cloud-storage`, configured via `GCS_*` env vars on the backend deployment
+
+**Critical Configuration Notes:**
+- **Strapi Build-time URL**: Strapi's admin panel is a React application built during the Docker build phase. It **must** know its public base path (e.g., `/cms`) at build time to correctly resolve asset paths (JS/CSS). This is passed via the `BACKEND_URL` build argument in the Dockerfile. Failure to provide this will result in a blank white page in production as assets will attempt to load from the root `/` instead of the subpath.
+- **Path Consistency**: The `BACKEND_URL` in Kubernetes secrets should be the full absolute URL, but Strapi's internal `url` configuration in `server.js` should be hardcoded to the relative path `/cms`. This ensures that Strapi ignores the prefix in incoming requests (supporting the Nginx rewrite) while still using it for relative asset resolution and link generation.
 
 K8s manifests are managed within Akvo's infrastructure (via the `composite-actions` repo and cluster configuration), not stored in this application repo.
 

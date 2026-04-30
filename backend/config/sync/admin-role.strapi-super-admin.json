@@ -572,7 +572,8 @@
           "file",
           "community",
           "uploadedBy",
-          "status"
+          "status",
+          "topics"
         ]
       },
       "conditions": [],
@@ -608,7 +609,8 @@
           "file",
           "community",
           "uploadedBy",
-          "status"
+          "status",
+          "topics"
         ]
       },
       "conditions": [],
@@ -626,7 +628,8 @@
           "file",
           "community",
           "uploadedBy",
-          "status"
+          "status",
+          "topics"
         ]
       },
       "conditions": [],

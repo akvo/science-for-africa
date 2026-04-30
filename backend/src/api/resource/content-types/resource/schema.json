@@ -41,6 +41,9 @@
       "type": "enumeration",
       "enum": ["pending", "approved", "declined"],
       "default": "pending"
+    },
+    "topics": {
+      "type": "json"
     }
   }
 }

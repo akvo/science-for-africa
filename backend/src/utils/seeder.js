@@ -521,6 +521,26 @@ const seed = async (strapi) => {
             },
           });
         inviteCreatedCount++;
+      } else {
+        // Check if status is missing and update if necessary
+        const existing = await strapi.db
+          .query("api::collaboration-invite.collaboration-invite")
+          .findOne({
+            where: {
+              invitedUser: user.id,
+              collaborationCall: call.id,
+              inviteStatus: { $null: true },
+            },
+          });
+
+        if (existing) {
+          await strapi.db
+            .query("api::collaboration-invite.collaboration-invite")
+            .update({
+              where: { id: existing.id },
+              data: { inviteStatus: "Accepted" },
+            });
+        }
       }
     }
   }

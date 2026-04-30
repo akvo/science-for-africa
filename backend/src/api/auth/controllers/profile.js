@@ -210,7 +210,10 @@ module.exports = ({ strapi }) => ({
           data.highestEducationInstitution = inst.id;
         } else if (targetId) {
           // Resolve numeric ID if needed
-          if (typeof targetId === "string") {
+          const numericId = parseInt(targetId);
+          if (!isNaN(numericId) && String(numericId) === String(targetId)) {
+            data.highestEducationInstitution = numericId;
+          } else if (typeof targetId === "string") {
             const inst = await strapi.db
               .query("api::institution.institution")
               .findOne({ where: { documentId: targetId } });
@@ -252,10 +255,14 @@ module.exports = ({ strapi }) => ({
               .findOne({ where: { documentId: created.documentId } });
           }
         } else if (targetId) {
+          const numericId = parseInt(targetId);
+          const isNumeric =
+            !isNaN(numericId) && String(numericId) === String(targetId);
+
           inst = await strapi.db.query("api::institution.institution").findOne({
             where: {
               $or: [
-                { id: typeof targetId === "number" ? targetId : -1 },
+                { id: isNumeric ? numericId : -1 },
                 { documentId: typeof targetId === "string" ? targetId : "" },
               ],
             },

@@ -198,13 +198,29 @@ export function transformProfileUpdatePayload(userData) {
     );
   }
 
-  // We now pass affiliationInstitution and educationInstitution as objects
+  // We now pass affiliationInstitution and highestEducationInstitution as objects
   // The backend handles creation/lookup.
-  // Note: OnboardingStep3 uses 'educationInstitution' in store,
-  // but backend uses 'highestEducationInstitution'.
+
+  // Onboarding uses 'educationInstitution', while profile edit uses 'highestEducationInstitution'
   if (data.educationInstitution) {
     data.highestEducationInstitution = data.educationInstitution;
     delete data.educationInstitution;
+  }
+
+  // Cleanup highestEducationInstitution if empty
+  if (data.highestEducationInstitution) {
+    const { id, name } = data.highestEducationInstitution;
+    if (!id && !name) {
+      delete data.highestEducationInstitution;
+    }
+  }
+
+  // Cleanup affiliationInstitution if empty
+  if (data.affiliationInstitution) {
+    const { id, name } = data.affiliationInstitution;
+    if (!id && !name) {
+      delete data.affiliationInstitution;
+    }
   }
 
   if (data.language) {

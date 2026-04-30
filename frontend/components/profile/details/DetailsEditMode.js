@@ -93,10 +93,9 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
           user?.highestEducationInstitution?.documentId ||
           user?.highestEducationInstitution?.id?.toString() ||
           "",
-        name:
-          user?.highestEducationInstitution?.name ||
-          user?.educationInstitutionName ||
-          "",
+        name: user?.highestEducationInstitution
+          ? ""
+          : user?.educationInstitutionName || "",
       },
       affiliationInstitution: {
         id:
@@ -106,9 +105,9 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
           user?.institution?.id?.toString() ||
           "",
         name:
-          user?.institutionMemberships?.[0]?.institution?.name ||
-          user?.institutionName ||
-          "",
+          user?.institutionMemberships?.[0]?.institution || user?.institution
+            ? ""
+            : user?.institutionName || "",
       },
     },
   });
@@ -128,10 +127,9 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
             user?.highestEducationInstitution?.documentId ||
             user?.highestEducationInstitution?.id?.toString() ||
             "",
-          name:
-            user?.highestEducationInstitution?.name ||
-            user?.educationInstitutionName ||
-            "",
+          name: user?.highestEducationInstitution
+            ? ""
+            : user?.educationInstitutionName || "",
         },
         affiliationInstitution: {
           id:
@@ -141,9 +139,9 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
             user?.institution?.id?.toString() ||
             "",
           name:
-            user?.institutionMemberships?.[0]?.institution?.name ||
-            user?.institutionName ||
-            "",
+            user?.institutionMemberships?.[0]?.institution || user?.institution
+              ? ""
+              : user?.institutionName || "",
         },
       });
     }
@@ -444,22 +442,32 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                         value={field.value || ""}
                         onValueChange={field.onChange}
                       >
-                        <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
-                          <SelectValue>
-                            {field.value
-                              ? institutions.find(
-                                  (i) =>
-                                    (i.documentId || i.id.toString()) ===
-                                    field.value.toString(),
-                                )?.name ||
-                                (field.value ===
-                                (user?.highestEducationInstitution
-                                  ?.documentId ||
-                                  user?.highestEducationInstitution?.id?.toString())
-                                  ? user?.highestEducationInstitution?.name
-                                  : field.value)
-                              : t("details.university_placeholder")}
-                          </SelectValue>
+                        <SelectTrigger
+                          disabled={loadingInstitutions}
+                          className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 disabled:bg-brand-gray-50 disabled:cursor-not-allowed"
+                        >
+                          {loadingInstitutions ? (
+                            <div className="flex items-center gap-2 text-brand-gray-400">
+                              <Loader2 size={14} className="animate-spin" />
+                              Loading...
+                            </div>
+                          ) : (
+                            <SelectValue>
+                              {field.value
+                                ? institutions.find(
+                                    (i) =>
+                                      (i.documentId || i.id.toString()) ===
+                                      field.value.toString(),
+                                  )?.name ||
+                                  (field.value ===
+                                  (user?.highestEducationInstitution
+                                    ?.documentId ||
+                                    user?.highestEducationInstitution?.id?.toString())
+                                    ? user?.highestEducationInstitution?.name
+                                    : field.value)
+                                : t("details.university_placeholder")}
+                            </SelectValue>
+                          )}
                         </SelectTrigger>
                         <SelectContent>
                           {loadingInstitutions ? (
@@ -546,25 +554,35 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                     value={field.value || ""}
                     onValueChange={field.onChange}
                   >
-                    <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
-                      <SelectValue>
-                        {field.value
-                          ? institutions.find(
-                              (i) =>
-                                (i.documentId || i.id.toString()) ===
-                                field.value.toString(),
-                            )?.name ||
-                            (field.value ===
-                            (user?.institutionMemberships?.[0]?.institution
-                              ?.documentId ||
-                              user?.institution?.documentId ||
-                              user?.institutionMemberships?.[0]?.institution?.id?.toString() ||
-                              user?.institution?.id?.toString())
-                              ? user?.institutionMemberships?.[0]?.institution
-                                  ?.name || user?.institutionName
-                              : field.value)
-                          : t("details.affiliation_placeholder")}
-                      </SelectValue>
+                    <SelectTrigger
+                      disabled={loadingInstitutions}
+                      className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 disabled:bg-brand-gray-50 disabled:cursor-not-allowed"
+                    >
+                      {loadingInstitutions ? (
+                        <div className="flex items-center gap-2 text-brand-gray-400">
+                          <Loader2 size={14} className="animate-spin" />
+                          Loading...
+                        </div>
+                      ) : (
+                        <SelectValue>
+                          {field.value
+                            ? institutions.find(
+                                (i) =>
+                                  (i.documentId || i.id.toString()) ===
+                                  field.value.toString(),
+                              )?.name ||
+                              (field.value ===
+                              (user?.institutionMemberships?.[0]?.institution
+                                ?.documentId ||
+                                user?.institution?.documentId ||
+                                user?.institutionMemberships?.[0]?.institution?.id?.toString() ||
+                                user?.institution?.id?.toString())
+                                ? user?.institutionMemberships?.[0]?.institution
+                                    ?.name || user?.institutionName
+                                : field.value)
+                            : t("details.affiliation_placeholder")}
+                        </SelectValue>
+                      )}
                     </SelectTrigger>
                     <SelectContent>
                       {loadingInstitutions ? (

@@ -14,7 +14,7 @@ Users access their profile via the user dropdown in the Navbar. The profile is o
 - [x] **Communities Tab**: Displays a grid of joined communities and sub-communities with title, description, and subscribers.
 - [x] **Community Actions**: Ability to "Leave" a community with a shadcn-based confirmation modal.
 - [x] **Badges**: Show "Joined" status badges (pills) matching the design spec.
-- **Resources**: Access to saved documents.
+- [x] **Resources Tab**: Access to saved and uploaded documents with status tracking.
 
 ---
 
@@ -99,8 +99,10 @@ graph TD
 - [x] **Status Badges**: Clear "Active" (green) or "Completed" (red) indicators.
 
 #### Resource & Activity
-- [ ] **Resources Tab**: Access and download technical documents or reports saved or associated with the profile.
-- [ ] **Empty States**: Display a professional empty state with a relevant CTA if no content is found in any tab.
+- [x] **Resources Tab**: Access and download technical documents or reports associated with the profile.
+- [x] **Status Badges**: Visual feedback for Pending, Approved, and Declined resources.
+- [x] **Deletion**: Users can remove their own resources with a confirmation modal.
+- [x] **Empty States**: Display a professional empty state with a relevant CTA if no content is found in any tab.
 
 ---
 
@@ -135,7 +137,8 @@ The following features were identified in the initial discovery but are not part
 - [x] **Details Tab**: Implement View/Edit flows for identity management.
 - [x] **Communities Tab**: Implement grid view, sub-community support, and "Leave" logic.
 - [x] **Collaboration Tab**: Implement tracking for active/completed projects.
-- [ ] **Resources Tab**: Implement document access and download functionality.
+- [x] **Resources Tab**: Implement document access, download, and status tracking.
+- [x] **Deletion Flow**: Enable users to remove their own resources.
 - [x] **Empty States**: Implement for all implemented tabs.
 
 ---
@@ -177,8 +180,8 @@ To ensure reliable image rendering across different environments (Docker, stagin
 ### Leave Community
 - **Method**: `POST`
 - **Path**: `/api/communities/:id/leave`
-- **Response**: `200 OK` with success message.
-- **Action**: Permanent deletion of the `CommunityMembership` record for the current user.
+- **Response**: `200 OK` with `{ success: true }`.
+- **Action**: Permanent deletion of the `CommunityMembership` record for the current user and removal from the community's `members` relation.
 
 ---
 

@@ -110,7 +110,7 @@ module.exports = createCoreController(
           populate: ["collaborationCall"],
         });
 
-      return { data: updated };
+      return { success: true, data: updated };
     },
   }),
 );

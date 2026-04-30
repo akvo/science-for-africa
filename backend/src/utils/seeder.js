@@ -414,6 +414,9 @@ const seed = async (strapi) => {
         }
       }
     }
+    strapi.log.info(
+      `Seeded ${COMMUNITIES.length} parent communities with sub-communities.`,
+    );
   }
 
   // 4. Seed memberships for existing users (Development only)
@@ -552,7 +555,6 @@ const seed = async (strapi) => {
 
   // Permissions must be synchronized in ALL environments
   strapi.log.info("Synchronizing permissions...");
-
   // 4. Set Permissions (Ensure Public and Authenticated can search)
   const roles = ["public", "authenticated"];
   const actions = [
@@ -598,6 +600,7 @@ const seed = async (strapi) => {
     "api::resource.resource.find",
     "api::resource.resource.findOne",
     "api::resource.resource.create",
+    "api::resource.resource.delete",
     "plugin::upload.content-api.upload",
     "api::community.community.join",
     "api::community.community.leave",

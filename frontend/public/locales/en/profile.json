@@ -59,6 +59,7 @@
     "profile": "Profile",
     "details": "Details",
     "communities": "My Communities",
+    "resources": "Resources",
     "content": "Content",
     "saved": "Saved",
     "events": "My events",
@@ -76,6 +77,8 @@
   "communities": {
     "description": "Manage your community memberships and explore new ones.",
     "joined": "Joined",
+    "leave_title": "Leave Community",
+    "leave_btn": "Leave",
     "leave_confirm": "Are you sure you want to leave {{name}}?",
     "leave_success": "You have left {{name}} successfully.",
     "leave_error": "Failed to leave community. Please try again.",
@@ -95,5 +98,14 @@
     "empty_title": "You don't have any collaborations yet",
     "empty_desc": "Start joining communities and responding to calls to begin collaborating.",
     "explore_calls": "Explore collaboration calls"
+  },
+  "resources": {
+    "title": "My Resources",
+    "description": "Access and manage your uploaded technical documents and reports.",
+    "empty_title": "You don't have any resources yet",
+    "empty_description": "Explore the community to find and save resources or upload your own in a community.",
+    "explore": "Explore community",
+    "delete_confirm_title": "Delete Resource",
+    "delete_confirm_description": "Are you sure you want to delete this resource? This action cannot be undone."
   }
 }

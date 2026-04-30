@@ -91,6 +91,20 @@
           "sortable": true
         }
       },
+      "status": {
+        "edit": {
+          "label": "status",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "status",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -189,6 +203,10 @@
         [
           {
             "name": "uploadedBy",
+            "size": 6
+          },
+          {
+            "name": "status",
             "size": 6
           }
         ]

@@ -204,6 +204,27 @@ async function grantPermissions(roleType, permissions) {
   }
 }
 
+/**
+ * Creates a mock file for testing media relations
+ */
+async function createMockFile(fileData = {}) {
+  const strapi = getStrapi();
+  const defaultFile = {
+    name: "test-file.pdf",
+    hash: "test-hash",
+    ext: ".pdf",
+    mime: "application/pdf",
+    size: 100,
+    provider: "local",
+    folderPath: "/",
+    ...fileData,
+  };
+
+  return await strapi.query("plugin::upload.file").create({
+    data: defaultFile,
+  });
+}
+
 module.exports = {
   setupStrapi,
   teardownStrapi,
@@ -211,4 +232,5 @@ module.exports = {
   createMockUser,
   generateJwtToken,
   grantPermissions,
+  createMockFile,
 };

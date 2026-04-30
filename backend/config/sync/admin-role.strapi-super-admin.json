@@ -561,12 +561,20 @@
       "locale": null
     },
     {
-      "documentId": "j43kfxe09zgg8q2r48w1lk1w",
+      "documentId": "mc3l723bfkgli8vr3o3oyeli",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "api::resource.resource",
       "properties": {
-        "fields": ["name", "resourceType", "file", "community", "uploadedBy"]
+        "fields": [
+          "name",
+          "resourceType",
+          "file",
+          "community",
+          "uploadedBy",
+          "status",
+          "topics"
+        ]
       },
       "conditions": [],
       "locale": null
@@ -590,23 +598,39 @@
       "locale": null
     },
     {
-      "documentId": "jzrbzgnatb52loqq6hcylsez",
+      "documentId": "f7c7za3ps5uimcpgbdwagvqi",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "api::resource.resource",
       "properties": {
-        "fields": ["name", "resourceType", "file", "community", "uploadedBy"]
+        "fields": [
+          "name",
+          "resourceType",
+          "file",
+          "community",
+          "uploadedBy",
+          "status",
+          "topics"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "er7mie1lhdpoqepjh1rqnh73",
+      "documentId": "cfj5gg1inxuenk0a2p8bha88",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "api::resource.resource",
       "properties": {
-        "fields": ["name", "resourceType", "file", "community", "uploadedBy"]
+        "fields": [
+          "name",
+          "resourceType",
+          "file",
+          "community",
+          "uploadedBy",
+          "status",
+          "topics"
+        ]
       },
       "conditions": [],
       "locale": null

@@ -37,6 +37,11 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user"
     },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "approved", "declined"],
+      "default": "pending"
+    },
     "topics": {
       "type": "json"
     }

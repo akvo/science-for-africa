@@ -14,6 +14,9 @@ jest.mock("@/lib/strapi", () => ({
   resendOtp: jest.fn(),
   verifyEmailToken: jest.fn(),
   verifyOtp: jest.fn(),
+  getRegistrationStatus: jest.fn(),
+  loginUser: jest.fn(),
+  fetchUserProfile: jest.fn(),
 }));
 
 // Mock next-i18next

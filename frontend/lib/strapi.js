@@ -462,6 +462,8 @@ export async function createResource({
   if (!fileId) throw new Error("File upload returned no file ID");
 
   // Step 2: Create the resource record with the uploaded file ID
+  const user = (await import("./auth-store")).useAuthStore.getState().user;
+
   const createRes = await fetch(`${baseUrl}/resources`, {
     method: "POST",
     headers: { ...headers, "Content-Type": "application/json" },
@@ -552,6 +554,37 @@ export async function fetchUserProfile() {
     return response.data;
   } catch (error) {
     console.error("Error fetching user profile:", error);
+    return null;
+  }
+}
+/**
+ * Delete a resource record by documentId
+ */
+export async function deleteResource(documentId) {
+  try {
+    const response = await apiClient.delete(`/resources/${documentId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting resource:", error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch resources uploaded by the current authenticated user
+ */
+export async function fetchMyResources() {
+  try {
+    const user = (await import("./auth-store")).useAuthStore.getState().user;
+    if (!user?.id) return null;
+
+    // Filter specifically for resources uploaded by the current user
+    const response = await fetchFromStrapi(
+      `/resources?filters[uploadedBy][documentId][$eq]=${user.documentId}&populate[file]=true&populate[uploadedBy]=true&sort=createdAt:desc`,
+    );
+    return response;
+  } catch (error) {
+    console.error("Error fetching my resources:", error);
     return null;
   }
 }

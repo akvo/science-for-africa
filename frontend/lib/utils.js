@@ -15,3 +15,39 @@ export function formatNumber(num) {
   }
   return num.toString();
 }
+
+export function formatFileSize(bytes) {
+  if (!bytes) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+}
+
+export function getFullFileUrl(url) {
+  if (!url) return null;
+  if (url.startsWith("http") || url.startsWith("data:")) return url;
+
+  const backendOrigin = (
+    process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api"
+  ).replace(/\/api\/?$/, "");
+
+  // Ensure leading slash
+  const path = url.startsWith("/") ? url : `/${url}`;
+  return `${backendOrigin}${path}`;
+}
+
+export async function downloadFile(url, filename) {
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename || url.split("/").pop();
+    a.click();
+    URL.revokeObjectURL(a.href);
+  } catch (error) {
+    console.error("Download failed, opening in new tab", error);
+    window.open(url, "_blank");
+  }
+}

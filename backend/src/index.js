@@ -14,6 +14,19 @@ module.exports = {
     // 2. Override users-permissions register route and controller
     const usersPermissionsPlugin = strapi.plugin("users-permissions");
 
+    // Disable route-level body validation for the resource create endpoint
+    const resourceApi = strapi.api?.["resource"];
+    if (resourceApi) {
+      const resourceRoutes = resourceApi.routes["resource"].routes;
+      const createRoute = resourceRoutes.find(
+        (r) => r.method === "POST" && r.path === "/resources",
+      );
+      if (createRoute) {
+        if (!createRoute.config) createRoute.config = {};
+        createRoute.config.validate = false;
+      }
+    }
+
     // Disable route-level body validation for the register endpoint
     const registerRoute = usersPermissionsPlugin.routes[
       "content-api"

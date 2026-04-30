@@ -30,6 +30,7 @@ To maintain DRY principles and UI consistency, common patterns are extracted int
 | `LoadingState` | Centered spinner with optional message for tab/page initialization. |
 | `EmptyState` | Standardized "No results" view with icon, title, description, and CTA button. |
 | `VerificationBadge` | Subtle badge showing "Pending" status for unverified users/institutions. |
+| `ResourceTable` | Shared table-based display for resources with status tracking and file actions. |
 
 
 ### 1.2 Backend
@@ -331,6 +332,7 @@ erDiagram
         string externalUrl
         integer downloadCount
         date publicationDate
+        enum status
     }
 
     Event {
@@ -466,6 +468,14 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 **InstitutionMembership as explicit join table.** Similar to communities, users are linked to institutions via a dedicated membership entity. This supports multi-institutional profiles and stores metadata like affiliation type (member/owner) and verification status, which were previously rigid fields on the User entity.
 
 **Formalized Education.** Educational background is linked directly to the Institution collection via the `highestEducationInstitution` field, replacing unstructured string data.
+
+**Resource Visibility & Moderation.** Resources only appear in public community lists when `status` is `approved`. Users can see their own `pending` or `declined` uploads in their profile. This is enforced at the controller layer by overwriting the core `find` and `findOne` methods to apply user-contextual filters.
++
++**Community Membership Synchronization Pattern.** To ensure data consistency between the primary `Community` entity (which tracks `members` for counts and listing) and the `CommunityMembership` collection (which drives the "My Communities" profile tab), the backend implements a dual-write pattern in the `join` and `leave` controllers.
++- **Join**: Creates a `CommunityMembership` record AND links the user to the community's `members` relation.
++- **Leave**: Deletes the `CommunityMembership` record (using a robust ID/Object manual filter to handle Strapi v5 variations) AND removes the user from the community's `members` relation.
++This pattern prevents stale membership listings in the user profile even if the direct relation is somehow decoupled.
++
 
 ## 3. Deployment & Infrastructure
 
@@ -757,3 +767,20 @@ The platform follows Google's best practices for localized sites:
 - **Subpath routing**: Distinct URLs for each language.
 - **HTML lang attribute**: Automatically updated by `next-i18next`.
 - **SSR support**: Translations are loaded server-side using `getStaticProps` or `getServerSideProps`.
+
+## 7. Community Membership Synchronization Pattern
+
+To ensure strict data integrity and a seamless user experience, the platform implements a **"Bulletproof Dual-Layer Removal"** pattern for community membership management.
+
+### 7.1 The Problem
+In Strapi v5, many-to-many relations (like `members` on a Community) and dedicated join tables (like the `CommunityMembership` collection) can become desynchronized if not handled atomically. Simple deletion of one may leave orphaned data in the other, leading to "stale" UI states where a user appears to have left a community but still sees it in their "My Communities" dashboard after a refresh.
+
+### 7.2 Implementation Strategy
+The `api/community/leave` controller implements a multi-layered synchronization logic:
+
+1.  **Relation Disconnection (Document Service)**: Uses the `strapi.documents` service to disconnect the user from the community's `members` field. This ensures the member count and community-level relations are updated.
+2.  **Atomic Record Purge (Database Query)**: Uses the low-level `strapi.db.query` service to find and delete all records in the `CommunityMembership` collection matching the user and community.
+3.  **Cross-ID Compatibility**: The deletion logic targets both numeric `id` and v5-specific `documentId` formats simultaneously using an `$or` filter. This prevents synchronization failures caused by ID format mismatches between different Strapi service layers.
+
+### 7.3 Data Consistency Rule
+Every "Join" action MUST create both the relation and the collection record. Every "Leave" action MUST delete both. This dual-write/dual-delete requirement is enforced at the controller level to maintain a "Single Source of Truth" across the relational model.

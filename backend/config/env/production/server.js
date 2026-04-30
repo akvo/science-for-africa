@@ -5,7 +5,6 @@ module.exports = ({ env }) => ({
     keys: env.array("APP_KEYS"),
   },
   proxy: true,
-  // Public URL for Strapi (webhooks, emails, OAuth)
   url: env("BACKEND_URL", "/cms"),
   webhooks: {
     populateRelations: env.bool("WEBHOOKS_POPULATE_RELATIONS", false),

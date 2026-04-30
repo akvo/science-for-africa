@@ -110,4 +110,41 @@ describe("Resource API Deletion", () => {
       });
     expect(deletedResource).toBeNull();
   });
+
+  it("should create a resource successfully", async () => {
+    // Create a mock file and community
+    const file = await createMockFile();
+    const community = await strapi
+      .documents("api::community.community")
+      .create({
+        data: { name: "Test Community", slug: "test-comm" },
+        status: "published",
+      });
+
+    const resourceData = {
+      data: {
+        name: "New Uploaded Resource",
+        resourceType: "publication",
+        file: file.id,
+        community: community.documentId,
+        // The frontend used to send this, my controller should strip it and let lifecycle handle it
+        uploadedBy: "some-fake-id",
+      },
+    };
+
+    const response = await request(strapi.server.httpServer)
+      .post("/api/resources")
+      .set("Authorization", `Bearer ${ownerJwt}`)
+      .send(resourceData);
+
+    expect(response.status).toBe(201);
+    expect(response.body.data.name).toBe("New Uploaded Resource");
+
+    // Fetch it again to verify uploadedBy was set correctly by lifecycle
+    const created = await strapi.documents("api::resource.resource").findOne({
+      documentId: response.body.data.documentId,
+      populate: ["uploadedBy"],
+    });
+    expect(created.uploadedBy.documentId).toBe(owner.documentId);
+  });
 });

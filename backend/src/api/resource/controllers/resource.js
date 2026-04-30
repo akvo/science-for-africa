@@ -103,5 +103,29 @@ module.exports = createCoreController(
 
       return { success: true };
     },
+
+    async create(ctx) {
+      const user = ctx.state.user;
+      if (!user) return ctx.unauthorized();
+
+      const { data } = ctx.request.body;
+      if (!data) return ctx.badRequest("Missing data");
+
+      // Security: Override protected fields
+      const sanitizedData = {
+        ...data,
+        uploadedBy: user.documentId,
+        status: "pending",
+      };
+
+      // Create using document service to bypass core controller validation
+      const result = await strapi.documents("api::resource.resource").create({
+        data: sanitizedData,
+        locale: ctx.query.locale,
+      });
+
+      ctx.status = 201;
+      return { data: result };
+    },
   }),
 );

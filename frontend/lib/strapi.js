@@ -473,9 +473,6 @@ export async function createResource({
         resourceType,
         file: fileId,
         community: { connect: [communityId] },
-        uploadedBy: user?.documentId
-          ? { connect: [user.documentId] }
-          : undefined,
         topics: topics || [],
       },
     }),

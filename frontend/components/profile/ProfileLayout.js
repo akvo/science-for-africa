@@ -106,7 +106,7 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                       <p className="text-xs text-brand-gray-500 mt-0.5">
                         {user?.roleType
                           ? t(`profile:roles.${user.roleType}`)
-                          : t("profile:roles.Researcher")}
+                          : t("profile:details.not_provided")}
                       </p>
                       <div className="mt-2">
                         <VerificationBadge verified={user?.verified} />
@@ -166,9 +166,10 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                       : t("profile:education_levels.Master's Degree")}
                   </p>
                   <p className="text-sm text-brand-gray-500">
-                    {user?.educationInstitutionName ||
+                    {user?.highestEducationInstitution?.name ||
+                      user?.educationInstitutionName ||
                       user?.institution?.name ||
-                      "University of Sydney"}
+                      t("profile:details.not_provided")}
                   </p>
                 </div>
               </div>

@@ -85,7 +85,9 @@ const DetailsViewMode = ({ user, t, onEdit }) => {
                 : t("details.not_provided")}
             </p>
             <p className="text-[15px] text-brand-gray-500 font-medium">
-              {user?.educationInstitutionName || t("details.not_provided")}
+              {user?.highestEducationInstitution?.name ||
+                user?.educationInstitutionName ||
+                t("details.not_provided")}
             </p>
           </div>
         </div>
@@ -93,15 +95,21 @@ const DetailsViewMode = ({ user, t, onEdit }) => {
         <ViewRow
           label={t("details.affiliation_title")}
           value={
+            user?.institutionMemberships?.[0]?.institution?.name ||
             user?.institution?.name ||
             user?.institutionName ||
             t("details.not_provided")
           }
           t={t}
           badge={
-            (user?.institution || user?.institutionName) && (
+            (user?.institutionMemberships?.[0]?.institution ||
+              user?.institution ||
+              user?.institutionName) && (
               <VerificationBadge
-                verified={user?.institution?.verified}
+                verified={
+                  user?.institutionMemberships?.[0]?.institution?.verified ||
+                  user?.institution?.verified
+                }
                 type="institution"
               />
             )

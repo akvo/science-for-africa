@@ -97,6 +97,11 @@ graph TD
 - [x] **Collaboration Tab**: Monitor involvement in active and completed collaboration spaces.
 - [x] **Project Details**: Display project objectives and relevant tags.
 - [x] **Status Badges**: Clear "Active" (green) or "Completed" (red) indicators.
+- [x] **Request Display**: The "Collaboration" tab lists all incoming requests/invitations.
+- [x] **Acceptance Action**: Each request includes "Accept" and "Decline" buttons.
+- [x] **Membership Status**: Accepting immediately grants "Member" status; doing nothing keeps the user as a "Visitor" (Pending).
+- [x] **Interaction Restrictions**: Posting/Commenting is disabled until "Accept" is clicked.
+- [x] **Public Visibility**: Collaboration spaces remain publicly viewable regardless of membership status.
 
 #### Resource & Activity
 - [x] **Resources Tab**: Access and download technical documents or reports associated with the profile.
@@ -140,6 +145,13 @@ The following features were identified in the initial discovery but are not part
 - [x] **Resources Tab**: Implement document access, download, and status tracking.
 - [x] **Deletion Flow**: Enable users to remove their own resources.
 - [x] **Empty States**: Implement for all implemented tabs.
+
+### Phase 3: Collaboration Acceptance (Current Sprint)
+- [x] **Backend: Profile Controller**: Include `Pending` invites in the `me` payload.
+- [x] **Backend: Security**: Implement membership checks in `chat-message.create`.
+- [x] **Backend: Decline Action**: Implement `POST /api/collaboration-invites/:id/decline`.
+- [x] **Frontend: Dashboard**: Update `CollaborationTab` to render invitation actions.
+- [x] **Frontend: Restrictions**: Disable chat composer for non-members in `[id].js`.
 
 ---
 

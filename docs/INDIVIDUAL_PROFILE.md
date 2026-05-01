@@ -15,6 +15,7 @@ Users access their profile via the user dropdown in the Navbar. The profile is o
 - [x] **Community Actions**: Ability to "Leave" a community with a shadcn-based confirmation modal.
 - [x] **Badges**: Show "Joined" status badges (pills) matching the design spec.
 - [x] **Resources Tab**: Access to saved and uploaded documents with status tracking.
+- [x] **Mentorship Tab**: Dedicated list for mentors to monitor their mentees across collaborations.
 
 ---
 
@@ -40,7 +41,7 @@ graph TD
     B -->|Content| H[User Posts API]
     B -->|Events| I[Event Registration API]
     B -->|Courses| J[Course Enrollment API]
-    B -->|Mentorship| K[Mentorship Connection API]
+    B -->|Mentorship| K[Mentorship API]
 
     C -->|Update| L[PUT /api/auth/me]
     D -->|Leave| M[POST /api/communities/:id/leave]
@@ -120,7 +121,7 @@ The following features were identified in the initial discovery but are not part
 - **My Content**: Chronological feed of own posts with interaction counts (bookmarks, comments, shares).
 - **Event Attendance**: Management of upcoming and past attendances.
 - **Courses & Certifications**: Educational progress and certifications.
-*   **Mentorship**: Management of mentorship relationships.
+*   **Mentorship**: Management of mentorship relationships. (Implemented)
 - **Quick Join**: Join community directly from a saved post view.
 - **Public Profiles**: Publicly accessible profile URLs.
 - **Notification Preferences**: Granular control over platform alerts.

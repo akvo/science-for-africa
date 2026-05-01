@@ -70,6 +70,7 @@ Beyond Strapi's auto-generated CRUD, we will create custom endpoints with hand-w
 | Endpoint | Method | Justification |
 |---|---|---|
 | `/api/auth/me` | `GET` | **Custom Extension**: Returns the currently authenticated user with deep population of media, memberships, and collaboration involvement. Supports optional `membershipLimit` query parameter for optimized sidebar loading. |
+| `/api/auth/mentees` | `GET` | **Custom Extension**: Returns collaborations where the current user is a Mentor, along with details of the mentees (Collaborators) and the collaboration status. |
 
 | `/api/auth/me` | `PUT` | **Custom Extension**: Profile update with whitelisting and character limit validation for `biography`. |
 | `/api/auth/verify-otp` | `POST` | **Custom Extension**: Verifies email using a 6-digit number. Confirms user and returns JWT. |

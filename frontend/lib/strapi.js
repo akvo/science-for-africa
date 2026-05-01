@@ -535,13 +535,30 @@ export async function updateUserProfile(userData) {
  */
 export async function fetchMyCollaborations(page = 1, pageSize = 6) {
   try {
+    // We fetch all invites (Pending/Accepted) and filter/sort in the UI if needed,
+    // or just let the dashboard show both.
     const response = await fetchFromStrapi(
-      `/collaboration-invites?filters[inviteStatus]=Accepted&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+      `/collaboration-invites?pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
     );
     return response;
   } catch (error) {
     console.error("Error fetching collaborations:", error);
     return null;
+  }
+}
+
+/**
+ * Decline a collaboration invite by its numeric id.
+ */
+export async function declineCollaborationInvite(id) {
+  try {
+    const response = await apiClient.post(
+      `/collaboration-invites/${id}/decline`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error declining collaboration invite:", error);
+    return error;
   }
 }
 

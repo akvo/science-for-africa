@@ -4,137 +4,133 @@ import { useTranslation } from "next-i18next";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { fetchMyCollaborations } from "@/lib/strapi";
-import { Loader2, ArrowRight, Calendar, Handshake } from "lucide-react";
+import {
+  fetchMyCollaborations,
+  acceptCollaborationInvite,
+  declineCollaborationInvite,
+} from "@/lib/strapi";
+import {
+  Loader2,
+  ArrowRight,
+  Handshake,
+} from "lucide-react";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
-import { format } from "date-fns";
+import { toast } from "sonner";
 
-const CollaborationCard = ({ invite, index }) => {
+const CollaborationRow = ({
+  invite,
+  onAccept,
+  onDecline,
+  processingId,
+}) => {
   const { t } = useTranslation(["profile", "common"]);
   const call = invite.collaborationCall;
 
   if (!call) return null;
 
-  const isActive = call.status === "Active";
-  const endDate = call.endDate ? new Date(call.endDate) : null;
-  const formattedEndDate = endDate ? format(endDate, "dd/MM/yy") : "--/--/--";
-
-  // Grid border logic to avoid phantom borders and double lines
-  const isFirstRow = index < 2;
-  const isFirstCol = index % 2 === 0;
+  const isPending = invite.inviteStatus === "Pending";
+  const isProcessing = processingId === invite.id;
+  const mentor = call.createdByUser;
 
   return (
-    <div
-      className={`bg-white p-6 flex flex-col gap-8 hover:shadow-md transition-shadow relative group border-b border-r border-brand-gray-100
-      ${isFirstRow ? "xl:border-t" : ""}
-      ${isFirstCol ? "xl:border-l" : ""}
-      ${index === 0 ? "border-t border-l" : ""}
-      ${index === 1 ? "max-xl:border-l" : ""}
-      ${index % 2 !== 0 ? "max-xl:border-t" : ""}
-      `}
-    >
-      {/* Top Section: Status and View Button */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center overflow-hidden rounded-full border border-brand-gray-100 bg-brand-gray-50">
-          <div className="flex items-center gap-2 px-3.5 py-2">
-            <div className="relative flex items-center justify-center">
-              <div
-                className={`size-2 rounded-full absolute animate-ping opacity-75 ${
-                  isActive ? "bg-brand-teal-500" : "bg-red-500"
-                }`}
-              />
-              <div
-                className={`size-2 rounded-full relative ${
-                  isActive ? "bg-brand-teal-500" : "bg-red-500"
-                }`}
-              />
-            </div>
-            <span className="text-sm font-medium text-brand-gray-900">
-              {isActive
-                ? t("collaboration.status_active", { defaultValue: "Active" })
-                : t("collaboration.status_completed", {
-                    defaultValue: "Completed",
-                  })}
-            </span>
-          </div>
-          <div className="flex items-center gap-2 px-3.5 py-2 border-l border-brand-gray-100">
-            <Calendar className="size-4 text-brand-gray-400" />
-            <span className="text-sm text-brand-gray-500">
-              {isActive
-                ? t("collaboration.valid_till", { defaultValue: "Valid till:" })
-                : t("collaboration.ended", { defaultValue: "Ended:" })}{" "}
-              <span className="text-brand-gray-900 font-medium">
-                {formattedEndDate}
-              </span>
-            </span>
-          </div>
-        </div>
-
-        <Link href={`/community/calls/${call.documentId || call.id}`}>
-          <Button
-            variant="outline"
-            size="sm"
-            className="rounded-full bg-brand-gray-50 border-brand-gray-100 text-brand-gray-900 hover:bg-brand-gray-100 px-5"
-          >
-            {t("common:view", { defaultValue: "View" })}
-          </Button>
-        </Link>
-      </div>
-
-      {/* Middle Section: Content */}
-      <div className="flex flex-col gap-6 grow">
-        <div className="space-y-2">
-          <h3 className="text-lg font-bold text-brand-gray-900 line-clamp-1 group-hover:text-brand-teal-600 transition-colors">
+    <tr className="border-b border-brand-gray-100 hover:bg-brand-gray-50/50 transition-colors group">
+      {/* Collaboration Space Column */}
+      <td className="py-6 px-6 align-top">
+        <div className="flex flex-col gap-2">
+          <h3 className="text-[17px] font-bold text-brand-gray-900 leading-snug">
             {call.title}
           </h3>
-          <p className="text-sm text-brand-gray-500 line-clamp-2 leading-relaxed">
-            {call.description}
-          </p>
+          <Link
+            href={`/community/calls/${call.documentId || call.id}`}
+            className="flex items-center gap-2 text-sm font-medium text-brand-teal-600 hover:text-brand-teal-700 transition-colors"
+          >
+            {t("common:view", { defaultValue: "View" })}
+            <ArrowRight className="size-4" />
+          </Link>
         </div>
+      </td>
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1.5">
-          {call.topics && Array.isArray(call.topics) ? (
-            call.topics.map((topic, idx) => (
-              <Badge
-                key={idx}
-                variant="outline"
-                className="rounded-full px-3 py-1 text-xs font-medium text-brand-gray-500 border-brand-gray-200 bg-white"
-              >
-                #{topic}
-              </Badge>
-            ))
-          ) : (
-            <div>&nbsp;</div>
-          )}
-        </div>
-      </div>
-
-      {/* Bottom Section: Community Affiliation */}
-      <div className="flex items-center justify-between pt-2">
-        <div className="flex items-center gap-1.5">
-          <Avatar className="size-7 border border-brand-gray-100 bg-brand-teal-50">
+      {/* Mentor Column */}
+      <td className="py-6 px-6 align-top">
+        <div className="flex items-start gap-3">
+          <Avatar className="size-10 border border-brand-gray-100 bg-brand-teal-50 shrink-0">
             <AvatarFallback className="text-sm text-brand-teal-700 font-bold bg-brand-teal-50">
-              {call.communityName?.substring(0, 2).toUpperCase() || "CR"}
+              <Handshake className="size-5" />
             </AvatarFallback>
           </Avatar>
-          <span className="text-sm text-brand-gray-500 truncate max-w-50">
-            {call.communityName || "Community of researchers"}
-          </span>
+          <div className="flex flex-col min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-bold text-brand-gray-900 truncate">
+                {mentor?.fullName || mentor?.username || "Unknown Mentor"}
+              </span>
+              <Badge className="bg-brand-orange-50 text-brand-orange-600 border-none rounded-full px-2.5 py-0.5 text-[11px] font-bold">
+                {t("collaboration.mentor_badge", { defaultValue: "Mentor" })}
+              </Badge>
+            </div>
+            <span className="text-sm text-brand-gray-500 truncate">
+              {mentor?.biography?.substring(0, 40) || "Researcher"}
+            </span>
+            {mentor?.institutionMemberships?.[0]?.institution?.name && (
+              <span className="text-xs text-brand-gray-400 truncate mt-0.5">
+                {mentor.institutionMemberships[0].institution.name}
+              </span>
+            )}
+          </div>
         </div>
+      </td>
 
-        <Link
-          href={`/community/${call.communityName?.toLowerCase().replace(/\s+/g, "-") || "#"}`}
-          className="flex items-center gap-1 text-xs text-brand-gray-400 hover:text-brand-teal-600 transition-colors group/link"
-        >
-          {t("collaboration.view_community", {
-            defaultValue: "View community",
-          })}
-          <ArrowRight className="size-3.5 group-hover/link:translate-x-0.5 transition-transform" />
-        </Link>
-      </div>
-    </div>
+      {/* Actions Column */}
+      <td className="py-6 px-6 align-top text-right">
+        <div className="flex items-center justify-end gap-3 h-10">
+          {isPending ? (
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="rounded-full bg-brand-gray-100 text-brand-gray-900 hover:bg-brand-gray-200 px-6 font-bold h-9"
+                onClick={() => onDecline(invite.id)}
+                disabled={isProcessing}
+              >
+                {t("collaboration.decline", { defaultValue: "Decline" })}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-full border-brand-teal-500 text-brand-teal-600 hover:bg-brand-teal-50 px-6 font-bold h-9"
+                onClick={() => onAccept(invite.id)}
+                disabled={isProcessing}
+              >
+                {isProcessing ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  t("collaboration.accept", { defaultValue: "Accept" })
+                )}
+              </Button>
+            </>
+          ) : (
+            <>
+              <button
+                className="text-sm font-bold text-brand-teal-600 hover:text-brand-teal-700 transition-colors mr-2"
+                onClick={() => onDecline(invite.id)}
+                disabled={isProcessing}
+              >
+                {t("common:remove", { defaultValue: "Remove" })}
+              </button>
+              <Link href={`/community/calls/${call.documentId || call.id}`}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full border-brand-teal-500 text-brand-teal-600 hover:bg-brand-teal-50 px-6 font-bold h-9"
+                >
+                  {t("common:view", { defaultValue: "View" })}
+                </Button>
+              </Link>
+            </>
+          )}
+        </div>
+      </td>
+    </tr>
   );
 };
 
@@ -143,6 +139,7 @@ const CollaborationTab = () => {
   const [invites, setInvites] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const [processingId, setProcessingId] = useState(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const PAGE_SIZE = 6;
@@ -163,7 +160,6 @@ const CollaborationTab = () => {
           setInvites((prev) => [...prev, ...result.data]);
         }
 
-        // Handle pagination metadata
         const pagination = result.meta?.pagination;
         if (pagination) {
           setHasMore(pagination.page < pagination.pageCount);
@@ -187,6 +183,60 @@ const CollaborationTab = () => {
     const nextPage = page + 1;
     setPage(nextPage);
     loadCollaborations(nextPage);
+  };
+
+  const handleAccept = async (id) => {
+    setProcessingId(id);
+    try {
+      const res = await acceptCollaborationInvite(id);
+      if (res?.success) {
+        toast.success(
+          t("collaboration.accept_success", {
+            defaultValue: "Invitation accepted successfully",
+          }),
+        );
+        setInvites((prev) =>
+          prev.map((inv) =>
+            inv.id === id ? { ...inv, inviteStatus: "Accepted" } : inv,
+          ),
+        );
+      } else {
+        toast.error(
+          t("collaboration.accept_error", {
+            defaultValue: "Failed to accept invitation",
+          }),
+        );
+      }
+    } catch (error) {
+      toast.error(t("common:error_occurred"));
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const handleDecline = async (id) => {
+    setProcessingId(id);
+    try {
+      const res = await declineCollaborationInvite(id);
+      if (res?.success) {
+        toast.success(
+          t("collaboration.decline_success", {
+            defaultValue: "Invitation processed",
+          }),
+        );
+        setInvites((prev) => prev.filter((inv) => inv.id !== id));
+      } else {
+        toast.error(
+          t("collaboration.decline_error", {
+            defaultValue: "Failed to process invitation",
+          }),
+        );
+      }
+    } catch (error) {
+      toast.error(t("common:error_occurred"));
+    } finally {
+      setProcessingId(null);
+    }
   };
 
   if (isLoading) {
@@ -213,15 +263,40 @@ const CollaborationTab = () => {
   }
 
   return (
-    <div className="flex flex-col space-y-8 pb-10">
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-0 overflow-hidden">
-        {invites.map((invite, idx) => (
-          <CollaborationCard key={invite.id} invite={invite} index={idx} />
-        ))}
+    <div className="flex flex-col pb-10">
+      <div className="overflow-x-auto border border-brand-gray-100 rounded-lg shadow-sm">
+        <table className="w-full border-collapse text-left bg-white">
+          <thead className="bg-brand-gray-50 border-b border-brand-gray-100">
+            <tr>
+              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 uppercase tracking-wider w-2/5">
+                {t("collaboration.header_space", {
+                  defaultValue: "Collaboration space",
+                })}
+              </th>
+              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 uppercase tracking-wider w-1/3">
+                {t("collaboration.header_mentor", { defaultValue: "Mentor" })}
+              </th>
+              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 uppercase tracking-wider text-right">
+                {t("collaboration.header_actions", { defaultValue: "Actions" })}
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-brand-gray-100">
+            {invites.map((invite) => (
+              <CollaborationRow
+                key={invite.id}
+                invite={invite}
+                onAccept={handleAccept}
+                onDecline={handleDecline}
+                processingId={processingId}
+              />
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {hasMore && (
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-8">
           <Button
             variant="outline"
             onClick={handleLoadMore}

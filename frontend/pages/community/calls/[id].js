@@ -127,6 +127,15 @@ export default function CollaborationCallDetailPage() {
       }));
   }, [call]);
 
+  const myInvite = useMemo(() => {
+    if (!user || !call?.invites) return null;
+    return call.invites.find(
+      (i) =>
+        i.invitedUser?.documentId === user.documentId ||
+        i.invitedUser?.id === user.id,
+    );
+  }, [call, user]);
+
   if (loading) {
     return (
       <div className="flex flex-1 items-center justify-center py-20 text-sm text-brand-gray-500">
@@ -142,15 +151,6 @@ export default function CollaborationCallDetailPage() {
       </div>
     );
   }
-
-  const myInvite = useMemo(() => {
-    if (!user || !call?.invites) return null;
-    return call.invites.find(
-      (i) =>
-        i.invitedUser?.documentId === user.documentId ||
-        i.invitedUser?.id === user.id,
-    );
-  }, [call, user]);
 
   const isAccepted = myInvite?.inviteStatus === "Accepted";
   const isCreator =

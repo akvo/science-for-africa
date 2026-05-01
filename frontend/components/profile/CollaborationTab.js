@@ -9,21 +9,12 @@ import {
   acceptCollaborationInvite,
   declineCollaborationInvite,
 } from "@/lib/strapi";
-import {
-  Loader2,
-  ArrowRight,
-  Handshake,
-} from "lucide-react";
+import { Loader2, ArrowRight, Handshake } from "lucide-react";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import { toast } from "sonner";
 
-const CollaborationRow = ({
-  invite,
-  onAccept,
-  onDecline,
-  processingId,
-}) => {
+const CollaborationRow = ({ invite, onAccept, onDecline, processingId }) => {
   const { t } = useTranslation(["profile", "common"]);
   const call = invite.collaborationCall;
 
@@ -62,7 +53,11 @@ const CollaborationRow = ({
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-bold text-brand-gray-900 truncate">
-                {mentor?.fullName || mentor?.username || t("collaboration.no_mentor", { defaultValue: "No mentor assigned" })}
+                {mentor?.fullName ||
+                  mentor?.username ||
+                  t("collaboration.no_mentor", {
+                    defaultValue: "No mentor assigned",
+                  })}
               </span>
               {mentor && (
                 <Badge className="bg-brand-orange-50 text-brand-orange-600 border-none rounded-full px-2.5 py-0.5 text-[11px] font-bold">

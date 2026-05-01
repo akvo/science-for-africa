@@ -722,6 +722,10 @@ sequenceDiagram
     else onboardingComplete is true
         Frontend->>User: Redirect to /
     end
+
+    Note over Strapi, Frontend: Collaboration Dashboard Population
+    Strapi-->>Frontend: findMany (Collaboration Invites)
+    Note right of Strapi: Deeply populates: collaborationCall, createdByUser, institutionMemberships.institution
 ```
 
 ### 5.2 Implementation Details

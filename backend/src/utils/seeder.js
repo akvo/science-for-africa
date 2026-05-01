@@ -311,6 +311,41 @@ const COLLABORATION_CALLS = [
   },
 ];
 
+const RESOURCES = [
+  {
+    name: "Draft Research Plan: Bio-Diversity",
+    description: "Initial draft for East Africa biodiversity study.",
+    resourceType: "report",
+    status: "approved",
+    communityName: "Community of Researchers",
+    uploadedBy: 0, // Index in users
+  },
+  {
+    name: "Climate Change Policy Brief",
+    description: "Impact on small-scale farming in the region.",
+    resourceType: "publication",
+    status: "pending",
+    communityName: "Community of Innovators",
+    uploadedBy: 1,
+  },
+  {
+    name: "Global Health Best Practices",
+    description: "Dataset for vaccine distribution.",
+    resourceType: "case-study",
+    status: "approved",
+    communityName: "Health and Wellness",
+    uploadedBy: 2,
+  },
+  {
+    name: "Urban Planning Framework",
+    description: "Legacy urban development models (unsupported).",
+    resourceType: "practice-note",
+    status: "declined",
+    communityName: "Community of Innovators",
+    uploadedBy: 1,
+  },
+];
+
 /**
  * Helper to synchronize French translations for a collection
  */
@@ -563,8 +598,7 @@ const seed = async (strapi) => {
               invitedUser: user.id,
               collaborationCall: call.id,
               email: user.email,
-              inviteStatus:
-                call.forcedStatus || "Accepted",
+              inviteStatus: call.forcedStatus || "Accepted",
               role: "Collaborator",
               invitedAt: new Date(),
             },
@@ -596,6 +630,70 @@ const seed = async (strapi) => {
     strapi.log.info(
       `Created ${inviteCreatedCount} new collaboration invites for ${users.length} users.`,
     );
+  }
+
+  // 6. Seed Resources (Development only)
+  strapi.log.info("Ensuring resources exist...");
+
+  // 6a. Seed static resources
+  for (const data of RESOURCES) {
+    const existing = await strapi.db
+      .query("api::resource.resource")
+      .findOne({ where: { name: data.name } });
+
+    if (!existing) {
+      strapi.log.info(`Creating static resource: ${data.name}`);
+      const { communityName, uploadedBy, ...resourceData } = data;
+
+      const community = await strapi.db
+        .query("api::community.community")
+        .findOne({ where: { name: communityName } });
+
+      const user = users[uploadedBy] || users[0];
+
+      await strapi.db.query("api::resource.resource").create({
+        data: {
+          ...resourceData,
+          community: community?.id,
+          uploadedBy: user?.id,
+          slug: data.name
+            .toLowerCase()
+            .replace(/ /g, "-")
+            .replace(/[^\w-]/g, ""),
+        },
+      });
+    }
+  }
+
+  // 6b. Ensure EVERY user has at least one resource (Development only)
+  const allCommunities = await strapi.db
+    .query("api::community.community")
+    .findMany();
+  for (const user of users) {
+    const resourceCount = await strapi.db
+      .query("api::resource.resource")
+      .count({ where: { uploadedBy: user.id } });
+
+    if (resourceCount === 0) {
+      strapi.log.info(`Creating default resource for user: ${user.username}`);
+      const community = allCommunities[0]; // Link to first community
+      const title = `Technical Note - ${user.username}`;
+
+      await strapi.db.query("api::resource.resource").create({
+        data: {
+          name: title,
+          description: `Automatically generated research note for ${user.username}.`,
+          resourceType: "practice-note",
+          status: "approved",
+          community: community?.id,
+          uploadedBy: user.id,
+          slug: title
+            .toLowerCase()
+            .replace(/ /g, "-")
+            .replace(/[^\w-]/g, ""),
+        },
+      });
+    }
   }
 
   // 3b. Synchronize French Translations for critical collections
@@ -645,6 +743,7 @@ const seed = async (strapi) => {
     "api::collaboration-call.collaboration-call.findOne",
     "api::collaboration-invite.collaboration-invite.create",
     "api::collaboration-invite.collaboration-invite.find",
+    "api::collaboration-invite.collaboration-invite.decline",
     "api::chat-message.chat-message.find",
     "api::chat-message.chat-message.create",
     "api::resource.resource.find",

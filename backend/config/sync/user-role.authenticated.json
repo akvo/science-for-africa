@@ -11,7 +11,7 @@
       "locale": null
     },
     {
-      "documentId": "li5uayl4tde3v14ppv6oe67p",
+      "documentId": "n9rxnm9tf8iv8vkxbjlekfmq",
       "action": "api::auth.profile.getMe",
       "locale": null
     },
@@ -41,7 +41,7 @@
       "locale": null
     },
     {
-      "documentId": "cjm9ipwpq6khegjmou03w4fk",
+      "documentId": "qs1iyyqqwzkutena8kyeyu3p",
       "action": "api::collaboration-call.collaboration-call.create-with-invites",
       "locale": null
     },
@@ -68,6 +68,11 @@
     {
       "documentId": "ow1seqagnosdmzfsa1qjtyv5",
       "action": "api::collaboration-invite.collaboration-invite.create",
+      "locale": null
+    },
+    {
+      "documentId": "ixol40p8sdb2u0oj6gucqbhg",
+      "action": "api::collaboration-invite.collaboration-invite.decline",
       "locale": null
     },
     {

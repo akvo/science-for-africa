@@ -117,6 +117,21 @@
           "sortable": true
         }
       },
+      "community": {
+        "edit": {
+          "label": "community",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "name"
+        },
+        "list": {
+          "label": "community",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdByUser": {
         "edit": {
           "label": "createdByUser",
@@ -267,6 +282,10 @@
         [
           {
             "name": "invites",
+            "size": 6
+          },
+          {
+            "name": "community",
             "size": 6
           }
         ]

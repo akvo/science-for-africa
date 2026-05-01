@@ -11,13 +11,18 @@
       "locale": null
     },
     {
-      "documentId": "oze5cijnby88c3yjgnbswqha",
+      "documentId": "h49k4jth39597zt0xzllcu1a",
       "action": "api::auth.profile.getMe",
       "locale": null
     },
     {
       "documentId": "kx7x8wmp2g5w7385pmtd97y0",
       "action": "api::auth.profile.me",
+      "locale": null
+    },
+    {
+      "documentId": "yvrdvjxn71l1r0ckjc4vsq9c",
+      "action": "api::auth.profile.mentees",
       "locale": null
     },
     {
@@ -41,7 +46,7 @@
       "locale": null
     },
     {
-      "documentId": "t2gf6m9drqntic6rermc49le",
+      "documentId": "t1w5rvphe5esgqvcw5ny0ts0",
       "action": "api::collaboration-call.collaboration-call.create-with-invites",
       "locale": null
     },

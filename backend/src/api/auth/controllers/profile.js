@@ -52,7 +52,7 @@ module.exports = ({ strapi }) => ({
         .findMany({
           filters: {
             invitedUser: user.id,
-            inviteStatus: "Accepted",
+            inviteStatus: { $in: ["Accepted", "Pending"] },
           },
           populate: ["collaborationCall"],
           status: "published",

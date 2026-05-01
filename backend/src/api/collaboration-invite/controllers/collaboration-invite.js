@@ -112,5 +112,41 @@ module.exports = createCoreController(
 
       return { success: true, data: updated };
     },
+
+    async decline(ctx) {
+      const { id } = ctx.params;
+
+      const row = await strapi.db
+        .query("api::collaboration-invite.collaboration-invite")
+        .findOne({
+          where: { id },
+          populate: ["invitedUser"],
+        });
+
+      if (!row) {
+        return ctx.notFound("Invite not found");
+      }
+
+      if (row.inviteStatus === "Accepted") {
+        return ctx.badRequest("This invite has already been accepted");
+      }
+
+      const user = ctx.state.user;
+      const data = {};
+      if (row.inviteStatus !== "Declined") data.inviteStatus = "Declined";
+      if (user && !row.invitedUser) data.invitedUser = user.id;
+
+      if (Object.keys(data).length > 0) {
+        await strapi
+          .documents("api::collaboration-invite.collaboration-invite")
+          .update({ documentId: row.documentId, data });
+      }
+
+      const updated = await strapi
+        .documents("api::collaboration-invite.collaboration-invite")
+        .findOne({ documentId: row.documentId });
+
+      return { success: true, data: updated };
+    },
   }),
 );

@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useOnboardingStore } from "@/lib/onboarding-store";
+import { useAuthStore } from "@/lib/auth-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,7 +11,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeft, Loader2, Search } from "lucide-react";
-import { fetchFromStrapi, fetchLocalized } from "@/lib/strapi";
+import {
+  fetchFromStrapi,
+  fetchLocalized,
+  updateUserProfile,
+} from "@/lib/strapi";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
@@ -22,6 +27,7 @@ const OnboardingStep3 = () => {
   const { locale } = router;
   const { formData, updateFormData, nextStep, prevStep, skipStep } =
     useOnboardingStore();
+  const { updateUser } = useAuthStore();
 
   const [institutions, setInstitutions] = useState([]);
   const [searchTerm, setSearchTerm] = useState(
@@ -29,6 +35,7 @@ const OnboardingStep3 = () => {
   );
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const searchTimeoutRef = useRef(null);
 
@@ -69,8 +76,27 @@ const OnboardingStep3 = () => {
     setShowDropdown(false);
   };
 
-  const handleConfirm = () => {
-    nextStep();
+  const handleConfirm = async () => {
+    setIsSubmitting(true);
+    try {
+      // Sync institution creation/lookup to backend immediately
+      // This ensures it appears in Step 5 search
+      const result = await updateUserProfile({
+        ...formData,
+      });
+
+      if (result?.user) {
+        updateUser(result.user);
+      }
+      nextStep();
+    } catch (error) {
+      console.error("Failed to sync education institution:", error);
+      // We still proceed to next step to avoid blocking user flow,
+      // but it might fail to show up in Step 5 search if this fails.
+      nextStep();
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const isFormValid =
@@ -83,14 +109,14 @@ const OnboardingStep3 = () => {
       <div className="flex items-center justify-between mb-24">
         <button
           onClick={prevStep}
-          className="flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"
+          className="flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium cursor-pointer"
         >
           <ArrowLeft size={18} />
           <span>{t("steps.back")}</span>
         </button>
         <button
           onClick={skipStep}
-          className="text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"
+          className="text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium cursor-pointer"
         >
           {t("steps.skip")}
         </button>
@@ -159,7 +185,7 @@ const OnboardingStep3 = () => {
                 <button
                   key={index}
                   onClick={() => handleSelect(inst)}
-                  className="w-full text-left px-4 py-3 hover:bg-brand-teal-50 transition-colors text-md text-brand-gray-900 border-b last:border-0 border-brand-gray-50"
+                  className="w-full text-left px-4 py-3 hover:bg-brand-teal-50 transition-colors text-md text-brand-gray-900 border-b last:border-0 border-brand-gray-50 cursor-pointer"
                 >
                   {inst.name}
                 </button>
@@ -167,7 +193,7 @@ const OnboardingStep3 = () => {
               {!loading && searchTerm.length > 2 && (
                 <button
                   onClick={() => setShowDropdown(false)}
-                  className="w-full text-left px-4 py-3 bg-brand-teal-50 hover:bg-brand-teal-100 transition-colors text-md text-brand-teal-700 font-medium italic"
+                  className="w-full text-left px-4 py-3 bg-brand-teal-50 hover:bg-brand-teal-100 transition-colors text-md text-brand-teal-700 font-medium italic cursor-pointer"
                 >
                   {t("step3.use_custom_institution", {
                     name: searchTerm,
@@ -184,10 +210,17 @@ const OnboardingStep3 = () => {
       <div className="flex flex-col">
         <Button
           onClick={handleConfirm}
-          disabled={!isFormValid}
+          disabled={!isFormValid || isSubmitting}
           className="w-full h-11 rounded-full text-md font-medium transition-all duration-300 hover:shadow-lg disabled:bg-brand-teal-100 disabled:text-white"
         >
-          {t("steps.confirm")}
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {t("steps.saving", { defaultValue: "Saving..." })}
+            </>
+          ) : (
+            t("steps.confirm")
+          )}
         </Button>
       </div>
     </div>

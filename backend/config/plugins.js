@@ -1,3 +1,5 @@
+const { getFrontendUrl } = require("../src/utils/url-helpers");
+
 const isEmpty = (value) => {
   return (
     value == null || // use `==` to check for null || undefined
@@ -47,17 +49,6 @@ module.exports = ({ env }) => {
         },
       }
     : {};
-
-  const getFrontendUrl = () => {
-    const url = (
-      env("NEXT_PUBLIC_FRONTEND_URL") ||
-      env("FRONTEND_URL") ||
-      env("PUBLIC_URL") ||
-      "http://localhost:3000"
-    ).replace(/\/$/, ""); // Remove trailing slash if present
-
-    return url;
-  };
 
   const frontendUrl = getFrontendUrl();
 

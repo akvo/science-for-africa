@@ -2,6 +2,7 @@
 
 const { createCoreController } = require("@strapi/strapi").factories;
 const { emailTemplate } = require("../../../helpers/email-template");
+const { getFrontendUrl } = require("../../../utils/url-helpers");
 
 /**
  * Select a safe subset of user fields to expose when populating
@@ -115,6 +116,9 @@ module.exports = createCoreController(
         }
         const createdInvites = [];
 
+        // Resolve frontend URL using the shared utility
+        const frontendUrl = getFrontendUrl();
+
         for (const [email, role] of emailRoles) {
           // Check if user exists in the system
           const existingUser = await strapi.db
@@ -138,36 +142,42 @@ module.exports = createCoreController(
           createdInvites.push(invite);
 
           // Send invitation email
-          const frontendUrl =
-            process.env.FRONTEND_URL || "http://localhost:3000";
           const acceptUrl = `${frontendUrl}/collaboration/invite/${invite.id}/accept`;
           const roleLabel = role === "Mentor" ? "a Mentor" : "a Collaborator";
 
           try {
-            await strapi.plugin("email").service("email").send({
-              to: email,
-              subject: `You're invited to collaborate: ${title}`,
-              html: emailTemplate({
-                title: "Collaboration Invitation",
-                body: `
+            await strapi
+              .plugin("email")
+              .service("email")
+              .send({
+                to: email,
+                subject: `You're invited to collaborate: ${title}`,
+                html: emailTemplate({
+                  title: "Collaboration Invitation",
+                  body: `
                   <p>Hello,</p>
                   <p>You've been invited as <strong>${roleLabel}</strong> to join a collaboration call on the Science for Africa platform.</p>
-                  <h2 style="color:#008080;margin:24px 0 8px;">${title}</h2>
-                  <p style="color:#666;">${description}</p>
-                  <p style="margin-top:24px;">
-                    <a href="${acceptUrl}" style="display:inline-block;padding:12px 32px;background-color:#008080;color:#ffffff;text-decoration:none;border-radius:8px;font-weight:bold;">
+
+                  <div style="margin: 24px 0; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border-left: 4px solid #008080;">
+                    <h2 style="color:#008080;margin:0 0 8px;font-size:18px;">${title}</h2>
+                    <p style="color:#666;margin:0;font-size:14px;line-height:1.5;">${description}</p>
+                  </div>
+
+                  <div style="text-align: center; margin: 32px 0;">
+                    <a href="${acceptUrl}" style="background-color: #008080; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
                       Accept Invitation
                     </a>
-                  </p>
-                  <p style="margin-top:16px;font-size:13px;color:#999;">
-                    If the button doesn't work, copy and paste this link:<br/>
-                    <a href="${acceptUrl}" style="color:#008080;">${acceptUrl}</a>
+                  </div>
+
+                  <p style="margin-top:24px;font-size:13px;color:#999;">
+                    If the button doesn't work, you can also copy and paste the following link into your browser:<br/>
+                    <a href="${acceptUrl}" style="color:#008080;word-break:break-all;">${acceptUrl}</a>
                   </p>
                 `,
-                footer:
-                  "You received this email because someone invited you to collaborate on Science for Africa.",
-              }),
-            });
+                  footer:
+                    "You received this email because someone invited you to collaborate on Science for Africa.",
+                }),
+              });
           } catch (emailError) {
             strapi.log.warn(
               `Failed to send invite email to ${email}: ${emailError.message}`,

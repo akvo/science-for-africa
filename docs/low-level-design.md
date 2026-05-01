@@ -45,6 +45,16 @@ To maintain DRY principles and UI consistency, common patterns are extracted int
 | `@strapi/provider-email-nodemailer` | 5.33 | Email delivery |
 | `@strapi-community/strapi-provider-upload-google-cloud-storage` | 5 | Cloud file storage |
 | Jest + Supertest | 30 / 7 | Backend API testing |
+| `@strapi/utils` | - | Internal Strapi utilities |
+
+#### 1.2.1 Backend Utilities
+
+Common backend patterns are extracted into `src/utils/` to ensure consistency:
+
+| Utility | Purpose |
+|---|---|
+| `url-helpers.js` | Centralized frontend URL resolution (`getFrontendUrl`) with environment variable priority. |
+
 
 ### 1.3 API Layer
 
@@ -106,7 +116,7 @@ All notifications are email-only and dispatched synchronously via the Strapi ema
 | Email verification | New user | Clickable verification link AND a copyable OTP code (dual-path: user can click the link in email or paste OTP into verification page) |
 | Password reset | User | Reset link with token |
 | Post moderation result | Post author | Approval or decline with reason |
-| Collaboration invite | Invitee | Link to collaboration call |
+| Collaboration invite | Invitee | Branded email with call summary card and centered CTA button |
 | Mentorship request | Potential mentor | Collaboration details with accept/decline link |
 | New member joined | Community admins | Member name and community |
 
@@ -724,6 +734,10 @@ To prevent hardcoded `localhost` redirects in production or testing environments
 4. `http://localhost:3000` (Local development fallback)
 
 This resolution occurs during the `bootstrap` phase and is applied to the Strapi `grant` store configuration.
+
+**Centralized URL Utility:**
+To maintain consistency, all backend logic (including `plugins.js`, `index.js`, and custom controllers) uses the `getFrontendUrl()` utility from `src/utils/url-helpers.js`. This prevents desynchronization between OAuth callbacks, email links, and redirect settings.
+
 
 **SSR Handshake:**
 The frontend uses a Server-Side Rendering (SSR) handshake via `getServerSideProps` to exchange the Google `access_token` for a Strapi `jwt`. This ensures the session is established securely on the server before the initial page render.

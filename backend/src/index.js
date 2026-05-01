@@ -1,4 +1,5 @@
 const { emailTemplate } = require("./helpers/email-template");
+const { getFrontendUrl } = require("./utils/url-helpers");
 
 module.exports = {
   /**
@@ -321,11 +322,7 @@ module.exports = {
     // Setting this to an empty string tells Strapi to return a JSON response instead of a 302 redirect.
     const emailRedirectUrl = "";
 
-    const frontendUrl =
-      process.env.FRONTEND_URL ||
-      process.env.PUBLIC_URL ||
-      process.env.NEXT_PUBLIC_FRONTEND_URL ||
-      "http://localhost:3000";
+    const frontendUrl = getFrontendUrl();
 
     strapi.log.info(`Resolved Frontend URL for bootstrap: ${frontendUrl}`);
 
@@ -434,12 +431,7 @@ module.exports = {
       const clientId = process.env.GOOGLE_CLIENT_ID;
       const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 
-      const frontendUrlForCallback = (
-        process.env.NEXT_PUBLIC_FRONTEND_URL ||
-        process.env.FRONTEND_URL ||
-        process.env.PUBLIC_URL ||
-        "http://localhost:3000"
-      ).replace(/\/$/, "");
+      const frontendUrlForCallback = getFrontendUrl();
 
       const backendUrlForLogs = (
         process.env.BACKEND_URL || "http://localhost:1337"
@@ -471,12 +463,7 @@ module.exports = {
           key: "advanced",
         });
         const currentAdvanced = await advancedStore.get();
-        const frontendUrl = (
-          process.env.NEXT_PUBLIC_FRONTEND_URL ||
-          process.env.FRONTEND_URL ||
-          process.env.PUBLIC_URL ||
-          "http://localhost:3000"
-        ).replace(/\/$/, "");
+        const frontendUrl = getFrontendUrl();
 
         await advancedStore.set({
           value: {

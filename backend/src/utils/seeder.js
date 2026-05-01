@@ -561,11 +561,17 @@ const seed = async (strapi) => {
         creatorId = mentorUser?.id || null;
       }
 
+      // Find community relation
+      const community = await strapi.db
+        .query("api::community.community")
+        .findOne({ where: { name: data.communityName } });
+
       call = await strapi.db
         .query("api::collaboration-call.collaboration-call")
         .create({
           data: {
             ...callData,
+            community: community?.id,
             createdByUser: creatorId,
           },
         });

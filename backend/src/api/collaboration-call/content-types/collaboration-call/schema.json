@@ -42,6 +42,11 @@
     "communityName": {
       "type": "string"
     },
+    "community": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::community.community"
+    },
     "createdByUser": {
       "type": "relation",
       "relation": "manyToOne",

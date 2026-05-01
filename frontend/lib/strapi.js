@@ -605,3 +605,16 @@ export async function fetchMyResources() {
     return null;
   }
 }
+
+/**
+ * Fetch mentees for the current authenticated mentor
+ */
+export async function fetchMentees() {
+  try {
+    const response = await apiClient.get("/auth/mentees");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching mentees:", error);
+    return null;
+  }
+}

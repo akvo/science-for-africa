@@ -245,47 +245,70 @@ const COMMUNITIES = [
 const COLLABORATION_CALLS = [
   {
     title: "Bio-Diversity Research Project",
-    description:
-      "Join our cross-border research team to study biodiversity patterns across East Africa.",
+    description: "Study biodiversity patterns across East Africa.",
     startDate: "2024-01-01T00:00:00.000Z",
     endDate: "2024-12-31T23:59:59.000Z",
     status: "Active",
-    topics: ["Biodiversity", "Ecology", "East Africa"],
+    topics: ["Biodiversity", "Ecology"],
     communityName: "Community of Researchers",
-    mentorIndex: 0, // Liam Smith (if users are seeded in standard order)
+    mentorIndex: 0,
+    forcedStatus: "Pending", // For seeder logic
   },
   {
     title: "Climate Change Impact Study",
-    description:
-      "A collaborative study on the socioeconomic impacts of climate change on small-scale farmers.",
+    description: "Socioeconomic impacts on small-scale farmers.",
     startDate: "2024-03-01T00:00:00.000Z",
     endDate: "2025-02-28T23:59:59.000Z",
     status: "Active",
-    topics: ["Climate Change", "Agriculture", "Socioeconomic"],
+    topics: ["Climate Change"],
     communityName: "Community of Innovators",
-    mentorIndex: 1, // Emma Johnson
+    mentorIndex: 1,
+    forcedStatus: "Accepted",
   },
   {
     title: "Global Health Initiative",
-    description:
-      "Past collaboration focusing on vaccine distribution strategies in sub-Saharan Africa.",
+    description: "Vaccine distribution strategies.",
     startDate: "2023-01-01T00:00:00.000Z",
     endDate: "2023-12-31T23:59:59.000Z",
     status: "Completed",
-    topics: ["Public Health", "Vaccines", "Africa"],
+    topics: ["Public Health"],
     communityName: "Health and Wellness",
-    mentorIndex: null, // Test "No mentor assigned"
+    mentorIndex: null, // No Mentor Assigned
+    forcedStatus: "Accepted",
   },
   {
     title: "Sustainable Urban Development",
-    description: "Developing green infrastructure models for rapidly growing African cities.",
+    description: "Green infrastructure models.",
     startDate: "2024-06-01T00:00:00.000Z",
     endDate: "2025-05-31T23:59:59.000Z",
     status: "Active",
-    topics: ["Urban Planning", "Sustainability", "Engineering"],
+    topics: ["Urban Planning"],
     communityName: "Community of Innovators",
-    mentorIndex: 2, // Another user
+    mentorIndex: 2,
+    forcedStatus: "Pending",
   },
+  {
+    title: "Renewable Energy Access",
+    description: "Solar micro-grids for rural communities.",
+    startDate: "2023-06-01T00:00:00.000Z",
+    endDate: "2024-05-31T23:59:59.000Z",
+    status: "Completed",
+    topics: ["Energy", "Sustainability"],
+    communityName: "Community of Researchers",
+    mentorIndex: 0,
+    forcedStatus: "Pending", // Pending but project completed
+  },
+  {
+    title: "AI in African Agriculture",
+    description: "Machine learning models for crop yield prediction.",
+    startDate: "2024-08-01T00:00:00.000Z",
+    endDate: "2025-07-31T23:59:59.000Z",
+    status: "Active",
+    topics: ["AI", "AgriTech"],
+    communityName: "Community of Innovators",
+    mentorIndex: null, // No Mentor Assigned
+    forcedStatus: "Accepted",
+  }
 ];
 
 /**
@@ -493,11 +516,14 @@ const seed = async (strapi) => {
     if (!call) {
       strapi.log.info(`Creating collaboration call: ${data.title}`);
       const { mentorIndex, ...callData } = data;
-      
-      // Assign mentor based on index, or null
+
+      // Determine creator (mentor)
+      // If mentorIndex is null, it's a "No mentor" case
       let creatorId = null;
-      if (mentorIndex !== null && users[mentorIndex]) {
-        creatorId = users[mentorIndex].id;
+      if (mentorIndex !== null) {
+        // Use the user at mentorIndex, or fallback to the first user
+        const mentorUser = users[mentorIndex] || users[0];
+        creatorId = mentorUser?.id || null;
       }
 
       call = await strapi.db
@@ -533,7 +559,7 @@ const seed = async (strapi) => {
               invitedUser: user.id,
               collaborationCall: call.id,
               email: user.email,
-              inviteStatus: allCalls.indexOf(call) < 2 ? "Pending" : "Accepted",
+              inviteStatus: call.forcedStatus || (allCalls.indexOf(call) < 2 ? "Pending" : "Accepted"),
               role: "Collaborator",
               invitedAt: new Date(),
             },

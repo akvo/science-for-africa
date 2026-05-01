@@ -62,19 +62,25 @@ const CollaborationRow = ({
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-bold text-brand-gray-900 truncate">
-                {mentor?.fullName || mentor?.username || "Unknown Mentor"}
+                {mentor?.fullName || mentor?.username || t("collaboration.no_mentor", { defaultValue: "No mentor assigned" })}
               </span>
-              <Badge className="bg-brand-orange-50 text-brand-orange-600 border-none rounded-full px-2.5 py-0.5 text-[11px] font-bold">
-                {t("collaboration.mentor_badge", { defaultValue: "Mentor" })}
-              </Badge>
+              {mentor && (
+                <Badge className="bg-brand-orange-50 text-brand-orange-600 border-none rounded-full px-2.5 py-0.5 text-[11px] font-bold">
+                  {t("collaboration.mentor_badge", { defaultValue: "Mentor" })}
+                </Badge>
+              )}
             </div>
-            <span className="text-sm text-brand-gray-500 truncate">
-              {mentor?.biography?.substring(0, 40) || "Researcher"}
-            </span>
-            {mentor?.institutionMemberships?.[0]?.institution?.name && (
-              <span className="text-xs text-brand-gray-400 truncate mt-0.5">
-                {mentor.institutionMemberships[0].institution.name}
-              </span>
+            {mentor && (
+              <>
+                <span className="text-sm text-brand-gray-500 truncate">
+                  {mentor?.biography?.substring(0, 40) || "Researcher"}
+                </span>
+                {mentor?.institutionMemberships?.[0]?.institution?.name && (
+                  <span className="text-xs text-brand-gray-400 truncate mt-0.5">
+                    {mentor.institutionMemberships[0].institution.name}
+                  </span>
+                )}
+              </>
             )}
           </div>
         </div>

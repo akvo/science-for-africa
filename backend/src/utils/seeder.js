@@ -252,6 +252,7 @@ const COLLABORATION_CALLS = [
     status: "Active",
     topics: ["Biodiversity", "Ecology", "East Africa"],
     communityName: "Community of Researchers",
+    mentorIndex: 0, // Liam Smith (if users are seeded in standard order)
   },
   {
     title: "Climate Change Impact Study",
@@ -262,6 +263,7 @@ const COLLABORATION_CALLS = [
     status: "Active",
     topics: ["Climate Change", "Agriculture", "Socioeconomic"],
     communityName: "Community of Innovators",
+    mentorIndex: 1, // Emma Johnson
   },
   {
     title: "Global Health Initiative",
@@ -272,6 +274,17 @@ const COLLABORATION_CALLS = [
     status: "Completed",
     topics: ["Public Health", "Vaccines", "Africa"],
     communityName: "Health and Wellness",
+    mentorIndex: null, // Test "No mentor assigned"
+  },
+  {
+    title: "Sustainable Urban Development",
+    description: "Developing green infrastructure models for rapidly growing African cities.",
+    startDate: "2024-06-01T00:00:00.000Z",
+    endDate: "2025-05-31T23:59:59.000Z",
+    status: "Active",
+    topics: ["Urban Planning", "Sustainability", "Engineering"],
+    communityName: "Community of Innovators",
+    mentorIndex: 2, // Another user
   },
 ];
 
@@ -479,12 +492,20 @@ const seed = async (strapi) => {
 
     if (!call) {
       strapi.log.info(`Creating collaboration call: ${data.title}`);
+      const { mentorIndex, ...callData } = data;
+      
+      // Assign mentor based on index, or null
+      let creatorId = null;
+      if (mentorIndex !== null && users[mentorIndex]) {
+        creatorId = users[mentorIndex].id;
+      }
+
       call = await strapi.db
         .query("api::collaboration-call.collaboration-call")
         .create({
           data: {
-            ...data,
-            createdByUser: users[0]?.id, // Default to first user as creator
+            ...callData,
+            createdByUser: creatorId,
           },
         });
     }
@@ -512,7 +533,7 @@ const seed = async (strapi) => {
               invitedUser: user.id,
               collaborationCall: call.id,
               email: user.email,
-              inviteStatus: "Accepted",
+              inviteStatus: allCalls.indexOf(call) < 2 ? "Pending" : "Accepted",
               role: "Collaborator",
               invitedAt: new Date(),
             },

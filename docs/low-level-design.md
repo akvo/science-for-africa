@@ -798,3 +798,21 @@ The `api/community/leave` controller implements a multi-layered synchronization 
 
 ### 7.3 Data Consistency Rule
 Every "Join" action MUST create both the relation and the collection record. Every "Leave" action MUST delete both. This dual-write/dual-delete requirement is enforced at the controller level to maintain a "Single Source of Truth" across the relational model.
+
+## 8. Onboarding Data Persistence
+
+To balance user experience with data integrity, the onboarding flow utilizes a hybrid persistence strategy.
+
+### 8.1 Multi-Stage Synchronization
+While most onboarding data is held in local client state (`Zustand`) to ensure a fast, lag-free UI, certain milestones trigger backend synchronization before the final completion:
+
+- **Milestone 1: Education (Step 3)**: Clicking "Confirm" triggers an immediate `updateUserProfile` call.
+    - **Rationale**: The backend automatically creates new `Institution` records if the name provided doesn't exist. By syncing at Step 3, any new institution the user studied at is immediately added to the database.
+    - **Impact**: When the user reaches Step 5 (Institutional Affiliation), they can search for and find the institution they just "created" in Step 3, ensuring data reuse and a consistent lookup experience.
+
+- **Milestone 2: Completion (Step 5)**: The final submission sets the `onboardingComplete` flag.
+    - **Rationale**: This is the atomic "Gatekeeper" flag. Only after this call returns successfully is the user's profile considered complete, unlocking dashboard access and platform interactions.
+
+### 8.2 Partial Sync Robustness
+The partial sync in Step 3 is designed to be **non-blocking**. If the API call fails (e.g., due to temporary network issues), the frontend logs the error but still allows the user to proceed to Step 4. This prioritizes the user's progress while accepting a minor risk that the institution might not be searchable in Step 5 if the sync failed.
+

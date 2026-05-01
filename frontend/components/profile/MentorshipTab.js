@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { fetchMentees, getStrapiMedia } from "@/lib/strapi";
+import { getInitials } from "@/lib/utils";
 import { Loader2, ArrowRight, User, GraduationCap } from "lucide-react";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
@@ -25,12 +26,12 @@ const MenteeRow = ({ mentorship }) => {
           {/* Collaboration Space Column - Only show for the first mentee in the group */}
           <td className="py-6 px-6 align-top">
             <div className="flex flex-col gap-2">
-              <h3 className="text-base font-normal text-brand-gray-900 leading-snug">
+              <h3 className="text-base font-normal text-brand-gray-900 leading-snug whitespace-normal wrap-break-words">
                 {collaborationCall.title}
               </h3>
               <Link
                 href={`/community/calls/${collaborationCall.documentId || collaborationCall.id}`}
-                className="flex items-center gap-2 text-sm font-medium text-brand-teal-600 hover:text-brand-teal-700 transition-colors"
+                className="flex items-center gap-2 text-sm font-normal text-brand-teal-600 hover:text-brand-teal-700 transition-colors"
               >
                 {t("common:view", { defaultValue: "View" })}
                 <ArrowRight className="size-4" />
@@ -51,7 +52,7 @@ const MenteeRow = ({ mentorship }) => {
                     alt={mentee.fullName || mentee.username}
                   />
                   <AvatarFallback className="text-sm text-brand-teal-700 font-bold bg-brand-teal-50">
-                    <User className="size-5" />
+                    {getInitials(mentee.fullName || mentee.username)}
                   </AvatarFallback>
                 </Avatar>
               </Link>
@@ -59,18 +60,12 @@ const MenteeRow = ({ mentorship }) => {
                 <div className="flex items-center gap-2 flex-wrap">
                   <Link
                     href={`/profile/${mentee.documentId || mentee.id}`}
-                    className="text-sm font-normal text-brand-gray-900 truncate hover:text-brand-teal-600 transition-colors"
+                    className="text-sm font-normal text-brand-gray-900 whitespace-normal wrap-break-words hover:text-brand-teal-600 transition-colors"
                   >
                     {mentee.fullName || mentee.username}
                   </Link>
-                  <Badge className="bg-brand-teal-50 text-brand-teal-700 border-none rounded-full px-2.5 py-0.5 text-[11px] font-bold">
-                    {mentee.mentorshipRole ||
-                      t("mentorship.collaborator", {
-                        defaultValue: "Collaborator",
-                      })}
-                  </Badge>
                 </div>
-                <span className="text-sm text-brand-gray-500 truncate mt-1">
+                <span className="text-sm text-brand-gray-500 whitespace-normal wrap-break-words mt-1">
                   {mentee.position ||
                     t("mentorship.researcher", { defaultValue: "Researcher" })}
                 </span>
@@ -81,17 +76,14 @@ const MenteeRow = ({ mentorship }) => {
           {/* Education Column */}
           <td className="py-6 px-6 align-top">
             <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-2 text-sm text-brand-gray-900 font-normal">
-                <GraduationCap className="size-4 text-brand-gray-400" />
-                <span>
-                  {mentee.educationLevel ||
-                    t("common:not_specified", { defaultValue: "N/A" })}
-                </span>
+              <div className="flex items-center gap-2 text-sm text-brand-gray-900 font-normal whitespace-normal wrap-break-words">
+                {mentee.educationLevel ||
+                  t("common:not_specified", { defaultValue: "N/A" })}
               </div>
               {mentee.highestEducationInstitution?.name && (
-                <span className="text-xs text-brand-gray-400 truncate ml-6">
+                <div className="text-xs text-brand-gray-400 whitespace-normal wrap-break-words">
                   {mentee.highestEducationInstitution.name}
-                </span>
+                </div>
               )}
             </div>
           </td>
@@ -164,12 +156,12 @@ const MentorshipTab = () => {
         <table className="w-full border-collapse text-left bg-white">
           <thead className="bg-brand-gray-50 border-b border-brand-gray-100">
             <tr>
-              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 tracking-wider w-[25%]">
+              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 tracking-wider w-[40%]">
                 {t("mentorship.header_space", {
                   defaultValue: "Collaboration space",
                 })}
               </th>
-              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 tracking-wider w-[35%]">
+              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 tracking-wider w-[25%]">
                 {t("mentorship.header_mentees", {
                   defaultValue: "Users mentoring",
                 })}
@@ -179,7 +171,7 @@ const MentorshipTab = () => {
                   defaultValue: "Education",
                 })}
               </th>
-              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 tracking-wider text-right w-[15%]">
+              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 tracking-wider text-right w-[10%]">
                 {t("mentorship.header_actions", { defaultValue: "Actions" })}
               </th>
             </tr>

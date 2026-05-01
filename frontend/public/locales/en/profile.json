@@ -107,5 +107,18 @@
     "explore": "Explore community",
     "delete_confirm_title": "Delete Resource",
     "delete_confirm_description": "Are you sure you want to delete this resource? This action cannot be undone."
+  },
+  "mentorship": {
+    "title": "Mentorship",
+    "description": "View and manage your mentorship relations.",
+    "header_space": "Collaboration space",
+    "header_mentees": "Users mentoring",
+    "header_education": "Education",
+    "header_actions": "Actions",
+    "collaborator": "Collaborator",
+    "researcher": "Researcher",
+    "empty_title": "You don't have any mentees yet",
+    "empty_desc": "When you are assigned as a mentor to a collaboration, your mentees will appear here.",
+    "explore_calls": "Explore collaboration calls"
   }
 }

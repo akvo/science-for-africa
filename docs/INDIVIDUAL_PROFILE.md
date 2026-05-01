@@ -15,6 +15,7 @@ Users access their profile via the user dropdown in the Navbar. The profile is o
 - [x] **Community Actions**: Ability to "Leave" a community with a shadcn-based confirmation modal.
 - [x] **Badges**: Show "Joined" status badges (pills) matching the design spec.
 - [x] **Resources Tab**: Access to saved and uploaded documents with status tracking.
+- [x] **Mentorship Tab**: Dedicated list for mentors to monitor their mentees across collaborations.
 
 ---
 
@@ -40,7 +41,7 @@ graph TD
     B -->|Content| H[User Posts API]
     B -->|Events| I[Event Registration API]
     B -->|Courses| J[Course Enrollment API]
-    B -->|Mentorship| K[Mentorship Connection API]
+    B -->|Mentorship| K[Mentorship API]
 
     C -->|Update| L[PUT /api/auth/me]
     D -->|Leave| M[POST /api/communities/:id/leave]
@@ -97,6 +98,13 @@ graph TD
 - [x] **Collaboration Tab**: Monitor involvement in active and completed collaboration spaces.
 - [x] **Project Details**: Display project objectives and relevant tags.
 - [x] **Status Badges**: Clear "Active" (green) or "Completed" (red) indicators.
+- [x] **Request Display**: The "Collaboration" tab lists all incoming requests/invitations.
+- [x] **Acceptance Action**: Each request includes "Accept" and "Decline" buttons.
+- [x] **Membership Status**: Accepting immediately grants "Member" status; doing nothing keeps the user as a "Visitor" (Pending).
+- [x] **Mentor Details**: Displays the assigned mentor's name and institution (if available).
+- [x] **No Mentor Fallback**: Displays "No mentor assigned" when a collaboration has no linked creator.
+- [x] **Interaction Restrictions**: Posting/Commenting is disabled until "Accept" is clicked.
+- [x] **Public Visibility**: Collaboration spaces remain publicly viewable regardless of membership status.
 
 #### Resource & Activity
 - [x] **Resources Tab**: Access and download technical documents or reports associated with the profile.
@@ -113,7 +121,7 @@ The following features were identified in the initial discovery but are not part
 - **My Content**: Chronological feed of own posts with interaction counts (bookmarks, comments, shares).
 - **Event Attendance**: Management of upcoming and past attendances.
 - **Courses & Certifications**: Educational progress and certifications.
-*   **Mentorship**: Management of mentorship relationships.
+*   **Mentorship**: Management of mentorship relationships. (Implemented)
 - **Quick Join**: Join community directly from a saved post view.
 - **Public Profiles**: Publicly accessible profile URLs.
 - **Notification Preferences**: Granular control over platform alerts.
@@ -140,6 +148,13 @@ The following features were identified in the initial discovery but are not part
 - [x] **Resources Tab**: Implement document access, download, and status tracking.
 - [x] **Deletion Flow**: Enable users to remove their own resources.
 - [x] **Empty States**: Implement for all implemented tabs.
+
+### Phase 3: Collaboration Acceptance (Current Sprint)
+- [x] **Backend: Profile Controller**: Include `Pending` invites in the `me` payload.
+- [x] **Backend: Security**: Implement membership checks in `chat-message.create`.
+- [x] **Backend: Decline Action**: Implement `POST /api/collaboration-invites/:id/decline`.
+- [x] **Frontend: Dashboard**: Update `CollaborationTab` to render invitation actions.
+- [x] **Frontend: Restrictions**: Disable chat composer for non-members in `[id].js`.
 
 ---
 
@@ -186,10 +201,10 @@ To ensure reliable image rendering across different environments (Docker, stagin
 ---
 
 ## ✅ Implementation Checklist
-- [ ] Unit tests for bio character counting and file validation.
-- [ ] Integration tests for tab switching and empty states.
-- [ ] Documentation updated in README and LLD.
-- [ ] Security audit: verify user cannot edit other users' profiles via API.
+- [x] Unit tests for profile updates and media handling.
+- [x] Integration tests for collaboration acceptance and security gates.
+- [x] Documentation updated in README and LLD.
+- [x] Security audit: verify user cannot edit other users' profiles via API.
 
 ---
 

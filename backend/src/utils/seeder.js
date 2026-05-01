@@ -434,6 +434,58 @@ const synchronizeTranslations = async (strapi, uid) => {
 const seed = async (strapi) => {
   strapi.log.info("Checking if database needs seeding...");
 
+  const allCommunities = await strapi.db
+    .query("api::community.community")
+    .findMany();
+
+  // 0. Update Existing Users with educational data (Development only)
+  const users = await strapi.db
+    .query("plugin::users-permissions.user")
+    .findMany();
+
+  if (users.length > 0) {
+    strapi.log.info(
+      `Enriching ${users.length} existing users with sample data...`,
+    );
+    const allInstitutions = await strapi.db
+      .query("api::institution.institution")
+      .findMany();
+
+    const sampleDegrees = [
+      "Doctorate (PhD)",
+      "Master's Degree",
+      "Bachelor's Degree",
+      "PhD Candidate",
+    ];
+    const sampleRoles = [
+      "Principal Investigator",
+      "Post-doctoral Fellow",
+      "Researcher",
+      "Student",
+    ];
+
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+      // Only update if data is missing
+      if (!user.educationLevel || !user.highestEducationInstitution) {
+        const institution = allInstitutions[i % allInstitutions.length];
+        const degree = sampleDegrees[i % sampleDegrees.length];
+        const role = sampleRoles[i % sampleRoles.length];
+
+        await strapi.db.query("plugin::users-permissions.user").update({
+          where: { id: user.id },
+          data: {
+            educationLevel: user.educationLevel || degree,
+            highestEducationInstitution:
+              user.highestEducationInstitution || institution?.id,
+            roleType: user.roleType || role,
+            onboardingComplete: true,
+          },
+        });
+      }
+    }
+  }
+
   // 1. Seed Interests
   const interestCount = await strapi.db.query("api::interest.interest").count();
   if (interestCount === 0) {
@@ -491,15 +543,7 @@ const seed = async (strapi) => {
   }
 
   // 4. Seed memberships for existing users (Development only)
-  const users = await strapi.db
-    .query("plugin::users-permissions.user")
-    .findMany();
-
-  if (users.length > 0) {
-    const allCommunities = await strapi.db
-      .query("api::community.community")
-      .findMany();
-
+  if (users.length > 0 && allCommunities.length > 0) {
     if (allCommunities.length > 0) {
       strapi.log.info(
         `Checking community memberships for ${users.length} users...`,
@@ -543,25 +587,56 @@ const seed = async (strapi) => {
   strapi.log.info("Ensuring collaboration calls and invites exist...");
 
   const allCalls = [];
+
+  // 5a. Create specific mentorship calls for EACH user to ensure they all have mentees
+  for (let i = 0; i < users.length; i++) {
+    const mentorUser = users[i];
+    const title = `Collaboration with ${mentorUser.fullName || mentorUser.username}`;
+    const community = allCommunities[i % allCommunities.length];
+
+    let call = await strapi.db
+      .query("api::collaboration-call.collaboration-call")
+      .findOne({ where: { title } });
+
+    if (!call) {
+      strapi.log.info(
+        `Creating mentorship call for user: ${mentorUser.username} in community: ${community?.name}`,
+      );
+      call = await strapi.db
+        .query("api::collaboration-call.collaboration-call")
+        .create({
+          data: {
+            title,
+            description: `A shared research initiative led by ${mentorUser.fullName || mentorUser.username}.`,
+            startDate: new Date(),
+            endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), // 1 year from now
+            status: "Active",
+            createdByUser: mentorUser.id,
+            community: community?.id,
+          },
+        });
+    }
+
+    allCalls.push({
+      ...call,
+      forcedStatus: "Accepted",
+      mentorId: mentorUser.id,
+    });
+  }
+
+  // 5b. Seed original static collaboration calls
   for (const data of COLLABORATION_CALLS) {
     let call = await strapi.db
       .query("api::collaboration-call.collaboration-call")
       .findOne({ where: { title: data.title } });
 
     if (!call) {
-      strapi.log.info(`Creating collaboration call: ${data.title}`);
+      strapi.log.info(`Creating static collaboration call: ${data.title}`);
       const { mentorIndex, ...callData } = data;
+      const mentorUser =
+        mentorIndex !== null ? users[mentorIndex] || users[0] : null;
+      const creatorId = mentorUser?.id || null;
 
-      // Determine creator (mentor)
-      // If mentorIndex is null, it's a "No mentor" case
-      let creatorId = null;
-      if (mentorIndex !== null) {
-        // Use the user at mentorIndex, or fallback to the first user
-        const mentorUser = users[mentorIndex] || users[0];
-        creatorId = mentorUser?.id || null;
-      }
-
-      // Find community relation
       const community = await strapi.db
         .query("api::community.community")
         .findOne({ where: { name: data.communityName } });
@@ -576,10 +651,10 @@ const seed = async (strapi) => {
           },
         });
     }
-    // Link the DB object with our static metadata (especially forcedStatus)
     allCalls.push({
       ...call,
       forcedStatus: data.forcedStatus,
+      mentorId: call.createdByUser,
     });
   }
 
@@ -605,7 +680,7 @@ const seed = async (strapi) => {
               collaborationCall: call.id,
               email: user.email,
               inviteStatus: call.forcedStatus || "Accepted",
-              role: "Collaborator",
+              role: call.mentorId === user.id ? "Mentor" : "Collaborator",
               invitedAt: new Date(),
             },
           });
@@ -625,7 +700,10 @@ const seed = async (strapi) => {
             .query("api::collaboration-invite.collaboration-invite")
             .update({
               where: { id: existing.id },
-              data: { inviteStatus: call.forcedStatus || "Accepted" },
+              data: {
+                inviteStatus: call.forcedStatus || "Accepted",
+                role: call.mentorId === user.id ? "Mentor" : "Collaborator",
+              },
             });
         }
       }
@@ -672,9 +750,6 @@ const seed = async (strapi) => {
   }
 
   // 6b. Ensure EVERY user has at least one resource (Development only)
-  const allCommunities = await strapi.db
-    .query("api::community.community")
-    .findMany();
   for (const user of users) {
     const resourceCount = await strapi.db
       .query("api::resource.resource")
@@ -740,6 +815,7 @@ const seed = async (strapi) => {
     "api::auth.profile.update",
     "api::auth.profile.me",
     "api::auth.profile.findUsers",
+    "api::auth.profile.mentees",
     "api::community-membership.community-membership.find",
     "api::community-membership.community-membership.leave",
     "api::collaboration-call.collaboration-call.createWithInvites",

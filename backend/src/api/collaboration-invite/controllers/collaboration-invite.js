@@ -35,10 +35,13 @@ module.exports = createCoreController(
               populate: {
                 collaborationCall: {
                   populate: {
-                    createdByUser: true,
-                    institutionMemberships: {
+                    createdByUser: {
                       populate: {
-                        institution: true
+                        institutionMemberships: {
+                          populate: {
+                            institution: true
+                          }
+                        }
                       }
                     }
                   }

@@ -11,7 +11,7 @@
       "locale": null
     },
     {
-      "documentId": "x8czrt4ajfgabrr7do76juwz",
+      "documentId": "li5uayl4tde3v14ppv6oe67p",
       "action": "api::auth.profile.getMe",
       "locale": null
     },
@@ -41,7 +41,7 @@
       "locale": null
     },
     {
-      "documentId": "c34fxubu4nmqbsdj3xlo238g",
+      "documentId": "cjm9ipwpq6khegjmou03w4fk",
       "action": "api::collaboration-call.collaboration-call.create-with-invites",
       "locale": null
     },
@@ -116,8 +116,23 @@
       "locale": null
     },
     {
+      "documentId": "djqfc9wz052vxpnnxqrijdcj",
+      "action": "api::resource-comment.resource-comment.create",
+      "locale": null
+    },
+    {
+      "documentId": "ybzhahtd0fyqac91vwyby28v",
+      "action": "api::resource-comment.resource-comment.find",
+      "locale": null
+    },
+    {
       "documentId": "j42deao778507qctfjysjb21",
       "action": "api::resource.resource.create",
+      "locale": null
+    },
+    {
+      "documentId": "delresource001",
+      "action": "api::resource.resource.delete",
       "locale": null
     },
     {
@@ -128,11 +143,6 @@
     {
       "documentId": "rv4eo9g2m62voy36uys7i9lf",
       "action": "api::resource.resource.findOne",
-      "locale": null
-    },
-    {
-      "documentId": "delresource001",
-      "action": "api::resource.resource.delete",
       "locale": null
     },
     {

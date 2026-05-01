@@ -29,7 +29,7 @@ const CollaborationRow = ({ invite, onAccept, onDecline, processingId }) => {
       {/* Collaboration Space Column */}
       <td className="py-6 px-6 align-top">
         <div className="flex flex-col gap-2">
-          <h3 className="text-[17px] font-bold text-brand-gray-900 leading-snug">
+          <h3 className="text-base font-normal text-brand-gray-900 leading-snug">
             {call.title}
           </h3>
           <Link
@@ -52,7 +52,7 @@ const CollaborationRow = ({ invite, onAccept, onDecline, processingId }) => {
           </Avatar>
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-bold text-brand-gray-900 truncate">
+              <span className="text-sm font-normal text-brand-gray-900 truncate">
                 {mentor?.fullName ||
                   mentor?.username ||
                   t("collaboration.no_mentor", {
@@ -89,7 +89,7 @@ const CollaborationRow = ({ invite, onAccept, onDecline, processingId }) => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="rounded-full bg-brand-gray-100 text-brand-gray-900 hover:bg-brand-gray-200 px-6 font-bold h-9"
+                className="rounded-full bg-brand-gray-50 text-brand-gray-900 hover:bg-brand-gray-100 px-6 font-normal h-9"
                 onClick={() => onDecline(invite.id)}
                 disabled={isProcessing}
               >
@@ -98,7 +98,7 @@ const CollaborationRow = ({ invite, onAccept, onDecline, processingId }) => {
               <Button
                 variant="outline"
                 size="sm"
-                className="rounded-full border-brand-teal-500 text-brand-teal-600 hover:bg-brand-teal-50 px-6 font-bold h-9"
+                className="rounded-full border-brand-teal-900 text-brand-teal-900 hover:bg-brand-teal-900 hover:text-white px-6 font-normal h-9"
                 onClick={() => onAccept(invite.id)}
                 disabled={isProcessing}
               >
@@ -112,7 +112,7 @@ const CollaborationRow = ({ invite, onAccept, onDecline, processingId }) => {
           ) : (
             <>
               <button
-                className="text-sm font-bold text-brand-teal-600 hover:text-brand-teal-700 transition-colors mr-2"
+                className="text-sm font-normal text-brand-teal-900 hover:text-brand-teal-700 transition-colors mr-2 cursor-pointer"
                 onClick={() => onDecline(invite.id)}
                 disabled={isProcessing}
               >
@@ -122,7 +122,7 @@ const CollaborationRow = ({ invite, onAccept, onDecline, processingId }) => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="rounded-full border-brand-teal-500 text-brand-teal-600 hover:bg-brand-teal-50 px-6 font-bold h-9"
+                  className="rounded-full border-brand-teal-900 text-brand-teal-900 hover:bg-brand-teal-900 hover:text-white px-6 font-normal h-9"
                 >
                   {t("common:view", { defaultValue: "View" })}
                 </Button>
@@ -269,15 +269,15 @@ const CollaborationTab = () => {
         <table className="w-full border-collapse text-left bg-white">
           <thead className="bg-brand-gray-50 border-b border-brand-gray-100">
             <tr>
-              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 uppercase tracking-wider w-2/5">
+              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 tracking-wider w-2/5">
                 {t("collaboration.header_space", {
                   defaultValue: "Collaboration space",
                 })}
               </th>
-              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 uppercase tracking-wider w-1/3">
+              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 tracking-wider w-1/3">
                 {t("collaboration.header_mentor", { defaultValue: "Mentor" })}
               </th>
-              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 uppercase tracking-wider text-right">
+              <th className="py-4 px-6 text-[13px] font-bold text-brand-gray-500 tracking-wider text-right">
                 {t("collaboration.header_actions", { defaultValue: "Actions" })}
               </th>
             </tr>

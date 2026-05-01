@@ -1,4 +1,5 @@
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import {
@@ -6,12 +7,9 @@ import {
   Calendar,
   FileText,
   ImageIcon,
+  Handshake,
 } from "lucide-react";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import {
@@ -56,6 +54,7 @@ function mapChatMessage(row, currentUserId) {
  * `api::chat-message` content type.
  */
 export default function CollaborationCallDetailPage() {
+  const { t } = useTranslation("profile");
   const router = useRouter();
   const { id } = router.query;
   const user = useAuthStore((state) => state.user);
@@ -144,6 +143,21 @@ export default function CollaborationCallDetailPage() {
     );
   }
 
+  const myInvite = useMemo(() => {
+    if (!user || !call?.invites) return null;
+    return call.invites.find(
+      (i) =>
+        i.invitedUser?.documentId === user.documentId ||
+        i.invitedUser?.id === user.id,
+    );
+  }, [call, user]);
+
+  const isAccepted = myInvite?.inviteStatus === "Accepted";
+  const isCreator =
+    call?.createdByUser?.id === user?.id ||
+    call?.createdByUser?.documentId === user?.documentId;
+  const canPost = isAccepted || isCreator;
+
   const isActive = (call.status || "").toLowerCase() === "active";
 
   return (
@@ -157,7 +171,24 @@ export default function CollaborationCallDetailPage() {
           onBack={() => router.back()}
         />
         <ChatThread messages={messages} />
-        <ChatComposer onSend={handleSendMessage} disabled={sending} />
+        {canPost ? (
+          <ChatComposer onSend={handleSendMessage} disabled={sending} />
+        ) : (
+          <div className="border-t border-brand-gray-100 bg-brand-gray-50 px-6 py-8 text-center">
+            <Handshake className="mx-auto mb-3 size-8 text-brand-gray-400" />
+            <h3 className="text-sm font-semibold text-brand-gray-900">
+              {t("collaboration.join_to_post_title", {
+                defaultValue: "Join this collaboration to start posting",
+              })}
+            </h3>
+            <p className="mt-1 text-xs text-brand-gray-500">
+              {t("collaboration.join_to_post_desc", {
+                defaultValue:
+                  "You must be an accepted member of this collaboration space to participate in the chat.",
+              })}
+            </p>
+          </div>
+        )}
       </section>
     </div>
   );
@@ -378,10 +409,7 @@ function ChatThread({ messages = [] }) {
           const key = m.id || idx;
           if (m.type === "separator") {
             return (
-              <li
-                key={key}
-                className="flex items-center justify-center"
-              >
+              <li key={key} className="flex items-center justify-center">
                 <span className="rounded-full bg-brand-gray-100 px-3 py-0.5 text-[11px] font-medium text-brand-gray-500">
                   {m.label}
                 </span>

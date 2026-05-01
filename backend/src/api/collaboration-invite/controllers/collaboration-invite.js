@@ -33,7 +33,16 @@ module.exports = createCoreController(
                 invitedUser: { id: user.id },
               },
               populate: {
-                collaborationCall: true,
+                collaborationCall: {
+                  populate: {
+                    createdByUser: true,
+                    institutionMemberships: {
+                      populate: {
+                        institution: true
+                      }
+                    }
+                  }
+                },
               },
               status: "published",
               limit,

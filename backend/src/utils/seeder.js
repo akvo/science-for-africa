@@ -308,7 +308,7 @@ const COLLABORATION_CALLS = [
     communityName: "Community of Innovators",
     mentorIndex: null, // No Mentor Assigned
     forcedStatus: "Accepted",
-  }
+  },
 ];
 
 /**
@@ -535,7 +535,11 @@ const seed = async (strapi) => {
           },
         });
     }
-    allCalls.push(call);
+    // Link the DB object with our static metadata (especially forcedStatus)
+    allCalls.push({
+      ...call,
+      forcedStatus: data.forcedStatus,
+    });
   }
 
   // Ensure every user has an invite for every call
@@ -559,21 +563,20 @@ const seed = async (strapi) => {
               invitedUser: user.id,
               collaborationCall: call.id,
               email: user.email,
-              inviteStatus: call.forcedStatus || (allCalls.indexOf(call) < 2 ? "Pending" : "Accepted"),
+              inviteStatus:
+                call.forcedStatus || "Accepted",
               role: "Collaborator",
               invitedAt: new Date(),
             },
           });
         inviteCreatedCount++;
       } else {
-        // Check if status is missing and update if necessary
         const existing = await strapi.db
           .query("api::collaboration-invite.collaboration-invite")
           .findOne({
             where: {
               invitedUser: user.id,
               collaborationCall: call.id,
-              inviteStatus: { $null: true },
             },
           });
 
@@ -582,7 +585,7 @@ const seed = async (strapi) => {
             .query("api::collaboration-invite.collaboration-invite")
             .update({
               where: { id: existing.id },
-              data: { inviteStatus: "Accepted" },
+              data: { inviteStatus: call.forcedStatus || "Accepted" },
             });
         }
       }

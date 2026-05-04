@@ -1,22 +1,12 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
-import {
-  Dialog,
-  DialogContent,
-  DialogClose,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Download,
-  File,
-  XIcon,
-  Share2,
-  Loader2,
-  Reply,
-} from "lucide-react";
+import { Download, File, XIcon, Share2, Loader2, Reply } from "lucide-react";
 import { useAuthStore } from "@/lib/auth-store";
+import { getFullFileUrl } from "@/lib/utils";
 import {
   fetchResource,
   fetchResourceComments,
@@ -29,15 +19,6 @@ const TYPE_LABEL_KEYS = {
   "practice-note": "resources.practice_note",
   "case-study": "resources.case_study",
 };
-
-function getFullFileUrl(url) {
-  if (!url) return null;
-  if (url.startsWith("http")) return url;
-  const backendOrigin = (
-    process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api"
-  ).replace(/\/api\/?$/, "");
-  return `${backendOrigin}${url}`;
-}
 
 function formatFileSize(bytes) {
   if (!bytes) return "";
@@ -137,7 +118,11 @@ function Comment({ comment }) {
   );
 }
 
-export default function ViewResourceDialog({ open, onOpenChange, resource: resourceProp }) {
+export default function ViewResourceDialog({
+  open,
+  onOpenChange,
+  resource: resourceProp,
+}) {
   const { t } = useTranslation("common");
   const [fullResource, setFullResource] = useState(null);
   const [comments, setComments] = useState([]);
@@ -220,7 +205,8 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 text-sm text-brand-gray-500 mb-1">
               <span className="font-medium text-brand-gray-700">
-                {t(TYPE_LABEL_KEYS[resource.resourceType]) || resource.resourceType}
+                {t(TYPE_LABEL_KEYS[resource.resourceType]) ||
+                  resource.resourceType}
               </span>
               {fileSize && (
                 <>
@@ -229,7 +215,9 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
                 </>
               )}
               <span className="size-1 rounded-full bg-brand-gray-300" />
-              <span>{t("resources.uploaded")} {formatShortDate(resource.createdAt)}</span>
+              <span>
+                {t("resources.uploaded")} {formatShortDate(resource.createdAt)}
+              </span>
             </div>
             <h2 className="text-lg font-bold text-brand-gray-900 leading-tight">
               {resource.name}
@@ -284,7 +272,9 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
                   )}
                 </div>
                 {uploader?.title && (
-                  <p className="text-xs text-brand-gray-500">{uploader.title}</p>
+                  <p className="text-xs text-brand-gray-500">
+                    {uploader.title}
+                  </p>
                 )}
               </div>
             </div>
@@ -306,7 +296,8 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
                 {t("resources.discussion")}
               </h3>
               <span className="text-sm text-brand-gray-500">
-                {comments.length} {comments.length !== 1 ? "comments" : "comment"}
+                {comments.length}{" "}
+                {comments.length !== 1 ? "comments" : "comment"}
               </span>
             </div>
 
@@ -320,7 +311,8 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" && commentText.trim()) handlePostComment();
+                    if (e.key === "Enter" && commentText.trim())
+                      handlePostComment();
                   }}
                 />
                 {commentText.trim() && (
@@ -351,10 +343,7 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
             ) : (
               <div className="flex flex-col divide-y divide-brand-gray-100">
                 {comments.map((c) => (
-                  <Comment
-                    key={c.documentId || c.id}
-                    comment={c}
-                  />
+                  <Comment key={c.documentId || c.id} comment={c} />
                 ))}
               </div>
             )}
@@ -380,11 +369,7 @@ export default function ViewResourceDialog({ open, onOpenChange, resource: resou
             {t("resources.share")}
           </Button>
           {fileUrl && (
-            <Button
-              size="md"
-              className="gap-2"
-              onClick={handleDownload}
-            >
+            <Button size="md" className="gap-2" onClick={handleDownload}>
               {t("resources.download")}
               <Download className="size-4" />
             </Button>

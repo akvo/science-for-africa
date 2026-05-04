@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { Plus, File } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, getFullFileUrl } from "@/lib/utils";
 import { fetchResources } from "@/lib/strapi";
 import AddResourceDialog from "./AddResourceDialog";
 import ViewResourceDialog from "./ViewResourceDialog";
@@ -21,16 +21,6 @@ const TYPE_LABEL_KEYS = {
   "practice-note": "resources.practice_note",
   "case-study": "resources.case_study",
 };
-
-function getFullFileUrl(url) {
-  if (!url) return null;
-  if (url.startsWith("http")) return url;
-  // Strapi returns relative paths like /uploads/file.pdf — prepend backend origin
-  const backendOrigin = (
-    process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api"
-  ).replace(/\/api\/?$/, "");
-  return `${backendOrigin}${url}`;
-}
 
 function ResourceCard({ resource, t, onView }) {
   const fileUrl = getFullFileUrl(resource.file?.url);
@@ -136,7 +126,7 @@ export default function ResourcesList({
               type="button"
               onClick={() => setFilter(f.key)}
               className={cn(
-                "inline-flex h-[34px] cursor-pointer items-center rounded-full px-[14px] text-sm font-medium transition-colors",
+                "inline-flex h-8.5 cursor-pointer items-center rounded-full px-3.5 text-sm font-medium transition-colors",
                 isActive
                   ? "border border-[#D0D5DD] bg-primary-50 text-brand-gray-900 shadow-[0_1px_2px_0_rgba(16,24,40,0.05),0_0_0_4px_var(--color-primary-50)]"
                   : "bg-white text-brand-gray-700 border border-brand-gray-100 hover:bg-brand-gray-50",
@@ -169,7 +159,12 @@ export default function ResourcesList({
       ) : (
         <div className="flex flex-col divide-y divide-brand-gray-100 border-b border-brand-gray-100">
           {filtered.map((r) => (
-            <ResourceCard key={r.documentId || r.id} resource={r} t={t} onView={setViewResource} />
+            <ResourceCard
+              key={r.documentId || r.id}
+              resource={r}
+              t={t}
+              onView={setViewResource}
+            />
           ))}
         </div>
       )}
@@ -183,7 +178,9 @@ export default function ResourcesList({
 
       <ViewResourceDialog
         open={!!viewResource}
-        onOpenChange={(open) => { if (!open) setViewResource(null); }}
+        onOpenChange={(open) => {
+          if (!open) setViewResource(null);
+        }}
         resource={viewResource}
       />
     </section>

@@ -198,7 +198,7 @@ export default function PrivacyPolicy() {
           <hr className="border-brand-gray-200" />
 
           {/* Terms of Use Section */}
-          <div className="space-y-16">
+          <div className="space-y-16" id="terms">
             <header className="space-y-4">
               <h1 className="text-display-md font-bold text-brand-teal-900">
                 {t("terms.title")}
@@ -282,7 +282,7 @@ export default function PrivacyPolicy() {
           <hr className="border-brand-gray-200" />
 
           {/* Community Guidelines Section */}
-          <div className="space-y-16">
+          <div className="space-y-16" id="community-guidelines">
             <header className="space-y-4">
               <h1 className="text-display-md font-bold text-brand-teal-900">
                 {t("community_guidelines.title")}

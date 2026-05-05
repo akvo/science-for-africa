@@ -13,17 +13,20 @@ const Footer = () => {
     {
       title: t("footer.sections.general.title"),
       links: [
-        { name: t("footer.sections.general.about"), href: "/about" },
+        { name: t("footer.sections.general.about"), href: "/coming-soon" },
         {
           name: t("footer.sections.general.opportunities"),
-          href: "/opportunities",
+          href: "/coming-soon",
         },
         {
           name: t("footer.sections.general.learning"),
-          href: "/learning",
+          href: "/coming-soon",
           isNew: true,
         },
-        { name: t("footer.sections.general.resources"), href: "/resources" },
+        {
+          name: t("footer.sections.general.resources"),
+          href: "/coming-soon",
+        },
         { name: t("footer.sections.general.account"), href: "/profile" },
       ],
     },
@@ -56,7 +59,7 @@ const Footer = () => {
         { name: t("footer.sections.legal.privacy"), href: "/privacy-policy" },
         { name: t("footer.sections.legal.cookies"), href: "/privacy-policy" },
         { name: t("footer.sections.legal.settings"), href: "/profile" },
-        { name: t("footer.sections.legal.contact"), href: "/contact" },
+        { name: t("footer.sections.legal.contact"), href: "/coming-soon" },
       ],
     },
   ];

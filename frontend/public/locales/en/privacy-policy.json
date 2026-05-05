@@ -1,0 +1,273 @@
+{
+  "seo": {
+    "title": "Privacy Policy | Science for Africa",
+    "description": "Privacy Policy, Terms of Use, and Community Guidelines for the Pan-African Community of Practice Platform."
+  },
+  "title": "Privacy Policy",
+  "subtitle": "Pan-African Community of Practice for Research and Innovation Management",
+  "intro": "The Pan-African Community of Practice for Research and Innovation Management (“the CoP”, “the Platform”) is committed to safeguarding personal data and upholding internationally recognised principles of data protection, privacy, and responsible digital governance.",
+  "aligned_with": {
+    "title": "This Privacy Policy is aligned with:",
+    "points": [
+      "the EU General Data Protection Regulation (GDPR),",
+      "African Union Data Protection and Digital Governance Principles, and",
+      "the accountability and transparency expectations of international public and philanthropic research funders."
+    ]
+  },
+  "scope": {
+    "title": "Scope of This Policy",
+    "content": "This policy applies to all users of the Platform, including individual members, institutional accounts, mentors, moderators, partners, and administrators.",
+    "acknowledgment": "By registering for or using the Platform, you acknowledge and accept the practices described in this policy."
+  },
+  "principles": {
+    "title": "Principles Governing Our Use of Data",
+    "intro": "We process personal data in accordance with the following principles:",
+    "points": [
+      "Lawfulness, fairness, and transparency",
+      "Purpose limitation (data used only for defined professional purposes)",
+      "Data minimisation (only data that is necessary is collected)",
+      "Accuracy and currency",
+      "Storage limitation",
+      "Integrity and confidentiality",
+      "Accountability and stewardship"
+    ],
+    "footer": "These principles reflect both GDPR requirements and AU commitments to responsible, people-centred digital systems."
+  },
+  "collection": {
+    "title": "Information We Collect",
+    "intro": "We may collect the following categories of data:",
+    "sections": [
+      {
+        "title": "Identity and Professional Information",
+        "points": [
+          "Name, email address, country, institution, professional role",
+          "Career stage, areas of expertise, and interests",
+          "Institutional affiliation and verification status"
+        ]
+      },
+      {
+        "title": "Platform and Participation Data",
+        "points": [
+          "Posts, comments, resource uploads, and discussion participation",
+          "Collaboration, mentorship, and working-group activity",
+          "Learning enrolment, completion, badges, and certifications"
+        ]
+      },
+      {
+        "title": "Technical and Usage Data",
+        "points": [
+          "Log-in records, device and browser information",
+          "IP address and session metadata",
+          "Cookies and platform analytics data"
+        ]
+      }
+    ],
+    "footer": "You may choose how much profile information is visible to others through privacy controls."
+  },
+  "lawful_basis": {
+    "title": "Lawful Basis for Processing",
+    "intro": "We process personal data under one or more of the following lawful bases:",
+    "points": [
+      "Consent (e.g. account creation, communications)",
+      "Legitimate professional interest in operating a trusted, secure community",
+      "Performance of programme or platform functions",
+      "Compliance with legal and funder obligations"
+    ],
+    "footer": "Users may withdraw consent at any time, without affecting the lawfulness of processing already undertaken."
+  },
+  "usage": {
+    "title": "How We Use Your Information",
+    "intro": "We use data solely to:",
+    "points": [
+      "Operate and improve the CoP platform",
+      "Enable professional interaction, collaboration, and mentorship",
+      "Deliver learning activities, events, and certification",
+      "Support professional recognition and identity",
+      "Personalise content, notifications, and recommendations",
+      "Monitor platform performance and engagement (aggregated and anonymised where possible)",
+      "Fulfil reporting and accountability obligations to funders and partners"
+    ],
+    "footer": "We do not use personal data for commercial advertising."
+  },
+  "sharing": {
+    "title": "Data Sharing and International Transfers",
+    "intro": "We do not sell or monetise personal data.",
+    "sharing_with_intro": "Data may be shared only:",
+    "points": [
+      "with trusted service providers supporting platform operation;",
+      "with learning or certification partners (where relevant);",
+      "where required by law or regulatory authority;",
+      "in anonymised or aggregated form for reporting and ecosystem learning."
+    ],
+    "transfer_footer": "Where data is processed or stored across borders, we apply safeguards consistent with GDPR and AU principles, including contractual and technical protections."
+  },
+  "retention": {
+    "title": "Data Retention",
+    "intro": "Personal data is retained only as long as necessary to:",
+    "points": [
+      "provide platform services,",
+      "meet legal or funder reporting requirements,",
+      "protect platform integrity and auditability."
+    ],
+    "footer": "Users may request deletion of their data, subject to legal or operational constraints (e.g. audit logs, safeguarding records)."
+  },
+  "security": {
+    "title": "Security and Safeguards",
+    "intro": "We implement proportionate technical and organisational measures, including:",
+    "points": [
+      "encrypted storage and secure access controls;",
+      "role-based permissions;",
+      "audit trails for sensitive actions;",
+      "regular review of platform security and governance practices."
+    ]
+  },
+  "rights": {
+    "title": "Your Rights",
+    "intro": "In line with GDPR and AU principles, you have the right to:",
+    "points": [
+      "Access your personal data",
+      "Correct or update inaccurate data",
+      "Request deletion (“right to be forgotten”), where applicable",
+      "Restrict or object to certain processing",
+      "Request data portability",
+      "Withdraw consent",
+      "Lodge a complaint where required"
+    ],
+    "footer": "Requests can be made using the contact details below."
+  },
+  "changes": {
+    "title": "Changes to This Policy",
+    "content": "We may update this Privacy Policy to reflect legal, regulatory, or operational changes.",
+    "footer": "Material updates will be communicated clearly on the Platform."
+  },
+  "contact": {
+    "title": "Contact",
+    "intro": "For privacy or data-protection matters, please contact:",
+    "email_label": "Email:",
+    "email_value": "[Insert Data Protection / Platform Contact Email - TBC]",
+    "organisation_label": "Organisation:",
+    "organisation_value": "Science for Africa Foundation"
+  },
+  "terms": {
+    "title": "Terms of Use",
+    "intro": "These Terms of Use define the conditions under which the CoP platform is accessed and used.",
+    "acceptance": "By using the platform, you agree to these Terms.",
+    "purpose": {
+      "title": "Purpose and Values of the Platform",
+      "intro": "The Platform exists to:",
+      "points": [
+        "professionalise research and innovation management;",
+        "enable peer learning, collaboration, and mentorship;",
+        "support strong, ethical, and accountable research systems in Africa."
+      ],
+      "footer": "Use of the Platform must align with these purposes and values."
+    },
+    "registration": {
+      "title": "Registration and Account Responsibility",
+      "points": [
+        "Users must provide accurate and current information",
+        "Accounts are personal and may not be shared",
+        "Institutional affiliations are subject to verification",
+        "The Platform reserves the right to approve, restrict, or suspend accounts"
+      ]
+    },
+    "professional_use": {
+      "title": "Acceptable Professional Use",
+      "intro": "Users agree to:",
+      "points": [
+        "act lawfully, ethically, and professionally;",
+        "engage respectfully and constructively;",
+        "contribute in good faith to shared learning and collaboration;",
+        "respect confidentiality, intellectual property, and data rights."
+      ]
+    },
+    "prohibited": {
+      "title": "Prohibited Conduct",
+      "intro": "Users must not:",
+      "points": [
+        "post harmful, misleading, or discriminatory content;",
+        "misuse data or breach confidentiality;",
+        "engage in unauthorised commercial activity;",
+        "undermine platform security, trust, or governance."
+      ]
+    },
+    "ugc": {
+      "title": "User-Generated Content",
+      "points": [
+        "Users retain ownership of their content",
+        "By posting, users grant the Platform a non-exclusive licence to host and display it",
+        "Content may be moderated to uphold standards, safeguard users, and meet funder and legal obligations"
+      ]
+    },
+    "governance": {
+      "title": "Platform Governance and Enforcement",
+      "intro": "The Platform may:",
+      "points": [
+        "moderate or remove content;",
+        "suspend or terminate access;",
+        "take necessary action to protect users, partners, and institutional integrity."
+      ],
+      "footer": "Serious or repeated violations may lead to permanent removal."
+    },
+    "liability": {
+      "title": "Limitation of Liability",
+      "content": "The Platform is provided on an “as-is” basis.",
+      "footer": "Participation does not guarantee outcomes, funding, or professional advancement."
+    },
+    "law": {
+      "title": "Governing Law",
+      "content": "These Terms are governed by applicable laws in the platform’s jurisdiction of operation (e.g. Kenya), alongside applicable international data and digital governance frameworks."
+    }
+  },
+  "community_guidelines": {
+    "title": "Community Guidelines",
+    "subtitle": "Building a Trusted, Professional Community",
+    "intro": "The CoP is a professional, inclusive, and trusted space. These guidelines reflect shared responsibility and stewardship.",
+    "conduct": {
+      "title": "Professional Conduct",
+      "intro": "Members are expected to:",
+      "points": [
+        "treat others with respect and fairness;",
+        "support learning across career stages;",
+        "acknowledge different institutional and national contexts;",
+        "engage constructively and responsibly."
+      ]
+    },
+    "sharing": {
+      "title": "Responsible Knowledge Sharing",
+      "intro": "Members should:",
+      "points": [
+        "share practice-based experience and evidence;",
+        "credit sources and collaborators;",
+        "distinguish opinion from fact;",
+        "avoid misinformation or unverified claims."
+      ]
+    },
+    "inclusion": {
+      "title": "Inclusion, Equity, and Safeguarding",
+      "intro": "The Platform does not tolerate:",
+      "points": [
+        "harassment, discrimination, or exclusion;",
+        "abuse of power or status;",
+        "behaviour that undermines psychological or professional safety."
+      ]
+    },
+    "moderation": {
+      "title": "Moderation and Accountability",
+      "points": [
+        "Moderators guide discussions and enforce standards",
+        "Decisions are documented and proportionate",
+        "Due process is applied, consistent with funder and governance expectations"
+      ]
+    },
+    "reporting": {
+      "title": "Reporting and Shared Responsibility",
+      "intro": "All members share responsibility for:",
+      "points": [
+        "maintaining trust and quality;",
+        "reporting concerns in good faith;",
+        "contributing to a professional research management community that strengthens Africa’s research and innovation systems."
+      ]
+    }
+  }
+}

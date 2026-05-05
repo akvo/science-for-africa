@@ -10,5 +10,10 @@ module.exports = {
         auth: false,
       },
     },
+    {
+      method: "POST",
+      path: "/collaboration-invites/request-join",
+      handler: "collaboration-invite.requestJoin",
+    },
   ],
 };

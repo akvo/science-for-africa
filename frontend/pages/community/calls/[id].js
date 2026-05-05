@@ -1,11 +1,14 @@
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import {
   ArrowLeft,
   Calendar,
   FileText,
   ImageIcon,
+  MoreHorizontal,
+  Paperclip,
+  X,
 } from "lucide-react";
 import {
   Avatar,
@@ -13,12 +16,20 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import {
   fetchChatMessages,
   fetchCollaborationCall,
   fetchCommunityByName,
   postChatMessage,
+  requestJoinCollaborationCall,
+  uploadFile,
 } from "@/lib/strapi";
 import { useAuthStore } from "@/lib/auth-store";
 import { htmlToPlainText, sanitizeHtml } from "@/lib/sanitize-html";
@@ -36,12 +47,23 @@ function mapChatMessage(row, currentUserId) {
     author.username ||
     author.email?.split("@")[0] ||
     "Member";
+  const att = row?.attachment;
+  const attachment = att
+    ? {
+        name: att.name,
+        size: formatFileSize(att.size),
+        url: att.url,
+        mime: att.mime || "",
+        kind: att.mime?.startsWith("image/") ? "image" : "file",
+      }
+    : null;
   return {
     id: row.id,
     self: currentUserId != null && author.id === currentUserId,
     author: authorName,
     time: formatChatTime(row.createdAt),
     text: row.text,
+    attachment,
   };
 }
 
@@ -86,12 +108,17 @@ export default function CollaborationCallDetailPage() {
     };
   }, [id, user?.id]);
 
-  const handleSendMessage = async (text) => {
+  const handleSendMessage = async (text, file) => {
     const trimmed = (text || "").trim();
-    if (!trimmed || !id || sending) return;
+    if ((!trimmed && !file) || !id || sending) return;
     setSending(true);
     try {
-      const res = await postChatMessage(id, trimmed);
+      let attachmentId = null;
+      if (file) {
+        const uploaded = await uploadFile(file);
+        attachmentId = uploaded?.[0]?.id || null;
+      }
+      const res = await postChatMessage(id, trimmed, attachmentId);
       const row = res?.data;
       if (row) {
         setMessages((prev) => [...prev, mapChatMessage(row, user?.id)]);
@@ -128,6 +155,83 @@ export default function CollaborationCallDetailPage() {
       }));
   }, [call]);
 
+  // Collect all attachments from chat messages
+  const chatAttachments = useMemo(() => {
+    return messages
+      .filter((m) => m.attachment)
+      .map((m) => m.attachment);
+  }, [messages]);
+
+  // Users who have accepted their invite (joined the call)
+  const joinedUsers = useMemo(() => {
+    const mapUser = (u) => ({
+      id: u.documentId || u.id,
+      name:
+        u.fullName ||
+        [u.firstName, u.lastName].filter(Boolean).join(" ") ||
+        u.username ||
+        "User",
+      avatarUrl: u.avatarUrl,
+      position: u.position || "",
+      educationLevel: u.educationLevel || "",
+      educationTopic: u.educationTopic || "",
+    });
+
+    const invites = call?.invites || [];
+    const users = invites
+      .filter((i) => i.inviteStatus === "Accepted" && i.invitedUser)
+      .map((i) => mapUser(i.invitedUser));
+    // Also include the creator if present
+    if (call?.createdByUser) {
+      const creator = call.createdByUser;
+      const alreadyIncluded = users.some((u) => u.id === (creator.documentId || creator.id));
+      if (!alreadyIncluded) {
+        users.unshift(mapUser(creator));
+      }
+    }
+    return users;
+  }, [call]);
+
+  // Check if current user already has an accepted invite for this call
+  const hasJoined = useMemo(() => {
+    if (!user || !call?.invites) return false;
+    return call.invites.some(
+      (i) =>
+        i.invitedUser?.id === user.id &&
+        i.inviteStatus === "Accepted",
+    );
+  }, [call, user]);
+
+  // Also check if user is the creator
+  const isCreator = useMemo(() => {
+    if (!user || !call?.createdByUser) return false;
+    return call.createdByUser.id === user.id;
+  }, [call, user]);
+
+  // Check if user has a pending request
+  const hasPendingRequest = useMemo(() => {
+    if (!user || !call?.invites) return false;
+    return call.invites.some(
+      (i) =>
+        i.invitedUser?.id === user.id &&
+        i.inviteStatus === "Pending",
+    );
+  }, [call, user]);
+
+  const handleRequestJoin = async () => {
+    const isAuthenticated = useAuthStore.getState().isAuthenticated;
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+    const res = await requestJoinCollaborationCall(id);
+    if (res?.data) {
+      // Re-fetch call to update state
+      const updated = await fetchCollaborationCall(id);
+      setCall(updated?.data || null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex flex-1 items-center justify-center py-20 text-sm text-brand-gray-500">
@@ -148,16 +252,25 @@ export default function CollaborationCallDetailPage() {
 
   return (
     <div className="grid min-w-0 grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)]">
-      <CommunityDetailsSidebar community={community} mentors={mentors} />
+      <CommunityDetailsSidebar community={community} mentors={mentors} joinedUsers={joinedUsers} attachments={chatAttachments} />
 
       <section className="flex min-w-0 flex-col">
         <ChatHeader
           call={call}
           isActive={isActive}
+          hasJoined={hasJoined || isCreator}
+          hasPendingRequest={hasPendingRequest}
+          onRequestJoin={handleRequestJoin}
           onBack={() => router.back()}
         />
-        <ChatThread messages={messages} />
-        <ChatComposer onSend={handleSendMessage} disabled={sending} />
+        <ChatThread messages={messages} canPost={hasJoined || isCreator} />
+        {(hasJoined || isCreator) ? (
+          <ChatComposer onSend={handleSendMessage} disabled={sending} />
+        ) : (
+          <div className="border-t border-brand-gray-100 px-6 py-4 text-center text-sm text-brand-gray-500">
+            Join this collaboration call to participate in the conversation.
+          </div>
+        )}
       </section>
     </div>
   );
@@ -165,10 +278,13 @@ export default function CollaborationCallDetailPage() {
 
 /* ----------------------- Community details sidebar ---------------------- */
 
-function CommunityDetailsSidebar({ community, mentors = [] }) {
+const MAX_AVATAR_COUNT = 8;
+
+function CommunityDetailsSidebar({ community, mentors = [], joinedUsers = [], attachments = [] }) {
+  const [showUsersModal, setShowUsersModal] = useState(false);
   if (!community) {
     return (
-      <aside className="flex flex-col gap-5 border-b border-brand-gray-100 bg-white p-5 lg:border-b-0 lg:border-r lg:min-h-[calc(100vh-114px)]">
+      <aside className="flex flex-col gap-5 border-b border-brand-gray-100 bg-brand-gray-50 p-5 lg:border-b-0 lg:border-r lg:min-h-[calc(100vh-114px)]">
         <p className="text-xs text-brand-gray-500">Loading community...</p>
       </aside>
     );
@@ -180,138 +296,185 @@ function CommunityDetailsSidebar({ community, mentors = [] }) {
   const subCommunities = community.subCommunities || [];
 
   return (
-    <aside className="flex flex-col gap-5 border-b border-brand-gray-100 bg-white p-5 lg:border-b-0 lg:border-r lg:min-h-[calc(100vh-114px)]">
-      <div className="flex items-center gap-3">
-        <Avatar size="md">
-          {community.avatarUrl ? (
-            <AvatarImage src={community.avatarUrl} alt={community.name} />
-          ) : null}
-          <AvatarFallback>
-            {community.initials || initialsOf(community.name)}
-          </AvatarFallback>
-        </Avatar>
-        <div className="min-w-0">
-          <h2 className="truncate font-heading text-base font-bold text-brand-gray-900">
-            {community.name}
-          </h2>
-          {community.handle ? (
-            <p className="truncate text-xs text-brand-gray-500">
-              ID: {community.handle}
-            </p>
-          ) : null}
-        </div>
-      </div>
-
-      {community.description ? (
-        <p className="text-sm text-brand-gray-600">{community.description}</p>
-      ) : null}
-
-      {createdLabel ? (
-        <p className="text-xs text-brand-gray-500">Created: {createdLabel}</p>
-      ) : null}
-
-      <div className="flex items-center gap-6">
-        <div>
-          <div className="text-[10px] uppercase tracking-wide text-brand-gray-500">
-            Subscribers
-          </div>
-          <div className="text-sm font-semibold text-brand-gray-900">
-            {formatNumber(community.subscribers || 0)}
+    <aside className="border-b border-brand-gray-100 p-5 lg:border-b-0 lg:border-r lg:min-h-[calc(100vh-114px)]">
+      <div className="flex flex-col gap-5 rounded-xl bg-brand-gray-50 p-4">
+        <div className="flex items-center gap-3">
+          <Avatar size="md">
+            {community.avatarUrl ? (
+              <AvatarImage src={community.avatarUrl} alt={community.name} />
+            ) : null}
+            <AvatarFallback>
+              {community.initials || initialsOf(community.name)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0">
+            <h2 className="truncate font-heading text-base font-bold text-brand-gray-900">
+              {community.name}
+            </h2>
+            {community.handle ? (
+              <p className="truncate text-xs text-brand-gray-500">
+                ID: {community.handle}
+              </p>
+            ) : null}
           </div>
         </div>
-        <div>
-          <div className="text-[10px] uppercase tracking-wide text-brand-gray-500">
-            Posts
-          </div>
-          <div className="text-sm font-semibold text-brand-gray-900">
-            {formatNumber(community.posts || 0)}
-          </div>
-        </div>
-      </div>
 
-      {tags.length ? (
-        <div className="flex flex-wrap gap-1.5 border-t border-brand-gray-100 pt-4">
-          {tags.map((t) => (
-            <span
-              key={t}
-              className="inline-flex items-center rounded-full border border-brand-gray-200 bg-transparent px-3 py-1 text-xs font-medium text-brand-gray-700"
-            >
-              #{t}
-            </span>
-          ))}
-        </div>
-      ) : null}
+        {community.description ? (
+          <p className="text-sm text-brand-gray-600">{community.description}</p>
+        ) : null}
 
-      {moderators.length ? (
-        <Section title="Moderators">
-          <ul className="flex flex-col gap-2 text-sm text-brand-gray-700">
-            {moderators.map((m) => (
-              <li key={m.documentId || m.id}>
-                {m.username || m.email || "Moderator"}
-              </li>
+        {createdLabel ? (
+          <p className="text-xs text-brand-gray-500">Created: {createdLabel}</p>
+        ) : null}
+
+        {tags.length ? (
+          <div className="flex flex-wrap gap-1.5 border-t border-brand-gray-200 pt-4">
+            {tags.map((t) => (
+              <span
+                key={t}
+                className="inline-flex items-center rounded-full border border-brand-gray-200 bg-transparent px-3 py-1 text-xs font-medium text-brand-gray-700"
+              >
+                #{t}
+              </span>
             ))}
-          </ul>
-        </Section>
-      ) : null}
+          </div>
+        ) : null}
 
-      {mentors.length ? (
-        <Section title="Mentors">
-          <ul className="flex flex-col gap-3">
-            {mentors.map((m) => (
-              <li key={m.id} className="flex items-center gap-3">
-                <Avatar size="sm">
-                  {m.avatarUrl ? (
-                    <AvatarImage src={m.avatarUrl} alt={m.name} />
+        {moderators.length ? (
+          <Section title="Moderators">
+            <ul className="flex flex-col gap-2 text-sm text-brand-gray-700">
+              {moderators.map((m) => (
+                <li key={m.documentId || m.id}>
+                  {m.username || m.email || "Moderator"}
+                </li>
+              ))}
+            </ul>
+          </Section>
+        ) : null}
+
+        {joinedUsers.length ? (
+          <Section
+            title="Users"
+            action={joinedUsers.length > MAX_AVATAR_COUNT ? "See all" : undefined}
+            onAction={() => setShowUsersModal(true)}
+          >
+            <div className="flex -space-x-2">
+              {joinedUsers.slice(0, MAX_AVATAR_COUNT).map((u) => (
+                <Avatar key={u.id} size="sm" className="ring-2 ring-white">
+                  {u.avatarUrl ? (
+                    <AvatarImage src={u.avatarUrl} alt={u.name} />
                   ) : null}
-                  <AvatarFallback>{initialsOf(m.name)}</AvatarFallback>
+                  <AvatarFallback>{initialsOf(u.name)}</AvatarFallback>
                 </Avatar>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="truncate text-sm font-medium text-brand-gray-900">
-                      {m.name}
-                    </span>
-                    <span className="inline-flex items-center rounded-full bg-brand-orange-50 px-2 py-0.5 text-[10px] font-medium text-brand-orange-500">
-                      Mentor
-                    </span>
-                  </div>
-                  <div className="truncate text-xs text-brand-gray-500">
-                    {m.role}
-                  </div>
+              ))}
+              {joinedUsers.length > MAX_AVATAR_COUNT ? (
+                <div className="flex size-8 items-center justify-center rounded-full bg-brand-gray-100 text-xs font-medium text-brand-gray-600 ring-2 ring-white">
+                  +{joinedUsers.length - MAX_AVATAR_COUNT}
                 </div>
-              </li>
-            ))}
-          </ul>
-        </Section>
-      ) : null}
+              ) : null}
+            </div>
+          </Section>
+        ) : null}
 
-      {subCommunities.length ? (
-        <Section title="Sub-Communities">
-          <ul className="flex flex-col gap-2">
-            {subCommunities.map((sc) => (
-              <li key={sc.documentId || sc.id} className="text-sm">
-                <div className="font-medium text-brand-gray-900">{sc.name}</div>
-                {sc.subscribers ? (
-                  <div className="text-xs text-brand-gray-500">
-                    {formatNumber(sc.subscribers)} Subscribers
+        {mentors.length ? (
+          <Section title="Mentors">
+            <ul className="flex flex-col gap-3">
+              {mentors.map((m) => (
+                <li key={m.id} className="flex items-center gap-3">
+                  <Avatar size="sm">
+                    {m.avatarUrl ? (
+                      <AvatarImage src={m.avatarUrl} alt={m.name} />
+                    ) : null}
+                    <AvatarFallback>{initialsOf(m.name)}</AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="truncate text-sm font-medium text-brand-gray-900">
+                        {m.name}
+                      </span>
+                      <span className="inline-flex items-center rounded-full bg-brand-orange-50 px-2 py-0.5 text-[10px] font-medium text-brand-orange-500">
+                        Mentor
+                      </span>
+                    </div>
+                    <div className="truncate text-xs text-brand-gray-500">
+                      {m.role}
+                    </div>
                   </div>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </Section>
-      ) : null}
+                </li>
+              ))}
+            </ul>
+          </Section>
+        ) : null}
+
+        {subCommunities.length ? (
+          <Section title="Sub-Communities">
+            <ul className="flex flex-col gap-2">
+              {subCommunities.map((sc) => (
+                <li key={sc.documentId || sc.id} className="text-sm">
+                  <div className="font-medium text-brand-gray-900">{sc.name}</div>
+                  {sc.subscribers ? (
+                    <div className="text-xs text-brand-gray-500">
+                      {formatNumber(sc.subscribers)} Subscribers
+                    </div>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          </Section>
+        ) : null}
+
+        {attachments.length ? (
+          <Section title="Attachments" action={attachments.length > 3 ? "See all" : undefined}>
+            <ul className="flex flex-col gap-3">
+              {attachments.slice(0, 3).map((att, idx) => (
+                <li key={idx}>
+                  <a
+                    href={att.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 hover:opacity-80"
+                  >
+                    <span className="flex size-9 flex-none items-center justify-center rounded-full bg-primary-50 text-primary-500">
+                      {att.kind === "image" ? (
+                        <ImageIcon className="size-4" />
+                      ) : (
+                        <FileText className="size-4" />
+                      )}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="truncate text-sm font-medium text-brand-gray-900">
+                        {att.name}
+                      </div>
+                      <div className="text-xs text-brand-gray-500">
+                        {att.size}
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </Section>
+        ) : null}
+      </div>
+
+      <UsersListModal
+        open={showUsersModal}
+        onClose={() => setShowUsersModal(false)}
+        users={joinedUsers}
+      />
     </aside>
   );
 }
 
-function Section({ title, action, children }) {
+function Section({ title, action, onAction, children }) {
   return (
     <div className="flex flex-col gap-3 border-t border-brand-gray-100 pt-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-brand-gray-900">{title}</h3>
+        <h3 className="text-sm font-normal text-[#484E51]">{title}</h3>
         {action ? (
           <button
             type="button"
+            onClick={onAction}
             className="text-xs font-medium text-primary-500 hover:underline"
           >
             {action}
@@ -323,9 +486,78 @@ function Section({ title, action, children }) {
   );
 }
 
+/* ------------------------------ Users Modal ------------------------------ */
+
+function UsersListModal({ open, onClose, users = [] }) {
+  return (
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="max-w-2xl p-0">
+        <DialogHeader className="px-6 pt-6 pb-4">
+          <DialogTitle>List of users</DialogTitle>
+        </DialogHeader>
+        <div className="overflow-y-auto max-h-[60vh]">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-brand-gray-100 bg-brand-gray-50 text-xs text-brand-gray-500">
+                <th className="px-6 py-3 font-medium">User name</th>
+                <th className="px-6 py-3 font-medium">Education</th>
+                <th className="px-6 py-3 w-10" />
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-brand-gray-100">
+              {users.map((u) => (
+                <tr key={u.id}>
+                  <td className="px-6 py-3">
+                    <div className="flex items-center gap-3">
+                      <Avatar size="sm">
+                        {u.avatarUrl ? (
+                          <AvatarImage src={u.avatarUrl} alt={u.name} />
+                        ) : null}
+                        <AvatarFallback>{initialsOf(u.name)}</AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0">
+                        <div className="font-medium text-brand-gray-900 truncate">
+                          {u.name}
+                        </div>
+                        {u.position ? (
+                          <div className="text-xs text-brand-gray-500 truncate">
+                            {u.position}
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-3">
+                    {u.educationLevel ? (
+                      <div className="font-medium text-brand-gray-900">
+                        {u.educationLevel}
+                        {u.educationTopic ? ` in ${u.educationTopic}` : ""}
+                      </div>
+                    ) : (
+                      <span className="text-brand-gray-400">—</span>
+                    )}
+                  </td>
+                  <td className="px-6 py-3">
+                    <button
+                      type="button"
+                      className="inline-flex size-8 items-center justify-center rounded-full text-brand-gray-400 hover:bg-brand-gray-50 hover:text-brand-gray-600"
+                    >
+                      <MoreHorizontal className="size-4" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 /* -------------------------------- Chat ---------------------------------- */
 
-function ChatHeader({ call, isActive, onBack }) {
+function ChatHeader({ call, isActive, onBack, onRequestJoin, hasJoined, hasPendingRequest }) {
   const datePrefix = isActive ? "Valid till" : "Ended";
   return (
     <div className="flex items-center justify-between gap-4 border-b border-brand-gray-100 px-6 py-4">
@@ -357,16 +589,38 @@ function ChatHeader({ call, isActive, onBack }) {
             {datePrefix}: {formatShortDate(call.endDate)}
           </span>
         </div>
+        {isActive && !hasJoined && !hasPendingRequest ? (
+          <Button
+            size="sm"
+            variant="outline"
+            className="rounded-full border-primary-500 text-primary-500 bg-transparent hover:bg-primary-50"
+            onClick={onRequestJoin}
+          >
+            Request to join
+          </Button>
+        ) : null}
+        {hasPendingRequest && !hasJoined ? (
+          <span className="inline-flex h-[34px] items-center rounded-full bg-amber-50 px-4 text-sm font-medium text-amber-700">
+            Requested
+          </span>
+        ) : null}
+        {hasJoined ? (
+          <span className="inline-flex h-[34px] items-center rounded-full bg-primary-50 px-4 text-sm font-medium text-primary-700">
+            Joined
+          </span>
+        ) : null}
       </div>
     </div>
   );
 }
 
-function ChatThread({ messages = [] }) {
+function ChatThread({ messages = [], canPost = false }) {
   if (!messages.length) {
     return (
       <div className="flex flex-1 items-center justify-center px-6 py-10 text-sm text-brand-gray-500">
-        No messages yet — start the conversation below.
+        {canPost
+          ? "No messages yet — start the conversation below."
+          : "No messages yet."}
       </div>
     );
   }
@@ -392,13 +646,23 @@ function ChatThread({ messages = [] }) {
             return (
               <li key={key} className="flex justify-end">
                 <div className="flex max-w-[70%] flex-col items-end gap-1">
-                  <div
-                    className="rounded-2xl rounded-tr-sm bg-primary-500 px-4 py-2.5 text-sm text-white break-words [&_a]:underline [&_a]:text-white [&_ul]:ml-5 [&_ul]:list-disc [&_ol]:ml-5 [&_ol]:list-decimal [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_p]:m-0 [&_blockquote]:border-l-2 [&_blockquote]:border-white/40 [&_blockquote]:pl-3 [&_pre]:bg-white/10 [&_pre]:rounded-md [&_pre]:p-2 [&_pre]:font-mono [&_pre]:text-xs"
-                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(m.text) }}
-                  />
-                  <span className="text-[11px] text-brand-gray-400">
-                    {m.time}
-                  </span>
+                  <div className="mb-1 flex items-center gap-2">
+                    <span className="text-sm font-semibold text-brand-gray-900">
+                      You
+                    </span>
+                    <span className="text-[11px] text-brand-gray-400">
+                      {m.time}
+                    </span>
+                  </div>
+                  {m.attachment ? (
+                    <ChatAttachment attachment={m.attachment} />
+                  ) : null}
+                  {m.text && m.text.replace(/<[^>]*>/g, "").trim() ? (
+                    <div
+                      className="rounded-2xl rounded-tr-sm bg-primary-500 px-4 py-2.5 text-sm text-white break-words [&_a]:underline [&_a]:text-white [&_ul]:ml-5 [&_ul]:list-disc [&_ol]:ml-5 [&_ol]:list-decimal [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_p]:m-0 [&_blockquote]:border-l-2 [&_blockquote]:border-white/40 [&_blockquote]:pl-3 [&_pre]:bg-white/10 [&_pre]:rounded-md [&_pre]:p-2 [&_pre]:font-mono [&_pre]:text-xs"
+                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(m.text) }}
+                    />
+                  ) : null}
                 </div>
               </li>
             );
@@ -419,29 +683,14 @@ function ChatThread({ messages = [] }) {
                   </span>
                 </div>
                 {m.attachment ? (
-                  <div className="inline-flex items-center gap-3 rounded-xl bg-brand-gray-50 px-3 py-2">
-                    <span className="flex size-9 flex-none items-center justify-center rounded-md bg-white text-brand-gray-500">
-                      {m.attachment.kind === "image" ? (
-                        <ImageIcon className="size-4" />
-                      ) : (
-                        <FileText className="size-4" />
-                      )}
-                    </span>
-                    <div>
-                      <div className="text-sm font-medium text-brand-gray-900">
-                        {m.attachment.name}
-                      </div>
-                      <div className="text-xs text-brand-gray-500">
-                        {m.attachment.size}
-                      </div>
-                    </div>
-                  </div>
-                ) : (
+                  <ChatAttachment attachment={m.attachment} />
+                ) : null}
+                {m.text && m.text.replace(/<[^>]*>/g, "").trim() ? (
                   <div
                     className="w-fit rounded-2xl rounded-tl-sm bg-brand-gray-50 px-4 py-2.5 text-sm text-brand-gray-800 break-words [&_a]:underline [&_a]:text-primary-500 [&_ul]:ml-5 [&_ul]:list-disc [&_ol]:ml-5 [&_ol]:list-decimal [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_p]:m-0 [&_blockquote]:border-l-2 [&_blockquote]:border-brand-gray-200 [&_blockquote]:pl-3 [&_pre]:bg-white [&_pre]:rounded-md [&_pre]:p-2 [&_pre]:font-mono [&_pre]:text-xs"
                     dangerouslySetInnerHTML={{ __html: sanitizeHtml(m.text) }}
                   />
-                )}
+                ) : null}
               </div>
             </li>
           );
@@ -451,24 +700,59 @@ function ChatThread({ messages = [] }) {
   );
 }
 
+function ChatAttachment({ attachment }) {
+  return (
+    <a
+      href={attachment.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-3 rounded-xl border border-brand-gray-100 bg-white px-4 py-3 hover:bg-brand-gray-50 transition-colors"
+    >
+      <span className="flex size-9 flex-none items-center justify-center rounded-full bg-primary-50 text-primary-500">
+        {attachment.kind === "image" ? (
+          <ImageIcon className="size-4" />
+        ) : (
+          <FileText className="size-4" />
+        )}
+      </span>
+      <div>
+        <div className="text-sm font-medium text-brand-gray-900">
+          {attachment.name}
+        </div>
+        <div className="text-xs text-brand-gray-500">
+          {attachment.size}
+        </div>
+      </div>
+    </a>
+  );
+}
+
 function ChatComposer({ onSend, disabled = false }) {
   const [value, setValue] = useState("");
+  const [file, setFile] = useState(null);
+  const fileInputRef = useRef(null);
 
   const plainText = htmlToPlainText(value).trim();
-  const canSend = plainText.length > 0 && !disabled;
+  const canSend = (plainText.length > 0 || file) && !disabled;
 
   const submit = () => {
     if (!canSend) return;
-    onSend?.(value);
+    onSend?.(value, file);
     setValue("");
+    setFile(null);
   };
 
   const handleKeyDown = (e) => {
-    // Cmd/Ctrl + Enter sends; plain Enter inserts a newline.
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       submit();
     }
+  };
+
+  const handleFileChange = (e) => {
+    const selected = e.target.files?.[0];
+    if (selected) setFile(selected);
+    e.target.value = "";
   };
 
   return (
@@ -479,7 +763,40 @@ function ChatComposer({ onSend, disabled = false }) {
         onKeyDown={handleKeyDown}
         placeholder="Write a message..."
         minHeight={96}
+        toolbarExtras={
+          <>
+            <button
+              type="button"
+              aria-label="Attach file"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => fileInputRef.current?.click()}
+              className="inline-flex size-7 items-center justify-center rounded-md text-brand-gray-500 hover:bg-brand-gray-50"
+            >
+              <Paperclip className="size-4" />
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </>
+        }
       />
+
+      {file ? (
+        <div className="mt-2 inline-flex items-center gap-2 rounded-lg bg-brand-gray-50 px-3 py-2 text-sm text-brand-gray-700">
+          <FileText className="size-4 text-brand-gray-400" />
+          <span className="truncate max-w-[200px]">{file.name}</span>
+          <button
+            type="button"
+            onClick={() => setFile(null)}
+            className="ml-1 text-brand-gray-400 hover:text-brand-gray-600"
+          >
+            <X className="size-3.5" />
+          </button>
+        </div>
+      ) : null}
 
       <div className="mt-3 flex items-center gap-2">
         <Button
@@ -494,8 +811,8 @@ function ChatComposer({ onSend, disabled = false }) {
           size="sm"
           variant="outline"
           className="rounded-full"
-          onClick={() => setValue("")}
-          disabled={!value.length}
+          onClick={() => { setValue(""); setFile(null); }}
+          disabled={!value.length && !file}
         >
           Cancel
         </Button>
@@ -549,6 +866,12 @@ function formatShortDate(value) {
 
 function formatNumber(n) {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function formatFileSize(kb) {
+  if (!kb) return "";
+  if (kb < 1024) return `${Math.round(kb)} KB`;
+  return `${(kb / 1024).toFixed(1)} MB`;
 }
 
 const WEEKDAYS = [

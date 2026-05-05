@@ -342,6 +342,23 @@ export async function fetchCollaborationCalls(communityName) {
 }
 
 /**
+ * Request to join a collaboration call. Creates a Pending invite for the
+ * current user. The call creator can approve it from the backend.
+ */
+export async function requestJoinCollaborationCall(collaborationCallId) {
+  try {
+    const response = await apiClient.post(
+      "/collaboration-invites/request-join",
+      { collaborationCallId },
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error requesting to join collaboration call:", error);
+    return error;
+  }
+}
+
+/**
  * Accept a collaboration invite by its numeric id.
  */
 export async function acceptCollaborationInvite(id) {
@@ -384,11 +401,11 @@ export async function fetchChatMessages(callDocumentId) {
  * Post a chat message to a collaboration call. Author is derived from the
  * authenticated user server-side — never trusted from the request body.
  */
-export async function postChatMessage(callDocumentId, text) {
+export async function postChatMessage(callDocumentId, text, attachmentId) {
   try {
-    const response = await apiClient.post("/chat-messages", {
-      data: { text, collaborationCall: callDocumentId },
-    });
+    const data = { text, collaborationCall: callDocumentId };
+    if (attachmentId) data.attachment = attachmentId;
+    const response = await apiClient.post("/chat-messages", { data });
     return response.data;
   } catch (error) {
     console.error("Error posting chat message:", error);
@@ -502,18 +519,22 @@ export async function fetchResource(documentId) {
  */
 export async function fetchResourceComments(resourceDocumentId) {
   return fetchFromStrapi(
-    `/resource-comments?filters[resource][documentId][$eq]=${encodeURIComponent(resourceDocumentId)}&populate[author]=true&sort=createdAt:asc`,
+    `/resource-comments?filters[resource][documentId][$eq]=${encodeURIComponent(resourceDocumentId)}&filters[parentComment][id][$null]=true&populate[author]=true&populate[replies][populate][author]=true&populate[replies][populate][replies][populate][author]=true&sort=createdAt:asc`,
   );
 }
 
 /**
- * Post a comment on a resource.
+ * Post a comment on a resource. Pass parentCommentId for threaded replies.
  */
-export async function postResourceComment(resourceDocumentId, text) {
-  return postToStrapi("/resource-comments", {
+export async function postResourceComment(resourceDocumentId, text, parentCommentId) {
+  const data = {
     text,
     resource: { connect: [resourceDocumentId] },
-  });
+  };
+  if (parentCommentId) {
+    data.parentComment = { connect: [parentCommentId] };
+  }
+  return postToStrapi("/resource-comments", data);
 }
 
 /**

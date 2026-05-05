@@ -1,10 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Download, File, XIcon, Share2, Loader2, Reply } from "lucide-react";
+import {
+  Download,
+  File,
+  XIcon,
+  Loader2,
+  Reply,
+} from "lucide-react";
 import { useAuthStore } from "@/lib/auth-store";
 import { getFullFileUrl } from "@/lib/utils";
 import {
@@ -69,51 +75,56 @@ function getAuthorName(author) {
   );
 }
 
-function Comment({ comment }) {
+function Comment({ comment, onReply, depth = 0 }) {
   const author = comment.author;
   const name = getAuthorName(author);
+  const replies = comment.replies || [];
 
   return (
-    <div className="flex gap-3 py-4">
-      <Avatar size="sm" className="shrink-0 mt-0.5">
-        <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-semibold">
-          {getInitials(name)}
-        </AvatarFallback>
-      </Avatar>
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm font-semibold text-brand-gray-900">
-            {name}
-          </span>
-          {author?.roleType && (
-            <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-primary-50 text-primary-700">
-              {author.roleType}
+    <div className={depth > 0 ? "ml-8 border-l border-brand-gray-100 pl-4" : ""}>
+      <div className="flex gap-3 py-4">
+        <Avatar size="sm" className="shrink-0 mt-0.5">
+          <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-semibold">
+            {getInitials(name)}
+          </AvatarFallback>
+        </Avatar>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-sm font-semibold text-brand-gray-900">
+              {name}
             </span>
-          )}
-          <span className="text-xs text-brand-gray-400">
-            {timeAgo(comment.createdAt)}
-          </span>
-        </div>
-        <p className="mt-1.5 text-sm leading-relaxed text-brand-gray-700">
-          {comment.text}
-        </p>
-        <div className="mt-2 flex items-center gap-4">
-          <button
-            type="button"
-            className="flex items-center gap-1 text-xs text-brand-gray-500 hover:text-brand-gray-700"
-          >
-            <Reply className="size-3.5" />
-            Reply
-          </button>
-          <button
-            type="button"
-            className="flex items-center gap-1 text-xs text-brand-gray-500 hover:text-brand-gray-700"
-          >
-            <Share2 className="size-3.5" />
-            Share
-          </button>
+            {author?.roleType && (
+              <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-primary-50 text-primary-700">
+                {author.roleType}
+              </span>
+            )}
+            <span className="text-xs text-brand-gray-400">
+              {timeAgo(comment.createdAt)}
+            </span>
+          </div>
+          <p className="mt-1.5 text-sm leading-relaxed text-brand-gray-700">
+            {comment.text}
+          </p>
+          <div className="mt-2">
+            <button
+              type="button"
+              onClick={() => onReply?.(comment)}
+              className="flex items-center gap-1 text-xs text-brand-gray-500 hover:text-brand-gray-700"
+            >
+              <Reply className="size-3.5" />
+              Reply
+            </button>
+          </div>
         </div>
       </div>
+      {replies.map((reply) => (
+        <Comment
+          key={reply.documentId || reply.id}
+          comment={reply}
+          onReply={onReply}
+          depth={depth + 1}
+        />
+      ))}
     </div>
   );
 }
@@ -129,13 +140,18 @@ export default function ViewResourceDialog({
   const [loadingComments, setLoadingComments] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [posting, setPosting] = useState(false);
+  const [replyingTo, setReplyingTo] = useState(null);
   const user = useAuthStore((s) => s.user);
+  const scrollRef = useRef(null);
+  const inputRef = useRef(null);
 
   const resourceId = resourceProp?.documentId;
 
   useEffect(() => {
     if (!open || !resourceId) {
       setFullResource(null);
+      setReplyingTo(null);
+      setCommentText("");
       return;
     }
     fetchResource(resourceId).then((res) => {
@@ -179,10 +195,16 @@ export default function ViewResourceDialog({
     if (!commentText.trim() || !resourceId) return;
     setPosting(true);
     try {
-      await postResourceComment(resourceId, commentText.trim());
+      const parentId = replyingTo?.documentId || replyingTo?.id || null;
+      await postResourceComment(resourceId, commentText.trim(), parentId);
       setCommentText("");
+      setReplyingTo(null);
       const res = await fetchResourceComments(resourceId);
       setComments(Array.isArray(res?.data) ? res.data : []);
+      // Scroll to bottom after posting
+      setTimeout(() => {
+        scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+      }, 100);
     } catch (err) {
       console.error("Failed to post comment:", err);
     } finally {
@@ -190,15 +212,21 @@ export default function ViewResourceDialog({
     }
   };
 
+  const handleReply = (comment) => {
+    setReplyingTo(comment);
+    setCommentText("");
+    inputRef.current?.focus();
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         size="lg"
         showCloseButton={false}
-        className="flex max-h-[90vh] flex-col overflow-hidden p-0 gap-0"
+        className="!flex h-[min(80vh,700px)] !flex-col overflow-hidden !p-0 !gap-0"
       >
-        {/* Header */}
-        <div className="flex items-start gap-4 px-6 pt-5 pb-4">
+        {/* Header — fixed */}
+        <div className="shrink-0 flex items-start gap-4 px-6 pt-5 pb-4">
           <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-primary-100 bg-primary-50 mt-0.5">
             <File className="size-5 text-primary-700" />
           </div>
@@ -236,9 +264,9 @@ export default function ViewResourceDialog({
           </DialogClose>
         </div>
 
-        {/* Topic tags */}
+        {/* Topic tags — fixed */}
         {topics.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 px-6 pb-4">
+          <div className="shrink-0 flex flex-wrap gap-1.5 px-6 pb-4">
             {topics.map((topic) => (
               <Badge
                 key={topic}
@@ -251,9 +279,9 @@ export default function ViewResourceDialog({
           </div>
         )}
 
-        {/* Author row */}
+        {/* Author row — fixed */}
         {uploaderName && (
-          <div className="flex items-center justify-between gap-3 border-t border-brand-gray-100 px-6 py-3">
+          <div className="shrink-0 flex items-center justify-between gap-3 border-t border-brand-gray-100 px-6 py-3">
             <div className="flex items-center gap-3">
               <Avatar size="sm">
                 <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-semibold">
@@ -287,9 +315,8 @@ export default function ViewResourceDialog({
           </div>
         )}
 
-        {/* Scrollable body */}
-        <div className="flex-1 overflow-y-auto border-t border-brand-gray-100">
-          {/* Discussion */}
+        {/* Scrollable comments area */}
+        <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto border-t border-brand-gray-100">
           <div className="px-6 py-4">
             <div className="flex items-center gap-2 mb-4">
               <h3 className="text-sm font-semibold text-brand-gray-900">
@@ -301,37 +328,6 @@ export default function ViewResourceDialog({
               </span>
             </div>
 
-            {/* Comment input */}
-            {user && (
-              <div className="mb-4 flex gap-3">
-                <input
-                  type="text"
-                  className="flex-1 h-10 rounded-full border border-brand-gray-200 bg-white px-4 text-sm text-brand-gray-900 placeholder:text-brand-gray-400 outline-none focus:border-primary-500 transition-colors"
-                  placeholder="Leave a comment"
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && commentText.trim())
-                      handlePostComment();
-                  }}
-                />
-                {commentText.trim() && (
-                  <Button
-                    size="sm"
-                    className="rounded-full shrink-0"
-                    disabled={posting}
-                    onClick={handlePostComment}
-                  >
-                    {posting && (
-                      <Loader2 className="size-3 animate-spin mr-1" />
-                    )}
-                    Post
-                  </Button>
-                )}
-              </div>
-            )}
-
-            {/* Comments */}
             {loadingComments ? (
               <div className="py-6 text-center text-sm text-brand-gray-500">
                 Loading...
@@ -343,31 +339,64 @@ export default function ViewResourceDialog({
             ) : (
               <div className="flex flex-col divide-y divide-brand-gray-100">
                 {comments.map((c) => (
-                  <Comment key={c.documentId || c.id} comment={c} />
+                  <Comment
+                    key={c.documentId || c.id}
+                    comment={c}
+                    onReply={handleReply}
+                  />
                 ))}
               </div>
             )}
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between border-t border-brand-gray-100 px-6 py-4">
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-2"
-            onClick={() => {
-              const url = window.location.href;
-              if (navigator.share) {
-                navigator.share({ title: resource.name, url });
-              } else {
-                navigator.clipboard.writeText(url);
-              }
-            }}
-          >
-            <Share2 className="size-4" />
-            {t("resources.share")}
-          </Button>
+        {/* Comment input — fixed at bottom */}
+        {user && (
+          <div className="shrink-0 border-t border-brand-gray-100 px-6 py-3">
+            {replyingTo && (
+              <div className="mb-2 flex items-center gap-2 text-xs text-brand-gray-500">
+                <Reply className="size-3" />
+                <span>Replying to <strong className="text-brand-gray-700">{getAuthorName(replyingTo.author)}</strong></span>
+                <button
+                  type="button"
+                  onClick={() => setReplyingTo(null)}
+                  className="ml-auto text-brand-gray-400 hover:text-brand-gray-600"
+                >
+                  <XIcon className="size-3.5" />
+                </button>
+              </div>
+            )}
+            <div className="flex gap-3">
+              <input
+                ref={inputRef}
+                type="text"
+                className="flex-1 h-10 rounded-full border border-brand-gray-200 bg-white px-4 text-sm text-brand-gray-900 placeholder:text-brand-gray-400 outline-none focus:border-primary-500 transition-colors"
+                placeholder={replyingTo ? "Write a reply..." : "Leave a comment"}
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && commentText.trim()) handlePostComment();
+                }}
+              />
+              {commentText.trim() && (
+                <Button
+                  size="sm"
+                  className="rounded-full shrink-0"
+                  disabled={posting}
+                  onClick={handlePostComment}
+                >
+                  {posting && (
+                    <Loader2 className="size-3 animate-spin mr-1" />
+                  )}
+                  Post
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Footer — fixed */}
+        <div className="shrink-0 flex items-center justify-end border-t border-brand-gray-100 px-6 py-4">
           {fileUrl && (
             <Button size="md" className="gap-2" onClick={handleDownload}>
               {t("resources.download")}

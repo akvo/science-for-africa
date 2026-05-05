@@ -47,6 +47,7 @@ module.exports = createCoreController(
           orderBy: { createdAt: "asc" },
           populate: {
             author: { select: USER_PUBLIC_FIELDS },
+            attachment: true,
           },
         });
 
@@ -64,8 +65,9 @@ module.exports = createCoreController(
       const body = ctx.request.body?.data || ctx.request.body || {};
       const text = typeof body.text === "string" ? body.text.trim() : "";
       const callDocumentId = body.collaborationCall;
+      const attachmentId = body.attachment || null;
 
-      if (!text) return ctx.badRequest("text is required");
+      if (!text && !attachmentId) return ctx.badRequest("text or attachment is required");
       if (!callDocumentId)
         return ctx.badRequest("collaborationCall is required");
 
@@ -75,22 +77,28 @@ module.exports = createCoreController(
 
       if (!call) return ctx.notFound("Collaboration call not found");
 
+      const data = {
+        text: text || "",
+        collaborationCall: call.id,
+        author: user.id,
+      };
+      if (attachmentId) {
+        data.attachment = attachmentId;
+      }
+
       const created = await strapi.entityService.create(
         "api::chat-message.chat-message",
-        {
-          data: {
-            text,
-            collaborationCall: call.id,
-            author: user.id,
-          },
-        },
+        { data },
       );
 
       const withAuthor = await strapi.db
         .query("api::chat-message.chat-message")
         .findOne({
           where: { id: created.id },
-          populate: { author: { select: USER_PUBLIC_FIELDS } },
+          populate: {
+            author: { select: USER_PUBLIC_FIELDS },
+            attachment: true,
+          },
         });
 
       return { data: withAuthor, meta: {} };

@@ -55,12 +55,12 @@ export default function PrivacyPolicy() {
 
       {/* Hero Section */}
       <div className="bg-gray-100 border-b border-brand-gray-100 w-full">
-        <div className="max-w-4xl mx-auto py-20 px-4">
+        <div className="max-w-5xl mx-auto py-20 px-4">
           <header className="text-center">
-            <p className="text-sm font-bold text-brand-gray-900 mb-4">
+            <p className="text-md font-bold text-brand-gray-900 mb-4">
               {t("title")}
             </p>
-            <h1 className="text-display-lg font-bold text-brand-teal-900 mb-8 leading-tight">
+            <h1 className="text-display-lg font-bold text-brand-teal-900 mb-6 leading-tight">
               {t("subtitle")}
             </h1>
             <p className="text-base text-brand-gray-600 max-w-2xl mx-auto leading-relaxed">
@@ -71,7 +71,7 @@ export default function PrivacyPolicy() {
       </div>
 
       {/* Content Body */}
-      <div className="max-w-4xl mx-auto py-16 md:py-24 px-4">
+      <div className="max-w-5xl mx-auto py-16 md:py-24 px-4">
         <div className="space-y-20">
           {/* Aligned With */}
           <div className="space-y-6">

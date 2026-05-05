@@ -1,1 +1,273 @@
-{}
+{
+  "seo": {
+    "title": "Sera ya Faragha | Sayansi kwa Afrika",
+    "description": "Sera ya Faragha, Masharti ya Matumizi, na Miongozo ya Jumuiya kwa Jukwaa la Jumuiya ya Mazoezi ya Pan-African."
+  },
+  "title": "Sera ya Faragha",
+  "subtitle": "Jumuiya ya Mazoezi ya Pan-African kwa ajili ya Usimamizi wa Utafiti na Ubunifu",
+  "intro": "Jumuiya ya Mazoezi ya Pan-African kwa ajili ya Usimamizi wa Utafiti na Ubunifu (“CoP”, “Jukwaa”) imejitolea kulinda data ya kibinafsi na kuzingatia kanuni zinazotambulika kimataifa za ulinzi wa data, faragha, na utawala bora wa kidijitali.",
+  "aligned_with": {
+    "title": "Sera hii ya Faragha inaendana na:",
+    "points": [
+      "Kanuni ya Jumla ya Ulinzi wa Data ya EU (GDPR),",
+      "Kanuni za Umoja wa Afrika za Ulinzi wa Data na Utawala wa Kidijitali, na",
+      "matarajio ya uwajibikaji na uwazi ya wafadhili wa kimataifa wa utafiti wa umma na hisani."
+    ]
+  },
+  "scope": {
+    "title": "Upeo wa Sera Hii",
+    "content": "Sera hii inatumika kwa watumiaji wote wa Jukwaa, wakiwemo wanachama binafsi, akaunti za taasisi, washauri, wasimamizi, washirika, na wasimamizi wa mfumo.",
+    "acknowledgment": "Kwa kujisajili au kutumia Jukwaa, unakiri na kukubali taratibu zilizoelezwa katika sera hii."
+  },
+  "principles": {
+    "title": "Kanuni Zinazoongoza Matumizi Yetu ya Data",
+    "intro": "Tunachakata data ya kibinafsi kulingana na kanuni zifuatazo:",
+    "points": [
+      "Uhalali, haki, na uwazi",
+      "Uzuiaji wa madhumuni (data inayotumika kwa madhumuni ya kitaalamu yaliyofafanuliwa tu)",
+      "Upunguzaji wa data (data inayohitajika tu ndiyo inakusanywa)",
+      "Usahihi na usasishaji",
+      "Uzuiaji wa uhifadhi",
+      "Uadilifu na usiri",
+      "Uwajibikaji na uongozi"
+    ],
+    "footer": "Kanuni hizi zinaakisi mahitaji ya GDPR na ahadi za AU kwa mifumo ya kidijitali inayowajibika na inayomlenga mwanadamu."
+  },
+  "collection": {
+    "title": "Taarifa Tunazokusanya",
+    "intro": "Tunaweza kukusanya kategoria zifuatazo za data:",
+    "sections": [
+      {
+        "title": "Utambulisho na Taarifa za Kitaalamu",
+        "points": [
+          "Jina, barua pepe, nchi, taasisi, jukumu la kitaalamu",
+          "Hatua ya kazi, maeneo ya utaalamu, na maslahi",
+          "Uhusiano wa kitaasisi na hali ya uhakiki"
+        ]
+      },
+      {
+        "title": "Data ya Jukwaa na Ushiriki",
+        "points": [
+          "Machapisho, maoni, upakiaji wa rasilimali, na ushiriki katika majadiliano",
+          "Ushirikiano, ushauri, na shughuli za vikundi vya kazi",
+          "Uandikishaji wa mafunzo, ukamilishaji, beji, na vyeti"
+        ]
+      },
+      {
+        "title": "Data ya Kiufundi na Matumizi",
+        "points": [
+          "Kumbukumbu za kuingia, taarifa za kifaa na kivinjari",
+          "Anwani ya IP na metadata ya kipindi",
+          "Vidakuzi na data ya uchambuzi wa jukwaa"
+        ]
+      }
+    ],
+    "footer": "Unaweza kuchagua kiasi gani cha taarifa za wasifu kinachoonekana kwa wengine kupitia vidhibiti vya faragha."
+  },
+  "lawful_basis": {
+    "title": "Msingi wa Kisheria wa Kuchakata",
+    "intro": "Tunachakata data ya kibinafsi chini ya msingi mmoja au zaidi wa kisheria ufuatao:",
+    "points": [
+      "Ridhaa (mfano: kuunda akaunti, mawasiliano)",
+      "Maslahi halali ya kitaalamu katika kuendesha jumuiya inayoaminika na salama",
+      "Utekelezaji wa kazi za programu au jukwaa",
+      "Uzingatiaji wa majukumu ya kisheria na ya wafadhili"
+    ],
+    "footer": "Watumiaji wanaweza kuondoa ridhaa wakati wowote, bila kuathiri uhalali wa uchakataji uliofanywa tayari."
+  },
+  "usage": {
+    "title": "Jinsi Tunavyotumia Taarifa Zako",
+    "intro": "Tunatumia data kwa madhumuni ya:",
+    "points": [
+      "Kuendesha na kuboresha jukwaa la CoP",
+      "Kuwezesha mwingiliano wa kitaalamu, ushirikiano, na ushauri",
+      "Kutoa shughuli za mafunzo, matukio, na utoaji wa vyeti",
+      "Kusaidia utambuzi wa kitaalamu na utambulisho",
+      "Kubinafsisha maudhui, arifa, na mapendekezo",
+      "Kufuatilia utendaji wa jukwaa na ushiriki (iliyokusanywa na isiyojulikana inapowezekana)",
+      "Kutekeleza majukumu ya kuripoti na uwajibikaji kwa wafadhili na washirika"
+    ],
+    "footer": "Hatutumii data ya kibinafsi kwa matangazo ya kibiashara."
+  },
+  "sharing": {
+    "title": "Ushiriki wa Data na Uhamishaji wa Kimataifa",
+    "intro": "Hatuuzi wala kupata faida kutokana na data ya kibinafsi.",
+    "sharing_with_intro": "Data inaweza kushirikiwa tu:",
+    "points": [
+      "na watoa huduma wanaoaminika wanaosaidia uendeshaji wa jukwaa;",
+      "na washirika wa mafunzo au utoaji wa vyeti (pale inapofaa);",
+      "pale inapohitajika na sheria au mamlaka ya udhibiti;",
+      "katika fomu isiyojulikana au iliyokusanywa kwa ajili ya kuripoti na mafunzo ya mfumo."
+    ],
+    "transfer_footer": "Pale ambapo data inachakatwa au kuhifadhiwa nje ya mipaka, tunatumia ulinzi unaoendana na kanuni za GDPR na AU, ikijumuisha ulinzi wa kimkataba na kiufundi."
+  },
+  "retention": {
+    "title": "Uhifadhi wa Data",
+    "intro": "Data ya kibinafsi huhifadhiwa tu kwa muda mrefu iwezekanavyo ili:",
+    "points": [
+      "kutoa huduma za jukwaa,",
+      "kukidhi mahitaji ya kisheria au ya kuripoti ya wafadhili,",
+      "kulinda uadilifu na uwezo wa kukagua jukwaa."
+    ],
+    "footer": "Watumiaji wanaweza kuomba kufutwa kwa data zao, kulingana na vikwazo vya kisheria au uendeshaji (mfano: kumbukumbu za ukaguzi, rekodi za ulinzi)."
+  },
+  "security": {
+    "title": "Usalama na Ulinzi",
+    "intro": "Tunatekeleza hatua za kiufundi na shirika zinazolingana, ikiwa ni pamoja na:",
+    "points": [
+      "uhifadhi uliosimbwa na udhibiti wa usalama wa ufikiaji;",
+      "ruhusa zinazotokana na majukumu;",
+      "njia za ukaguzi kwa hatua nyeti;",
+      "mapitio ya mara kwa mara ya usalama wa jukwaa na taratibu za utawala."
+    ]
+  },
+  "rights": {
+    "title": "Haki Zako",
+    "intro": "Kulingana na kanuni za GDPR na AU, una haki ya:",
+    "points": [
+      "Kufikia data yako ya kibinafsi",
+      "Kurekebisha au kusasisha data isiyo sahihi",
+      "Kuomba kufutwa (“haki ya kusahaulika”), inapohitajika",
+      "Kuzuia au kupinga uchakataji fulani",
+      "Kuomba uhamisho wa data",
+      "Kuondoa ridhaa",
+      "Kuwasilisha malalamiko inapohitajika"
+    ],
+    "footer": "Maombi yanaweza kufanywa kwa kutumia maelezo ya mawasiliano hapa chini."
+  },
+  "changes": {
+    "title": "Mabadiliko ya Sera Hii",
+    "content": "Tunaweza kusasisha Sera hii ya Faragha ili kuakisi mabadiliko ya kisheria, udhibiti, au uendeshaji.",
+    "footer": "Sasisho muhimu zitawasilishwa waziwazi kwenye Jukwaa."
+  },
+  "contact": {
+    "title": "Mawasiliano",
+    "intro": "Kwa masuala ya faragha au ulinzi wa data, tafadhali wasiliana na:",
+    "email_label": "Barua pepe:",
+    "email_value": "[Ingiza Barua Pepe ya Mawasiliano ya Ulinzi wa Data / Jukwaa - TBC]",
+    "organisation_label": "Shirika:",
+    "organisation_value": "Science for Africa Foundation"
+  },
+  "terms": {
+    "title": "Masharti ya Matumizi",
+    "intro": "Masharti haya ya Matumizi yanafafanua masharti ambayo jukwaa la CoP hupatikana na kutumiwa.",
+    "acceptance": "Kwa kutumia jukwaa, unakubaliana na Masharti haya.",
+    "purpose": {
+      "title": "Madhumuni na Maadili ya Jukwaa",
+      "intro": "Jukwaa lipo kwa ajili ya:",
+      "points": [
+        "kitaalamu usimamizi wa utafiti na ubunifu;",
+        "kuwezesha mafunzo ya wenzao, ushirikiano, na ushauri;",
+        "kusaidia mifumo imara, ya kimaadili, na inayowajibika ya utafiti barani Afrika."
+      ],
+      "footer": "Matumizi ya Jukwaa lazima yaendane na madhumuni na maadili haya."
+    },
+    "registration": {
+      "title": "Usajili na Uwajibikaji wa Akaunti",
+      "points": [
+        "Watumiaji lazima watoe taarifa sahihi na za sasa",
+        "Akaunti ni za kibinafsi na haziwezi kushirikiwa",
+        "Uhusiano wa kitaasisi unategemea uhakiki",
+        "Jukwaa lina haki ya kuidhinisha, kuzuia, au kusitisha akaunti"
+      ]
+    },
+    "professional_use": {
+      "title": "Matumizi Yanayokubalika ya Kitaalamu",
+      "intro": "Watumiaji wanakubali:",
+      "points": [
+        "kutenda kihalali, kimaadili, na kitaalamu;",
+        "kushiriki kwa heshima na kwa kujenga;",
+        "kuchangia kwa nia njema kwenye mafunzo ya pamoja na ushirikiano;",
+        "kuheshimu usiri, mali ya kiakili, na haki za data."
+      ]
+    },
+    "prohibited": {
+      "title": "Tabia Zilizopigwa Marufuku",
+      "intro": "Watumiaji hawapaswi:",
+      "points": [
+        "kuchapisha maudhui hatari, yanayopotosha, au ya ubaguzi;",
+        "kutumia vibaya data au kuvunja usiri;",
+        "kushiriki katika shughuli za kibiashara zisizoidhinishwa;",
+        "kudhoofisha usalama wa jukwaa, uaminifu, au utawala."
+      ]
+    },
+    "ugc": {
+      "title": "Maudhui Yanayozalishwa na Mtumiaji",
+      "points": [
+        "Watumiaji wanahifadhi umiliki wa maudhui yao",
+        "Kwa kuchapisha, watumiaji wanaipa Jukwaa leseni isiyo ya kipekee ya kuihifadhi na kuionyesha",
+        "Maudhui yanaweza kusimamiwa ili kudumisha viwango, kulinda watumiaji, na kukidhi majukumu ya wafadhili na kisheria"
+      ]
+    },
+    "governance": {
+      "title": "Utawala wa Jukwaa na Utekelezaji",
+      "intro": "Jukwaa linaweza:",
+      "points": [
+        "kusimamia au kuondoa maudhui;",
+        "kusitisha au kuzuia ufikiaji;",
+        "kuchukua hatua muhimu kulinda watumiaji, washirika, na uadilifu wa taasisi."
+      ],
+      "footer": "Ukiukaji mkubwa au wa mara kwa mara unaweza kusababisha kuondolewa kwa kudumu."
+    },
+    "liability": {
+      "title": "Uzuiaji wa Dhima",
+      "content": "Jukwaa linatolewa “kama lilivyo”.",
+      "footer": "Ushiriki hauhakikishii matokeo, ufadhili, au maendeleo ya kitaalamu."
+    },
+    "law": {
+      "title": "Sheria Inayoongoza",
+      "content": "Masharti haya yanaongozwa na sheria zinazotumika katika eneo la uendeshaji wa jukwaa (mfano: Kenya), pamoja na misingi ya kimataifa ya data na utawala wa kidijitali."
+    }
+  },
+  "community_guidelines": {
+    "title": "Miongozo ya Jumuiya",
+    "subtitle": "Kujenga Jumuiya Inayoaminika na ya Kitaalamu",
+    "intro": "CoP ni nafasi ya kitaalamu, jumuishi, na inayoaminika. Miongozo hii inaakisi uwajibikaji na uongozi wa pamoja.",
+    "conduct": {
+      "title": "Tabia ya Kitaalamu",
+      "intro": "Wanachama wanatarajiwa:",
+      "points": [
+        "kuwatendea wengine kwa heshima na haki;",
+        "kusaidia mafunzo katika hatua zote za kazi;",
+        "kutambua mazingira tofauti ya kitaasisi na kitaifa;",
+        "kushiriki kwa kujenga na kuwajibika."
+      ]
+    },
+    "sharing": {
+      "title": "Ushiriki wa Maarifa Unaowajibika",
+      "intro": "Wanachama wanapaswa:",
+      "points": [
+        "kushiriki uzoefu na ushahidi unaotokana na mazoezi;",
+        "kutambua vyanzo na washirika;",
+        "kutofautisha maoni na ukweli;",
+        "kuepuka taarifa zisizo sahihi au madai yasiyothibitishwa."
+      ]
+    },
+    "inclusion": {
+      "title": "Ujumuishi, Usawa, na Ulinzi",
+      "intro": "Jukwaa halivumilii:",
+      "points": [
+        "unyanyasaji, ubaguzi, au ubaguzi;",
+        "matumizi mabaya ya nguvu au hadhi;",
+        "tabia inayodhoofisha usalama wa kisaikolojia au wa kitaalamu."
+      ]
+    },
+    "moderation": {
+      "title": "Usimamizi na Uwajibikaji",
+      "points": [
+        "Wasimamizi huongoza majadiliano na kutekeleza viwango",
+        "Maamuzi yanarekodiwa na yanalingana",
+        "Mchakato unaostahili unatumika, unaoendana na matarajio ya wafadhili na utawala"
+      ]
+    },
+    "reporting": {
+      "title": "Kuripoti na Uwajibikaji wa Pamoja",
+      "intro": "Wanachama wote wanashiriki uwajibikaji kwa:",
+      "points": [
+        "kudumisha uaminifu na ubora;",
+        "kuripoti wasiwasi kwa nia njema;",
+        "kuchangia katika jumuiya ya kitaalamu ya usimamizi wa utafiti inayowaimarisha mifumo ya utafiti na ubunifu barani Afrika."
+      ]
+    }
+  }
+}

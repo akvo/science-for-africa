@@ -13,7 +13,19 @@
     "profile": "Profil",
     "settings": "Paramètres",
     "logout": "Se déconnecter",
-    "publish": "Publier"
+    "publish": "Publier",
+    "back": "Retour",
+    "researcher_placeholder": "Chercheur institutionnel",
+    "profile_dropdown": {
+      "details": "Détails",
+      "communities": "Communautés",
+      "content": "Contenu",
+      "saved_posts": "Articles enregistrés",
+      "my_events": "Mes événements",
+      "courses": "Cours et certifications",
+      "faq": "FAQ",
+      "logout": "Se déconnecter"
+    }
   },
   "common": {
     "loading": "Chargement...",

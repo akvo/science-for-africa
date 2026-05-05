@@ -17,7 +17,7 @@ To provide a secure, seamless, and professional entry point for researchers and 
     - **Step 1: Account Type**: Choose between "Individual" or "Institutional" tabs. Select Role Type and search for Institution.
     - **Path A: Individual** (5 Steps):
         - Step 2: Interests (Select up to 5)
-        - Step 3: Career (Position & Education level)
+        - Step 3: Career (Career stage)
         - Step 4: ORCID Integration
         - Step 5: Affiliation (Final institutional link)
     - **Path B: Institutional** (2 Steps):

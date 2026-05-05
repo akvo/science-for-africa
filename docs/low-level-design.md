@@ -816,3 +816,18 @@ While most onboarding data is held in local client state (`Zustand`) to ensure a
 ### 8.2 Partial Sync Robustness
 The partial sync in Step 3 is designed to be **non-blocking**. If the API call fails (e.g., due to temporary network issues), the frontend logs the error but still allows the user to proceed to Step 4. This prioritizes the user's progress while accepting a minor risk that the institution might not be searchable in Step 5 if the sync failed.
 
+## 8. Legal and Privacy Policy
++
++The platform provides a centralized legal documentation page at `/privacy-policy`.
++
++### 8.1 Architecture
++- **Single Page**: All legal documents (Privacy Policy, Terms of Use, Community Guidelines) are hosted on a single, long-form scrollable page.
++- **Localization**: Content is managed via `frontend/public/locales/{lang}/privacy-policy.json`.
++- **SEO**: Metadata is managed via the `Meta` component with localized titles and descriptions.
++
++### 8.2 Content Structure
++The page is divided into three main logical sections, each with its own typography and visual identifiers:
++1.  **Privacy Policy**: Covers data collection, lawful basis, principles, and user rights.
++2.  **Terms of Use**: Covers registration, acceptable use, and governing law.
++3.  **Community Guidelines**: Covers professional conduct and reporting.
++

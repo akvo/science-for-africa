@@ -680,7 +680,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                         ? t(`languages.${field.value}`, {
                             defaultValue: field.value,
                           })
-                        : ""}
+                        : t("details.language_placeholder")}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>

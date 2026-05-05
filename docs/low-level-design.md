@@ -806,17 +806,35 @@ The `api/community/leave` controller implements a multi-layered synchronization 
 ### 7.3 Data Consistency Rule
 Every "Join" action MUST create both the relation and the collection record. Every "Leave" action MUST delete both. This dual-write/dual-delete requirement is enforced at the controller level to maintain a "Single Source of Truth" across the relational model.
 
-## 8. Collaboration Security
+## 8. Onboarding Data Persistence
+
+To balance user experience with data integrity, the onboarding flow utilizes a hybrid persistence strategy.
+
+### 8.1 Multi-Stage Synchronization
+While most onboarding data is held in local client state (`Zustand`) to ensure a fast, lag-free UI, certain milestones trigger backend synchronization before the final completion:
+
+- **Milestone 1: Education (Step 3)**: Clicking "Confirm" triggers an immediate `updateUserProfile` call.
+    - **Rationale**: The backend automatically creates new `Institution` records if the name provided doesn't exist. By syncing at Step 3, any new institution the user studied at is immediately added to the database.
+    - **Impact**: When the user reaches Step 5 (Institutional Affiliation), they can search for and find the institution they just "created" in Step 3, ensuring data reuse and a consistent lookup experience.
+
+- **Milestone 2: Completion (Step 5)**: The final submission sets the `onboardingComplete` flag.
+    - **Rationale**: This is the atomic "Gatekeeper" flag. Only after this call returns successfully is the user's profile considered complete, unlocking dashboard access and platform interactions.
+
+### 8.2 Partial Sync Robustness
+The partial sync in Step 3 is designed to be **non-blocking**. If the API call fails (e.g., due to temporary network issues), the frontend logs the error but still allows the user to proceed to Step 4. This prioritizes the user's progress while accepting a minor risk that the institution might not be searchable in Step 5 if the sync failed.
+
+## 9. Collaboration Security
 
 The platform enforces membership-level security for collaboration spaces to ensure professional and focused project work.
 
-### 8.1 Invitation-Based Membership
+### 9.1 Invitation-Based Membership
 Participation in a collaboration space is gated by an invitation system (`api::collaboration-invite`).
 - **Visitor**: Users who have not yet accepted an invitation. They have read-only access to the collaboration thread.
 - **Member**: Users who have clicked "Accept" on a pending invitation. They gain permission to post messages and contribute content.
 - **Creator**: The user who created the collaboration call. They have inherent membership permissions.
 
-### 8.2 Chat Interaction Gating
+### 9.2 Chat Interaction Gating
 Security is enforced at two levels:
 1.  **Frontend (UI/UX)**: The `ChatComposer` is replaced by a "Join to post" banner for non-members, preventing interaction attempts before membership is confirmed.
 2.  **Backend (API Guard)**: The `chat-message.create` controller explicitly verifies that the requester is either the `createdByUser` of the collaboration call or has an invitation with `inviteStatus: Accepted`. Requests from non-members are rejected with a `403 Forbidden` status.
+

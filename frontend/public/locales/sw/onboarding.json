@@ -1,0 +1,79 @@
+{
+  "steps": {
+    "step_count": "Hatua {{current}} ya {{total}}",
+    "back": "Nyuma",
+    "skip": "Ruka",
+    "confirm": "Thibitisha",
+    "next": "Ifuatayo",
+    "finish": "Maliza"
+  },
+  "step1": {
+    "title": "Unapendelea kuunda akaunti ya aina gani?",
+    "description": "Chagua aina ya akaunti yako kuifanyia binafsi uzoefu wako.",
+    "individual_tab": "Mtu binafsi",
+    "institution_tab": "Shirika",
+    "individual_desc": "Lorem ipsum dolor sit amet consectetur. Rhoncus quis nunc ipsum pellentesque praesent facilisis tempor.",
+    "institution_desc": "Lorem ipsum dolor sit amet consectetur. Rhoncus quis nunc ipsum pellentesque praesent facilisis tempor.",
+    "role_label": "Jukumu",
+    "role_placeholder": "Chagua jukumu",
+    "institution_label": "Shirika",
+    "institution_placeholder": "Andika jina la shirika lako",
+    "no_institutions_found": "Hakuna mashirika yaliyopatikana. Unaweza kuendelea na kile ulichokuchapisha.",
+    "dismiss": "Funga"
+  },
+  "roles": {
+    "Researcher": "Mtafiti",
+    "Principal Investigator / Lab Lead": "Mchunguzi Mkuu / Kiongozi wa Maabara",
+    "Post-doctoral Fellow": "Mshirika wa Baada ya Daktari",
+    "PhD Candidate": "Mshiriki wa PhD",
+    "Graduate / Undergraduate Student": "Mwanafunzi wa Shahada ya Uzamili / Chuo",
+    "Administrator / Support Staff": "Msimamizi / Wafanyakazi wa Usaidizi",
+    "Program Manager / Funder representative": "Meneja wa Programu / Mwakilishi wa Mfadhili",
+    "External Reviewer": "Mhakiki wa Nje"
+  },
+  "education_levels": {
+    "Postgraduate Student (Masters)": "Postgraduate Student (Masters)",
+    "Doctoral Candidate (PhD Student)": "Doctoral Candidate (PhD Student)",
+    "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)": "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)",
+    "Mid-Career Researcher / Research management professional (6 – 15 years)": "Mid-Career Researcher / Research management professional (6 – 15 years)",
+    "Senior Researcher / Research management professional (16+ years)": "Senior Researcher / Research management professional (16+ years)",
+    "Emeritus / Retired": "Emeritus / Retired",
+    "High School": "Shule ya Upili",
+    "Bachelor's Degree": "Shahada ya Udhamini",
+    "Master's Degree": "Shahada ya Uzamili",
+    "Doctorate (PhD)": "Daktari (PhD)",
+    "Post-Doctorate": "Baada ya Daktari",
+    "Professional Certificate": "Cheti cha Kitaalamu"
+  },
+  "step2": {
+    "title": "Masomo ya Maslahi",
+    "description": "Chagua angalau 3 maslahi yanayokuvutia zaidi.",
+    "search_placeholder": "Tafuta maslahi...",
+    "selected_count": "{{count}} imechaguliwa",
+    "min_required": "Tafadhali chagua angalau 3 maslahi ili kuendelea",
+    "loading_interests": "Inapakia maslahi...",
+    "limit_reached": "Upeo wa 5 maslahi umefikiwa"
+  },
+  "step3": {
+    "title": "Elimu na Kazi",
+    "description": "Tusaidie kuelewa historia yako ili kutoa fursa za kisayansi zinazokubaliana zaidi.",
+    "level_label": "Hatua ya kazi",
+    "level_placeholder": "Chagua hatua ya kazi",
+    "institution_label": "Taasisi ya elimu (ambako ulisomea)",
+    "institution_placeholder": "Tafuta au andika chuo chako"
+  },
+  "step4": {
+    "title": "Una ORCID?",
+    "description": "ORCID hutoa kitambulisho cha kidijitali kinachodumu kinachokutofautisha kutoka kwa wasomi wengine.",
+    "orcid_label": "Weka ORCID yako",
+    "orcid_placeholder": "0000-0000-0000-0000"
+  },
+  "step5": {
+    "title": "Uhusiano wa sasa",
+    "description": "Tutapendekeza washirika wa utafiti na wafadhili kulingana na uhusiano wako wa taasisi ya sasa.",
+    "search_label": "Tafuta taasisi",
+    "search_placeholder": "Andika taasisi yako kuu",
+    "finishing": "Inakamilika...",
+    "complete_button": "Maliza Usanidi"
+  }
+}

@@ -26,15 +26,32 @@ export function formatFileSize(bytes) {
 
 export function getFullFileUrl(url) {
   if (!url) return null;
-  if (url.startsWith("http") || url.startsWith("data:")) return url;
+  if (url.startsWith("data:")) {
+    return url;
+  }
 
   const backendOrigin = (
     process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api"
   ).replace(/\/api\/?$/, "");
 
-  // Ensure leading slash
-  const path = url.startsWith("/") ? url : `/${url}`;
-  return `${backendOrigin}${path}`;
+  let path = url;
+
+  if (url.startsWith("http")) {
+    // If it's the backend URL, strip the origin to make it relative
+    // This allows it to respect the frontend URL via Next.js rewrites
+    if (url.startsWith(backendOrigin)) {
+      path = url.replace(backendOrigin, "");
+    } else if (url.startsWith("http://localhost:1337")) {
+      // Fallback for default local Strapi if different from env var
+      path = url.replace("http://localhost:1337", "");
+    } else {
+      // It's an external URL (e.g. S3 or external CDN), leave as is
+      return url;
+    }
+  }
+
+  // Ensure leading slash for the relative path
+  return path.startsWith("/") ? path : `/${path}`;
 }
 
 export async function downloadFile(url, filename) {

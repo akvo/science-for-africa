@@ -107,7 +107,7 @@ const OnboardingStep1 = () => {
       <div className="flex items-center justify-end mb-24">
         <button
           onClick={skipStep}
-          className="text-brand-gray-500 hover:text-brand-teal-700 transition-colors"
+          className="text-brand-gray-500 hover:text-brand-teal-700 transition-colors cursor-pointer"
         >
           {t("steps.skip")}
         </button>
@@ -242,7 +242,7 @@ const OnboardingStep1 = () => {
                     key={index}
                     type="button"
                     onClick={() => handleInstitutionSelect(inst)}
-                    className="w-full text-left px-4 py-3 hover:bg-brand-teal-50 transition-colors text-md text-brand-gray-900 border-b last:border-0 border-brand-gray-50"
+                    className="w-full text-left px-4 py-3 hover:bg-brand-teal-50 transition-colors text-md text-brand-gray-900 border-b last:border-0 border-brand-gray-50 cursor-pointer"
                   >
                     {inst.name}
                   </button>
@@ -251,7 +251,7 @@ const OnboardingStep1 = () => {
                   <button
                     type="button"
                     onClick={() => setShowDropdown(false)}
-                    className="w-full text-left px-4 py-3 bg-brand-teal-50 hover:bg-brand-teal-100 transition-colors text-md text-brand-teal-700 font-medium italic"
+                    className="w-full text-left px-4 py-3 bg-brand-teal-50 hover:bg-brand-teal-100 transition-colors text-md text-brand-teal-700 font-medium italic cursor-pointer"
                   >
                     {t("step1.use_custom_institution", {
                       name: searchTerm,

@@ -32,6 +32,12 @@
     "External Reviewer": "Mhakiki wa Nje"
   },
   "education_levels": {
+    "Postgraduate Student (Masters)": "Postgraduate Student (Masters)",
+    "Doctoral Candidate (PhD Student)": "Doctoral Candidate (PhD Student)",
+    "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)": "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)",
+    "Mid-Career Researcher / Research management professional (6 – 15 years)": "Mid-Career Researcher / Research management professional (6 – 15 years)",
+    "Senior Researcher / Research management professional (16+ years)": "Senior Researcher / Research management professional (16+ years)",
+    "Emeritus / Retired": "Emeritus / Retired",
     "High School": "Shule ya Upili",
     "Bachelor's Degree": "Shahada ya Udhamini",
     "Master's Degree": "Shahada ya Uzamili",
@@ -51,8 +57,8 @@
   "step3": {
     "title": "Elimu na Kazi",
     "description": "Tusaidie kuelewa historia yako ili kutoa fursa za kisayansi zinazokubaliana zaidi.",
-    "level_label": "Kiwango cha elimu",
-    "level_placeholder": "Chagua kiwango cha elimu",
+    "level_label": "Hatua ya kazi",
+    "level_placeholder": "Chagua hatua ya kazi",
     "institution_label": "Taasisi ya elimu (ambako ulisomea)",
     "institution_placeholder": "Tafuta au andika chuo chako"
   },

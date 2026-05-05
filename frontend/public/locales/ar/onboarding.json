@@ -32,6 +32,12 @@
     "External Reviewer": "مراجع خارجي"
   },
   "education_levels": {
+    "Postgraduate Student (Masters)": "Postgraduate Student (Masters)",
+    "Doctoral Candidate (PhD Student)": "Doctoral Candidate (PhD Student)",
+    "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)": "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)",
+    "Mid-Career Researcher / Research management professional (6 – 15 years)": "Mid-Career Researcher / Research management professional (6 – 15 years)",
+    "Senior Researcher / Research management professional (16+ years)": "Senior Researcher / Research management professional (16+ years)",
+    "Emeritus / Retired": "Emeritus / Retired",
     "High School": "المدرسة الثانوية",
     "Bachelor's Degree": "درجة البكالوريوس",
     "Master's Degree": "درجة الماجستير",
@@ -51,8 +57,8 @@
   "step3": {
     "title": "التعليم والمسار الوظيفي",
     "description": "ساعدنا على فهم خلفيتك لتقديم فرص علمية أكثر صلة.",
-    "level_label": "مستوى التعليم",
-    "level_placeholder": "اختر مستوى التعليم",
+    "level_label": "مرحلة العمل",
+    "level_placeholder": "اختر مرحلة العمل",
     "institution_label": "المؤسسة التعليمية (حيث درست)",
     "institution_placeholder": "ابحث أو اكتب اسم جامعتك"
   },

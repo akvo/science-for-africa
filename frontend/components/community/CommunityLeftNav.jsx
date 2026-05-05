@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
+import { TrendingUp, Users, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_KEYS = [
-  { key: "trending", i18nKey: "community.left_nav.trending", href: "/community/trending" },
-  { key: "communities", i18nKey: "community.left_nav.communities", href: "/community" },
-  { key: "active-discussions", i18nKey: "community.left_nav.discussions", href: "/community/discussions" },
-  { key: "collaboration-hub", i18nKey: "community.left_nav.collaboration", href: "/community/collaboration-hub" },
-  { key: "events", i18nKey: "community.left_nav.events", href: "/community/events" },
+  { key: "trending", i18nKey: "community.left_nav.trending", href: "/community/trending", icon: TrendingUp },
+  { key: "communities", i18nKey: "community.left_nav.communities", href: "/community", icon: Users },
+  { key: "collaboration-hub", i18nKey: "community.left_nav.collaboration", href: "/community/collaboration-hub", icon: Globe },
 ];
 
 export default function CommunityLeftNav({
@@ -23,17 +22,19 @@ export default function CommunityLeftNav({
     >
       {NAV_KEYS.map((item) => {
         const isActive = item.key === activeKey;
+        const Icon = item.icon;
         return (
           <Link
             key={item.key}
             href={item.href}
             className={cn(
-              "rounded-lg px-3 py-2 font-medium whitespace-nowrap transition-colors",
+              "flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium whitespace-nowrap transition-colors",
               isActive
                 ? "bg-primary-50 text-brand-teal-700"
                 : "text-brand-gray-700 hover:bg-brand-gray-50",
             )}
           >
+            {Icon ? <Icon className="size-5 shrink-0" /> : null}
             {t(item.i18nKey)}
           </Link>
         );

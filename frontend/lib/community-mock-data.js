@@ -4,15 +4,11 @@
  */
 
 import {
-  Rss,
-  MessageSquare,
   Handshake,
   BookOpen,
 } from "lucide-react";
 
 export const COMMUNITY_TABS = [
-  { value: "feed", i18nKey: "community.tab_feed", icon: Rss },
-  { value: "discussions", i18nKey: "community.tab_discussions", icon: MessageSquare },
   {
     value: "collaboration-calls",
     i18nKey: "community.tab_collaboration",

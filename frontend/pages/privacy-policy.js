@@ -353,3 +353,4 @@ export default function PrivacyPolicy() {
 }
 
 PrivacyPolicy.noContainer = true;
+PrivacyPolicy.showFooter = true;

@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
-const AppLayout = ({ children, noContainer }) => {
+const AppLayout = ({ children, noContainer, showFooter = false }) => {
   return (
     <div className="min-h-screen flex flex-col bg-white overflow-x-clip">
       <Navbar />
@@ -19,7 +19,7 @@ const AppLayout = ({ children, noContainer }) => {
           </div>
         )}
       </main>
-      <Footer />
+      {showFooter && <Footer />}
     </div>
   );
 };

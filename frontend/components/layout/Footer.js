@@ -74,13 +74,13 @@ const Footer = () => {
               {t("footer.newsletter.subtitle")}
             </p>
           </div>
-          <div className="flex w-full md:w-auto max-w-md gap-3">
+          <div className="flex w-full md:w-auto max-w-2xl gap-3">
             <Input
               type="email"
               placeholder={t("footer.newsletter.placeholder")}
-              className="bg-white border-brand-gray-200"
+              className="bg-white border-brand-gray-200 h-11.5"
             />
-            <Button variant="primary" size="lg">
+            <Button variant="primary" size="xl">
               {t("footer.newsletter.subscribe")}
             </Button>
           </div>
@@ -92,7 +92,7 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-12">
           {footerSections.map((section) => (
             <div key={section.title} className="space-y-6">
-              <h4 className="text-sm font-bold text-brand-gray-500 uppercase tracking-wider">
+              <h4 className="text-sm font-bold text-brand-gray-500 tracking-wider">
                 {section.title}
               </h4>
               <ul className="space-y-4">
@@ -121,15 +121,15 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-brand-gray-100 py-8">
+      <div className="border-t border-brand-gray-100 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="shrink-0 relative w-auto h-8">
+          <div className="shrink-0 relative w-auto h-32">
             <Image
-              src="/logo-full.png"
+              src="/logo-black.png"
               alt="Science for Africa"
-              width={120}
-              height={32}
-              className="h-8 w-auto grayscale opacity-50"
+              width={480}
+              height={128}
+              className="h-32 w-auto opacity-70"
             />
           </div>
           <p className="text-sm font-medium text-brand-gray-400">

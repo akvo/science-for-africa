@@ -32,6 +32,12 @@
     "External Reviewer": "External Reviewer"
   },
   "education_levels": {
+    "Postgraduate Student (Masters)": "Postgraduate Student (Masters)",
+    "Doctoral Candidate (PhD Student)": "Doctoral Candidate (PhD Student)",
+    "Early-Career Researcher / Research management professional (0 - 5 years post-qualification)": "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)",
+    "Mid-Career Researcher / Research management professional (6 - 15 years)": "Mid-Career Researcher / Research management professional (6 – 15 years)",
+    "Senior Researcher / Research management professional (16+ years)": "Senior Researcher / Research management professional (16+ years)",
+    "Emeritus / Retired": "Emeritus / Retired",
     "High School": "High School",
     "Bachelor's Degree": "Bachelor's Degree",
     "Master's Degree": "Master's Degree",
@@ -51,8 +57,8 @@
   "step3": {
     "title": "Education and career",
     "description": "Help us understand your background to provide more relevant scientific opportunities.",
-    "level_label": "Education level",
-    "level_placeholder": "Select education level",
+    "level_label": "Career stage",
+    "level_placeholder": "Select career stage",
     "institution_label": "Educational institution (where you studied)",
     "institution_placeholder": "Search or type your university"
   },

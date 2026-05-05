@@ -1,0 +1,24 @@
+{
+  "title": "الملف الشخصي",
+  "edit_profile": "تحرير الملف",
+  "save_changes": "حفظ التغييرات",
+  "cancel": "إلغاء",
+  "fields": {
+    "full_name": "الاسم الكامل",
+    "email": "البريد الإلكتروني",
+    "institution": "المؤسسة",
+    "role": "الدور",
+    "orcid": "ORCID"
+  },
+  "placeholders": {
+    "full_name": "اكتب اسمك الكامل",
+    "email": "email@institution.org",
+    "institution": "اكتب اسم مؤسستك",
+    "role": "اختر الدور",
+    "orcid": "0000-0000-0000-0000"
+  },
+  "messages": {
+    "update_success": "تم تحديث ملفك بنجاح",
+    "update_error": "حدث خطأ أثناء تحديث ملفك"
+  }
+}

@@ -93,7 +93,7 @@ const OnboardingStep2 = () => {
       <div className="flex items-center justify-between mb-24">
         <button
           onClick={prevStep}
-          className="flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"
+          className="flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium cursor-pointer"
         >
           <ArrowLeft size={18} />
           <span>{t("steps.back")}</span>
@@ -101,7 +101,7 @@ const OnboardingStep2 = () => {
         {!isInstitution && (
           <button
             onClick={skipStep}
-            className="text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium"
+            className="text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium cursor-pointer"
           >
             {t("steps.skip")}
           </button>

@@ -17,9 +17,9 @@ To provide a secure, seamless, and professional entry point for researchers and 
     - **Step 1: Account Type**: Choose between "Individual" or "Institutional" tabs. Select Role Type and search for Institution.
     - **Path A: Individual** (5 Steps):
         - Step 2: Interests (Select up to 5)
-        - Step 3: Career (Position & Education level)
+        - Step 3: Career (Position & Education level) — **Triggers partial profile sync on confirm.**
         - Step 4: ORCID Integration
-        - Step 5: Affiliation (Final institutional link)
+        - Step 5: Affiliation (Final institutional link) — **Triggers final onboarding completion.**
     - **Path B: Institutional** (2 Steps):
         - Step 1: Search and select Institution immediately.
         - Step 2: Interests (Select up to 5)
@@ -89,9 +89,9 @@ graph TD
 ### Phase 4: Onboarding Journey (Step-by-Step)
 - [x] **Account Type & Institution**: Branching logic for Individual/Institutional, searchable dropdown. Integrated `fetchLocalized` with English fallback.
 - [x] **Expertise & Interests**: Category-based selection, visual highlights, max 5 limit check. Integrated `fetchLocalized` for multi-locale support.
-- [x] **Education & Career**: Education level dropdown, institution type field, "Skip" logic (Individual only).
+- [x] **Education & Career**: Education level dropdown, institution type field, "Skip" logic (Individual only). **Implementation**: Calls `updateUserProfile` on confirm to ensure the educational institution is persisted to the backend immediately.
 - [x] **ORCID Integration**: 16-digit regex validation, "Skip" logic (Individual only).
-- [x] **Affiliation**: Search and select institution manually (Individual only). Uses `fetchLocalized` for consistent data availability.
+- [x] **Affiliation**: Search and select institution manually (Individual only). Uses `fetchLocalized` for consistent data availability. **Note**: Can discover institutions created in Step 3 due to the earlier partial sync.
 
 ### Phase 5: Password Recovery
 - [x] **Request**: Forgot password link -> Strapi standard forgot password email with a secure reset link.
@@ -155,6 +155,18 @@ graph TD
     2. Use `PUBLIC_URL` from the environment to dynamically construct `EMAIL_CONFIRMATION_URL`.
     3. Configure Strapi's `email_confirmation_redirection` in the `bootstrap` lifecycle to ensure consistency with the frontend host.
 - **Consequences**: Ensures portability across environments (local, staging, prod) and fixes the "stuck on signup" bug.
+
+---
+
+## 🔄 Onboarding Data Synchronization
+
+To ensure a seamless transition between steps, the onboarding flow implements a **Multi-Stage Persistence** pattern:
+
+1.  **Local State (Step 1-2)**: Data is stored in `useOnboardingStore` (Zustand) and persisted to `sessionStorage`.
+2.  **Partial Backend Sync (Step 3)**: When a user confirms their Education details, the frontend calls `updateUserProfile`.
+    - **Purpose**: If the user creates a new "Educational Institution", the backend persists it to the `Institution` collection immediately.
+    - **Benefit**: This entry becomes searchable in **Step 5** (Affiliation), preventing data fragmentation and improving user discovery.
+3.  **Final Completion (Step 5)**: The final "Complete" action sets `onboardingComplete: true`, which unlocks the full platform features.
 
 ---
 

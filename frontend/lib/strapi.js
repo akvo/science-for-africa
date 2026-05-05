@@ -447,6 +447,7 @@ export async function fetchResources(communityId, resourceType) {
  */
 export async function createResource({
   name,
+  description,
   resourceType,
   communityId,
   file,
@@ -487,6 +488,7 @@ export async function createResource({
     body: JSON.stringify({
       data: {
         name,
+        description: description || undefined,
         resourceType,
         file: fileId,
         community: { connect: [communityId] },

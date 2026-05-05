@@ -249,6 +249,27 @@ export default function CollaborationCallDetailPage() {
   }
 
   const isActive = (call.status || "").toLowerCase() === "active";
+  const visibility = call.visibility || "public";
+
+  // Determine posting permission based on visibility
+  // Public: any signed-in user can post
+  // Restricted: only accepted members / creator can post
+  // Private: only invited members / creator can post (and only they can see the page)
+  const canPost =
+    visibility === "public"
+      ? !!user
+      : hasJoined || isCreator;
+
+  // Determine if "Request to join" should be shown
+  // Public: no need (anyone can post)
+  // Restricted: yes, for non-members
+  // Private: hidden (invite-only)
+  const showRequestJoin =
+    visibility === "restricted" &&
+    isActive &&
+    !hasJoined &&
+    !isCreator &&
+    !hasPendingRequest;
 
   return (
     <div className="grid min-w-0 grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)]">
@@ -258,17 +279,21 @@ export default function CollaborationCallDetailPage() {
         <ChatHeader
           call={call}
           isActive={isActive}
+          visibility={visibility}
           hasJoined={hasJoined || isCreator}
           hasPendingRequest={hasPendingRequest}
+          showRequestJoin={showRequestJoin}
           onRequestJoin={handleRequestJoin}
           onBack={() => router.back()}
         />
-        <ChatThread messages={messages} canPost={hasJoined || isCreator} />
-        {(hasJoined || isCreator) ? (
+        <ChatThread messages={messages} canPost={canPost} />
+        {canPost ? (
           <ChatComposer onSend={handleSendMessage} disabled={sending} />
         ) : (
           <div className="border-t border-brand-gray-100 px-6 py-4 text-center text-sm text-brand-gray-500">
-            Join this collaboration call to participate in the conversation.
+            {visibility === "restricted"
+              ? "Join this collaboration call to participate in the conversation."
+              : "Sign in to participate in the conversation."}
           </div>
         )}
       </section>
@@ -557,7 +582,13 @@ function UsersListModal({ open, onClose, users = [] }) {
 
 /* -------------------------------- Chat ---------------------------------- */
 
-function ChatHeader({ call, isActive, onBack, onRequestJoin, hasJoined, hasPendingRequest }) {
+const VISIBILITY_LABELS = {
+  public: "Public",
+  restricted: "Limited access",
+  private: "Private",
+};
+
+function ChatHeader({ call, isActive, visibility, onBack, onRequestJoin, hasJoined, hasPendingRequest, showRequestJoin }) {
   const datePrefix = isActive ? "Valid till" : "Ended";
   return (
     <div className="flex items-center justify-between gap-4 border-b border-brand-gray-100 px-6 py-4">
@@ -588,8 +619,13 @@ function ChatHeader({ call, isActive, onBack, onRequestJoin, hasJoined, hasPendi
             <Calendar className="size-4" />
             {datePrefix}: {formatShortDate(call.endDate)}
           </span>
+          {visibility && visibility !== "public" && (
+            <span className="inline-flex h-full items-center gap-2 px-4">
+              {VISIBILITY_LABELS[visibility] || visibility}
+            </span>
+          )}
         </div>
-        {isActive && !hasJoined && !hasPendingRequest ? (
+        {showRequestJoin ? (
           <Button
             size="sm"
             variant="outline"

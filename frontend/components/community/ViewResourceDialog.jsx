@@ -1,23 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Download,
-  File,
-  XIcon,
-  Loader2,
-  Reply,
-} from "lucide-react";
-import { useAuthStore } from "@/lib/auth-store";
+import { Download, File, XIcon } from "lucide-react";
 import { getFullFileUrl } from "@/lib/utils";
-import {
-  fetchResource,
-  fetchResourceComments,
-  postResourceComment,
-} from "@/lib/strapi";
+import { fetchResource } from "@/lib/strapi";
 
 const TYPE_LABEL_KEYS = {
   report: "resources.report",
@@ -49,21 +38,6 @@ function formatShortDate(dateStr) {
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
 
-function timeAgo(dateStr) {
-  if (!dateStr) return "";
-  const now = new Date();
-  const d = new Date(dateStr);
-  const diffMs = now - d;
-  const mins = Math.floor(diffMs / 60000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins}m ago`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}d ago`;
-  return formatShortDate(dateStr);
-}
-
 function getAuthorName(author) {
   if (!author) return "";
   return (
@@ -75,60 +49,6 @@ function getAuthorName(author) {
   );
 }
 
-function Comment({ comment, onReply, depth = 0 }) {
-  const author = comment.author;
-  const name = getAuthorName(author);
-  const replies = comment.replies || [];
-
-  return (
-    <div className={depth > 0 ? "ml-8 border-l border-brand-gray-100 pl-4" : ""}>
-      <div className="flex gap-3 py-4">
-        <Avatar size="sm" className="shrink-0 mt-0.5">
-          <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-semibold">
-            {getInitials(name)}
-          </AvatarFallback>
-        </Avatar>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-semibold text-brand-gray-900">
-              {name}
-            </span>
-            {author?.roleType && (
-              <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-primary-50 text-primary-700">
-                {author.roleType}
-              </span>
-            )}
-            <span className="text-xs text-brand-gray-400">
-              {timeAgo(comment.createdAt)}
-            </span>
-          </div>
-          <p className="mt-1.5 text-sm leading-relaxed text-brand-gray-700">
-            {comment.text}
-          </p>
-          <div className="mt-2">
-            <button
-              type="button"
-              onClick={() => onReply?.(comment)}
-              className="flex items-center gap-1 text-xs text-brand-gray-500 hover:text-brand-gray-700"
-            >
-              <Reply className="size-3.5" />
-              Reply
-            </button>
-          </div>
-        </div>
-      </div>
-      {replies.map((reply) => (
-        <Comment
-          key={reply.documentId || reply.id}
-          comment={reply}
-          onReply={onReply}
-          depth={depth + 1}
-        />
-      ))}
-    </div>
-  );
-}
-
 export default function ViewResourceDialog({
   open,
   onOpenChange,
@@ -136,31 +56,16 @@ export default function ViewResourceDialog({
 }) {
   const { t } = useTranslation("common");
   const [fullResource, setFullResource] = useState(null);
-  const [comments, setComments] = useState([]);
-  const [loadingComments, setLoadingComments] = useState(false);
-  const [commentText, setCommentText] = useState("");
-  const [posting, setPosting] = useState(false);
-  const [replyingTo, setReplyingTo] = useState(null);
-  const user = useAuthStore((s) => s.user);
-  const scrollRef = useRef(null);
-  const inputRef = useRef(null);
 
   const resourceId = resourceProp?.documentId;
 
   useEffect(() => {
     if (!open || !resourceId) {
       setFullResource(null);
-      setReplyingTo(null);
-      setCommentText("");
       return;
     }
     fetchResource(resourceId).then((res) => {
       if (res?.data) setFullResource(res.data);
-    });
-    setLoadingComments(true);
-    fetchResourceComments(resourceId).then((res) => {
-      setComments(Array.isArray(res?.data) ? res.data : []);
-      setLoadingComments(false);
     });
   }, [open, resourceId]);
 
@@ -191,39 +96,12 @@ export default function ViewResourceDialog({
     }
   };
 
-  const handlePostComment = async () => {
-    if (!commentText.trim() || !resourceId) return;
-    setPosting(true);
-    try {
-      const parentId = replyingTo?.documentId || replyingTo?.id || null;
-      await postResourceComment(resourceId, commentText.trim(), parentId);
-      setCommentText("");
-      setReplyingTo(null);
-      const res = await fetchResourceComments(resourceId);
-      setComments(Array.isArray(res?.data) ? res.data : []);
-      // Scroll to bottom after posting
-      setTimeout(() => {
-        scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-      }, 100);
-    } catch (err) {
-      console.error("Failed to post comment:", err);
-    } finally {
-      setPosting(false);
-    }
-  };
-
-  const handleReply = (comment) => {
-    setReplyingTo(comment);
-    setCommentText("");
-    inputRef.current?.focus();
-  };
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         size="lg"
         showCloseButton={false}
-        className="!flex h-[min(80vh,700px)] !flex-col overflow-hidden !p-0 !gap-0"
+        className="!flex !flex-col overflow-hidden !p-0 !gap-0"
       >
         {/* Header — fixed */}
         <div className="shrink-0 flex items-start gap-4 px-6 pt-5 pb-4">
@@ -315,87 +193,16 @@ export default function ViewResourceDialog({
           </div>
         )}
 
-        {/* Scrollable comments area */}
-        <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto border-t border-brand-gray-100">
-          <div className="px-6 py-4">
-            <div className="flex items-center gap-2 mb-4">
-              <h3 className="text-sm font-semibold text-brand-gray-900">
-                {t("resources.discussion")}
-              </h3>
-              <span className="text-sm text-brand-gray-500">
-                {comments.length}{" "}
-                {comments.length !== 1 ? "comments" : "comment"}
-              </span>
-            </div>
-
-            {loadingComments ? (
-              <div className="py-6 text-center text-sm text-brand-gray-500">
-                Loading...
-              </div>
-            ) : comments.length === 0 ? (
-              <div className="rounded-lg border border-dashed border-brand-gray-200 p-8 text-center text-sm text-brand-gray-500">
-                No comments yet. Be the first to share your thoughts.
-              </div>
-            ) : (
-              <div className="flex flex-col divide-y divide-brand-gray-100">
-                {comments.map((c) => (
-                  <Comment
-                    key={c.documentId || c.id}
-                    comment={c}
-                    onReply={handleReply}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Comment input — fixed at bottom */}
-        {user && (
-          <div className="shrink-0 border-t border-brand-gray-100 px-6 py-3">
-            {replyingTo && (
-              <div className="mb-2 flex items-center gap-2 text-xs text-brand-gray-500">
-                <Reply className="size-3" />
-                <span>Replying to <strong className="text-brand-gray-700">{getAuthorName(replyingTo.author)}</strong></span>
-                <button
-                  type="button"
-                  onClick={() => setReplyingTo(null)}
-                  className="ml-auto text-brand-gray-400 hover:text-brand-gray-600"
-                >
-                  <XIcon className="size-3.5" />
-                </button>
-              </div>
-            )}
-            <div className="flex gap-3">
-              <input
-                ref={inputRef}
-                type="text"
-                className="flex-1 h-10 rounded-full border border-brand-gray-200 bg-white px-4 text-sm text-brand-gray-900 placeholder:text-brand-gray-400 outline-none focus:border-primary-500 transition-colors"
-                placeholder={replyingTo ? "Write a reply..." : "Leave a comment"}
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && commentText.trim()) handlePostComment();
-                }}
-              />
-              {commentText.trim() && (
-                <Button
-                  size="sm"
-                  className="rounded-full shrink-0"
-                  disabled={posting}
-                  onClick={handlePostComment}
-                >
-                  {posting && (
-                    <Loader2 className="size-3 animate-spin mr-1" />
-                  )}
-                  Post
-                </Button>
-              )}
-            </div>
+        {/* Description */}
+        {resource.description && (
+          <div className="flex-1 min-h-0 overflow-y-auto border-t border-brand-gray-100 px-6 py-4">
+            <p className="text-sm leading-relaxed text-brand-gray-700">
+              {resource.description}
+            </p>
           </div>
         )}
 
-        {/* Footer — fixed */}
+        {/* Footer */}
         <div className="shrink-0 flex items-center justify-end border-t border-brand-gray-100 px-6 py-4">
           {fileUrl && (
             <Button size="md" className="gap-2" onClick={handleDownload}>

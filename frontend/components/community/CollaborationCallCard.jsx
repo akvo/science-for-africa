@@ -1,4 +1,4 @@
-import { Calendar } from "lucide-react";
+import { Calendar, Globe, Link2, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { COLLABORATION_CALL_STATUS } from "@/lib/community-mock-data";
@@ -72,6 +72,16 @@ export default function CollaborationCallCard({ call, onView }) {
             <Calendar className="size-4" />
             {datePrefix}: {formatDate(call.endsAt)}
           </span>
+          {call.visibility && call.visibility !== "public" && (
+            <span className="inline-flex h-full items-center gap-2 px-4">
+              {call.visibility === "private" ? (
+                <Lock className="size-3.5" />
+              ) : (
+                <Link2 className="size-3.5" />
+              )}
+              {call.visibility === "private" ? "Private" : "Limited access"}
+            </span>
+          )}
         </div>
         <h3 className="truncate text-base font-semibold text-brand-gray-900">
           {call.title}

@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 const AppLayout = ({ children, noContainer }) => {
   return (
@@ -18,6 +19,7 @@ const AppLayout = ({ children, noContainer }) => {
           </div>
         )}
       </main>
+      <Footer />
     </div>
   );
 };

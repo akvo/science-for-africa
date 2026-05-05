@@ -51,6 +51,13 @@
     "Post-Doctorate": "Post-doctorat",
     "Professional Certificate": "Certificat professionnel"
   },
+  "languages": {
+    "en": "Anglais",
+    "fr": "Français",
+    "pt": "Portugais",
+    "ar": "Arabe",
+    "sw": "Swahili"
+  },
   "tabs": {
     "profile": "Profil",
     "details": "Détails",

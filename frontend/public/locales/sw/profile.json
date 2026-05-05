@@ -30,5 +30,12 @@
     "request_button": "Ombi",
     "save_success": "Wasifu wako umesasishwa kwa mafanikio",
     "save_error": "Imeshindwa kusasisha wasifu"
+  },
+  "languages": {
+    "en": "Kiingereza",
+    "fr": "Kifaransa",
+    "pt": "Kireno",
+    "ar": "Kiarabu",
+    "sw": "Kiswahili"
   }
 }

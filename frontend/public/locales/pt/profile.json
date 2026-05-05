@@ -30,5 +30,12 @@
     "request_button": "Solicitar",
     "save_success": "Perfil atualizado com sucesso",
     "save_error": "Falha ao atualizar o perfil"
+  },
+  "languages": {
+    "en": "Inglês",
+    "fr": "Francês",
+    "pt": "Português",
+    "ar": "Árabe",
+    "sw": "Suaíli"
   }
 }

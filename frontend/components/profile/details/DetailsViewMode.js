@@ -134,7 +134,11 @@ const DetailsViewMode = ({ user, t, onEdit }) => {
 
         <ViewRow
           label={t("details.language_label")}
-          value={user?.languagePreferences === "fr" ? "French" : "English"}
+          value={
+            user?.languagePreferences
+              ? t(`languages.${user.languagePreferences}`)
+              : t("details.not_provided")
+          }
           t={t}
         />
         <ViewRow label={t("details.orcid_label")} value={user?.orcidId} t={t} />

@@ -12,7 +12,7 @@ import { Toaster } from "sonner";
 function App({ Component, pageProps }) {
   return (
     <div className={inter.className}>
-      <MainLayout>
+      <MainLayout noContainer={Component.noContainer}>
         <Component {...pageProps} />
       </MainLayout>
       <Toaster position="bottom-right" richColors />

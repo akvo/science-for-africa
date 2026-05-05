@@ -11,7 +11,7 @@ import { useAuthStore } from "@/lib/auth-store";
  * Automatically switches between Standard App Layout and Auth Layout
  * based on the current route.
  */
-const MainLayout = ({ children, title, description }) => {
+const MainLayout = ({ children, title, description, noContainer }) => {
   const router = useRouter();
   const { isAuthenticated, user } = useAuthStore();
 
@@ -63,7 +63,7 @@ const MainLayout = ({ children, title, description }) => {
   }
 
   return (
-    <AppLayout>
+    <AppLayout noContainer={noContainer}>
       <Meta title={title} description={description} />
       {children}
     </AppLayout>

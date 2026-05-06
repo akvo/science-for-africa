@@ -140,4 +140,32 @@ describe("OnboardingStep2 - Interest Grouping", () => {
     expect(screen.queryByText("Inactive Cat")).not.toBeInTheDocument();
     expect(screen.queryByText("Inactive Interest")).not.toBeInTheDocument();
   });
+
+  it("skips individual interests that are marked as inactive", async () => {
+    const mockData = {
+      data: [
+        {
+          name: "Active Interest",
+          isActive: true,
+          interestCategory: { name: "Test Cat", isActive: true },
+        },
+        {
+          name: "Inactive Interest",
+          isActive: false,
+          interestCategory: { name: "Test Cat", isActive: true },
+        },
+      ],
+    };
+
+    fetchLocalized.mockResolvedValue(mockData);
+
+    render(<OnboardingStep2 />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Active Interest")).toBeInTheDocument();
+    });
+
+    // Inactive interest should NOT be visible
+    expect(screen.queryByText("Inactive Interest")).not.toBeInTheDocument();
+  });
 });

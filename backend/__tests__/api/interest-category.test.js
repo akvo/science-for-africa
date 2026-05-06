@@ -92,4 +92,20 @@ describe("Interest & Category API", () => {
     const message = response.body.error?.message || response.body.message || "";
     expect(message.toLowerCase()).toMatch(/forbidden|cannot be deleted/);
   });
+
+  it("should block deletion of interests for accident prevention", async () => {
+    const interest = await strapi.documents("api::interest.interest").create({
+      data: { name: `Interest protection test ${Math.random()}` },
+      status: "published",
+    });
+
+    const response = await request(strapi.server.httpServer)
+      .delete(`/api/interests/${interest.documentId}`)
+      .set("Accept", "application/json");
+
+    expect(response.status).toBe(403);
+    expect(response.body.error.message.toLowerCase()).toMatch(
+      /forbidden|cannot be deleted/,
+    );
+  });
 });

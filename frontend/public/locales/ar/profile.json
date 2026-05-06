@@ -34,11 +34,17 @@
     "no_bio": "لم يتم تقديم سيرة ذاتية بعد."
   },
   "education_levels": {
-    "Postgraduate Student (Masters)": "طالب دراسات عليا (ماجستير)",
-    "Doctoral Candidate (PhD Student)": "مرشح دكتوراه (طالب دكتوراه)",
-    "Early-Career Researcher / Research management professional (0 - 5 years post-qualification)": "باحث في بداية حياته المهنية (0 - 5 سنوات)",
-    "Mid-Career Researcher / Research management professional (6 - 15 years)": "باحث في منتصف حياته المهنية (6 - 15 سنة)",
-    "Senior Researcher / Research management professional (16+ years)": "باحث أول (16+ سنة)",
-    "Emeritus / Retired": "أستاذ متفرغ / متقاعد"
+    "Postgraduate Student (Masters)": "Postgraduate Student (Masters)",
+    "Doctoral Candidate (PhD Student)": "Doctoral Candidate (PhD Student)",
+    "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)": "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)",
+    "Mid-Career Researcher / Research management professional (6 – 15 years)": "Mid-Career Researcher / Research management professional (6 – 15 years)",
+    "Senior Researcher / Research management professional (16+ years)": "Senior Researcher / Research management professional (16+ years)",
+    "Emeritus / Retired": "Emeritus / Retired",
+    "High School": "المدرسة الثانوية",
+    "Bachelor's Degree": "درجة البكالوريوس",
+    "Master's Degree": "درجة الماجستير",
+    "Doctorate (PhD)": "دكتوراه (PhD)",
+    "Post-Doctorate": "ما بعد الدكتوراه",
+    "Professional Certificate": "شهادة مهنية"
   }
 }

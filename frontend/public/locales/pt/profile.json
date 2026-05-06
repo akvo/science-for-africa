@@ -34,11 +34,17 @@
     "no_bio": "Nenhuma biografia fornecida."
   },
   "education_levels": {
-    "Postgraduate Student (Masters)": "Estudante de Pós-graduação (Mestrado)",
-    "Doctoral Candidate (PhD Student)": "Candidato ao Doutoramento (Estudante de PhD)",
-    "Early-Career Researcher / Research management professional (0 - 5 years post-qualification)": "Investigador em Início de Carreira (0 - 5 anos)",
-    "Mid-Career Researcher / Research management professional (6 - 15 years)": "Investigador de Carreira Média (6 - 15 anos)",
-    "Senior Researcher / Research management professional (16+ years)": "Investigador Sénior (16+ anos)",
-    "Emeritus / Retired": "Emérito / Reformado"
+    "Postgraduate Student (Masters)": "Postgraduate Student (Masters)",
+    "Doctoral Candidate (PhD Student)": "Doctoral Candidate (PhD Student)",
+    "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)": "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)",
+    "Mid-Career Researcher / Research management professional (6 – 15 years)": "Mid-Career Researcher / Research management professional (6 – 15 years)",
+    "Senior Researcher / Research management professional (16+ years)": "Senior Researcher / Research management professional (16+ years)",
+    "Emeritus / Retired": "Emeritus / Retired",
+    "High School": "Ensino Médio",
+    "Bachelor's Degree": "Graduação",
+    "Master's Degree": "Mestrado",
+    "Doctorate (PhD)": "Doutorado (PhD)",
+    "Post-Doctorate": "Pós‑Doutorado",
+    "Professional Certificate": "Certificado Profissional"
   }
 }

@@ -34,11 +34,17 @@
     "no_bio": "Hakuna wasifu uliotolewa."
   },
   "education_levels": {
-    "Postgraduate Student (Masters)": "Mwanafunzi wa Uzamili (Masters)",
-    "Doctoral Candidate (PhD Student)": "Mgombea wa Udaktari (Mwanafunzi wa PhD)",
-    "Early-Career Researcher / Research management professional (0 - 5 years post-qualification)": "Mtafiti wa Mapema wa Kazi (miaka 0 - 5)",
-    "Mid-Career Researcher / Research management professional (6 - 15 years)": "Mtafiti wa Kati wa Kazi (miaka 6 - 15)",
-    "Senior Researcher / Research management professional (16+ years)": "Mtafiti Mwandamizi (miaka 16+)",
-    "Emeritus / Retired": "Mstaafu"
+    "Postgraduate Student (Masters)": "Postgraduate Student (Masters)",
+    "Doctoral Candidate (PhD Student)": "Doctoral Candidate (PhD Student)",
+    "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)": "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)",
+    "Mid-Career Researcher / Research management professional (6 – 15 years)": "Mid-Career Researcher / Research management professional (6 – 15 years)",
+    "Senior Researcher / Research management professional (16+ years)": "Senior Researcher / Research management professional (16+ years)",
+    "Emeritus / Retired": "Emeritus / Retired",
+    "High School": "Shule ya Upili",
+    "Bachelor's Degree": "Shahada ya Udhamini",
+    "Master's Degree": "Shahada ya Uzamili",
+    "Doctorate (PhD)": "Daktari (PhD)",
+    "Post-Doctorate": "Baada ya Daktari",
+    "Professional Certificate": "Cheti cha Kitaalamu"
   }
 }

@@ -33,16 +33,6 @@
     "not_provided": "Non fourni",
     "no_bio": "Aucune biographie fournie pour le moment."
   },
-  "roles": {
-    "Researcher": "Chercheur",
-    "Principal Investigator / Lab Lead": "Chercheur principal / Chef de laboratoire",
-    "Post-doctoral Fellow": "Chercheur post-doctoral",
-    "PhD Candidate": "Candidat au doctorat",
-    "Graduate / Undergraduate Student": "Étudiant diplômé / de premier cycle",
-    "Administrator / Support Staff": "Administrateur / Personnel de soutien",
-    "Program Manager / Funder representative": "Gestionnaire de programme / Représentant du bailleur de fonds",
-    "External Reviewer": "Examinateur externe"
-  },
   "education_levels": {
     "Postgraduate Student (Masters)": "Étudiant de troisième cycle (Master)",
     "Doctoral Candidate (PhD Student)": "Candidat au doctorat (Étudiant en PhD)",

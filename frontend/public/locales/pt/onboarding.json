@@ -21,16 +21,6 @@
     "no_institutions_found": "Nenhuma instituição encontrada. Você pode continuar com o que digitou.",
     "dismiss": "Fechar"
   },
-  "roles": {
-    "Researcher": "Pesquisador",
-    "Principal Investigator / Lab Lead": "Investigador Principal / Líder de Laboratório",
-    "Post-doctoral Fellow": "Fellow Pós‑Doutorado",
-    "PhD Candidate": "Candidato a PhD",
-    "Graduate / Undergraduate Student": "Estudante de Pós‑Graduação / Graduação",
-    "Administrator / Support Staff": "Administrador / Equipe de Suporte",
-    "Program Manager / Funder representative": "Gerente de Programa / Representante do Financiador",
-    "External Reviewer": "Revisor Externo"
-  },
   "education_levels": {
     "Postgraduate Student (Masters)": "Postgraduate Student (Masters)",
     "Doctoral Candidate (PhD Student)": "Doctoral Candidate (PhD Student)",

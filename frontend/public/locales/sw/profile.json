@@ -33,16 +33,6 @@
     "not_provided": "Haijatolewa",
     "no_bio": "Hakuna wasifu uliotolewa."
   },
-  "roles": {
-    "Researcher": "Mtafiti",
-    "Principal Investigator / Lab Lead": "Mchunguzi Mkuu / Kiongozi wa Maabara",
-    "Post-doctoral Fellow": "Mwanachama wa Baada ya Udaktari",
-    "PhD Candidate": "Mgombea wa PhD",
-    "Graduate / Undergraduate Student": "Mwanafunzi wa Shahada / Shahada ya Kwanza",
-    "Administrator / Support Staff": "Msimamizi / Wafanyakazi wa Msaada",
-    "Program Manager / Funder representative": "Meneja wa Mpango / Mwawakilishi wa Mfadhili",
-    "External Reviewer": "Mkaguzi wa Nje"
-  },
   "education_levels": {
     "Postgraduate Student (Masters)": "Mwanafunzi wa Uzamili (Masters)",
     "Doctoral Candidate (PhD Student)": "Mgombea wa Udaktari (Mwanafunzi wa PhD)",

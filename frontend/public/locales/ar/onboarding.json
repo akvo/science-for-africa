@@ -21,16 +21,6 @@
     "no_institutions_found": "لم يتم العثور على مؤسسات. يمكنك المتابعة بما كتبته.",
     "dismiss": "إغلاق"
   },
-  "roles": {
-    "Researcher": "باحث",
-    "Principal Investigator / Lab Lead": "المحقق الرئيسي / قائد المختبر",
-    "Post-doctoral Fellow": "زميل ما بعد الدكتوراه",
-    "PhD Candidate": "مرشح دكتوراه",
-    "Graduate / Undergraduate Student": "طالب دراسات عليا / طالب جامعي",
-    "Administrator / Support Staff": "مسؤول / طاقم الدعم",
-    "Program Manager / Funder representative": "مدير البرنامج / ممثل الممول",
-    "External Reviewer": "مراجع خارجي"
-  },
   "education_levels": {
     "Postgraduate Student (Masters)": "Postgraduate Student (Masters)",
     "Doctoral Candidate (PhD Student)": "Doctoral Candidate (PhD Student)",

@@ -33,16 +33,6 @@
     "not_provided": "Não fornecido",
     "no_bio": "Nenhuma biografia fornecida."
   },
-  "roles": {
-    "Researcher": "Investigador",
-    "Principal Investigator / Lab Lead": "Investigador Principal / Líder de Laboratório",
-    "Post-doctoral Fellow": "Bolseiro de Pós-Doutoramento",
-    "PhD Candidate": "Candidato ao Doutoramento",
-    "Graduate / Undergraduate Student": "Estudante de Graduação / Pré-graduação",
-    "Administrator / Support Staff": "Administrador / Equipa de Apoio",
-    "Program Manager / Funder representative": "Gestor de Programa / Representante do Financiador",
-    "External Reviewer": "Revisor Externo"
-  },
   "education_levels": {
     "Postgraduate Student (Masters)": "Estudante de Pós-graduação (Mestrado)",
     "Doctoral Candidate (PhD Student)": "Candidato ao Doutoramento (Estudante de PhD)",

@@ -33,16 +33,6 @@
     "not_provided": "غير متوفر",
     "no_bio": "لم يتم تقديم سيرة ذاتية بعد."
   },
-  "roles": {
-    "Researcher": "باحث",
-    "Principal Investigator / Lab Lead": "باحث رئيسي / رئيس مختبر",
-    "Post-doctoral Fellow": "زميل ما بعد الدكتوراه",
-    "PhD Candidate": "مرشح دكتوراه",
-    "Graduate / Undergraduate Student": "طالب دراسات عليا / بكالوريوس",
-    "Administrator / Support Staff": "إداري / طاقم دعم",
-    "Program Manager / Funder representative": "مدير برنامج / ممثل ممول",
-    "External Reviewer": "مقيم خارجي"
-  },
   "education_levels": {
     "Postgraduate Student (Masters)": "طالب دراسات عليا (ماجستير)",
     "Doctoral Candidate (PhD Student)": "مرشح دكتوراه (طالب دكتوراه)",

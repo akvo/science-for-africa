@@ -21,16 +21,6 @@
     "no_institutions_found": "Aucune institution trouvée. Vous pouvez continuer avec ce que vous avez tapé.",
     "dismiss": "Ignorer"
   },
-  "roles": {
-    "Researcher": "Chercheur",
-    "Principal Investigator / Lab Lead": "Chercheur principal / Chef de laboratoire",
-    "Post-doctoral Fellow": "Chercheur post-doctoral",
-    "PhD Candidate": "Candidat au doctorat",
-    "Graduate / Undergraduate Student": "Étudiant diplômé / de premier cycle",
-    "Administrator / Support Staff": "Administrateur / Personnel de soutien",
-    "Program Manager / Funder representative": "Responsable de programme / Représentant du bailleur de fonds",
-    "External Reviewer": "Réviseur externe"
-  },
   "education_levels": {
     "Postgraduate Student (Masters)": "Étudiant de troisième cycle (Master)",
     "Doctoral Candidate (PhD Student)": "Candidat au doctorat (Étudiant en PhD)",

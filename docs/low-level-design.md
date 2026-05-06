@@ -164,6 +164,7 @@ erDiagram
     Community ||--o{ Resource : "has_resources"
     Community ||--o{ Event : "hosts"
     Community }o--o{ Tag : "tagged_with"
+    Interest }o--|| InterestCategory : "belongs_to"
 
     CommunityMembership }o--|| User : "user"
     CommunityMembership }o--|| Community : "community"
@@ -454,6 +455,8 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 | **Resource** | Shared files/links (Publication, Training, Toolkit, Dataset) with download tracking |
 | **Event** | Community events (Webinar / Workshop / In-person). Capacity limits, certificate issuance |
 | **EventRegistration** | User + Event + status (registered / waitlisted / attended) |
+| **Interest** | Scientific research interests (e.g. Bioinformatics, Genetics) |
+| **InterestCategory** | Grouping for interests (e.g. Popular, Clinical & Medical) |
 | **Tag** | Cross-entity taxonomy (expertise, region, topic) — applied to Resources, Threads, Users, Communities |
 | **Report** | Content flagging for moderation (Spam / Harassment / Misinformation / Other) |
 | **Notification** | Email notification log with delivery status |
@@ -763,7 +766,7 @@ The platform supports multi-language content (English as default, French for lau
 ### 6.2 Data Model Changes
 
 Specific content types have localization enabled:
-- **Interest**, **Institution**: Enabled for name/title and description fields. No new models were created; localization was strictly applied to the existing implementation.
+- **Interest**, **InterestCategory**, **Institution**: Enabled for name/title and description fields. No new models were created; localization was strictly applied to the existing implementation.
 
 ### 6.3 Locale Awareness
 

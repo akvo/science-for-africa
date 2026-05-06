@@ -22,10 +22,10 @@
     "dismiss": "Fechar"
   },
   "education_levels": {
-    "Postgraduate Student (Masters)": "Postgraduate Student (Masters)",
-    "Doctoral Candidate (PhD Student)": "Doctoral Candidate (PhD Student)",
-    "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)": "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)",
-    "Mid-Career Researcher / Research management professional (6 – 15 years)": "Mid-Career Researcher / Research management professional (6 – 15 years)",
+    "Postgraduate Student (Masters)": "Pós-graduando (Mestrado)",
+    "Doctoral Candidate (PhD Student)": "Doutorando (PhD)",
+    "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)": "Pesquisador em início de carreira / Profissional de gestão de pesquisa (0 – 5 anos após qualificação)",
+    "Mid-Career Researcher / Research management professional (6 – 15 years)": "Pesquisador em meio de carreira / Profissional de gestão de pesquisa (6 – 15 anos)",
     "Senior Researcher / Research management professional (16+ years)": "Senior Researcher / Research management professional (16+ years)",
     "Emeritus / Retired": "Emeritus / Retired",
     "High School": "Ensino Médio",

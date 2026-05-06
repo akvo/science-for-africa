@@ -264,24 +264,63 @@ module.exports = ({ strapi }) => ({
         delete data.affiliationInstitution;
       }
 
-      // Handle roleType if it's a documentId
+      // Handle roleType if it's a documentId or Name
       if (
         data.roleType &&
         typeof data.roleType === "string" &&
         isNaN(parseInt(data.roleType))
       ) {
-        const role = await strapi.db
+        let role = await strapi.db
           .query("api::individual-role.individual-role")
           .findOne({
             where: { documentId: data.roleType },
           });
+
+        // Fallback to name if documentId not found
+        if (!role) {
+          role = await strapi.db
+            .query("api::individual-role.individual-role")
+            .findOne({
+              where: { name: data.roleType },
+            });
+        }
         data.roleType = role?.id;
+      }
+
+      // Handle interests (convert names to IDs)
+      if (data.interests && Array.isArray(data.interests)) {
+        const resolvedInterests = [];
+        for (const item of data.interests) {
+          const name = typeof item === "string" ? item : item.name;
+          if (name) {
+            let interest = await strapi.db
+              .query("api::interest.interest")
+              .findOne({
+                where: { name: { $containsi: name } },
+              });
+
+            if (!interest) {
+              interest = await strapi.db
+                .query("api::interest.interest")
+                .create({
+                  data: { name, locale: "en" },
+                });
+            }
+            resolvedInterests.push(interest.id);
+          }
+        }
+        data.interests = resolvedInterests;
       }
 
       // Clean up deprecated fields
       delete data.institution;
       delete data.institutionName;
       delete data.educationInstitutionName;
+
+      // [AUTH-DEBUG] beforeUpdate User
+      strapi.log.info(
+        `[AUTH-DEBUG] beforeUpdate User: where=${JSON.stringify({ id: user.id })} data=${JSON.stringify(data)}`,
+      );
 
       // Update the user
       await strapi.db.query("plugin::users-permissions.user").update({

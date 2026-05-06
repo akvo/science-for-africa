@@ -16,11 +16,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FormRow } from "./SharedComponents";
+import { EDUCATION_LEVEL_OPTIONS } from "@/lib/onboarding-constants";
 import {
-  ROLE_OPTIONS,
-  EDUCATION_LEVEL_OPTIONS,
-} from "@/lib/onboarding-constants";
-import { fetchFromStrapi, getStrapiMedia } from "@/lib/strapi";
+  fetchFromStrapi,
+  getStrapiMedia,
+  fetchIndividualRoles,
+} from "@/lib/strapi";
 
 const profileSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -60,6 +61,8 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
     React.useState(false);
   const [showRequestEducationInstitution, setShowRequestEducationInstitution] =
     React.useState(false);
+  const [roles, setRoles] = React.useState([]);
+  const [loadingRoles, setLoadingRoles] = React.useState(false);
 
   React.useEffect(() => {
     if (user?.institutionName) {
@@ -84,7 +87,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
       fullName: user?.fullName || "",
       email: user?.email || "",
       biography: user?.biography || "",
-      roleType: user?.roleType || "",
+      roleType: user?.roleType?.documentId || user?.roleType || "",
       orcidId: user?.orcidId || "",
       educationLevel: user?.educationLevel || "",
       language: user?.languagePreferences || "en",
@@ -118,7 +121,7 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
         fullName: user?.fullName || "",
         email: user?.email || "",
         biography: user?.biography || "",
-        roleType: user?.roleType || "",
+        roleType: user?.roleType?.documentId || user?.roleType || "",
         orcidId: user?.orcidId || "",
         educationLevel: user?.educationLevel || "",
         language: user?.languagePreferences || "en",
@@ -208,6 +211,25 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
     }
     getInstitutions();
   }, []);
+
+  React.useEffect(() => {
+    async function getRoles() {
+      setLoadingRoles(true);
+      try {
+        const response = await fetchIndividualRoles(
+          user?.languagePreferences || "en",
+        );
+        if (response?.data) {
+          setRoles(response.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch roles:", err);
+      } finally {
+        setLoadingRoles(false);
+      }
+    }
+    getRoles();
+  }, [user?.languagePreferences]);
 
   const handlePhotoClick = () => {
     fileInputRef.current?.click();
@@ -364,20 +386,31 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                   onValueChange={field.onChange}
                 >
                   <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
-                    <SelectValue>
-                      {field.value
-                        ? t(`roles.${field.value}`, {
-                            defaultValue: field.value,
-                          })
-                        : t("details.role_placeholder")}
+                    <SelectValue placeholder={t("details.role_placeholder")}>
+                      {roles.find((r) => r.documentId === field.value)?.name ||
+                        (field.value
+                          ? t(`roles.${field.value}`, {
+                              defaultValue: field.value,
+                            })
+                          : null)}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    {ROLE_OPTIONS.map((role) => (
-                      <SelectItem key={role} value={role}>
-                        {t(`roles.${role}`, { defaultValue: role })}
-                      </SelectItem>
-                    ))}
+                    {loadingRoles ? (
+                      <div className="p-2 text-sm text-brand-gray-400 flex items-center gap-2">
+                        <Loader2 size={14} className="animate-spin" />
+                        Loading...
+                      </div>
+                    ) : (
+                      roles.map((role) => (
+                        <SelectItem
+                          key={role.documentId}
+                          value={role.documentId}
+                        >
+                          {role.name}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
               )}

@@ -178,7 +178,9 @@ const OnboardingStep1 = () => {
                 id="role-type"
                 className="w-full h-11 px-3.5 py-2.5 bg-white border-brand-gray-100 rounded-8 focus:ring-1 focus:ring-brand-teal-500 shadow-xs text-md"
               >
-                <SelectValue placeholder={t("step1.role_placeholder")} />
+                <SelectValue placeholder={t("step1.role_placeholder")}>
+                  {roles.find((r) => r.documentId === formData.roleType)?.name}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent alignItemWithTrigger={false}>
                 {loadingRoles ? (
@@ -219,7 +221,9 @@ const OnboardingStep1 = () => {
                 id="inst-role-type"
                 className="w-full h-11 px-3.5 py-2.5 bg-white border-brand-gray-100 rounded-8 focus:ring-1 focus:ring-brand-teal-500 shadow-xs text-md"
               >
-                <SelectValue placeholder={t("step1.role_placeholder")} />
+                <SelectValue placeholder={t("step1.role_placeholder")}>
+                  {roles.find((r) => r.documentId === formData.roleType)?.name}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent alignItemWithTrigger={false}>
                 {loadingRoles ? (

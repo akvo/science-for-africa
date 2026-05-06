@@ -13,7 +13,19 @@
     "profile": "Profil",
     "settings": "Paramètres",
     "logout": "Se déconnecter",
-    "publish": "Publier"
+    "publish": "Publier",
+    "back": "Retour",
+    "researcher_placeholder": "Chercheur institutionnel",
+    "profile_dropdown": {
+      "details": "Détails",
+      "communities": "Communautés",
+      "content": "Contenu",
+      "saved_posts": "Articles enregistrés",
+      "my_events": "Mes événements",
+      "courses": "Cours et certifications",
+      "faq": "FAQ",
+      "logout": "Se déconnecter"
+    }
   },
   "common": {
     "loading": "Chargement...",
@@ -133,5 +145,40 @@
     "home_title": "Système de Conception | Guide de Style",
     "onboarding_title": "Complétez Votre Profil",
     "community_title": "Communauté"
+  },
+  "footer": {
+    "newsletter": {
+      "title": "Rejoignez notre newsletter",
+      "subtitle": "Nous vous enverrons une lettre sympa une fois par semaine. Pas de spam.",
+      "placeholder": "Votre email",
+      "subscribe": "S'abonner"
+    },
+    "sections": {
+      "general": {
+        "title": "Général",
+        "about": "À propos",
+        "opportunities": "Opportunités",
+        "learning": "Apprentissage",
+        "resources": "Ressources",
+        "account": "Compte"
+      },
+      "community": {
+        "title": "Communauté",
+        "trending": "Tendances",
+        "communities": "Communautés",
+        "discussions": "Discussions actives",
+        "collaboration": "Hub de collaboration",
+        "events": "Événements"
+      },
+      "legal": {
+        "title": "Juridique",
+        "terms": "Conditions d'utilisation",
+        "privacy": "Politique de confidentialité",
+        "cookies": "Cookies",
+        "settings": "Paramètres",
+        "contact": "Contact"
+      }
+    },
+    "copyright": "© Science for Africa 2026"
   }
 }

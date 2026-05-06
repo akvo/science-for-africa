@@ -26,6 +26,7 @@
     "biography_placeholder": "Write a short introduction.",
     "characters_left": "characters left",
     "language_label": "Language preferences",
+    "language_placeholder": "Select language",
     "orcid_label": "ORCHID",
     "request_button": "Request",
     "save_success": "Profile updated successfully",
@@ -53,7 +54,10 @@
   },
   "languages": {
     "en": "English",
-    "fr": "French"
+    "fr": "French",
+    "pt": "Portuguese",
+    "ar": "Arabic",
+    "sw": "Swahili"
   },
   "tabs": {
     "profile": "Profile",

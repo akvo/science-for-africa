@@ -131,6 +131,15 @@
 }
 
 @layer base {
+  html {
+    scroll-padding-top: 120px;
+    scroll-behavior: smooth;
+  }
+  @media (min-width: 768px) {
+    html {
+      scroll-padding-top: 140px;
+    }
+  }
   body {
     @apply antialiased bg-background text-foreground;
     font-family: var(--font-sans);

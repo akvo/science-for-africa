@@ -483,12 +483,12 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 **Formalized Education.** Educational background is linked directly to the Institution collection via the `highestEducationInstitution` field, replacing unstructured string data.
 
 **Resource Visibility & Moderation.** Resources only appear in public community lists when `status` is `approved`. Users can see their own `pending` or `declined` uploads in their profile. This is enforced at the controller layer by overwriting the core `find` and `findOne` methods to apply user-contextual filters.
-+
-+**Community Membership Synchronization Pattern.** To ensure data consistency between the primary `Community` entity (which tracks `members` for counts and listing) and the `CommunityMembership` collection (which drives the "My Communities" profile tab), the backend implements a dual-write pattern in the `join` and `leave` controllers.
-+- **Join**: Creates a `CommunityMembership` record AND links the user to the community's `members` relation.
-+- **Leave**: Deletes the `CommunityMembership` record (using a robust ID/Object manual filter to handle Strapi v5 variations) AND removes the user from the community's `members` relation.
-+This pattern prevents stale membership listings in the user profile even if the direct relation is somehow decoupled.
-+
+
+**Community Membership Synchronization Pattern.** To ensure data consistency between the primary `Community` entity (which tracks `members` for counts and listing) and the `CommunityMembership` collection (which drives the "My Communities" profile tab), the backend implements a dual-write pattern in the `join` and `leave` controllers.
+- **Join**: Creates a `CommunityMembership` record AND links the user to the community's `members` relation.
+- **Leave**: Deletes the `CommunityMembership` record (using a robust ID/Object manual filter to handle Strapi v5 variations) AND removes the user from the community's `members` relation.
+This pattern prevents stale membership listings in the user profile even if the direct relation is somehow decoupled.
+
 
 ## 3. Deployment & Infrastructure
 
@@ -838,3 +838,17 @@ Security is enforced at two levels:
 1.  **Frontend (UI/UX)**: The `ChatComposer` is replaced by a "Join to post" banner for non-members, preventing interaction attempts before membership is confirmed.
 2.  **Backend (API Guard)**: The `chat-message.create` controller explicitly verifies that the requester is either the `createdByUser` of the collaboration call or has an invitation with `inviteStatus: Accepted`. Requests from non-members are rejected with a `403 Forbidden` status.
 
+## 10. Legal and Privacy Policy
+
+The platform provides a centralized legal documentation page at `/privacy-policy`.
+
+### 10.1 Architecture
+- **Single Page**: All legal documents (Privacy Policy, Terms of Use, Community Guidelines) are hosted on a single, long-form scrollable page.
+- **Localization**: Content is managed via `frontend/public/locales/{lang}/privacy-policy.json`.
+- **SEO**: Metadata is managed via the `Meta` component with localized titles and descriptions.
+
+### 10.2 Content Structure
+The page is divided into three main logical sections, each with its own typography and visual identifiers:
+1.  **Privacy Policy**: Covers data collection, lawful basis, principles, and user rights.
+2.  **Terms of Use**: Covers registration, acceptable use, and governing law.
+3.  **Community Guidelines**: Covers professional conduct and reporting.

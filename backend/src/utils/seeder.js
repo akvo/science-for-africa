@@ -41,59 +41,72 @@ const INTEREST_CATEGORIES = {
 const INSTITUTIONS = [
   {
     name: "University of Nairobi",
-    type: "Academic",
+    institutionTypeName: "Academic",
     country: "Kenya",
     verified: true,
   },
   {
     name: "Makerere University",
-    type: "Academic",
+    institutionTypeName: "Academic",
     country: "Uganda",
     verified: true,
   },
   {
     name: "University of Cape Town",
-    type: "Academic",
+    institutionTypeName: "Academic",
     country: "South Africa",
     verified: true,
   },
   {
     name: "Kwame Nkrumah University of Science and Technology",
-    type: "Academic",
+    institutionTypeName: "Academic",
     country: "Ghana",
     verified: true,
   },
   {
     name: "Addis Ababa University",
-    type: "Academic",
+    institutionTypeName: "Academic",
     country: "Ethiopia",
     verified: true,
   },
   {
     name: "Cairo University",
-    type: "Academic",
+    institutionTypeName: "Academic",
     country: "Egypt",
     verified: true,
   },
   {
     name: "University of Ibadan",
-    type: "Academic",
+    institutionTypeName: "Academic",
     country: "Nigeria",
     verified: true,
   },
   {
     name: "Stellenbosch University",
-    type: "Academic",
+    institutionTypeName: "Academic",
     country: "South Africa",
     verified: true,
   },
-  { name: "Science Foundation", type: "NGO", country: "Kenya", verified: true },
   {
-    name: "African Academy of Sciences",
-    type: "NGO",
+    name: "Science Foundation",
+    institutionTypeName: "NGO",
     country: "Kenya",
     verified: true,
   },
+  {
+    name: "African Academy of Sciences",
+    institutionTypeName: "NGO",
+    country: "Kenya",
+    verified: true,
+  },
+];
+
+const INSTITUTION_TYPES = [
+  "Academic",
+  "Research",
+  "NGO",
+  "Government",
+  "Private",
 ];
 
 /**
@@ -379,15 +392,42 @@ const seed = async (strapi) => {
     );
   }
 
+  // 1b. Seed Institution Types
+  const institutionTypeCount = await strapi.db
+    .query("api::institution-type.institution-type")
+    .count();
+  if (institutionTypeCount === 0) {
+    strapi.log.info("Seeding Institution Types...");
+    for (const name of INSTITUTION_TYPES) {
+      await strapi.db.query("api::institution-type.institution-type").create({
+        data: { name, isActive: true, locale: "en" },
+      });
+    }
+    strapi.log.info(`Seeded ${INSTITUTION_TYPES.length} Institution Types.`);
+  }
+
   // 2. Seed Institutions
   const institutionCount = await strapi.db
     .query("api::institution.institution")
     .count();
   if (institutionCount === 0) {
     strapi.log.info("Seeding Institutions...");
+    const types = await strapi.db
+      .query("api::institution-type.institution-type")
+      .findMany();
+
     for (const data of INSTITUTIONS) {
+      const typeRelation = types.find(
+        (t) => t.name.toLowerCase() === data.institutionTypeName.toLowerCase(),
+      );
+
+      const { institutionTypeName, ...instData } = data;
+
       await strapi.db.query("api::institution.institution").create({
-        data,
+        data: {
+          ...instData,
+          institutionType: typeRelation ? typeRelation.id : null,
+        },
       });
     }
     strapi.log.info(`Seeded ${INSTITUTIONS.length} Institutions.`);
@@ -551,6 +591,10 @@ const seed = async (strapi) => {
   // 3b. Synchronize French Translations for critical collections
   strapi.log.info("Synchronizing French translations...");
   await synchronizeTranslations(strapi, "api::interest.interest");
+  await synchronizeTranslations(
+    strapi,
+    "api::institution-type.institution-type",
+  );
   await synchronizeTranslations(strapi, "api::institution.institution");
 
   // Permissions must be synchronized in ALL environments
@@ -559,6 +603,7 @@ const seed = async (strapi) => {
   const roles = ["public", "authenticated"];
   const actions = [
     "api::interest.interest.find",
+    "api::institution-type.institution-type.find",
     "api::institution.institution.find",
     "api::community.community.find",
     "api::community.community.findOne",

@@ -118,8 +118,8 @@
       "list": [
         "id",
         "name",
-        "category",
-        "createdAt"
+        "createdAt",
+        "category"
       ],
       "edit": [
         [

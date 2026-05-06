@@ -11,7 +11,11 @@
       "actionParameters": {},
       "subject": "api::chat-message.chat-message",
       "properties": {
-        "fields": ["text", "collaborationCall", "author"]
+        "fields": [
+          "text",
+          "collaborationCall",
+          "author"
+        ]
       },
       "conditions": [],
       "locale": null
@@ -40,7 +44,11 @@
       "actionParameters": {},
       "subject": "api::chat-message.chat-message",
       "properties": {
-        "fields": ["text", "collaborationCall", "author"]
+        "fields": [
+          "text",
+          "collaborationCall",
+          "author"
+        ]
       },
       "conditions": [],
       "locale": null
@@ -51,7 +59,11 @@
       "actionParameters": {},
       "subject": "api::chat-message.chat-message",
       "properties": {
-        "fields": ["text", "collaborationCall", "author"]
+        "fields": [
+          "text",
+          "collaborationCall",
+          "author"
+        ]
       },
       "conditions": [],
       "locale": null
@@ -215,7 +227,12 @@
       "actionParameters": {},
       "subject": "api::community-membership.community-membership",
       "properties": {
-        "fields": ["user", "community", "role", "joinedAt"]
+        "fields": [
+          "user",
+          "community",
+          "role",
+          "joinedAt"
+        ]
       },
       "conditions": [],
       "locale": null
@@ -244,7 +261,12 @@
       "actionParameters": {},
       "subject": "api::community-membership.community-membership",
       "properties": {
-        "fields": ["user", "community", "role", "joinedAt"]
+        "fields": [
+          "user",
+          "community",
+          "role",
+          "joinedAt"
+        ]
       },
       "conditions": [],
       "locale": null
@@ -255,7 +277,12 @@
       "actionParameters": {},
       "subject": "api::community-membership.community-membership",
       "properties": {
-        "fields": ["user", "community", "role", "joinedAt"]
+        "fields": [
+          "user",
+          "community",
+          "role",
+          "joinedAt"
+        ]
       },
       "conditions": [],
       "locale": null
@@ -366,196 +393,473 @@
       "locale": null
     },
     {
-      "documentId": "xspm70aoqqlymaxkx05odbyl",
+      "documentId": "apzir2x3e2r6ei6p6vo4viuk",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "api::institution-membership.institution-membership",
       "properties": {
-        "fields": ["user", "institution", "type", "verificationStatus"],
-        "locales": ["en", "fr"]
+        "fields": [
+          "user",
+          "institution",
+          "type",
+          "verificationStatus"
+        ],
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "ag5tb38znpfelq8uo5oj1t11",
+      "documentId": "ep31duz7nv896kw4ty5t6mp6",
       "action": "plugin::content-manager.explorer.delete",
       "actionParameters": {},
       "subject": "api::institution-membership.institution-membership",
       "properties": {
-        "locales": ["en", "fr"]
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "xziewy0u7sdc9m3otdhkz39a",
+      "documentId": "fmlmfx7whmd9e5svtpz9j3b8",
       "action": "plugin::content-manager.explorer.publish",
       "actionParameters": {},
       "subject": "api::institution-membership.institution-membership",
       "properties": {
-        "locales": ["en", "fr"]
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "q1i2grhc9j0p8s57we72dqqv",
+      "documentId": "fwg440zqn3ldigchatn1whn9",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "api::institution-membership.institution-membership",
       "properties": {
-        "fields": ["user", "institution", "type", "verificationStatus"],
-        "locales": ["en", "fr"]
+        "fields": [
+          "user",
+          "institution",
+          "type",
+          "verificationStatus"
+        ],
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "sdapy0vvq3ssfn1udlvlh155",
+      "documentId": "x6rl5ft9a4m31j9uhkq72vzt",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "api::institution-membership.institution-membership",
       "properties": {
-        "fields": ["user", "institution", "type", "verificationStatus"],
-        "locales": ["en", "fr"]
+        "fields": [
+          "user",
+          "institution",
+          "type",
+          "verificationStatus"
+        ],
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "g4y99j1sm2bajlbw3583q6xu",
+      "documentId": "nk8n63pfp4z5gwfab9p9eg0j",
+      "action": "plugin::content-manager.explorer.create",
+      "actionParameters": {},
+      "subject": "api::institution-type.institution-type",
+      "properties": {
+        "fields": [
+          "name",
+          "isActive",
+          "institutions"
+        ],
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "xnkefad5x0ohsv1ikb8fiajm",
+      "action": "plugin::content-manager.explorer.delete",
+      "actionParameters": {},
+      "subject": "api::institution-type.institution-type",
+      "properties": {
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "lvg9gaxj9bq3cerj6khgd1nr",
+      "action": "plugin::content-manager.explorer.publish",
+      "actionParameters": {},
+      "subject": "api::institution-type.institution-type",
+      "properties": {
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "nzj1s9wx52ucmssxydpgku64",
+      "action": "plugin::content-manager.explorer.read",
+      "actionParameters": {},
+      "subject": "api::institution-type.institution-type",
+      "properties": {
+        "fields": [
+          "name",
+          "isActive",
+          "institutions"
+        ],
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "vdv6pgxbp57jcro8s9e8csv3",
+      "action": "plugin::content-manager.explorer.update",
+      "actionParameters": {},
+      "subject": "api::institution-type.institution-type",
+      "properties": {
+        "fields": [
+          "name",
+          "isActive",
+          "institutions"
+        ],
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "hlfhko84z6h6c3pb4wsvzjid",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "api::institution.institution",
       "properties": {
         "fields": [
           "name",
-          "type",
+          "institutionType",
           "country",
           "verified",
           "memberships",
           "alumni"
         ],
-        "locales": ["en", "fr"]
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "gpgm4ja98z1e7w0bdote0p9n",
+      "documentId": "iwh35egxs2ihbzy1jnn7sk45",
       "action": "plugin::content-manager.explorer.delete",
       "actionParameters": {},
       "subject": "api::institution.institution",
       "properties": {
-        "locales": ["en", "fr"]
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "el0kf6zabuj7khjzp5vue5xe",
+      "documentId": "uzexovzb32uzqw316yoif7j0",
       "action": "plugin::content-manager.explorer.publish",
       "actionParameters": {},
       "subject": "api::institution.institution",
       "properties": {
-        "locales": ["en", "fr"]
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "i1caau1t7tglnqvczzgicb1l",
+      "documentId": "tfstvw7mghsv0hb71dw6jbdw",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "api::institution.institution",
       "properties": {
         "fields": [
           "name",
-          "type",
+          "institutionType",
           "country",
           "verified",
           "memberships",
           "alumni"
         ],
-        "locales": ["en", "fr"]
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "c39libw1etqu0zby5uv8ubkt",
+      "documentId": "dhk1x06gb4jhvktvklk7qv0j",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "api::institution.institution",
       "properties": {
         "fields": [
           "name",
-          "type",
+          "institutionType",
           "country",
           "verified",
           "memberships",
           "alumni"
         ],
-        "locales": ["en", "fr"]
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "c9ynr1xpp5ym8znao39hskpj",
+      "documentId": "hciopoqs84y3gdtsvx012wal",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "api::interest.interest",
       "properties": {
-        "fields": ["name", "category"],
-        "locales": ["en", "fr"]
+        "fields": [
+          "name",
+          "category"
+        ],
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "bztmk489tqx99jbvm5azvrnh",
+      "documentId": "sg403t6l4t8v9k7g5z3c4x3r",
       "action": "plugin::content-manager.explorer.delete",
       "actionParameters": {},
       "subject": "api::interest.interest",
       "properties": {
-        "locales": ["en", "fr"]
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "f32ptg61g94u768y50i6kuph",
+      "documentId": "bhqwcwpk7vvt3e1qsaueb3gk",
       "action": "plugin::content-manager.explorer.publish",
       "actionParameters": {},
       "subject": "api::interest.interest",
       "properties": {
-        "locales": ["en", "fr"]
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "l1ebdhcq21qharejzbde3v0x",
+      "documentId": "hgaz5gn2t0qeacf89vjdpvy0",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "api::interest.interest",
       "properties": {
-        "fields": ["name", "category"],
-        "locales": ["en", "fr"]
+        "fields": [
+          "name",
+          "category"
+        ],
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
       },
       "conditions": [],
       "locale": null
     },
     {
-      "documentId": "mz4h2eu5catjp2mp2kh573g5",
+      "documentId": "fet9wr1y8qu36yjw7ptbqhjt",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "api::interest.interest",
       "properties": {
-        "fields": ["name", "category"],
-        "locales": ["en", "fr"]
+        "fields": [
+          "name",
+          "category"
+        ],
+        "locales": [
+          "en",
+          "fr",
+          "pt",
+          "sw",
+          "ar"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "xp96tiycxnj2acu1dbnbiqax",
+      "action": "plugin::content-manager.explorer.create",
+      "actionParameters": {},
+      "subject": "api::resource-comment.resource-comment",
+      "properties": {
+        "fields": [
+          "text",
+          "resource",
+          "author"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "tv6ugyu8ywtzskxh5av064et",
+      "action": "plugin::content-manager.explorer.delete",
+      "actionParameters": {},
+      "subject": "api::resource-comment.resource-comment",
+      "properties": {},
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "b2z4sla0eazq5bpylssyeapj",
+      "action": "plugin::content-manager.explorer.publish",
+      "actionParameters": {},
+      "subject": "api::resource-comment.resource-comment",
+      "properties": {},
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "lwrilu5pr5ad5epon98lhioo",
+      "action": "plugin::content-manager.explorer.read",
+      "actionParameters": {},
+      "subject": "api::resource-comment.resource-comment",
+      "properties": {
+        "fields": [
+          "text",
+          "resource",
+          "author"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "z0lgovywrcc7xov71qrps1o5",
+      "action": "plugin::content-manager.explorer.update",
+      "actionParameters": {},
+      "subject": "api::resource-comment.resource-comment",
+      "properties": {
+        "fields": [
+          "text",
+          "resource",
+          "author"
+        ]
       },
       "conditions": [],
       "locale": null

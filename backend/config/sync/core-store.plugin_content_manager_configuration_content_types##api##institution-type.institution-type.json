@@ -1,5 +1,5 @@
 {
-  "key": "plugin_content_manager_configuration_content_types::api::resource.resource",
+  "key": "plugin_content_manager_configuration_content_types::api::institution-type.institution-type",
   "value": {
     "settings": {
       "bulkable": true,
@@ -33,37 +33,23 @@
           "sortable": true
         }
       },
-      "resourceType": {
+      "isActive": {
         "edit": {
-          "label": "resourceType",
+          "label": "isActive",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "resourceType",
+          "label": "isActive",
           "searchable": true,
           "sortable": true
         }
       },
-      "file": {
+      "institutions": {
         "edit": {
-          "label": "file",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "file",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "community": {
-        "edit": {
-          "label": "community",
+          "label": "institutions",
           "description": "",
           "placeholder": "",
           "visible": true,
@@ -71,50 +57,7 @@
           "mainField": "name"
         },
         "list": {
-          "label": "community",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "uploadedBy": {
-        "edit": {
-          "label": "uploadedBy",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true,
-          "mainField": "username"
-        },
-        "list": {
-          "label": "uploadedBy",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "status": {
-        "edit": {
-          "label": "status",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "status",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "topics": {
-        "edit": {
-          "label": "topics",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "topics",
+          "label": "institutions",
           "searchable": false,
           "sortable": false
         }
@@ -190,8 +133,8 @@
       "list": [
         "id",
         "name",
-        "resourceType",
-        "file"
+        "isActive",
+        "institutions"
       ],
       "edit": [
         [
@@ -200,39 +143,19 @@
             "size": 6
           },
           {
-            "name": "resourceType",
-            "size": 6
+            "name": "isActive",
+            "size": 4
           }
         ],
         [
           {
-            "name": "file",
+            "name": "institutions",
             "size": 6
-          },
-          {
-            "name": "community",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "uploadedBy",
-            "size": 6
-          },
-          {
-            "name": "status",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "topics",
-            "size": 12
           }
         ]
       ]
     },
-    "uid": "api::resource.resource"
+    "uid": "api::institution-type.institution-type"
   },
   "type": "object",
   "environment": null,

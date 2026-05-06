@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "institution_types",
+  "info": {
+    "singularName": "institution-type",
+    "pluralName": "institution-types",
+    "displayName": "Institution Type",
+    "description": "Relational model for institution categories with protection layers"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "unique": true,
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    },
+    "institutions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::institution.institution",
+      "mappedBy": "institutionType"
+    }
+  }
+}

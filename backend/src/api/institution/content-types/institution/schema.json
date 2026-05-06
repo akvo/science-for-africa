@@ -25,10 +25,11 @@
         }
       }
     },
-    "type": {
-      "type": "enumeration",
-      "enum": ["Academic", "Research", "NGO", "Government", "Private"],
-      "required": true
+    "institutionType": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::institution-type.institution-type",
+      "inversedBy": "institutions"
     },
     "country": {
       "type": "string",

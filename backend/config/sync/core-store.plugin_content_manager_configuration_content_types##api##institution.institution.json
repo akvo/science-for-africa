@@ -33,16 +33,17 @@
           "sortable": true
         }
       },
-      "type": {
+      "institutionType": {
         "edit": {
-          "label": "type",
+          "label": "institutionType",
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true
+          "editable": true,
+          "mainField": "name"
         },
         "list": {
-          "label": "type",
+          "label": "institutionType",
           "searchable": true,
           "sortable": true
         }
@@ -176,17 +177,12 @@
       "list": [
         "id",
         "name",
-        "type",
         "country"
       ],
       "edit": [
         [
           {
             "name": "name",
-            "size": 6
-          },
-          {
-            "name": "type",
             "size": 6
           }
         ],
@@ -207,6 +203,12 @@
           },
           {
             "name": "alumni",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "institutionType",
             "size": 6
           }
         ]

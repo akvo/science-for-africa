@@ -36,6 +36,11 @@
       "locale": null
     },
     {
+      "documentId": "jwyg553mbwa1odmir1fzsq15",
+      "action": "api::institution-type.institution-type.find",
+      "locale": null
+    },
+    {
       "documentId": "d2kupfblkd5ybfc6hdjidhjo",
       "action": "api::institution.institution.find",
       "locale": null

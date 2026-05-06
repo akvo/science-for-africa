@@ -819,3 +819,20 @@ While most onboarding data is held in local client state (`Zustand`) to ensure a
 ### 8.2 Partial Sync Robustness
 The partial sync in Step 3 is designed to be **non-blocking**. If the API call fails (e.g., due to temporary network issues), the frontend logs the error but still allows the user to proceed to Step 4. This prioritizes the user's progress while accepting a minor risk that the institution might not be searchable in Step 5 if the sync failed.
 
+## 9. Interest Management Security
+
+To ensure data integrity and prevent accidental deletion of system-critical taxonomies, the `Interest` and `InterestCategory` models implement a two-tier protection system.
+
+### 9.1 Protection Layers
+1.  **Intentional Deactivation (`isActive`)**:
+    - Both models include an `isActive` boolean flag (default: `true`).
+    - The onboarding frontend explicitly filters out any interests or categories where `isActive` is `false`.
+    - This allows administrators to "soft-delete" or temporarily hide interests without breaking historical data relations on existing user profiles.
+2.  **Accident Prevention (Delete Blocking)**:
+    - The `delete` core controller is overridden for both `api::interest.interest` and `api::interest-category.interest-category`.
+    - Any attempt to delete a record via the API returns a **403 Forbidden** error.
+    - Administrators must use the `isActive` flag for management.
+
+### 9.2 Data Synchronization
+The system seeder uses the Strapi v5 Document Service to maintain relational integrity between interests and their categories, ensuring consistent `documentId` linking across all environments.
+

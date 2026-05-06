@@ -284,6 +284,17 @@ export async function fetchCommunities() {
 }
 
 /**
+ * Fetch all active individual roles for onboarding, sorted by sortOrder.
+ * Uses localized names based on the current locale.
+ */
+export async function fetchIndividualRoles(locale = "en") {
+  return fetchLocalized(
+    "/individual-roles?filters[isActive][$eq]=true&sort=sortOrder:asc",
+    locale,
+  );
+}
+
+/**
  * Fetch a single community by slug (with relations populated)
  */
 export async function fetchCommunity(slug) {

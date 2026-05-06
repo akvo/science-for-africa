@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 
 import { ROLE_OPTIONS } from "@/lib/onboarding-constants";
 
+// # TODO:: Load individual role from strapi
 const OnboardingStep1 = () => {
   const { t } = useTranslation("onboarding");
   const router = useRouter();

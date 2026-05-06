@@ -123,6 +123,9 @@ describe("Profile Institution API", () => {
       .set("Authorization", `Bearer ${jwt}`)
       .send(updateData);
 
+    if (response.status !== 200) {
+      console.log(response.body);
+    }
     expect(response.status).toBe(200);
 
     // Check highestEducationInstitution

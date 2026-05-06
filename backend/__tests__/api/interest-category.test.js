@@ -51,26 +51,45 @@ describe("Interest & Category API", () => {
     expect(interest.name).toBe("Quantum Computing");
 
     // 3. Fetch Interest with populated category
-    const response = await request(strapi.server.httpServer)
-      .get("/api/interests?filters[name][$eq]=Quantum Computing&populate=interestCategory");
+    const response = await request(strapi.server.httpServer).get(
+      "/api/interests?filters[name][$eq]=Quantum Computing&populate=interestCategory",
+    );
 
     expect(response.status).toBe(200);
-    
 
     expect(response.body.data).toBeDefined();
-    
+
     // Find our interest in the list (handling both flattened and nested attributes)
-    const found = response.body.data.find(i => {
+    const found = response.body.data.find((i) => {
       const name = i.attributes ? i.attributes.name : i.name;
       return name === "Quantum Computing";
     });
 
     expect(found).toBeDefined();
-    
-    const fetchedCategory = found.attributes ? found.attributes.interestCategory : found.interestCategory;
-    const fetchedCategoryData = fetchedCategory.data ? fetchedCategory.data.attributes : fetchedCategory;
+
+    const fetchedCategory = found.interestCategory;
+    const fetchedCategoryData = fetchedCategory;
 
     expect(fetchedCategoryData).toBeDefined();
-    expect(fetchedCategoryData.name).toBe("Health");
+    expect(found.interestCategory.name).toBe("Health");
+  });
+
+  it("should block deletion of interest categories for accident prevention", async () => {
+    const categoryName = `Protection Test ${Math.random()}`;
+    const category = await strapi
+      .documents("api::interest-category.interest-category")
+      .create({
+        data: { name: categoryName },
+        status: "published",
+      });
+
+    const response = await request(strapi.server.httpServer)
+      .delete(`/api/interest-categories/${category.documentId}`)
+      .set("Accept", "application/json");
+
+    expect(response.status).toBe(403);
+    // In some test environments, Strapi returns a generic 'Forbidden' message
+    const message = response.body.error?.message || response.body.message || "";
+    expect(message.toLowerCase()).toMatch(/forbidden|cannot be deleted/);
   });
 });

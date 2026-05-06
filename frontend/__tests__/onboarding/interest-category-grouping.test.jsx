@@ -105,4 +105,39 @@ describe("OnboardingStep2 - Interest Grouping", () => {
     });
     expect(screen.getByText("Shadow Science")).toBeInTheDocument();
   });
+
+  it("skips interests belonging to inactive categories", async () => {
+    const mockData = {
+      data: [
+        {
+          name: "Active Interest",
+          interestCategory: { name: "Active Cat", isActive: true },
+        },
+        {
+          name: "Inactive Interest",
+          interestCategory: { name: "Inactive Cat", isActive: false },
+        },
+        {
+          name: "Uncategorized Interest",
+          interestCategory: null,
+        },
+      ],
+    };
+
+    fetchLocalized.mockResolvedValue(mockData);
+
+    render(<OnboardingStep2 />);
+
+    await waitFor(() => {
+      expect(screen.queryByText("Active Cat")).toBeInTheDocument();
+    });
+
+    expect(screen.getByText("Active Interest")).toBeInTheDocument();
+    expect(screen.getByText("Uncategorized")).toBeInTheDocument();
+    expect(screen.getByText("Uncategorized Interest")).toBeInTheDocument();
+
+    // Inactive category should NOT be visible
+    expect(screen.queryByText("Inactive Cat")).not.toBeInTheDocument();
+    expect(screen.queryByText("Inactive Interest")).not.toBeInTheDocument();
+  });
 });

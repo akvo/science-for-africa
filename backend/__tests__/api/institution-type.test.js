@@ -65,6 +65,7 @@ describe("InstitutionType API", () => {
     expect(response.status).toBe(201);
     expect(response.body.data.name).toBe("New Academic");
     expect(response.body.data.isActive).toBe(true);
+    expect(response.body.data.sortOrder).toBe(0); // default
   });
 
   it("should block deletion of an institution type with 403 Forbidden", async () => {

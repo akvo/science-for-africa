@@ -1,24 +1,54 @@
 {
-  "title": "الملف الشخصي",
-  "edit_profile": "تحرير الملف",
-  "save_changes": "حفظ التغييرات",
-  "cancel": "إلغاء",
-  "fields": {
+  "details": {
+    "title": "الملف الشخصي",
+    "description": "قم بتحديث صورتك وتفاصيلك الشخصية هنا.",
+    "edit_button": "تحرير",
+    "save_button": "حفظ",
+    "cancel_button": "إلغاء",
+    "photo_label": "صورتك (اختياري)",
+    "photo_description": "سيتم عرض هذه على ملفك الشخصي.",
+    "click_to_upload": "انقر للتحميل",
+    "drag_drop": "أو اسحب وأفلت",
+    "upload_hint": "SVG, PNG, JPG أو GIF (بحد أقصى 800x400 بكسل)",
+    "remove_photo": "إزالة الصورة",
     "full_name": "الاسم الكامل",
     "email": "البريد الإلكتروني",
-    "institution": "المؤسسة",
     "role": "الدور",
-    "orcid": "ORCID"
+    "role_placeholder": "اختر الدور",
+    "education_title": "التعليم",
+    "education_level_label": "مستوى التعليم",
+    "education_level_placeholder": "اختر مستوى التعليم",
+    "university_label": "نوع المؤسسة التعليمية",
+    "university_placeholder": "نوع المؤسسة التعليمية",
+    "affiliation_title": "الانتماء المؤسسي",
+    "affiliation_placeholder": "اختر المنظمة",
+    "biography_label": "السيرة الذاتية (اختياري)",
+    "biography_placeholder": "اكتب مقدمة قصيرة.",
+    "characters_left": "حروف متبقية",
+    "language_label": "تفضيلات اللغة",
+    "orcid_label": "ORCID",
+    "request_button": "طلب",
+    "save_success": "تم تحديث الملف الشخصي بنجاح",
+    "save_error": "فشل تحديث الملف الشخصي",
+    "not_provided": "غير متوفر",
+    "no_bio": "لم يتم تقديم سيرة ذاتية بعد."
   },
-  "placeholders": {
-    "full_name": "اكتب اسمك الكامل",
-    "email": "email@institution.org",
-    "institution": "اكتب اسم مؤسستك",
-    "role": "اختر الدور",
-    "orcid": "0000-0000-0000-0000"
+  "roles": {
+    "Researcher": "باحث",
+    "Principal Investigator / Lab Lead": "باحث رئيسي / رئيس مختبر",
+    "Post-doctoral Fellow": "زميل ما بعد الدكتوراه",
+    "PhD Candidate": "مرشح دكتوراه",
+    "Graduate / Undergraduate Student": "طالب دراسات عليا / بكالوريوس",
+    "Administrator / Support Staff": "إداري / طاقم دعم",
+    "Program Manager / Funder representative": "مدير برنامج / ممثل ممول",
+    "External Reviewer": "مقيم خارجي"
   },
-  "messages": {
-    "update_success": "تم تحديث ملفك بنجاح",
-    "update_error": "حدث خطأ أثناء تحديث ملفك"
+  "education_levels": {
+    "Postgraduate Student (Masters)": "طالب دراسات عليا (ماجستير)",
+    "Doctoral Candidate (PhD Student)": "مرشح دكتوراه (طالب دكتوراه)",
+    "Early-Career Researcher / Research management professional (0 - 5 years post-qualification)": "باحث في بداية حياته المهنية (0 - 5 سنوات)",
+    "Mid-Career Researcher / Research management professional (6 - 15 years)": "باحث في منتصف حياته المهنية (6 - 15 سنة)",
+    "Senior Researcher / Research management professional (16+ years)": "باحث أول (16+ سنة)",
+    "Emeritus / Retired": "أستاذ متفرغ / متقاعد"
   }
 }

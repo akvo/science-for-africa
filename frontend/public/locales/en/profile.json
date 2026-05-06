@@ -44,12 +44,12 @@
     "External Reviewer": "External Reviewer"
   },
   "education_levels": {
-    "High School": "High School",
-    "Bachelor's Degree": "Bachelor's Degree",
-    "Master's Degree": "Master's Degree",
-    "Doctorate (PhD)": "Doctorate (PhD)",
-    "Post-Doctorate": "Post-Doctorate",
-    "Professional Certificate": "Professional Certificate"
+    "Postgraduate Student (Masters)": "Postgraduate Student (Masters)",
+    "Doctoral Candidate (PhD Student)": "Doctoral Candidate (PhD Student)",
+    "Early-Career Researcher / Research management professional (0 - 5 years post-qualification)": "Early-Career Researcher (0 - 5 years)",
+    "Mid-Career Researcher / Research management professional (6 - 15 years)": "Mid-Career Researcher (6 - 15 years)",
+    "Senior Researcher / Research management professional (16+ years)": "Senior Researcher (16+ years)",
+    "Emeritus / Retired": "Emeritus / Retired"
   },
   "languages": {
     "en": "English",

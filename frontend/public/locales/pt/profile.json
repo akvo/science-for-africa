@@ -29,6 +29,26 @@
     "orcid_label": "ORCID",
     "request_button": "Solicitar",
     "save_success": "Perfil atualizado com sucesso",
-    "save_error": "Falha ao atualizar o perfil"
+    "save_error": "Falha ao atualizar o perfil",
+    "not_provided": "Não fornecido",
+    "no_bio": "Nenhuma biografia fornecida."
+  },
+  "roles": {
+    "Researcher": "Investigador",
+    "Principal Investigator / Lab Lead": "Investigador Principal / Líder de Laboratório",
+    "Post-doctoral Fellow": "Bolseiro de Pós-Doutoramento",
+    "PhD Candidate": "Candidato ao Doutoramento",
+    "Graduate / Undergraduate Student": "Estudante de Graduação / Pré-graduação",
+    "Administrator / Support Staff": "Administrador / Equipa de Apoio",
+    "Program Manager / Funder representative": "Gestor de Programa / Representante do Financiador",
+    "External Reviewer": "Revisor Externo"
+  },
+  "education_levels": {
+    "Postgraduate Student (Masters)": "Estudante de Pós-graduação (Mestrado)",
+    "Doctoral Candidate (PhD Student)": "Candidato ao Doutoramento (Estudante de PhD)",
+    "Early-Career Researcher / Research management professional (0 - 5 years post-qualification)": "Investigador em Início de Carreira (0 - 5 anos)",
+    "Mid-Career Researcher / Research management professional (6 - 15 years)": "Investigador de Carreira Média (6 - 15 anos)",
+    "Senior Researcher / Research management professional (16+ years)": "Investigador Sénior (16+ anos)",
+    "Emeritus / Retired": "Emérito / Reformado"
   }
 }

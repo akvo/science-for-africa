@@ -29,6 +29,26 @@
     "orcid_label": "ORCID",
     "request_button": "Ombi",
     "save_success": "Wasifu wako umesasishwa kwa mafanikio",
-    "save_error": "Imeshindwa kusasisha wasifu"
+    "save_error": "Imeshindwa kusasisha wasifu",
+    "not_provided": "Haijatolewa",
+    "no_bio": "Hakuna wasifu uliotolewa."
+  },
+  "roles": {
+    "Researcher": "Mtafiti",
+    "Principal Investigator / Lab Lead": "Mchunguzi Mkuu / Kiongozi wa Maabara",
+    "Post-doctoral Fellow": "Mwanachama wa Baada ya Udaktari",
+    "PhD Candidate": "Mgombea wa PhD",
+    "Graduate / Undergraduate Student": "Mwanafunzi wa Shahada / Shahada ya Kwanza",
+    "Administrator / Support Staff": "Msimamizi / Wafanyakazi wa Msaada",
+    "Program Manager / Funder representative": "Meneja wa Mpango / Mwawakilishi wa Mfadhili",
+    "External Reviewer": "Mkaguzi wa Nje"
+  },
+  "education_levels": {
+    "Postgraduate Student (Masters)": "Mwanafunzi wa Uzamili (Masters)",
+    "Doctoral Candidate (PhD Student)": "Mgombea wa Udaktari (Mwanafunzi wa PhD)",
+    "Early-Career Researcher / Research management professional (0 - 5 years post-qualification)": "Mtafiti wa Mapema wa Kazi (miaka 0 - 5)",
+    "Mid-Career Researcher / Research management professional (6 - 15 years)": "Mtafiti wa Kati wa Kazi (miaka 6 - 15)",
+    "Senior Researcher / Research management professional (16+ years)": "Mtafiti Mwandamizi (miaka 16+)",
+    "Emeritus / Retired": "Mstaafu"
   }
 }

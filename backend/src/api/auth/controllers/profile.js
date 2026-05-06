@@ -19,36 +19,57 @@ module.exports = ({ strapi }) => ({
         ? parseInt(ctx.query.membershipLimit)
         : undefined;
 
-      const profile = await strapi.db
-        .query("plugin::users-permissions.user")
-        .findOne({
-          where: { id: user.id },
+      // Resolve documentId if missing (common in some auth states)
+      if (!user.documentId) {
+        const u = await strapi.db
+          .query("plugin::users-permissions.user")
+          .findOne({
+            where: { id: user.id },
+          });
+        user.documentId = u?.documentId;
+      }
+
+      const profile = await strapi.entityService.findOne(
+        "plugin::users-permissions.user",
+        user.id,
+        {
           populate: {
             roleType: true,
             highestEducationInstitution: true,
             institutionMemberships: {
-              populate: {
-                institution: true,
-              },
+              populate: { institution: true },
             },
             interests: true,
             profilePhoto: true,
             pageCover: true,
             memberships: {
-              populate: {
-                community: true,
-              },
+              populate: { community: true },
             },
             collaborationInvites: {
-              populate: {
-                collaborationCall: true,
-              },
+              populate: { collaborationCall: true },
             },
           },
-        });
+        },
+      );
 
       if (!profile) {
         return ctx.notFound("Profile not found");
+      }
+
+      // [WORKAROUND] Manually fetch collaborationInvites if missing from population
+      if (
+        !profile.collaborationInvites ||
+        profile.collaborationInvites.length === 0
+      ) {
+        const manualInvites = await strapi.db
+          .query("api::collaboration-invite.collaboration-invite")
+          .findMany({
+            where: { invitedUser: profile.id },
+            populate: { collaborationCall: true },
+          });
+        if (manualInvites && manualInvites.length > 0) {
+          profile.collaborationInvites = manualInvites;
+        }
       }
 
       // Format community memberships: filter out duplicates and apply limit
@@ -57,9 +78,12 @@ module.exports = ({ strapi }) => ({
 
       if (profile.memberships) {
         profile.memberships.forEach((m) => {
-          if (m.community && !seenCommunities.has(m.community.documentId)) {
+          if (
+            m.community &&
+            !seenCommunities.has(m.community.documentId || m.community.id)
+          ) {
             uniqueMemberships.push(m);
-            seenCommunities.add(m.community.documentId);
+            seenCommunities.add(m.community.documentId || m.community.id);
           }
         });
       }
@@ -170,31 +194,42 @@ module.exports = ({ strapi }) => ({
       }
 
       // 1. Handle highestEducationInstitution (on-the-fly creation if name provided)
-      if (
-        data.highestEducationInstitution &&
-        typeof data.highestEducationInstitution === "object"
-      ) {
-        const { name, id, documentId } = data.highestEducationInstitution;
-        const targetId = documentId || id;
+      if (data.highestEducationInstitution) {
+        if (typeof data.highestEducationInstitution === "object") {
+          const { name, id, documentId } = data.highestEducationInstitution;
+          const targetId = documentId || id;
 
-        if (!targetId && name) {
-          let inst = await strapi.db
-            .query("api::institution.institution")
-            .findOne({
-              where: { name: { $containsi: name } },
-            });
-
-          if (!inst) {
-            inst = await strapi.db
+          if (!targetId && name) {
+            let inst = await strapi.db
               .query("api::institution.institution")
-              .create({
-                data: { name, verified: false, locale: "en" },
+              .findOne({
+                where: { name: { $containsi: name } },
               });
+
+            if (!inst) {
+              inst = await strapi.db
+                .query("api::institution.institution")
+                .create({
+                  data: { name, verified: false, locale: "en" },
+                });
+            }
+            data.highestEducationInstitution = inst.id;
+          } else if (targetId) {
+            // Resolve to numeric ID
+            if (typeof targetId === "string" && isNaN(parseInt(targetId))) {
+              const inst = await strapi.db
+                .query("api::institution.institution")
+                .findOne({
+                  where: { documentId: targetId },
+                });
+              data.highestEducationInstitution = inst?.id;
+            } else {
+              data.highestEducationInstitution = parseInt(targetId);
+            }
           }
-          data.highestEducationInstitution = inst.id;
-        } else if (targetId) {
-          // If it's a documentId string, resolve to numeric ID for db.query
-          if (typeof targetId === "string" && isNaN(parseInt(targetId))) {
+        } else if (typeof data.highestEducationInstitution === "string") {
+          const targetId = data.highestEducationInstitution;
+          if (isNaN(parseInt(targetId))) {
             const inst = await strapi.db
               .query("api::institution.institution")
               .findOne({
@@ -208,30 +243,39 @@ module.exports = ({ strapi }) => ({
       }
 
       // 2. Handle affiliationInstitution (on-the-fly creation + membership)
-      if (
-        data.affiliationInstitution &&
-        typeof data.affiliationInstitution === "object"
-      ) {
-        const { name, id, documentId } = data.affiliationInstitution;
-        const targetId = documentId || id;
-
+      if (data.affiliationInstitution) {
         let inst;
-        if (!targetId && name) {
-          inst = await strapi.db.query("api::institution.institution").findOne({
-            where: { name: { $containsi: name } },
-          });
+        if (typeof data.affiliationInstitution === "object") {
+          const { name, id, documentId } = data.affiliationInstitution;
+          const targetId = documentId || id;
 
-          if (!inst) {
+          if (!targetId && name) {
             inst = await strapi.db
               .query("api::institution.institution")
-              .create({
-                data: { name, verified: false, locale: "en" },
+              .findOne({
+                where: { name: { $containsi: name } },
+              });
+
+            if (!inst) {
+              inst = await strapi.db
+                .query("api::institution.institution")
+                .create({
+                  data: { name, verified: false, locale: "en" },
+                });
+            }
+          } else if (targetId) {
+            const isNumeric = !isNaN(parseInt(targetId));
+            inst = await strapi.db
+              .query("api::institution.institution")
+              .findOne({
+                where: isNumeric
+                  ? { id: parseInt(targetId) }
+                  : { documentId: targetId },
               });
           }
-        } else if (targetId) {
-          const isNumeric =
-            !isNaN(parseInt(targetId)) &&
-            String(parseInt(targetId)) === String(targetId);
+        } else {
+          const targetId = data.affiliationInstitution;
+          const isNumeric = !isNaN(parseInt(targetId));
           inst = await strapi.db.query("api::institution.institution").findOne({
             where: isNumeric
               ? { id: parseInt(targetId) }
@@ -240,22 +284,24 @@ module.exports = ({ strapi }) => ({
         }
 
         if (inst) {
-          // Check for existing membership
-          const existingMembership = await strapi.db
+          const existing = await strapi.db
             .query("api::institution-membership.institution-membership")
             .findOne({
-              where: { user: user.id, institution: inst.id },
+              where: {
+                user: user.id,
+                institution: inst.id,
+              },
             });
 
-          if (!existingMembership) {
+          if (!existing) {
             await strapi.db
               .query("api::institution-membership.institution-membership")
               .create({
                 data: {
                   user: user.id,
                   institution: inst.id,
-                  type: "member",
-                  verificationStatus: false,
+                  isPrimary: false,
+                  verified: false,
                   locale: "en",
                 },
               });
@@ -264,19 +310,16 @@ module.exports = ({ strapi }) => ({
         delete data.affiliationInstitution;
       }
 
-      // Handle roleType if it's a documentId or Name
-      if (
-        data.roleType &&
-        typeof data.roleType === "string" &&
-        isNaN(parseInt(data.roleType))
-      ) {
+      // 3. Handle roleType (resolve name/documentId to numeric ID)
+      if (data.roleType && typeof data.roleType === "string") {
         let role = await strapi.db
           .query("api::individual-role.individual-role")
           .findOne({
-            where: { documentId: data.roleType },
+            where: {
+              $or: [{ name: data.roleType }, { documentId: data.roleType }],
+            },
           });
 
-        // Fallback to name if documentId not found
         if (!role) {
           role = await strapi.db
             .query("api::individual-role.individual-role")
@@ -287,52 +330,36 @@ module.exports = ({ strapi }) => ({
         data.roleType = role?.id;
       }
 
-      // Handle interests (convert names to IDs)
+      // 4. Handle interests (convert names to objects for component)
       if (data.interests && Array.isArray(data.interests)) {
-        const resolvedInterests = [];
-        for (const item of data.interests) {
-          const name = typeof item === "string" ? item : item.name;
-          if (name) {
-            let interest = await strapi.db
-              .query("api::interest.interest")
-              .findOne({
-                where: { name: { $containsi: name } },
-              });
-
-            if (!interest) {
-              interest = await strapi.db
-                .query("api::interest.interest")
-                .create({
-                  data: { name, locale: "en" },
-                });
+        data.interests = data.interests
+          .map((interest) => {
+            if (typeof interest === "string") {
+              return { name: interest };
             }
-            resolvedInterests.push(interest.id);
-          }
-        }
-        data.interests = resolvedInterests;
+            return interest;
+          })
+          .filter((item) => !!item.name);
       }
 
-      // Clean up deprecated fields
-      delete data.institution;
+      // Clean up legacy fields
       delete data.institutionName;
       delete data.educationInstitutionName;
 
-      // [AUTH-DEBUG] beforeUpdate User
-      strapi.log.info(
-        `[AUTH-DEBUG] beforeUpdate User: where=${JSON.stringify({ id: user.id })} data=${JSON.stringify(data)}`,
+      // Update the user using Entity Service
+      await strapi.entityService.update(
+        "plugin::users-permissions.user",
+        user.id,
+        {
+          data,
+        },
       );
 
-      // Update the user
-      await strapi.db.query("plugin::users-permissions.user").update({
-        where: { id: user.id },
-        data,
-      });
-
-      // Fetch the updated user with full population
-      const updatedUser = await strapi
-        .documents("plugin::users-permissions.user")
+      // Fetch the updated user with full population using db.query to ensure consistency with ID
+      const updatedUser = await strapi.db
+        .query("plugin::users-permissions.user")
         .findOne({
-          documentId: user.documentId,
+          where: { id: user.id },
           populate: {
             roleType: true,
             highestEducationInstitution: true,
@@ -350,6 +377,42 @@ module.exports = ({ strapi }) => ({
             },
           },
         });
+
+      if (!updatedUser) {
+        return ctx.notFound("Updated user not found");
+      }
+
+      // [WORKAROUND] Manually fetch collaborationInvites if missing from population
+      if (
+        !updatedUser.collaborationInvites ||
+        updatedUser.collaborationInvites.length === 0
+      ) {
+        const manualInvites = await strapi.db
+          .query("api::collaboration-invite.collaboration-invite")
+          .findMany({
+            where: { invitedUser: updatedUser.id },
+            populate: { collaborationCall: true },
+          });
+        if (manualInvites && manualInvites.length > 0) {
+          updatedUser.collaborationInvites = manualInvites;
+        }
+      }
+
+      // Format community memberships for consistency
+      const uniqueMemberships = [];
+      const seenCommunities = new Set();
+      if (updatedUser.memberships) {
+        updatedUser.memberships.forEach((m) => {
+          if (
+            m.community &&
+            !seenCommunities.has(m.community.documentId || m.community.id)
+          ) {
+            uniqueMemberships.push(m);
+            seenCommunities.add(m.community.documentId || m.community.id);
+          }
+        });
+      }
+      updatedUser.memberships = uniqueMemberships;
 
       return updatedUser;
     } catch (error) {

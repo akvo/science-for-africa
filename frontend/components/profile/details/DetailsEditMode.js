@@ -87,7 +87,11 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
       fullName: user?.fullName || "",
       email: user?.email || "",
       biography: user?.biography || "",
-      roleType: user?.roleType?.documentId || user?.roleType || "",
+      roleType:
+        user?.roleType?.documentId ||
+        user?.roleType?.id?.toString() ||
+        user?.roleType?.toString() ||
+        "",
       orcidId: user?.orcidId || "",
       educationLevel: user?.educationLevel || "",
       language: user?.languagePreferences || "en",
@@ -121,7 +125,11 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
         fullName: user?.fullName || "",
         email: user?.email || "",
         biography: user?.biography || "",
-        roleType: user?.roleType?.documentId || user?.roleType || "",
+        roleType:
+          user?.roleType?.documentId ||
+          user?.roleType?.id?.toString() ||
+          user?.roleType?.toString() ||
+          "",
         orcidId: user?.orcidId || "",
         educationLevel: user?.educationLevel || "",
         language: user?.languagePreferences || "en",
@@ -387,7 +395,11 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                 >
                   <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
                     <SelectValue placeholder={t("details.role_placeholder")}>
-                      {roles.find((r) => r.documentId === field.value)?.name ||
+                      {roles.find(
+                        (r) =>
+                          r.documentId === field.value ||
+                          r.id?.toString() === field.value?.toString(),
+                      )?.name ||
                         (field.value
                           ? t(`roles.${field.value}`, {
                               defaultValue: field.value,

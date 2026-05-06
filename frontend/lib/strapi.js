@@ -504,7 +504,7 @@ export async function createResource({
  */
 export async function fetchResource(documentId) {
   return fetchFromStrapi(
-    `/resources/${documentId}?populate[file]=true&populate[uploadedBy]=true&populate[community]=true`,
+    `/resources/${documentId}?populate[file]=true&populate[uploadedBy][populate][roleType]=true&populate[community]=true`,
   );
 }
 
@@ -513,7 +513,7 @@ export async function fetchResource(documentId) {
  */
 export async function fetchResourceComments(resourceDocumentId) {
   return fetchFromStrapi(
-    `/resource-comments?filters[resource][documentId][$eq]=${encodeURIComponent(resourceDocumentId)}&populate[author]=true&sort=createdAt:asc`,
+    `/resource-comments?filters[resource][documentId][$eq]=${encodeURIComponent(resourceDocumentId)}&populate[author][populate][roleType]=true&sort=createdAt:asc`,
   );
 }
 

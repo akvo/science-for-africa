@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Mail, UploadCloud, User as UserIcon, Loader2 } from "lucide-react";
+import { Mail, UploadCloud, User as UserIcon, Loader2, CheckCircle2 } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -20,7 +20,7 @@ import {
   ROLE_OPTIONS,
   EDUCATION_LEVEL_OPTIONS,
 } from "@/lib/onboarding-constants";
-import { fetchFromStrapi, getStrapiMedia } from "@/lib/strapi";
+import { fetchFromStrapi, getStrapiMedia, validateOrcid } from "@/lib/strapi";
 
 const profileSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -698,27 +698,33 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
 
         <FormRow label={t("details.orcid_label")} error={errors.orcidId}>
           <div className="space-y-4 w-full">
-            <Input
-              {...register("orcidId")}
-              className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 w-full"
-            />
-            <div className="flex items-center gap-4">
-              <Button
-                variant="outline"
-                type="button"
-                className="px-8 rounded-full text-sm h-10 border-brand-teal-900 text-brand-teal-900 hover:bg-brand-teal-50 hover:text-brand-teal-700 transition-all font-outfit"
-              >
-                {t("details.request_button")}
-              </Button>
-              <Button
-                variant="ghost"
-                type="button"
-                onClick={() => setValue("orcidId", "")}
-                className="text-sm font-outfit text-brand-gray-500 hover:text-brand-teal-600 hover:bg-transparent px-0"
-              >
-                {t("details.cancel_button")}
-              </Button>
-            </div>
+            {user?.verified && user?.orcidId ? (
+              <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-green-50 border border-green-200">
+                <CheckCircle2 className="size-5 text-green-600 shrink-0" />
+                <span className="text-sm font-medium text-green-800">
+                  {user.orcidId}
+                </span>
+                <span className="text-xs text-green-600 ml-auto">Verified</span>
+              </div>
+            ) : (
+              <>
+                <Input
+                  {...register("orcidId")}
+                  placeholder="0000-0000-0000-0000"
+                  className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 w-full"
+                />
+                <div className="flex items-center gap-4">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={() => setValue("orcidId", "")}
+                    className="text-sm font-outfit text-brand-gray-500 hover:text-brand-teal-600 hover:bg-transparent px-0"
+                  >
+                    {t("details.cancel_button")}
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         </FormRow>
       </div>

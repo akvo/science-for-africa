@@ -169,6 +169,14 @@
       "type": "enumeration",
       "enum": ["en", "fr"],
       "default": "en"
+    },
+    "verified": {
+      "type": "boolean",
+      "default": false
+    },
+    "orcidAccessToken": {
+      "type": "string",
+      "private": true
     }
   }
 }

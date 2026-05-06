@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useAuthStore } from "@/lib/auth-store";
-import { updateUserProfile, uploadFile } from "@/lib/strapi";
+import { updateUserProfile, uploadFile, fetchUserProfile } from "@/lib/strapi";
 import { toast } from "sonner";
 import DetailsViewMode from "./details/DetailsViewMode";
 import DetailsEditMode from "./details/DetailsEditMode";
@@ -56,8 +56,18 @@ const DetailsTab = () => {
     );
   }
 
+  const handleUserUpdate = async () => {
+    const freshUser = await fetchUserProfile();
+    if (freshUser) updateUser(freshUser);
+  };
+
   return (
-    <DetailsViewMode user={user} t={t} onEdit={() => setIsEditing(true)} />
+    <DetailsViewMode
+      user={user}
+      t={t}
+      onEdit={() => setIsEditing(true)}
+      onUserUpdate={handleUserUpdate}
+    />
   );
 };
 

@@ -36,13 +36,13 @@
       "locale": null
     },
     {
-      "documentId": "jwyg553mbwa1odmir1fzsq15",
-      "action": "api::institution-type.institution-type.find",
+      "documentId": "indivrolefindpub001",
+      "action": "api::individual-role.individual-role.find",
       "locale": null
     },
     {
-      "documentId": "indivrolefindpub001",
-      "action": "api::individual-role.individual-role.find",
+      "documentId": "jwyg553mbwa1odmir1fzsq15",
+      "action": "api::institution-type.institution-type.find",
       "locale": null
     },
     {

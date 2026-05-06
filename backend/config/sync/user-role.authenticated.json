@@ -11,7 +11,7 @@
       "locale": null
     },
     {
-      "documentId": "jx79xorl2vc1uj6rjbxlm48x",
+      "documentId": "w67ba19xpl8ws5auq0h4d8pt",
       "action": "api::auth.profile.getMe",
       "locale": null
     },
@@ -41,7 +41,7 @@
       "locale": null
     },
     {
-      "documentId": "fm9obfcqyn01pkz6xbxsnw9t",
+      "documentId": "cdi9vjtbgb6mi2rup63l9prs",
       "action": "api::collaboration-call.collaboration-call.create-with-invites",
       "locale": null
     },
@@ -106,13 +106,13 @@
       "locale": null
     },
     {
-      "documentId": "ww1a0bnihode0z4jacl0d5cs",
-      "action": "api::institution-type.institution-type.find",
+      "documentId": "indivrolefind001",
+      "action": "api::individual-role.individual-role.find",
       "locale": null
     },
     {
-      "documentId": "indivrolefind001",
-      "action": "api::individual-role.individual-role.find",
+      "documentId": "ww1a0bnihode0z4jacl0d5cs",
+      "action": "api::institution-type.institution-type.find",
       "locale": null
     },
     {

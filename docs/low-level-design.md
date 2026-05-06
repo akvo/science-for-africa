@@ -155,6 +155,7 @@ erDiagram
 
     Institution ||--o{ InstitutionMembership : "has_members"
     Institution ||--o{ User : "alumni"
+    Institution }o--|| InstitutionType : "of_type"
 
     Community ||--o| Community : "parent"
     Community ||--o{ CommunityMembership : "has_members"
@@ -247,9 +248,16 @@ erDiagram
     Institution {
         string id PK
         string name UK
-        enum type
+        string type
+        string institutionType FK
         string country
         boolean verified
+    }
+
+    InstitutionType {
+        string id PK
+        string name UK
+        boolean isActive
     }
 
     InstitutionMembership {
@@ -442,6 +450,7 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 |---|---|
 | **User** | Extended Strapi user: bio, orcidId, careerStage, highestEducationInstitution, mentorAvailability, notificationPreferences, socialLinks |
 | **Institution** | Organisations (Academic / Research / NGO / Government / Private). Verified list. |
+| **InstitutionType** | Relational categories for institutions with `isActive` protection. |
 | **InstitutionMembership** | Explicit join table: User + Institution + role (member / owner) + verificationStatus |
 | **Community** | Top-level communities and sub-communities. Self-referential `parent` field for hierarchy. Privacy, type, branding |
 | **CommunityMembership** | Explicit join table: User + Community + role (admin / moderator / curator / member) |

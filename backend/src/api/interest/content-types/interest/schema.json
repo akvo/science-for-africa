@@ -25,9 +25,11 @@
         }
       }
     },
-    "category": {
-      "type": "string",
-      "required": true
+    "interestCategory": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::interest-category.interest-category",
+      "inversedBy": "interests"
     }
   }
 }

@@ -363,21 +363,74 @@ const synchronizeTranslations = async (strapi, uid) => {
 const seed = async (strapi) => {
   strapi.log.info("Checking if database needs seeding...");
 
-  // 1. Seed Interests
-  const interestCount = await strapi.db.query("api::interest.interest").count();
-  if (interestCount === 0) {
-    strapi.log.info("Seeding Interests...");
-    for (const [category, items] of Object.entries(INTEREST_CATEGORIES)) {
-      for (const name of items) {
-        await strapi.db.query("api::interest.interest").create({
-          data: { name, category },
+  // 1. Seed Interests (Upsert Pattern using Document Service for v5 compatibility)
+  strapi.log.info(
+    "Synchronizing Interest Categories and Interests (v5 Documents)...",
+  );
+  let categoriesCreated = 0;
+  let interestsCreated = 0;
+
+  for (const [categoryName, items] of Object.entries(INTEREST_CATEGORIES)) {
+    // Find or Create Category via Document Service
+    const existingCategories = await strapi
+      .documents("api::interest-category.interest-category")
+      .findMany({
+        filters: { name: categoryName },
+        locale: "en",
+      });
+
+    let category = existingCategories[0];
+
+    if (!category) {
+      strapi.log.info(`Creating category (v5): ${categoryName}`);
+      category = await strapi
+        .documents("api::interest-category.interest-category")
+        .create({
+          data: { name: categoryName },
+          status: "published",
+          locale: "en",
         });
+      categoriesCreated++;
+    }
+
+    // Create interests for this category via Document Service
+    for (const name of items) {
+      const existingInterests = await strapi
+        .documents("api::interest.interest")
+        .findMany({
+          filters: { name: { $eqi: name } },
+          locale: "en",
+          populate: ["interestCategory"],
+        });
+
+      const existingInterest = existingInterests[0];
+
+      if (!existingInterest) {
+        strapi.log.info(`Creating interest (v5): ${name} -> ${categoryName}`);
+        await strapi.documents("api::interest.interest").create({
+          data: {
+            name,
+            interestCategory: category.documentId, // Use documentId for relations in v5
+          },
+          status: "published",
+          locale: "en",
+        });
+        interestsCreated++;
+      } else if (!existingInterest.interestCategory) {
+        strapi.log.info(`Linking interest (v5): ${name} -> ${categoryName}`);
+        await strapi.documents("api::interest.interest").update({
+          documentId: existingInterest.documentId,
+          data: { interestCategory: category.documentId },
+          status: "published",
+        });
+        interestsCreated++;
       }
     }
-    strapi.log.info(
-      `Seeded ${Object.values(INTEREST_CATEGORIES).flat().length} Interests.`,
-    );
   }
+
+  strapi.log.info(
+    `Interest Sync complete: ${categoriesCreated} new categories, ${interestsCreated} interests created/linked.`,
+  );
 
   // 2. Seed Institutions
   const institutionCount = await strapi.db
@@ -559,6 +612,7 @@ const seed = async (strapi) => {
   const roles = ["public", "authenticated"];
   const actions = [
     "api::interest.interest.find",
+    "api::interest-category.interest-category.find",
     "api::institution.institution.find",
     "api::community.community.find",
     "api::community.community.findOne",

@@ -158,7 +158,7 @@ module.exports = {
     console.log("--- SCANNING AUTH ROUTES DETAILS ---");
     try {
       const upRoutes =
-        strapi.plugins["users-permissions"].routes["content-api"].routes;
+        strapi.plugin("users-permissions").routes["content-api"].routes;
       upRoutes.forEach((route) => {
         if (
           route.path.includes("/me") ||
@@ -243,6 +243,9 @@ module.exports = {
       },
       async beforeUpdate(event) {
         const { data, where } = event.params;
+        strapi.log.info(
+          `[AUTH-DEBUG] beforeUpdate User: where=${JSON.stringify(where)} data=${JSON.stringify(data)}`,
+        );
 
         // 1. Handle profilePhoto cleanup (Delete orphaned files from Media Library)
         if (data.profilePhoto !== undefined) {
@@ -281,11 +284,13 @@ module.exports = {
           data.fullName =
             `${data.firstName || ""} ${data.lastName || ""}`.trim();
         }
+        /*
         if (data.interests && Array.isArray(data.interests)) {
           data.interests = data.interests.map((item) =>
             typeof item === "string" ? { name: item } : item,
           );
         }
+        */
       },
     });
 

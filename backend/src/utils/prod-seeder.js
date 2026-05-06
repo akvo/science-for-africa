@@ -70,6 +70,19 @@ const COUNTRIES = [
   "Zimbabwe",
 ];
 
+const INDIVIDUAL_ROLES = [
+  "Knowledge Consumer",
+  "Knowledge Contributor",
+  "Working Group Member",
+  "Working Group Lead / Facilitator",
+  "Mentor",
+  "Mentee",
+  "Event Organiser / Host",
+  "Reviewer / Expert Advisor",
+  "Institutional Representative",
+  "Observer",
+];
+
 /**
  * Production seeder for critical metadata
  */
@@ -163,6 +176,78 @@ const seedProd = async (strapi) => {
       }
     }
   }
+
+  // 3. Seed Individual Roles if empty
+  const individualRoleCount = await strapi.db
+    .query("api::individual-role.individual-role")
+    .count();
+
+  if (individualRoleCount === 0) {
+    strapi.log.info("Seeding Individual Roles (Production)...");
+    for (let i = 0; i < INDIVIDUAL_ROLES.length; i++) {
+      const name = INDIVIDUAL_ROLES[i];
+      await strapi.db.query("api::individual-role.individual-role").create({
+        data: { name, isActive: true, sortOrder: i + 1, locale: "en" },
+      });
+    }
+    strapi.log.info(`Seeded ${INDIVIDUAL_ROLES.length} Individual Roles.`);
+
+    // Grant permissions
+    const roles = ["public", "authenticated"];
+    const actions = ["api::individual-role.individual-role.find"];
+
+    for (const roleName of roles) {
+      const role = await strapi.db
+        .query("plugin::users-permissions.role")
+        .findOne({ where: { type: roleName } });
+
+      if (role) {
+        for (const action of actions) {
+          const existingPermission = await strapi.db
+            .query("plugin::users-permissions.permission")
+            .findOne({
+              where: { action, role: role.id },
+            });
+
+          if (!existingPermission) {
+            await strapi.db
+              .query("plugin::users-permissions.permission")
+              .create({
+                data: { action, role: role.id },
+              });
+            strapi.log.info(`Granted ${action} to ${roleName}`);
+          }
+        }
+      }
+    }
+  }
+
+  // 4. Backfill existing users with fallback Individual Role "Knowledge Consumer"
+  const knowledgeConsumer = await strapi.db
+    .query("api::individual-role.individual-role")
+    .findOne({ where: { name: "Knowledge Consumer" } });
+
+  if (knowledgeConsumer) {
+    const usersToUpdate = await strapi.db
+      .query("plugin::users-permissions.user")
+      .findMany({
+        where: { roleType: { id: { $null: true } } },
+      });
+
+    if (usersToUpdate.length > 0) {
+      strapi.log.info(
+        `Backfilling ${usersToUpdate.length} users with fallback role 'Knowledge Consumer'...`,
+      );
+      for (const user of usersToUpdate) {
+        await strapi.db.query("plugin::users-permissions.user").update({
+          where: { id: user.id },
+          data: { roleType: knowledgeConsumer.id },
+        });
+      }
+    }
+  }
+
+  strapi.log.info("Production seeding and backfill complete.");
 };
 
 module.exports = { seedProd, INSTITUTION_TYPES, COUNTRIES };

@@ -10,5 +10,13 @@ module.exports = {
         auth: false,
       },
     },
+    {
+      method: "POST",
+      path: "/collaboration-invites/:id/decline",
+      handler: "collaboration-invite.decline",
+      config: {
+        auth: false,
+      },
+    },
   ],
 };

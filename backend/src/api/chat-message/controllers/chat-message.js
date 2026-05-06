@@ -71,9 +71,30 @@ module.exports = createCoreController(
 
       const call = await strapi.db
         .query("api::collaboration-call.collaboration-call")
-        .findOne({ where: { documentId: callDocumentId } });
+        .findOne({
+          where: { documentId: callDocumentId },
+          populate: ["createdByUser"],
+        });
 
       if (!call) return ctx.notFound("Collaboration call not found");
+
+      // Security: Only accepted members or the call creator can post messages.
+      const isCreator = call.createdByUser?.id === user.id;
+      const invite = await strapi.db
+        .query("api::collaboration-invite.collaboration-invite")
+        .findOne({
+          where: {
+            collaborationCall: call.id,
+            invitedUser: user.id,
+            inviteStatus: "Accepted",
+          },
+        });
+
+      if (!isCreator && !invite) {
+        return ctx.forbidden(
+          "You must be an accepted member to post in this collaboration space.",
+        );
+      }
 
       const created = await strapi.entityService.create(
         "api::chat-message.chat-message",

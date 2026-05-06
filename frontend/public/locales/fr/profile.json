@@ -26,6 +26,7 @@
     "biography_placeholder": "Écrivez une courte introduction.",
     "characters_left": "caractères restants",
     "language_label": "Préférences linguistiques",
+    "language_placeholder": "Sélectionnez la langue",
     "orcid_label": "ORCHID",
     "request_button": "Demander",
     "save_success": "Profil mis à jour avec succès",
@@ -50,6 +51,13 @@
     "Doctorate (PhD)": "Doctorat (PhD)",
     "Post-Doctorate": "Post-doctorat",
     "Professional Certificate": "Certificat professionnel"
+  },
+  "languages": {
+    "en": "Anglais",
+    "fr": "Français",
+    "pt": "Portugais",
+    "ar": "Arabe",
+    "sw": "Swahili"
   },
   "tabs": {
     "profile": "Profil",
@@ -91,5 +99,18 @@
     "explore": "Explorer la communauté",
     "delete_confirm_title": "Supprimer la ressource",
     "delete_confirm_description": "Êtes-vous sûr de vouloir supprimer cette ressource ? Cette action ne peut pas être annulée."
+  },
+  "mentorship": {
+    "title": "Mentorat",
+    "description": "Visualisez et gérez vos relations de mentorat.",
+    "header_space": "Espace de collaboration",
+    "header_mentees": "Utilisateurs mentorés",
+    "header_education": "Éducation",
+    "header_actions": "Actions",
+    "collaborator": "Collaborateur",
+    "researcher": "Chercheur",
+    "empty_title": "Vous n'avez pas encore de mentorés",
+    "empty_desc": "Lorsque vous serez assigné comme mentor à une collaboration, vos mentorés apparaîtront ici.",
+    "explore_calls": "Explorer les appels à collaboration"
   }
 }

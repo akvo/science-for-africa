@@ -70,10 +70,13 @@ Beyond Strapi's auto-generated CRUD, we will create custom endpoints with hand-w
 | Endpoint | Method | Justification |
 |---|---|---|
 | `/api/auth/me` | `GET` | **Custom Extension**: Returns the currently authenticated user with deep population of media, memberships, and collaboration involvement. Supports optional `membershipLimit` query parameter for optimized sidebar loading. |
+| `/api/auth/mentees` | `GET` | **Custom Extension**: Returns collaborations where the current user is a Mentor, along with details of the mentees (Collaborators) and the collaboration status. |
 
 | `/api/auth/me` | `PUT` | **Custom Extension**: Profile update with whitelisting and character limit validation for `biography`. |
 | `/api/auth/verify-otp` | `POST` | **Custom Extension**: Verifies email using a 6-digit number. Confirms user and returns JWT. |
 | `/api/auth/resend-otp` | `POST` | **Custom Extension**: Enforced 60s cooldown and 3/hr limit. Generates new code and sends dual-path email (Link + Code). |
+| `/api/collaboration-invites/:id/accept` | `POST` | **Custom Extension**: Idempotent acceptance of a collaboration invite. Attaches current user as `invitedUser` if not already set. |
+| `/api/collaboration-invites/:id/decline` | `POST` | **Custom Extension**: Marks a collaboration invitation as `Declined`. Prevents future acceptance and removes it from active dashboard views. |
 | `/api/posts/:id/moderate` | `PUT` | Moderation action (approve/decline) — wraps status update + notification trigger to post author |
 | `/api/communities/:id/join` | `POST` | Join community — side effects: increment memberCount, create CommunityMembership with `member` role, notify community admins |
 | `/api/communities/:id/leave` | `POST` | Leave community — decrement memberCount, remove CommunityMembership |
@@ -483,12 +486,12 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 **Formalized Education.** Educational background is linked directly to the Institution collection via the `highestEducationInstitution` field, replacing unstructured string data.
 
 **Resource Visibility & Moderation.** Resources only appear in public community lists when `status` is `approved`. Users can see their own `pending` or `declined` uploads in their profile. This is enforced at the controller layer by overwriting the core `find` and `findOne` methods to apply user-contextual filters.
-+
-+**Community Membership Synchronization Pattern.** To ensure data consistency between the primary `Community` entity (which tracks `members` for counts and listing) and the `CommunityMembership` collection (which drives the "My Communities" profile tab), the backend implements a dual-write pattern in the `join` and `leave` controllers.
-+- **Join**: Creates a `CommunityMembership` record AND links the user to the community's `members` relation.
-+- **Leave**: Deletes the `CommunityMembership` record (using a robust ID/Object manual filter to handle Strapi v5 variations) AND removes the user from the community's `members` relation.
-+This pattern prevents stale membership listings in the user profile even if the direct relation is somehow decoupled.
-+
+
+**Community Membership Synchronization Pattern.** To ensure data consistency between the primary `Community` entity (which tracks `members` for counts and listing) and the `CommunityMembership` collection (which drives the "My Communities" profile tab), the backend implements a dual-write pattern in the `join` and `leave` controllers.
+- **Join**: Creates a `CommunityMembership` record AND links the user to the community's `members` relation.
+- **Leave**: Deletes the `CommunityMembership` record (using a robust ID/Object manual filter to handle Strapi v5 variations) AND removes the user from the community's `members` relation.
+This pattern prevents stale membership listings in the user profile even if the direct relation is somehow decoupled.
+
 
 ## 3. Deployment & Infrastructure
 
@@ -723,6 +726,10 @@ sequenceDiagram
     else onboardingComplete is true
         Frontend->>User: Redirect to /
     end
+
+    Note over Strapi, Frontend: Collaboration Dashboard Population
+    Strapi-->>Frontend: findMany (Collaboration Invites)
+    Note right of Strapi: Deeply populates: collaborationCall, createdByUser, institutionMemberships.institution
 ```
 
 ### 5.2 Implementation Details
@@ -836,3 +843,32 @@ To ensure data integrity and prevent accidental deletion of system-critical taxo
 ### 9.2 Data Synchronization
 The system seeder uses the Strapi v5 Document Service to maintain relational integrity between interests and their categories, ensuring consistent `documentId` linking across all environments.
 
+## 10. Collaboration Security
+
+The platform enforces membership-level security for collaboration spaces to ensure professional and focused project work.
+
+### 10.1 Invitation-Based Membership
+Participation in a collaboration space is gated by an invitation system (`api::collaboration-invite`).
+- **Visitor**: Users who have not yet accepted an invitation. They have read-only access to the collaboration thread.
+- **Member**: Users who have clicked "Accept" on a pending invitation. They gain permission to post messages and contribute content.
+- **Creator**: The user who created the collaboration call. They have inherent membership permissions.
+
+### 10.2 Chat Interaction Gating
+Security is enforced at two levels:
+1.  **Frontend (UI/UX)**: The `ChatComposer` is replaced by a "Join to post" banner for non-members, preventing interaction attempts before membership is confirmed.
+2.  **Backend (API Guard)**: The `chat-message.create` controller explicitly verifies that the requester is either the `createdByUser` of the collaboration call or has an invitation with `inviteStatus: Accepted`. Requests from non-members are rejected with a `403 Forbidden` status.
+
+## 11. Legal and Privacy Policy
+
+The platform provides a centralized legal documentation page at `/privacy-policy`.
+
+### 11.1 Architecture
+- **Single Page**: All legal documents (Privacy Policy, Terms of Use, Community Guidelines) are hosted on a single, long-form scrollable page.
+- **Localization**: Content is managed via `frontend/public/locales/{lang}/privacy-policy.json`.
+- **SEO**: Metadata is managed via the `Meta` component with localized titles and descriptions.
+
+### 11.2 Content Structure
+The page is divided into three main logical sections, each with its own typography and visual identifiers:
+1.  **Privacy Policy**: Covers data collection, lawful basis, principles, and user rights.
+2.  **Terms of Use**: Covers registration, acceptable use, and governing law.
+3.  **Community Guidelines**: Covers professional conduct and reporting.

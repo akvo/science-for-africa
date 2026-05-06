@@ -1,0 +1,273 @@
+{
+  "seo": {
+    "title": "Política de Privacidade | Science for Africa",
+    "description": "Política de Privacidade, Termos de Uso e Diretrizes da Comunidade para a plataforma da Comunidade de Prática Pan-Africana."
+  },
+  "title": "Política de Privacidade",
+  "subtitle": "Comunidade de Prática Pan-Africana para Gestão de Pesquisa e Inovação",
+  "intro": "A Comunidade de Prática Pan-Africana para Gestão de Pesquisa e Inovação (“a CoP”, “a Plataforma”) está comprometida em salvaguardar os dados pessoais e manter os princípios internacionalmente reconhecidos de proteção de dados, privacidade e governança digital responsável.",
+  "aligned_with": {
+    "title": "Esta Política de Privacidade está alinhada com:",
+    "points": [
+      "o Regulamento Geral de Proteção de Dados (GDPR) da UE,",
+      "os Princípios de Proteção de Dados e Governança Digital da União Africana, e",
+      "as expectativas de responsabilidade e transparência dos financiadores internacionais de pesquisa pública e filantrópica."
+    ]
+  },
+  "scope": {
+    "title": "Escopo Desta Política",
+    "content": "Esta política se aplica a todos os usuários da Plataforma, incluindo membros individuais, contas institucionais, mentores, moderadores, parceiros e administradores.",
+    "acknowledgment": "Ao se registrar ou usar a Plataforma, você reconhece e aceita as práticas descritas nesta política."
+  },
+  "principles": {
+    "title": "Princípios que Governam o Nosso Uso de Dados",
+    "intro": "Processamos dados pessoais de acordo com os seguintes princípios:",
+    "points": [
+      "Legalidade, lealdade e transparência",
+      "Limitação de finalidade (dados usados apenas para fins profissionais definidos)",
+      "Minimização de dados (apenas os dados necessários são coletados)",
+      "Exatidão e atualização",
+      "Limitação de armazenamento",
+      "Integridade e confidencialidade",
+      "Responsabilidade e administração"
+    ],
+    "footer": "Esses princípios refletem tanto os requisitos do GDPR quanto os compromissos da UA com sistemas digitais responsáveis e centrados nas pessoas."
+  },
+  "collection": {
+    "title": "Informações que Coletamos",
+    "intro": "Podemos coletar as seguintes categorias de dados:",
+    "sections": [
+      {
+        "title": "Identidade e Informações Profissionais",
+        "points": [
+          "Nome, endereço de e-mail, país, instituição, cargo profissional",
+          "Estágio da carreira, áreas de especialização e interesses",
+          "Afiliação institucional e status de verificação"
+        ]
+      },
+      {
+        "title": "Dados da Plataforma e de Participação",
+        "points": [
+          "Postagens, comentários, uploads de recursos e participação em discussões",
+          "Colaboração, mentoria e atividade em grupos de trabalho",
+          "Inscrição em aprendizagem, conclusão, emblemas e certificações"
+        ]
+      },
+      {
+        "title": "Dados Técnicos e de Uso",
+        "points": [
+          "Registros de login, informações do dispositivo e do navegador",
+          "Endereço IP e metadados da sessão",
+          "Cookies e dados analíticos da plataforma"
+        ]
+      }
+    ],
+    "footer": "Você pode escolher quanta informação do perfil é visível para outros através dos controles de privacidade."
+  },
+  "lawful_basis": {
+    "title": "Base Legal para o Processamento",
+    "intro": "Processamos dados pessoais sob uma ou mais das seguintes bases legais:",
+    "points": [
+      "Consentimento (ex: criação de conta, comunicações)",
+      "Interesse profissional legítimo em operar uma comunidade confiável e segura",
+      "Desempenho de funções do programa ou da plataforma",
+      "Conformidade com obrigações legais e de financiadores"
+    ],
+    "footer": "Os usuários podem retirar o consentimento a qualquer momento, sem afetar a legalidade do processamento já realizado."
+  },
+  "usage": {
+    "title": "Como Usamos as Suas Informações",
+    "intro": "Usamos dados exclusivamente para:",
+    "points": [
+      "Operar e melhorar a plataforma CoP",
+      "Permitir interação profissional, colaboração e mentoria",
+      "Entregar atividades de aprendizagem, eventos e certificação",
+      "Apoiar o reconhecimento e a identidade profissional",
+      "Personalizar conteúdo, notificações e recomendações",
+      "Monitorar o desempenho e o engajamento da plataforma (agregado e anonimizado sempre que possível)",
+      "Cumprir obrigações de prestação de contas e relatórios para financiadores e parceiros"
+    ],
+    "footer": "Não usamos dados pessoais para publicidade comercial."
+  },
+  "sharing": {
+    "title": "Compartilhamento de Dados e Transferências Internacionais",
+    "intro": "Não vendemos nem monetizamos dados pessoais.",
+    "sharing_with_intro": "Os dados podem ser compartilhados apenas:",
+    "points": [
+      "com provedores de serviços confiáveis que apoiam a operação da plataforma;",
+      "com parceiros de aprendizagem ou certificação (onde relevante);",
+      "quando exigido por lei ou autoridade regulatória;",
+      "de forma anonimizada ou agregada para relatórios e aprendizagem do ecossistema."
+    ],
+    "transfer_footer": "Onde os dados são processados ou armazenados além das fronteiras, aplicamos salvaguardas consistentes com os princípios do GDPR e da UA, incluindo proteções contratuais e técnicas."
+  },
+  "retention": {
+    "title": "Retenção de Dados",
+    "intro": "Os dados pessoais são retidos apenas pelo tempo necessário para:",
+    "points": [
+      "fornecer serviços da plataforma,",
+      "atender a requisitos legais ou de relatórios de financiadores,",
+      "proteger a integridade e auditabilidade da plataforma."
+    ],
+    "footer": "Os usuários podem solicitar a exclusão de seus dados, sujeitos a restrições legais ou operacionais (ex: logs de auditoria, registros de salvaguarda)."
+  },
+  "security": {
+    "title": "Segurança e Salvaguardas",
+    "intro": "Implementamos medidas técnicas e organizacionais proporcionais, incluindo:",
+    "points": [
+      "armazenamento criptografado e controles de acesso seguro;",
+      "permissões baseadas em funções;",
+      "trilhas de auditoria para ações sensíveis;",
+      "revisão regular da segurança da plataforma e das práticas de governança."
+    ]
+  },
+  "rights": {
+    "title": "Seus Direitos",
+    "intro": "De acordo com os princípios do GDPR e da UA, você tem o direito de:",
+    "points": [
+      "Acessar seus dados pessoais",
+      "Corrigir ou atualizar dados imprecisos",
+      "Solicitar exclusão (“direito de ser esquecido”), quando aplicável",
+      "Restringir ou se opor a certos processamentos",
+      "Solicitar portabilidade de dados",
+      "Retirar o consentimento",
+      "Apresentar uma reclamação quando necessário"
+    ],
+    "footer": "As solicitações podem ser feitas usando os detalhes de contato abaixo."
+  },
+  "changes": {
+    "title": "Alterações nesta Política",
+    "content": "Podemos atualizar esta Política de Privacidade para refletir alterações legais, regulatórias ou operacionais.",
+    "footer": "Atualizações materiais serão comunicadas claramente na Plataforma."
+  },
+  "contact": {
+    "title": "Contato",
+    "intro": "Para questões de privacidade ou proteção de dados, entre em contato com:",
+    "email_label": "E-mail:",
+    "email_value": "[Inserir E-mail de Contato de Proteção de Dados / Plataforma - TBC]",
+    "organisation_label": "Organização:",
+    "organisation_value": "Science for Africa Foundation"
+  },
+  "terms": {
+    "title": "Termos de Uso",
+    "intro": "Estes Termos de Uso definem as condições sob as quais a plataforma CoP é acessada e usada.",
+    "acceptance": "Ao usar a plataforma, você concorda com estes Termos.",
+    "purpose": {
+      "title": "Propósito e Valores da Plataforma",
+      "intro": "A Plataforma existe para:",
+      "points": [
+        "profissionalizar a gestão de pesquisa e inovação;",
+        "permitir aprendizagem entre pares, colaboração e mentoria;",
+        "apoiar sistemas de pesquisa fortes, éticos e responsáveis na África."
+      ],
+      "footer": "O uso da Plataforma deve estar alinhado com esses propósitos e valores."
+    },
+    "registration": {
+      "title": "Registro e Responsabilidade da Conta",
+      "points": [
+        "Os usuários devem fornecer informações precisas e atuais",
+        "As contas são pessoais e não podem ser compartilhadas",
+        "As afiliações institucionais estão sujeitas a verificação",
+        "A Plataforma reserva-se o direito de aprovar, restringir ou suspender contas"
+      ]
+    },
+    "professional_use": {
+      "title": "Uso Profissional Aceitável",
+      "intro": "Os usuários concordam em:",
+      "points": [
+        "agir de forma legal, ética e profissional;",
+        "envolver-se de forma respeitosa e construtiva;",
+        "contribuir de boa fé para a aprendizagem compartilhada e colaboração;",
+        "respeitar a confidencialidade, a propriedade intelectual e os direitos de dados."
+      ]
+    },
+    "prohibited": {
+      "title": "Conduta Proibida",
+      "intro": "Os usuários não devem:",
+      "points": [
+        "postar conteúdo prejudicial, enganoso ou discriminatório;",
+        "usar indevidamente os dados ou violar a confidencialidade;",
+        "envolver-se em atividade comercial não autorizada;",
+        "prejudicar a segurança, confiança ou governança da plataforma."
+      ]
+    },
+    "ugc": {
+      "title": "Conteúdo Gerado pelo Usuário",
+      "points": [
+        "Os usuários mantêm a propriedade de seu conteúdo",
+        "Ao postar, os usuários concedem à Plataforma uma licença não exclusiva para hospedar e exibir o conteúdo",
+        "O conteúdo pode ser moderado para manter padrões, proteger usuários e cumprir obrigações legais e de financiadores"
+      ]
+    },
+    "governance": {
+      "title": "Governança e Execução da Plataforma",
+      "intro": "A Plataforma pode:",
+      "points": [
+        "moderar ou remover conteúdo;",
+        "suspender ou encerrar o acesso;",
+        "tomar as medidas necessárias para proteger os usuários, parceiros e a integridade institucional."
+      ],
+      "footer": "Violações graves ou repetidas podem levar à remoção permanente."
+    },
+    "liability": {
+      "title": "Limitação de Responsabilidade",
+      "content": "A Plataforma é fornecida “como está”.",
+      "footer": "A participação não garante resultados, financiamento ou avanço profissional."
+    },
+    "law": {
+      "title": "Lei Aplicável",
+      "content": "Estes Termos são regidos pelas leis aplicáveis na jurisdição de operação da plataforma (ex: Quênia), juntamente com os marcos internacionais aplicáveis de governança digital e de dados."
+    }
+  },
+  "community_guidelines": {
+    "title": "Diretrizes da Comunidade",
+    "subtitle": "Construindo uma Comunidade Profissional e Confiável",
+    "intro": "A CoP é um espaço profissional, inclusivo e confiável. Estas diretrizes refletem a responsabilidade e a gestão compartilhadas.",
+    "conduct": {
+      "title": "Conduta Profissional",
+      "intro": "Espera-se que os membros:",
+      "points": [
+        "tratem os outros com respeito e justiça;",
+        "apoiem a aprendizagem em todos os estágios da carreira;",
+        "reconheçam diferentes contextos institucionais e nacionais;",
+        "envolvam-se de forma construtiva e responsável."
+      ]
+    },
+    "sharing": {
+      "title": "Compartilhamento Responsável de Conhecimento",
+      "intro": "Os membros devem:",
+      "points": [
+        "compartilhar experiência e evidências baseadas na prática;",
+        "creditar fontes e colaboradores;",
+        "distinguir opinião de fato;",
+        "evitar desinformação ou alegações não verificadas."
+      ]
+    },
+    "inclusion": {
+      "title": "Inclusão, Equidade e Salvaguarda",
+      "intro": "A Plataforma não tolera:",
+      "points": [
+        "assédio, discriminação ou exclusão;",
+        "abuso de poder ou status;",
+        "comportamento que prejudique a segurança psicológica ou profissional."
+      ]
+    },
+    "moderation": {
+      "title": "Moderação e Responsabilidade",
+      "points": [
+        "Moderadores guiam as discussões e impõem padrões",
+        "As decisões são documentadas e proporcionais",
+        "O devido processo é aplicado, consistente com as expectativas de governança e dos financiadores"
+      ]
+    },
+    "reporting": {
+      "title": "Relatos e Responsabilidade Compartilhada",
+      "intro": "Todos os membros compartilham a responsabilidade por:",
+      "points": [
+        "manter a confiança e a qualidade;",
+        "relatar preocupações de boa fé;",
+        "contribuir para uma comunidade profissional de gestão de pesquisa que fortaleça os sistemas de pesquisa e inovação da África."
+      ]
+    }
+  }
+}

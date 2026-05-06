@@ -1,0 +1,273 @@
+{
+  "seo": {
+    "title": "Politique de confidentialité | Science for Africa",
+    "description": "Politique de confidentialité, conditions d'utilisation et directives communautaires pour la plateforme panafricaine de communauté de pratique."
+  },
+  "title": "Politique de confidentialité",
+  "subtitle": "Communauté de pratique panafricaine pour la gestion de la recherche et de l'innovation",
+  "intro": "La Communauté de pratique panafricaine pour la gestion de la recherche et de l'innovation (« la CdP », « la Plateforme ») s'engage à protéger les données personnelles et à respecter les principes internationalement reconnus de protection des données, de confidentialité et de gouvernance numérique responsable.",
+  "aligned_with": {
+    "title": "Cette politique de confidentialité est alignée sur :",
+    "points": [
+      "le Règlement général sur la protection des données (RGPD) de l'UE,",
+      "les principes de protection des données et de gouvernance numérique de l'Union africaine, et",
+      "les attentes en matière de responsabilité et de transparence des bailleurs de fonds internationaux de la recherche publique et philanthropique."
+    ]
+  },
+  "scope": {
+    "title": "Portée de cette politique",
+    "content": "Cette politique s'applique à tous les utilisateurs de la Plateforme, y compris les membres individuels, les comptes institutionnels, les mentors, les modérateurs, les partenaires et les administrateurs.",
+    "acknowledgment": "En vous inscrivant ou en utilisant la Plateforme, vous reconnaissez et acceptez les pratiques décrites dans cette politique."
+  },
+  "principles": {
+    "title": "Principes régissant notre utilisation des données",
+    "intro": "Nous traitons les données personnelles conformément aux principes suivants :",
+    "points": [
+      "Légalité, loyauté et transparence",
+      "Limitation des finalités (données utilisées uniquement à des fins professionnelles définies)",
+      "Minimisation des données (seules les données nécessaires sont collectées)",
+      "Exactitude et mise à jour",
+      "Limitation de la conservation",
+      "Intégrité et confidentialité",
+      "Responsabilité et gérance"
+    ],
+    "footer": "Ces principes reflètent à la fois les exigences du RGPD et les engagements de l'UA en faveur de systèmes numériques responsables et centrés sur l'humain."
+  },
+  "collection": {
+    "title": "Informations que nous collectons",
+    "intro": "Nous pouvons collecter les catégories de données suivantes :",
+    "sections": [
+      {
+        "title": "Identité et informations professionnelles",
+        "points": [
+          "Nom, adresse e-mail, pays, institution, rôle professionnel",
+          "Étape de la carrière, domaines d'expertise et intérêts",
+          "Affiliation institutionnelle et statut de vérification"
+        ]
+      },
+      {
+        "title": "Données de la plateforme et de participation",
+        "points": [
+          "Messages, commentaires, téléchargements de ressources et participation aux discussions",
+          "Collaboration, mentorat et activité des groupes de travail",
+          "Inscription à l'apprentissage, achèvement, badges et certifications"
+        ]
+      },
+      {
+        "title": "Données techniques et d'utilisation",
+        "points": [
+          "Registres de connexion, informations sur l'appareil et le navigateur",
+          "Adresse IP et métadonnées de session",
+          "Cookies et données d'analyse de la plateforme"
+        ]
+      }
+    ],
+    "footer": "Vous pouvez choisir le degré de visibilité de vos informations de profil par rapport aux autres grâce aux contrôles de confidentialité."
+  },
+  "lawful_basis": {
+    "title": "Base légale du traitement",
+    "intro": "Nous traitons les données personnelles selon une ou plusieurs des bases légales suivantes :",
+    "points": [
+      "Consentement (par exemple, création de compte, communications)",
+      "Intérêt professionnel légitime à exploiter une communauté de confiance et sécurisée",
+      "Exécution des fonctions du programme ou de la plateforme",
+      "Respect des obligations légales et des bailleurs de fonds"
+    ],
+    "footer": "Les utilisateurs peuvent retirer leur consentement à tout moment, sans affecter la légalité du traitement déjà entrepris."
+  },
+  "usage": {
+    "title": "Comment nous utilisons vos informations",
+    "intro": "Nous utilisons les données uniquement pour :",
+    "points": [
+      "Exploiter et améliorer la plateforme CdP",
+      "Permettre l'interaction professionnelle, la collaboration et le mentorat",
+      "Fournir des activités d'apprentissage, des événements et des certifications",
+      "Soutenir la reconnaissance et l'identité professionnelles",
+      "Personnaliser le contenu, les notifications et les recommandations",
+      "Surveiller les performances et l'engagement de la plateforme (agrégées et anonymisées si possible)",
+      "Remplir les obligations de rapport et de responsabilité envers les bailleurs de fonds et les partenaires"
+    ],
+    "footer": "Nous n'utilisons pas les données personnelles pour la publicité commerciale."
+  },
+  "sharing": {
+    "title": "Partage de données et transferts internationaux",
+    "intro": "Nous ne vendons ni ne monétisons les données personnelles.",
+    "sharing_with_intro": "Les données ne peuvent être partagées que :",
+    "points": [
+      "avec des prestataires de services de confiance soutenant l'exploitation de la plateforme ;",
+      "avec des partenaires d'apprentissage ou de certification (le cas échéant) ;",
+      "lorsque la loi ou une autorité réglementaire l'exige ;",
+      "sous forme anonymisée ou agrégée pour les rapports et l'apprentissage de l'écosystème."
+    ],
+    "transfer_footer": "Lorsque les données sont traitées ou stockées au-delà des frontières, nous appliquons des garanties conformes aux principes du RGPD et de l'UA, y compris des protections contractuelles et techniques."
+  },
+  "retention": {
+    "title": "Conservation des données",
+    "intro": "Les données personnelles ne sont conservées que le temps nécessaire pour :",
+    "points": [
+      "fournir les services de la plateforme,",
+      "répondre aux exigences de rapport légales ou des bailleurs de fonds,",
+      "protéger l'intégrité et l'auditabilité de la plateforme."
+    ],
+    "footer": "Les utilisateurs peuvent demander la suppression de leurs données, sous réserve de contraintes légales ou opérationnelles (par exemple, journaux d'audit, dossiers de sauvegarde)."
+  },
+  "security": {
+    "title": "Sécurité et garanties",
+    "intro": "Nous mettons en œuvre des mesures techniques et organisationnelles proportionnées, notamment :",
+    "points": [
+      "stockage crypté et contrôles d'accès sécurisés ;",
+      "autorisations basées sur les rôles ;",
+      "pistes d'audit pour les actions sensibles ;",
+      "examen régulier de la sécurité de la plateforme et des pratiques de gouvernance."
+    ]
+  },
+  "rights": {
+    "title": "Vos droits",
+    "intro": "Conformément aux principes du RGPD et de l'UA, vous avez le droit de :",
+    "points": [
+      "Accéder à vos données personnelles",
+      "Corriger ou mettre à jour des données inexactes",
+      "Demander la suppression (« droit à l'oubli »), le cas échéant",
+      "Restreindre ou s'opposer à certains traitements",
+      "Demander la portabilité des données",
+      "Retirer le consentement",
+      "Déposer une plainte si nécessaire"
+    ],
+    "footer": "Les demandes peuvent être faites en utilisant les coordonnées ci-dessous."
+  },
+  "changes": {
+    "title": "Modifications de cette politique",
+    "content": "Nous pouvons mettre à jour cette politique de confidentialité pour refléter les changements légaux, réglementaires ou opérationnels.",
+    "footer": "Les mises à jour substantielles seront communiquées clairement sur la plateforme."
+  },
+  "contact": {
+    "title": "Contact",
+    "intro": "Pour les questions de confidentialité ou de protection des données, veuillez contacter :",
+    "email_label": "E-mail :",
+    "email_value": "[Insérer l'e-mail de contact de la protection des données / de la plateforme - À confirmer]",
+    "organisation_label": "Organisation :",
+    "organisation_value": "Fondation Science for Africa"
+  },
+  "terms": {
+    "title": "Conditions d'utilisation",
+    "intro": "Ces conditions d'utilisation définissent les conditions dans lesquelles la plateforme CdP est consultée et utilisée.",
+    "acceptance": "En utilisant la plateforme, vous acceptez ces conditions.",
+    "purpose": {
+      "title": "Objectif et valeurs de la plateforme",
+      "intro": "La plateforme existe pour :",
+      "points": [
+        "professionnaliser la gestion de la recherche et de l'innovation ;",
+        "permettre l'apprentissage par les pairs, la collaboration et le mentorat ;",
+        "soutenir des systèmes de recherche solides, éthiques et responsables en Afrique."
+      ],
+      "footer": "L'utilisation de la plateforme doit être conforme à ces objectifs et valeurs."
+    },
+    "registration": {
+      "title": "Inscription et responsabilité du compte",
+      "points": [
+        "Les utilisateurs doivent fournir des informations exactes et à jour",
+        "Les comptes sont personnels et ne peuvent être partagés",
+        "Les affiliations institutionnelles sont soumises à vérification",
+        "La Plateforme se réserve le droit d'approuver, de restreindre ou de suspendre des comptes"
+      ]
+    },
+    "professional_use": {
+      "title": "Utilisation professionnelle acceptable",
+      "intro": "Les utilisateurs acceptent de :",
+      "points": [
+        "agir de manière légale, éthique et professionnelle ;",
+        "s'engager de manière respectueuse et constructive ;",
+        "contribuer de bonne foi à l'apprentissage partagé et à la collaboration ;",
+        "respecter la confidentialité, la propriété intellectuelle et les droits sur les données."
+      ]
+    },
+    "prohibited": {
+      "title": "Conduite interdite",
+      "intro": "Les utilisateurs ne doivent pas :",
+      "points": [
+        "publier du contenu nuisible, trompeur ou discriminatoire ;",
+        "faire un mauvais usage des données ou violer la confidentialité ;",
+        "s'engager dans une activité commerciale non autorisée ;",
+        "compromettre la sécurité, la confiance ou la gouvernance de la plateforme."
+      ]
+    },
+    "ugc": {
+      "title": "Contenu généré par l'utilisateur",
+      "points": [
+        "Les utilisateurs conservent la propriété de leur contenu",
+        "En publiant, les utilisateurs accordent à la Plateforme une licence non exclusive pour l'héberger et l'afficher",
+        "Le contenu peut être modéré pour respecter les normes, protéger les utilisateurs et répondre aux obligations des bailleurs de fonds et légales"
+      ]
+    },
+    "governance": {
+      "title": "Gouvernance et application de la plateforme",
+      "intro": "La plateforme peut :",
+      "points": [
+        "modérer ou supprimer du contenu ;",
+        "suspendre ou résilier l'accès ;",
+        "prendre les mesures nécessaires pour protéger les utilisateurs, les partenaires et l'intégrité institutionnelle."
+      ],
+      "footer": "Les violations graves ou répétées peuvent entraîner une suppression permanente."
+    },
+    "liability": {
+      "title": "Limitation de responsabilité",
+      "content": "La Plateforme est fournie « en l'état ».",
+      "footer": "La participation ne garantit pas de résultats, de financement ou d'avancement professionnel."
+    },
+    "law": {
+      "title": "Droit applicable",
+      "content": "Ces conditions sont régies par les lois applicables dans la juridiction d'exploitation de la plateforme (par exemple, le Kenya), ainsi que par les cadres de gouvernance numérique et de données internationaux applicables."
+    }
+  },
+  "community_guidelines": {
+    "title": "Directives communautaires",
+    "subtitle": "Bâtir une communauté de confiance et professionnelle",
+    "intro": "La CdP est un espace professionnel, inclusif et de confiance. Ces directives reflètent la responsabilité et la gérance partagées.",
+    "conduct": {
+      "title": "Conduite professionnelle",
+      "intro": "Les membres sont censés :",
+      "points": [
+        "traiter les autres avec respect et équité ;",
+        "soutenir l'apprentissage à toutes les étapes de la carrière ;",
+        "reconnaître les différents contextes institutionnels et nationaux ;",
+        "s'engager de manière constructive et responsable."
+      ]
+    },
+    "sharing": {
+      "title": "Partage responsable des connaissances",
+      "intro": "Les membres devraient :",
+      "points": [
+        "partager l'expérience et les preuves basées sur la pratique ;",
+        "créditer les sources et les collaborateurs ;",
+        "distinguer l'opinion du fait ;",
+        "éviter la désinformation ou les affirmations non vérifiées."
+      ]
+    },
+    "inclusion": {
+      "title": "Inclusion, équité et protection",
+      "intro": "La plateforme ne tolère pas :",
+      "points": [
+        "le harcèlement, la discrimination ou l'exclusion ;",
+        "l'abus de pouvoir ou de statut ;",
+        "les comportements qui compromettent la sécurité psychologique ou professionnelle."
+      ]
+    },
+    "moderation": {
+      "title": "Modération et responsabilité",
+      "points": [
+        "Les modérateurs guident les discussions et appliquent les normes",
+        "Les décisions sont documentées et proportionnées",
+        "Une procédure régulière est appliquée, conformément aux attentes des bailleurs de fonds et de la gouvernance"
+      ]
+    },
+    "reporting": {
+      "title": "Signalement et responsabilité partagée",
+      "intro": "Tous les membres partagent la responsabilité de :",
+      "points": [
+        "maintenir la confiance et la qualité ;",
+        "signaler les préoccupations de bonne foi ;",
+        "contribuer à une communauté professionnelle de gestion de la recherche qui renforce les systèmes de recherche et d'innovation en Afrique."
+      ]
+    }
+  }
+}

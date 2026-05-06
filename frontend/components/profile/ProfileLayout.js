@@ -246,7 +246,15 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
 
             {/* Tabs List */}
             <div className="flex items-center gap-6 border-b border-brand-gray-200 overflow-x-auto scrollbar-hide py-1">
-              {TABS.map((tab) => (
+              {TABS.filter((tab) => {
+                if (tab.id === "mentorship") {
+                  return user?.collaborationInvites?.some(
+                    (inv) =>
+                      inv.role === "Mentor" && inv.inviteStatus === "Accepted",
+                  );
+                }
+                return true;
+              }).map((tab) => (
                 <Link
                   key={tab.id}
                   href={tab.href}

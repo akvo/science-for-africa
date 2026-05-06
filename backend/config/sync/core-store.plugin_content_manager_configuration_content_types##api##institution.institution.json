@@ -175,21 +175,11 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "name",
-        "country"
-      ],
+      "list": ["id", "name", "institutionType", "country"],
       "edit": [
         [
           {
             "name": "name",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "country",
             "size": 6
           },
           {
@@ -199,17 +189,21 @@
         ],
         [
           {
-            "name": "memberships",
+            "name": "institutionType",
             "size": 6
           },
           {
-            "name": "alumni",
+            "name": "country",
             "size": 6
           }
         ],
         [
           {
-            "name": "institutionType",
+            "name": "memberships",
+            "size": 6
+          },
+          {
+            "name": "alumni",
             "size": 6
           }
         ]

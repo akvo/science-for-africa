@@ -70,10 +70,13 @@ Beyond Strapi's auto-generated CRUD, we will create custom endpoints with hand-w
 | Endpoint | Method | Justification |
 |---|---|---|
 | `/api/auth/me` | `GET` | **Custom Extension**: Returns the currently authenticated user with deep population of media, memberships, and collaboration involvement. Supports optional `membershipLimit` query parameter for optimized sidebar loading. |
+| `/api/auth/mentees` | `GET` | **Custom Extension**: Returns collaborations where the current user is a Mentor, along with details of the mentees (Collaborators) and the collaboration status. |
 
 | `/api/auth/me` | `PUT` | **Custom Extension**: Profile update with whitelisting and character limit validation for `biography`. |
 | `/api/auth/verify-otp` | `POST` | **Custom Extension**: Verifies email using a 6-digit number. Confirms user and returns JWT. |
 | `/api/auth/resend-otp` | `POST` | **Custom Extension**: Enforced 60s cooldown and 3/hr limit. Generates new code and sends dual-path email (Link + Code). |
+| `/api/collaboration-invites/:id/accept` | `POST` | **Custom Extension**: Idempotent acceptance of a collaboration invite. Attaches current user as `invitedUser` if not already set. |
+| `/api/collaboration-invites/:id/decline` | `POST` | **Custom Extension**: Marks a collaboration invitation as `Declined`. Prevents future acceptance and removes it from active dashboard views. |
 | `/api/posts/:id/moderate` | `PUT` | Moderation action (approve/decline) — wraps status update + notification trigger to post author |
 | `/api/communities/:id/join` | `POST` | Join community — side effects: increment memberCount, create CommunityMembership with `member` role, notify community admins |
 | `/api/communities/:id/leave` | `POST` | Leave community — decrement memberCount, remove CommunityMembership |
@@ -720,6 +723,10 @@ sequenceDiagram
     else onboardingComplete is true
         Frontend->>User: Redirect to /
     end
+
+    Note over Strapi, Frontend: Collaboration Dashboard Population
+    Strapi-->>Frontend: findMany (Collaboration Invites)
+    Note right of Strapi: Deeply populates: collaborationCall, createdByUser, institutionMemberships.institution
 ```
 
 ### 5.2 Implementation Details
@@ -815,4 +822,19 @@ While most onboarding data is held in local client state (`Zustand`) to ensure a
 
 ### 8.2 Partial Sync Robustness
 The partial sync in Step 3 is designed to be **non-blocking**. If the API call fails (e.g., due to temporary network issues), the frontend logs the error but still allows the user to proceed to Step 4. This prioritizes the user's progress while accepting a minor risk that the institution might not be searchable in Step 5 if the sync failed.
+
+## 9. Collaboration Security
+
+The platform enforces membership-level security for collaboration spaces to ensure professional and focused project work.
+
+### 9.1 Invitation-Based Membership
+Participation in a collaboration space is gated by an invitation system (`api::collaboration-invite`).
+- **Visitor**: Users who have not yet accepted an invitation. They have read-only access to the collaboration thread.
+- **Member**: Users who have clicked "Accept" on a pending invitation. They gain permission to post messages and contribute content.
+- **Creator**: The user who created the collaboration call. They have inherent membership permissions.
+
+### 9.2 Chat Interaction Gating
+Security is enforced at two levels:
+1.  **Frontend (UI/UX)**: The `ChatComposer` is replaced by a "Join to post" banner for non-members, preventing interaction attempts before membership is confirmed.
+2.  **Backend (API Guard)**: The `chat-message.create` controller explicitly verifies that the requester is either the `createdByUser` of the collaboration call or has an invitation with `inviteStatus: Accepted`. Requests from non-members are rejected with a `403 Forbidden` status.
 

@@ -91,5 +91,18 @@
     "explore": "Explorer la communauté",
     "delete_confirm_title": "Supprimer la ressource",
     "delete_confirm_description": "Êtes-vous sûr de vouloir supprimer cette ressource ? Cette action ne peut pas être annulée."
+  },
+  "mentorship": {
+    "title": "Mentorat",
+    "description": "Visualisez et gérez vos relations de mentorat.",
+    "header_space": "Espace de collaboration",
+    "header_mentees": "Utilisateurs mentorés",
+    "header_education": "Éducation",
+    "header_actions": "Actions",
+    "collaborator": "Collaborateur",
+    "researcher": "Chercheur",
+    "empty_title": "Vous n'avez pas encore de mentorés",
+    "empty_desc": "Lorsque vous serez assigné comme mentor à une collaboration, vos mentorés apparaîtront ici.",
+    "explore_calls": "Explorer les appels à collaboration"
   }
 }

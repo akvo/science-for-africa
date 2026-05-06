@@ -32,8 +32,10 @@
       "inversedBy": "institutions"
     },
     "country": {
-      "type": "string",
-      "required": true
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::country.country",
+      "inversedBy": "institutions"
     },
     "verified": {
       "type": "boolean",

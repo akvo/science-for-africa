@@ -386,21 +386,6 @@ const seed = async (strapi) => {
     );
   }
 
-  // 1b. Seed Institution Types
-  const institutionTypeCount = await strapi.db
-    .query("api::institution-type.institution-type")
-    .count();
-  if (institutionTypeCount === 0) {
-    strapi.log.info("Seeding Institution Types...");
-    for (let i = 0; i < INSTITUTION_TYPES.length; i++) {
-      const name = INSTITUTION_TYPES[i];
-      await strapi.db.query("api::institution-type.institution-type").create({
-        data: { name, isActive: true, sortOrder: i + 1, locale: "en" },
-      });
-    }
-    strapi.log.info(`Seeded ${INSTITUTION_TYPES.length} Institution Types.`);
-  }
-
   // 2. Seed Institutions
   const institutionCount = await strapi.db
     .query("api::institution.institution")
@@ -411,17 +396,24 @@ const seed = async (strapi) => {
       .query("api::institution-type.institution-type")
       .findMany();
 
+    const countries = await strapi.db.query("api::country.country").findMany();
+
     for (const data of INSTITUTIONS) {
       const typeRelation = types.find(
         (t) => t.name.toLowerCase() === data.institutionTypeName.toLowerCase(),
       );
 
-      const { institutionTypeName, ...instData } = data;
+      const countryRelation = countries.find(
+        (c) => c.name.toLowerCase() === data.country.toLowerCase(),
+      );
+
+      const { institutionTypeName, country, ...instData } = data;
 
       await strapi.db.query("api::institution.institution").create({
         data: {
           ...instData,
           institutionType: typeRelation ? typeRelation.id : null,
+          country: countryRelation ? countryRelation.id : null,
         },
       });
     }

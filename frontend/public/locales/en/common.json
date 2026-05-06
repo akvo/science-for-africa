@@ -161,5 +161,40 @@
     "pending": "Pending",
     "tooltip_user": "pending account details confirmation",
     "tooltip_institution": "pending institution details confirmation"
+  },
+  "footer": {
+    "newsletter": {
+      "title": "Join our newsletter",
+      "subtitle": "We'll send you a nice letter once per week. No spam.",
+      "placeholder": "Your email",
+      "subscribe": "Subscribe"
+    },
+    "sections": {
+      "general": {
+        "title": "General",
+        "about": "About",
+        "opportunities": "Opportunities",
+        "learning": "Learning",
+        "resources": "Resources",
+        "account": "Account"
+      },
+      "community": {
+        "title": "Community",
+        "trending": "Trending now",
+        "communities": "Communities",
+        "discussions": "Active discussions",
+        "collaboration": "Collaboration hub",
+        "events": "Events"
+      },
+      "legal": {
+        "title": "Legal",
+        "terms": "Terms and conditions",
+        "privacy": "Privacy policy",
+        "cookies": "Cookies",
+        "settings": "Settings",
+        "contact": "Contact"
+      }
+    },
+    "copyright": "© Science for Africa 2026"
   }
 }

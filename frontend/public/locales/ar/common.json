@@ -161,5 +161,40 @@
     "pending": "قيد الانتظار",
     "tooltip_user": "تفاصيل حساب المستخدم قيد التأكيد",
     "tooltip_institution": "تفاصيل حساب المؤسسة قيد التأكد"
+  },
+  "footer": {
+    "newsletter": {
+      "title": "انضم إلى نشرتنا الإخبارية",
+      "subtitle": "سنرسل لك رسالة لطيفة مرة واحدة في الأسبوع. لا رسائل مزعجة.",
+      "placeholder": "بريدك الإلكتروني",
+      "subscribe": "اشتراك"
+    },
+    "sections": {
+      "general": {
+        "title": "عام",
+        "about": "حول",
+        "opportunities": "فرص",
+        "learning": "تعلم",
+        "resources": "موارد",
+        "account": "الحساب"
+      },
+      "community": {
+        "title": "مجتمع",
+        "trending": "الرائج الآن",
+        "communities": "مجتمعات",
+        "discussions": "نقاشات نشطة",
+        "collaboration": "مركز التعاون",
+        "events": "أحداث"
+      },
+      "legal": {
+        "title": "قانوني",
+        "terms": "الشروط والأحكام",
+        "privacy": "سياسة الخصوصية",
+        "cookies": "ملفات تعريف الارتباط",
+        "settings": "الإعدادات",
+        "contact": "اتصل بنا"
+      }
+    },
+    "copyright": "© العلوم لأفريقيا 2026"
   }
 }

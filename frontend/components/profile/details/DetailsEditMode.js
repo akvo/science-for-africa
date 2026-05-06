@@ -725,12 +725,15 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
                         ? t(`languages.${field.value}`, {
                             defaultValue: field.value,
                           })
-                        : ""}
+                        : t("details.language_placeholder")}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="en">{t("languages.en")}</SelectItem>
                     <SelectItem value="fr">{t("languages.fr")}</SelectItem>
+                    <SelectItem value="pt">{t("languages.pt")}</SelectItem>
+                    <SelectItem value="ar">{t("languages.ar")}</SelectItem>
+                    <SelectItem value="sw">{t("languages.sw")}</SelectItem>
                   </SelectContent>
                 </Select>
               )}

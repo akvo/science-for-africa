@@ -69,7 +69,7 @@
       "locale": null
     },
     {
-      "documentId": "qlr560gmump06qbsek0tzkkn",
+      "documentId": "kxhiy5wwhn5spnjtq4mt98c3",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "api::collaboration-call.collaboration-call",
@@ -82,6 +82,7 @@
           "status",
           "topics",
           "communityName",
+          "community",
           "createdByUser",
           "invites"
         ]
@@ -108,7 +109,7 @@
       "locale": null
     },
     {
-      "documentId": "lwnkkxuogu5l6zvvlnx8y5di",
+      "documentId": "mcvbnx36hkl6xhvr9k7dudvz",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "api::collaboration-call.collaboration-call",
@@ -121,6 +122,7 @@
           "status",
           "topics",
           "communityName",
+          "community",
           "createdByUser",
           "invites"
         ]
@@ -129,7 +131,7 @@
       "locale": null
     },
     {
-      "documentId": "ware6tg5bv524cn7c0a58dlp",
+      "documentId": "notdqch21ku6gyssteendcty",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "api::collaboration-call.collaboration-call",
@@ -142,6 +144,7 @@
           "status",
           "topics",
           "communityName",
+          "community",
           "createdByUser",
           "invites"
         ]
@@ -1011,7 +1014,7 @@
       "locale": null
     },
     {
-      "documentId": "xp96tiycxnj2acu1dbnbiqax",
+      "documentId": "h1nmfsmr7l1yeozfgxbyi1n0",
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
       "subject": "api::resource-comment.resource-comment",
@@ -1026,7 +1029,7 @@
       "locale": null
     },
     {
-      "documentId": "tv6ugyu8ywtzskxh5av064et",
+      "documentId": "a3ey084huyfer22773sojcoq",
       "action": "plugin::content-manager.explorer.delete",
       "actionParameters": {},
       "subject": "api::resource-comment.resource-comment",
@@ -1035,7 +1038,7 @@
       "locale": null
     },
     {
-      "documentId": "b2z4sla0eazq5bpylssyeapj",
+      "documentId": "wtuifitwavr8b3auup9jpjkv",
       "action": "plugin::content-manager.explorer.publish",
       "actionParameters": {},
       "subject": "api::resource-comment.resource-comment",
@@ -1044,7 +1047,7 @@
       "locale": null
     },
     {
-      "documentId": "lwrilu5pr5ad5epon98lhioo",
+      "documentId": "l8v7za4z9e0fum20qe0fms4s",
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "api::resource-comment.resource-comment",
@@ -1059,7 +1062,7 @@
       "locale": null
     },
     {
-      "documentId": "z0lgovywrcc7xov71qrps1o5",
+      "documentId": "spsdurr68reyxsr72swcy8ev",
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
       "subject": "api::resource-comment.resource-comment",

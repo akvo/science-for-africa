@@ -56,20 +56,20 @@ module.exports = ({ strapi }) => ({
         return ctx.notFound("Profile not found");
       }
 
-      // [WORKAROUND] Manually fetch collaborationInvites if missing from population
-      if (
-        !profile.collaborationInvites ||
-        profile.collaborationInvites.length === 0
-      ) {
-        const manualInvites = await strapi.db
-          .query("api::collaboration-invite.collaboration-invite")
-          .findMany({
-            where: { invitedUser: profile.id },
-            populate: { collaborationCall: true },
-          });
-        if (manualInvites && manualInvites.length > 0) {
-          profile.collaborationInvites = manualInvites;
-        }
+      // Manually fetch collaboration invites since programmatic relations can be tricky for population
+      const invites = await strapi
+        .documents("api::collaboration-invite.collaboration-invite")
+        .findMany({
+          filters: {
+            invitedUser: user.id,
+            inviteStatus: { $in: ["Accepted", "Pending"] },
+          },
+          populate: ["collaborationCall"],
+          status: "published",
+        });
+
+      if (profile) {
+        profile.collaborationInvites = invites;
       }
 
       // Format community memberships: filter out duplicates and apply limit
@@ -417,6 +417,109 @@ module.exports = ({ strapi }) => ({
       return updatedUser;
     } catch (error) {
       strapi.log.error("UpdateMe Error: " + error.message);
+      return ctx.internalServerError(error.message);
+    }
+  },
+
+  /**
+   * Returns mentees for the currently authenticated mentor
+   */
+  async mentees(ctx) {
+    const user = ctx.state.user;
+    if (!user) {
+      return ctx.unauthorized();
+    }
+
+    try {
+      // 1. Find all collaborations where the user is an accepted Mentor
+      const mentorInvites = await strapi
+        .documents("api::collaboration-invite.collaboration-invite")
+        .findMany({
+          filters: {
+            invitedUser: user.id,
+            role: "Mentor",
+            inviteStatus: "Accepted",
+          },
+          populate: ["collaborationCall"],
+          status: "published",
+        });
+
+      if (!mentorInvites || mentorInvites.length === 0) {
+        return [];
+      }
+
+      const results = [];
+
+      for (const mentorInvite of mentorInvites) {
+        const call = mentorInvite.collaborationCall;
+        if (!call) continue;
+
+        // 2. Fetch all accepted collaborators (mentees) for this call
+        const collaboratorInvites = await strapi
+          .documents("api::collaboration-invite.collaboration-invite")
+          .findMany({
+            filters: {
+              collaborationCall: call.id,
+              inviteStatus: "Accepted",
+              invitedUser: { $ne: user.id }, // Exclude the mentor themselves
+            },
+            populate: {
+              invitedUser: {
+                populate: {
+                  profilePhoto: true,
+                  highestEducationInstitution: true,
+                },
+              },
+            },
+            status: "published",
+          });
+
+        // 3. Fetch the creator of the call (also a mentee if not the mentor)
+        const fullCall = await strapi
+          .documents("api::collaboration-call.collaboration-call")
+          .findOne({
+            documentId: call.documentId,
+            populate: {
+              createdByUser: {
+                populate: {
+                  profilePhoto: true,
+                  highestEducationInstitution: true,
+                },
+              },
+            },
+          });
+
+        const mentees = [];
+
+        // Add creator if they are not the mentor
+        if (fullCall.createdByUser && fullCall.createdByUser.id !== user.id) {
+          mentees.push({
+            ...fullCall.createdByUser,
+            mentorshipRole: "Creator",
+          });
+        }
+
+        // Add other collaborators
+        collaboratorInvites.forEach((invite) => {
+          if (invite.invitedUser) {
+            mentees.push({
+              ...invite.invitedUser,
+              mentorshipRole: invite.role || "Collaborator",
+            });
+          }
+        });
+
+        if (mentees.length > 0) {
+          results.push({
+            collaborationCall: call,
+            mentees,
+          });
+        }
+      }
+
+      return results;
+    } catch (error) {
+      strapi.log.error("Mentees Error: " + error.message);
       return ctx.internalServerError(error.message);
     }
   },

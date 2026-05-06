@@ -161,5 +161,40 @@
     "pending": "Inasubiri",
     "tooltip_user": "Maelezo ya akaunti ya mtumiaji yanasasishwa",
     "tooltip_institution": "Maelezo ya akaunti ya taasisi yasasishwa"
+  },
+  "footer": {
+    "newsletter": {
+      "title": "Jiunge na jarida letu",
+      "subtitle": "Tutakutumia barua nzuri mara moja kwa wiki. Hakuna spam.",
+      "placeholder": "Barua pepe yako",
+      "subscribe": "Jiandikishe"
+    },
+    "sections": {
+      "general": {
+        "title": "Jumla",
+        "about": "Kuhusu",
+        "opportunities": "Fursa",
+        "learning": "Kujifunza",
+        "resources": "Rasilimali",
+        "account": "Akaunti"
+      },
+      "community": {
+        "title": "Jumuiya",
+        "trending": "Mada zinazopendwa",
+        "communities": "Jumuiya",
+        "discussions": "Majadiliano hai",
+        "collaboration": "Kituo cha ushirikiano",
+        "events": "Matukio"
+      },
+      "legal": {
+        "title": "Kisheria",
+        "terms": "Masharti na vigezo",
+        "privacy": "Sera ya faragha",
+        "cookies": "Vidakuzi",
+        "settings": "Mipangilio",
+        "contact": "Mawasiliano"
+      }
+    },
+    "copyright": "© Sayansi kwa Afrika 2026"
   }
 }

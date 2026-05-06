@@ -57,5 +57,13 @@ module.exports = {
         description: "List users for mentor assignment",
       },
     },
+    {
+      method: "GET",
+      path: "/auth/mentees",
+      handler: "profile.mentees",
+      config: {
+        description: "List mentees for the current mentor",
+      },
+    },
   ],
 };

@@ -46,6 +46,9 @@ const OnboardingStep2 = () => {
           const grouped = response.data.reduce((acc, item) => {
             const category = item.interestCategory;
 
+            // Skip if interest itself is inactive
+            if (item.isActive === false) return acc;
+
             // Skip if category exists and is inactive
             if (category && category.isActive === false) return acc;
 

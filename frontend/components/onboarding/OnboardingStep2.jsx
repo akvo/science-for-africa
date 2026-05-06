@@ -44,7 +44,12 @@ const OnboardingStep2 = () => {
         if (response?.data) {
           // Group by category
           const grouped = response.data.reduce((acc, item) => {
-            const categoryName = item.interestCategory?.name || "Uncategorized";
+            const category = item.interestCategory;
+
+            // Skip if category exists and is inactive
+            if (category && category.isActive === false) return acc;
+
+            const categoryName = category?.name || "Uncategorized";
             const { name } = item;
             if (!acc[categoryName]) acc[categoryName] = [];
             acc[categoryName].push(name);

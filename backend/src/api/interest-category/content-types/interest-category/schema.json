@@ -31,6 +31,11 @@
       "relation": "oneToMany",
       "target": "api::interest.interest",
       "mappedBy": "interestCategory"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true,
+      "required": true
     }
   }
 }

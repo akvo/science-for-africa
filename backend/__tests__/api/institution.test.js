@@ -24,7 +24,6 @@ describe("Institution API", () => {
       .create({
         data: {
           name: "Oxford University",
-          country: "United Kingdom",
           verified: true,
         },
       });
@@ -40,7 +39,6 @@ describe("Institution API", () => {
       strapi.db.query("api::institution.institution").create({
         data: {
           name: "oxford university",
-          country: "UK",
         },
       }),
     ).rejects.toThrow(
@@ -55,7 +53,6 @@ describe("Institution API", () => {
       .create({
         data: {
           name: "Cambridge University",
-          country: "United Kingdom",
         },
       });
 

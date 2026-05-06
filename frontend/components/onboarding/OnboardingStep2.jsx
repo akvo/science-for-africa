@@ -37,13 +37,17 @@ const OnboardingStep2 = () => {
     const loadInterests = async () => {
       setLoading(true);
       try {
-        const response = await fetchLocalized("/interests", locale);
+        const response = await fetchLocalized(
+          "/interests?populate=interestCategory",
+          locale,
+        );
         if (response?.data) {
           // Group by category
           const grouped = response.data.reduce((acc, item) => {
-            const { category, name } = item;
-            if (!acc[category]) acc[category] = [];
-            acc[category].push(name);
+            const categoryName = item.interestCategory?.name || "Uncategorized";
+            const { name } = item;
+            if (!acc[categoryName]) acc[categoryName] = [];
+            acc[categoryName].push(name);
             return acc;
           }, {});
           setCategories(grouped);

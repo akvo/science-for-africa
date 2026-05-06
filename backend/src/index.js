@@ -482,7 +482,10 @@ module.exports = {
     }
 
     // 4. Seed development data
+    const { seedProd } = require("./utils/prod-seeder");
     const { seed } = require("./utils/seeder");
+
+    await seedProd(strapi);
     await seed(strapi);
   },
 };

@@ -1,5 +1,7 @@
 "use strict";
 
+const { INSTITUTION_TYPES } = require("./prod-seeder");
+
 const INTEREST_CATEGORIES = {
   Popular: [
     "Bioinformatics",
@@ -41,72 +43,64 @@ const INTEREST_CATEGORIES = {
 const INSTITUTIONS = [
   {
     name: "University of Nairobi",
-    institutionTypeName: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Kenya",
     verified: true,
   },
   {
     name: "Makerere University",
-    institutionTypeName: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Uganda",
     verified: true,
   },
   {
     name: "University of Cape Town",
-    institutionTypeName: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "South Africa",
     verified: true,
   },
   {
     name: "Kwame Nkrumah University of Science and Technology",
-    institutionTypeName: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Ghana",
     verified: true,
   },
   {
     name: "Addis Ababa University",
-    institutionTypeName: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Ethiopia",
     verified: true,
   },
   {
     name: "Cairo University",
-    institutionTypeName: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Egypt",
     verified: true,
   },
   {
     name: "University of Ibadan",
-    institutionTypeName: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Nigeria",
     verified: true,
   },
   {
     name: "Stellenbosch University",
-    institutionTypeName: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "South Africa",
     verified: true,
   },
   {
     name: "Science Foundation",
-    institutionTypeName: "NGO",
+    institutionTypeName: "Civil Society / NGO",
     country: "Kenya",
     verified: true,
   },
   {
     name: "African Academy of Sciences",
-    institutionTypeName: "NGO",
+    institutionTypeName: "Civil Society / NGO",
     country: "Kenya",
     verified: true,
   },
-];
-
-const INSTITUTION_TYPES = [
-  "Academic",
-  "Research",
-  "NGO",
-  "Government",
-  "Private",
 ];
 
 /**
@@ -398,9 +392,10 @@ const seed = async (strapi) => {
     .count();
   if (institutionTypeCount === 0) {
     strapi.log.info("Seeding Institution Types...");
-    for (const name of INSTITUTION_TYPES) {
+    for (let i = 0; i < INSTITUTION_TYPES.length; i++) {
+      const name = INSTITUTION_TYPES[i];
       await strapi.db.query("api::institution-type.institution-type").create({
-        data: { name, isActive: true, locale: "en" },
+        data: { name, isActive: true, sortOrder: i + 1, locale: "en" },
       });
     }
     strapi.log.info(`Seeded ${INSTITUTION_TYPES.length} Institution Types.`);

@@ -30,6 +30,10 @@
       "type": "boolean",
       "default": true
     },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    },
     "institutions": {
       "type": "relation",
       "relation": "oneToMany",

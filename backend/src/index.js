@@ -481,8 +481,11 @@ module.exports = {
       strapi.log.error(`[AUTH] Failed to sync Google OAuth: ${error.message}`);
     }
 
-    // 4. Seed development data
-    const { seed } = require("./utils/seeder");
-    await seed(strapi);
+    // 4. Seed development data (Manual only for production)
+    const nodeEnv = process.env.NODE_ENV || "development";
+    if (nodeEnv !== "production") {
+      const { seed } = require("./utils/seeder");
+      await seed(strapi);
+    }
   },
 };

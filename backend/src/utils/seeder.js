@@ -1,42 +1,6 @@
-"use strict";
-
-const INTEREST_CATEGORIES = {
-  Popular: [
-    "Bioinformatics",
-    "Genetics",
-    "Virology",
-    "Immunology",
-    "Ecology",
-    "Epidemiology",
-    "Public Health",
-    "Climate Change",
-  ],
-  Education: [
-    "Curriculum Design",
-    "STEM Outreach",
-    "University Management",
-    "Teacher Training",
-  ],
-  "Clinical & Medical": [
-    "Clinical Trials",
-    "Diagnostics",
-    "Pharmacology",
-    "Neuroscience",
-    "Infectious Diseases",
-  ],
-  "Environmental & Earth": [
-    "Sustainability",
-    "Geophysics",
-    "Hydrology",
-    "Renewable Energy",
-  ],
-  "Socio-Economic": [
-    "Health Economics",
-    "Policy Analysis",
-    "Social Informatics",
-    "Gender Studies",
-  ],
-};
+const { INTEREST_TAXONOMY } = require("./taxonomy");
+const { grantPermission, revokePermission } = require("./permission-helpers");
+const { syncInterestTaxonomy, syncPermissions } = require("./prod-seeder");
 
 const INSTITUTIONS = [
   {
@@ -95,60 +59,6 @@ const INSTITUTIONS = [
     verified: true,
   },
 ];
-
-/**
- * Helper to grant permissions to a role
- */
-const grantPermission = async (strapi, roleType, action) => {
-  const role = await strapi.db
-    .query("plugin::users-permissions.role")
-    .findOne({ where: { type: roleType } });
-
-  if (role) {
-    const existing = await strapi.db
-      .query("plugin::users-permissions.permission")
-      .findOne({
-        where: {
-          role: role.id,
-          action: action,
-        },
-      });
-
-    if (!existing) {
-      strapi.log.info(`Granting ${action} to ${roleType}...`);
-      await strapi.db.query("plugin::users-permissions.permission").create({
-        data: {
-          action: action,
-          role: role.id,
-        },
-      });
-    }
-  }
-};
-
-/**
- * Helper to revoke a permission from a role (inverse of grantPermission).
- * Used to clean up permissions that were granted in earlier seeder runs but
- * shouldn't be present anymore.
- */
-const revokePermission = async (strapi, roleType, action) => {
-  const role = await strapi.db
-    .query("plugin::users-permissions.role")
-    .findOne({ where: { type: roleType } });
-
-  if (!role) return;
-
-  const existing = await strapi.db
-    .query("plugin::users-permissions.permission")
-    .findOne({ where: { role: role.id, action } });
-
-  if (existing) {
-    strapi.log.info(`Revoking ${action} from ${roleType}...`);
-    await strapi.db
-      .query("plugin::users-permissions.permission")
-      .delete({ where: { id: existing.id } });
-  }
-};
 
 const COMMUNITIES = [
   {
@@ -486,74 +396,8 @@ const seed = async (strapi) => {
     }
   }
 
-  // 1. Seed Interests (Upsert Pattern using Document Service for v5 compatibility)
-  strapi.log.info(
-    "Synchronizing Interest Categories and Interests (v5 Documents)...",
-  );
-  let categoriesCreated = 0;
-  let interestsCreated = 0;
-
-  for (const [categoryName, items] of Object.entries(INTEREST_CATEGORIES)) {
-    // Find or Create Category via Document Service
-    const existingCategories = await strapi
-      .documents("api::interest-category.interest-category")
-      .findMany({
-        filters: { name: categoryName },
-        locale: "en",
-      });
-
-    let category = existingCategories[0];
-
-    if (!category) {
-      strapi.log.info(`Creating category (v5): ${categoryName}`);
-      category = await strapi
-        .documents("api::interest-category.interest-category")
-        .create({
-          data: { name: categoryName },
-          status: "published",
-          locale: "en",
-        });
-      categoriesCreated++;
-    }
-
-    // Create interests for this category via Document Service
-    for (const name of items) {
-      const existingInterests = await strapi
-        .documents("api::interest.interest")
-        .findMany({
-          filters: { name: { $eqi: name } },
-          locale: "en",
-          populate: ["interestCategory"],
-        });
-
-      const existingInterest = existingInterests[0];
-
-      if (!existingInterest) {
-        strapi.log.info(`Creating interest (v5): ${name} -> ${categoryName}`);
-        await strapi.documents("api::interest.interest").create({
-          data: {
-            name,
-            interestCategory: category.documentId, // Use documentId for relations in v5
-          },
-          status: "published",
-          locale: "en",
-        });
-        interestsCreated++;
-      } else if (!existingInterest.interestCategory) {
-        strapi.log.info(`Linking interest (v5): ${name} -> ${categoryName}`);
-        await strapi.documents("api::interest.interest").update({
-          documentId: existingInterest.documentId,
-          data: { interestCategory: category.documentId },
-          status: "published",
-        });
-        interestsCreated++;
-      }
-    }
-  }
-
-  strapi.log.info(
-    `Interest Sync complete: ${categoriesCreated} new categories, ${interestsCreated} interests created/linked.`,
-  );
+  // 1. Seed Interests (Taxonomy Sync with Soft Migration)
+  await syncInterestTaxonomy(strapi);
 
   // 2. Seed Institutions
   const institutionCount = await strapi.db
@@ -835,36 +679,11 @@ const seed = async (strapi) => {
   await synchronizeTranslations(strapi, "api::interest.interest");
   await synchronizeTranslations(strapi, "api::institution.institution");
 
-  // Permissions must be synchronized in ALL environments
-  strapi.log.info("Synchronizing permissions...");
-  // 4. Set Permissions (Ensure Public and Authenticated can search)
-  const roles = ["public", "authenticated"];
-  const actions = [
-    "api::interest.interest.find",
-    "api::interest-category.interest-category.find",
-    "api::institution.institution.find",
-    "api::community.community.find",
-    "api::community.community.findOne",
-    "api::collaboration-invite.collaboration-invite.accept",
-  ];
-  for (const role of roles) {
-    for (const action of actions) {
-      await grantPermission(strapi, role, action);
-    }
-  }
+  // Permissions synchronization
+  await syncPermissions(strapi);
 
-  // Grant Public access to OTP verification (New custom API routes)
-  const publicAuthActions = [
-    "api::auth.auth.verifyOtp",
-    "api::auth.auth.resendOtp",
-    "api::auth.auth.registrationStatus",
-  ];
-  for (const action of publicAuthActions) {
-    await grantPermission(strapi, "public", action);
-  }
-
-  // 5. Collaboration Call and Profile permissions (Authenticated only)
-  const collaborationActions = [
+  // 5. Collaboration Call and Profile permissions (Authenticated only - Dev specific extensions)
+  const devCollaborationActions = [
     "api::auth.profile.getMe",
     "api::auth.profile.update",
     "api::auth.profile.me",
@@ -893,17 +712,8 @@ const seed = async (strapi) => {
     "api::resource-comment.resource-comment.create",
   ];
 
-  for (const action of collaborationActions) {
+  for (const action of devCollaborationActions) {
     await grantPermission(strapi, "authenticated", action);
-  }
-
-  // 6. Revoke permissions that were previously granted in error.
-  const publicRevokes = [
-    "api::collaboration-call.collaboration-call.find",
-    "api::collaboration-call.collaboration-call.findOne",
-  ];
-  for (const action of publicRevokes) {
-    await revokePermission(strapi, "public", action);
   }
 };
 

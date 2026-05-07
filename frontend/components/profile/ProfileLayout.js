@@ -185,7 +185,7 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                         <Badge
                           key={tag}
                           variant="outline"
-                          className="rounded-full px-3.5 py-1.5 text-[12px] font-medium text-brand-gray-600 border-brand-gray-300 bg-white"
+                          className="rounded-xl px-3 py-1.5 text-[12px] font-medium text-brand-gray-600 border-brand-gray-300 bg-white text-left flex items-center justify-start h-auto min-h-7 leading-relaxed whitespace-normal max-w-full"
                         >
                           #{tag.replace("#", "")}
                         </Badge>

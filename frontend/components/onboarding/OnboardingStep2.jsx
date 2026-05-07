@@ -159,7 +159,7 @@ const OnboardingStep2 = () => {
                         variant={selected ? "default" : "outline"}
                         onClick={() => toggleInterest(item)}
                         className={cn(
-                          "px-3.5 py-4 text-sm font-normal rounded-full transition-all duration-300 cursor-pointer shadow-none",
+                          "px-4 py-2.5 text-[14px] leading-snug font-medium rounded-2xl transition-all duration-300 cursor-pointer shadow-none text-left flex items-center justify-start h-auto min-h-11",
                           selected
                             ? "bg-brand-teal-600 text-white border-brand-teal-600 hover:bg-brand-teal-700 active:scale-95 transition-transform"
                             : "bg-white text-brand-gray-700 border-brand-gray-200 hover:bg-brand-teal-50 hover:border-brand-teal-200 active:scale-95",

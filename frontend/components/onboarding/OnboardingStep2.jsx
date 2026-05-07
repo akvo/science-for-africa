@@ -38,7 +38,7 @@ const OnboardingStep2 = () => {
       setLoading(true);
       try {
         const response = await fetchLocalized(
-          "/interests?populate=interestCategory",
+          "/interests?populate=interestCategory&filters[isActive][$eq]=true&filters[interestCategory][isActive][$eq]=true",
           locale,
         );
         if (response?.data) {

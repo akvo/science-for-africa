@@ -37,6 +37,13 @@ module.exports = {
       if (profile.biography) updateData.biography = profile.biography;
       if (profile.position) updateData.position = profile.position;
 
+      // Map interests (max 5)
+      if (profile.interests && Array.isArray(profile.interests)) {
+        updateData.interests = profile.interests.slice(0, 5).map((name) => ({
+          name,
+        }));
+      }
+
       await strapi.documents("plugin::users-permissions.user").update({
         documentId: user.documentId,
         data: updateData,

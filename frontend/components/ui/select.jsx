@@ -20,7 +20,7 @@ function SelectValue({ className, ...props }) {
   return (
     <SelectPrimitive.Value
       data-slot="select-value"
-      className={cn("flex flex-1 text-left", className)}
+      className={cn("flex flex-1 text-left truncate min-w-0", className)}
       {...props}
     />
   );
@@ -37,7 +37,7 @@ function SelectTrigger({
     "data-slot": "select-trigger",
     "data-size": size,
     className: cn(
-      "flex w-full items-center justify-between gap-1.5 rounded-8 border border-brand-gray-200 bg-white px-3.5 py-2.5 text-base font-heading font-medium tracking-wider whitespace-nowrap transition-all focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:text-brand-gray-400 data-[size=default]:h-12 data-[size=sm]:h-10",
+      "flex w-full items-center justify-between gap-1.5 rounded-8 border border-brand-gray-200 bg-white px-3.5 py-2.5 text-base font-heading font-medium tracking-wider transition-all focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:text-brand-gray-400 data-[size=default]:h-12 data-[size=sm]:h-10 overflow-hidden",
       className,
     ),
     ...props,
@@ -117,7 +117,7 @@ function SelectItem({ className, children, ...props }) {
       )}
       {...props}
     >
-      <SelectPrimitive.ItemText className="flex flex-1 shrink-0 gap-2 whitespace-nowrap">
+      <SelectPrimitive.ItemText className="flex flex-1 shrink-0 gap-2 truncate">
         {children}
       </SelectPrimitive.ItemText>
       <SelectPrimitive.ItemIndicator

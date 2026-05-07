@@ -8,8 +8,10 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ViewRow } from "./SharedComponents";
 import VerificationBadge from "@/components/shared/VerificationBadge";
 import { getStrapiMedia, validateOrcid } from "@/lib/strapi";
+import { useTranslation } from "next-i18next";
 
 const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
+  const { t: tCommon } = useTranslation("common");
   const [validating, setValidating] = React.useState(false);
   const [orcidError, setOrcidError] = React.useState(null);
   const [orcidInput, setOrcidInput] = React.useState("");
@@ -23,7 +25,7 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
     if (res?.data?.verified) {
       onUserUpdate?.();
     } else {
-      setOrcidError(res?.error || "Could not verify this ORCID iD");
+      setOrcidError(res?.error || tCommon("verification.orcid_verify_failed"));
     }
   };
   return (
@@ -168,7 +170,7 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
                   {user.orcidId}
                 </span>
                 <span className="text-xs text-green-600 font-medium">
-                  Verified
+                  {tCommon("verification.verified")}
                 </span>
               </div>
             ) : (
@@ -191,10 +193,10 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
                     {validating ? (
                       <>
                         <Loader2 className="size-3 animate-spin mr-1" />
-                        Verifying...
+                        {tCommon("verification.verifying")}
                       </>
                     ) : (
-                      "Verify ORCID"
+                      tCommon("verification.verify_orcid")
                     )}
                   </Button>
                 </div>

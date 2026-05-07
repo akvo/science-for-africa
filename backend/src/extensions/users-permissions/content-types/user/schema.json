@@ -173,10 +173,6 @@
     "verified": {
       "type": "boolean",
       "default": false
-    },
-    "orcidAccessToken": {
-      "type": "string",
-      "private": true
     }
   }
 }

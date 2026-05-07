@@ -44,6 +44,14 @@ const DetailsTab = () => {
     }
   };
 
+  const handleUserUpdate = async () => {
+    const freshUser = await fetchUserProfile();
+    if (freshUser) {
+      updateUser(freshUser);
+      setIsEditing(false);
+    }
+  };
+
   if (isEditing) {
     return (
       <DetailsEditMode
@@ -52,14 +60,10 @@ const DetailsTab = () => {
         onCancel={() => setIsEditing(false)}
         onSave={handleSave}
         isSaving={isSaving}
+        onUserUpdate={handleUserUpdate}
       />
     );
   }
-
-  const handleUserUpdate = async () => {
-    const freshUser = await fetchUserProfile();
-    if (freshUser) updateUser(freshUser);
-  };
 
   return (
     <DetailsViewMode

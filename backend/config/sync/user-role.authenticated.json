@@ -131,6 +131,11 @@
       "locale": null
     },
     {
+      "documentId": "orcidvalidate001",
+      "action": "api::orcid-auth.orcid-auth.validate",
+      "locale": null
+    },
+    {
       "documentId": "wt0awwpc8bl6zktg1spucdgs",
       "action": "api::interest.interest.find",
       "locale": null

@@ -1,6 +1,12 @@
 import React from "react";
 import Image from "next/image";
-import { Mail, UploadCloud, User as UserIcon, Loader2 } from "lucide-react";
+import {
+  Mail,
+  UploadCloud,
+  User as UserIcon,
+  Loader2,
+  CheckCircle2,
+} from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -16,12 +22,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FormRow } from "./SharedComponents";
-import { EDUCATION_LEVEL_OPTIONS } from "@/lib/onboarding-constants";
+import {
+  ROLE_OPTIONS,
+  EDUCATION_LEVEL_OPTIONS,
+} from "@/lib/onboarding-constants";
 import {
   fetchFromStrapi,
   getStrapiMedia,
   fetchIndividualRoles,
+  validateOrcid,
 } from "@/lib/strapi";
+import { useTranslation } from "next-i18next";
 
 const profileSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -52,8 +63,18 @@ const profileSchema = z.object({
   profilePhoto: z.any().optional(),
 });
 
-const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
+const DetailsEditMode = ({
+  user,
+  t,
+  onCancel,
+  onSave,
+  isSaving,
+  onUserUpdate,
+}) => {
+  const { t: tCommon } = useTranslation("common");
   const fileInputRef = React.useRef(null);
+  const [orcidValidating, setOrcidValidating] = React.useState(false);
+  const [orcidError, setOrcidError] = React.useState(null);
   const [photoPreview, setPhotoPreview] = React.useState(null);
   const [institutions, setInstitutions] = React.useState([]);
   const [loadingInstitutions, setLoadingInstitutions] = React.useState(false);
@@ -743,27 +764,69 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving }) => {
 
         <FormRow label={t("details.orcid_label")} error={errors.orcidId}>
           <div className="space-y-4 w-full">
-            <Input
-              {...register("orcidId")}
-              className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 w-full"
-            />
-            <div className="flex items-center gap-4">
-              <Button
-                variant="outline"
-                type="button"
-                className="px-8 rounded-full text-sm h-10 border-brand-teal-900 text-brand-teal-900 hover:bg-brand-teal-50 hover:text-brand-teal-700 transition-all font-outfit"
-              >
-                {t("details.request_button")}
-              </Button>
-              <Button
-                variant="ghost"
-                type="button"
-                onClick={() => setValue("orcidId", "")}
-                className="text-sm font-outfit text-brand-gray-500 hover:text-brand-teal-600 hover:bg-transparent px-0"
-              >
-                {t("details.cancel_button")}
-              </Button>
-            </div>
+            {user?.verified && user?.orcidId ? (
+              <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-green-50 border border-green-200">
+                <CheckCircle2 className="size-5 text-green-600 shrink-0" />
+                <span className="text-sm font-medium text-green-800">
+                  {user.orcidId}
+                </span>
+                <span className="text-xs text-green-600 ml-auto">
+                  {tCommon("verification.verified")}
+                </span>
+              </div>
+            ) : (
+              <>
+                <Input
+                  {...register("orcidId")}
+                  placeholder="0000-0000-0000-0000"
+                  className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 w-full"
+                />
+                <div className="flex items-center gap-4">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    disabled={orcidValidating || !watch("orcidId")?.trim()}
+                    onClick={async () => {
+                      const orcidId = watch("orcidId")?.trim();
+                      if (!orcidId) return;
+                      setOrcidValidating(true);
+                      setOrcidError(null);
+                      const res = await validateOrcid(orcidId);
+                      setOrcidValidating(false);
+                      if (res?.data?.verified) {
+                        onUserUpdate?.();
+                      } else {
+                        setOrcidError(
+                          res?.error ||
+                            tCommon("verification.orcid_verify_failed"),
+                        );
+                      }
+                    }}
+                    className="px-8 rounded-full text-sm h-10 border-brand-teal-900 text-brand-teal-900 hover:bg-brand-teal-50 hover:text-brand-teal-700 transition-all font-outfit"
+                  >
+                    {orcidValidating ? (
+                      <>
+                        <Loader2 className="size-3 animate-spin mr-1" />
+                        {tCommon("verification.verifying")}
+                      </>
+                    ) : (
+                      tCommon("verification.verify_orcid")
+                    )}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    onClick={() => setValue("orcidId", "")}
+                    className="text-sm font-outfit text-brand-gray-500 hover:text-brand-teal-600 hover:bg-transparent px-0"
+                  >
+                    {t("details.cancel_button")}
+                  </Button>
+                </div>
+                {orcidError && (
+                  <p className="text-xs text-red-600">{orcidError}</p>
+                )}
+              </>
+            )}
           </div>
         </FormRow>
       </div>

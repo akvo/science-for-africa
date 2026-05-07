@@ -1,7 +1,5 @@
 "use strict";
 
-const { INSTITUTION_TYPES } = require("./prod-seeder");
-
 const INTEREST_CATEGORIES = {
   Popular: [
     "Bioinformatics",
@@ -492,54 +490,56 @@ const seed = async (strapi) => {
     }
   }
 
-  // 1. Seed Interests
-  const interestCount = await strapi.db.query("api::interest.interest").count();
-  if (interestCount === 0) {
-    strapi.log.info("Seeding Interests...");
-    for (const [category, items] of Object.entries(INTEREST_CATEGORIES)) {
-      for (const name of items) {
-        await strapi.db.query("api::interest.interest").create({
-          data: { name, category },
-        });
-      }
+  // Helper for upsert
+  const upsertEntry = async (uid, data, lookupField = "name") => {
+    const existing = await strapi.db.query(uid).findOne({
+      where: { [lookupField]: data[lookupField] },
+    });
+
+    if (existing) {
+      return await strapi.db.query(uid).update({
+        where: { id: existing.id },
+        data,
+      });
+    } else {
+      return await strapi.db.query(uid).create({
+        data,
+      });
     }
-    strapi.log.info(
-      `Seeded ${Object.values(INTEREST_CATEGORIES).flat().length} Interests.`,
-    );
+  };
+
+  // 1. Seed Interests
+  strapi.log.info("Synchronizing Interests...");
+  for (const [category, items] of Object.entries(INTEREST_CATEGORIES)) {
+    for (const name of items) {
+      await upsertEntry("api::interest.interest", { name, category });
+    }
   }
 
   // 2. Seed Institutions
-  const institutionCount = await strapi.db
-    .query("api::institution.institution")
-    .count();
-  if (institutionCount === 0) {
-    strapi.log.info("Seeding Institutions...");
-    const types = await strapi.db
-      .query("api::institution-type.institution-type")
-      .findMany();
+  strapi.log.info("Synchronizing Institutions...");
+  const types = await strapi.db
+    .query("api::institution-type.institution-type")
+    .findMany();
 
-    const countries = await strapi.db.query("api::country.country").findMany();
+  const countries = await strapi.db.query("api::country.country").findMany();
 
-    for (const data of INSTITUTIONS) {
-      const typeRelation = types.find(
-        (t) => t.name.toLowerCase() === data.institutionTypeName.toLowerCase(),
-      );
+  for (const data of INSTITUTIONS) {
+    const typeRelation = types.find(
+      (t) => t.name.toLowerCase() === data.institutionTypeName.toLowerCase(),
+    );
 
-      const countryRelation = countries.find(
-        (c) => c.name.toLowerCase() === data.country.toLowerCase(),
-      );
+    const countryRelation = countries.find(
+      (c) => c.name.toLowerCase() === data.country.toLowerCase(),
+    );
 
-      const { institutionTypeName, country, ...instData } = data;
+    const { institutionTypeName, country, ...instData } = data;
 
-      await strapi.db.query("api::institution.institution").create({
-        data: {
-          ...instData,
-          institutionType: typeRelation ? typeRelation.id : null,
-          country: countryRelation ? countryRelation.id : null,
-        },
-      });
-    }
-    strapi.log.info(`Seeded ${INSTITUTIONS.length} Institutions.`);
+    await upsertEntry("api::institution.institution", {
+      ...instData,
+      institutionType: typeRelation ? typeRelation.id : null,
+      country: countryRelation ? countryRelation.id : null,
+    });
   }
 
   // 3. Seed Communities (upsert by slug — skip existing ones)

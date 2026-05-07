@@ -486,11 +486,16 @@ module.exports = {
       strapi.log.error(`[AUTH] Failed to sync Google OAuth: ${error.message}`);
     }
 
-    // 4. Seed development data
-    const { seedProd } = require("./utils/prod-seeder");
-    const { seed } = require("./utils/seeder");
+    // Seeding logic
+    if (process.env.NODE_ENV !== "production") {
+      const { seed } = require("./utils/seeder");
 
-    await seedProd(strapi);
-    await seed(strapi);
+      strapi.log.info("Development environment detected, running auto-seed...");
+      await seed(strapi);
+    } else {
+      strapi.log.info(
+        "Production environment detected, automatic seeding skipped. Use 'npm run seed:prod' for manual seeding.",
+      );
+    }
   },
 };

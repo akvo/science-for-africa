@@ -169,6 +169,7 @@ erDiagram
     Community ||--o{ Resource : "has_resources"
     Community ||--o{ Event : "hosts"
     Community }o--o{ Tag : "tagged_with"
+    Interest }o--|| InterestCategory : "belongs_to"
 
     CommunityMembership }o--|| User : "user"
     CommunityMembership }o--|| Community : "community"
@@ -468,6 +469,8 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 | **Resource** | Shared files/links (Publication, Training, Toolkit, Dataset) with download tracking |
 | **Event** | Community events (Webinar / Workshop / In-person). Capacity limits, certificate issuance |
 | **EventRegistration** | User + Event + status (registered / waitlisted / attended) |
+| **Interest** | Scientific and professional interests (e.g., Grants Management, STI Policy). Soft-migrated via `isActive` flag. |
+| **InterestCategory** | Thematic and competency-based grouping for interests (e.g., Governance, Strategy & Leadership). |
 | **Tag** | Cross-entity taxonomy (expertise, region, topic) — applied to Resources, Threads, Users, Communities |
 | **Report** | Content flagging for moderation (Spam / Harassment / Misinformation / Other) |
 | **Notification** | Email notification log with delivery status |
@@ -494,6 +497,8 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 **Formalized Education.** Educational background is linked directly to the Institution collection via the `highestEducationInstitution` field, replacing unstructured string data.
 
 **Resource Visibility & Moderation.** Resources only appear in public community lists when `status` is `approved`. Users can see their own `pending` or `declined` uploads in their profile. This is enforced at the controller layer by overwriting the core `find` and `findOne` methods to apply user-contextual filters.
+
+**Soft Migration Taxonomy.** To evolve the Interest taxonomy without breaking legacy user profiles, the platform implements a non-destructive migration strategy. Existing `Interest` and `InterestCategory` records are never deleted; instead, they are marked with an `isActive: false` flag. The onboarding flow and tag filters are restricted to `isActive: true` records. This ensures that historical data on user profiles remains visible (as the user entity stores interest names as strings) while only the new, approved taxonomy is available for future selections and platform-wide filtering.
 
 **Community Membership Synchronization Pattern.** To ensure data consistency between the primary `Community` entity (which tracks `members` for counts and listing) and the `CommunityMembership` collection (which drives the "My Communities" profile tab), the backend implements a dual-write pattern in the `join` and `leave` controllers.
 - **Join**: Creates a `CommunityMembership` record AND links the user to the community's `members` relation.
@@ -781,7 +786,7 @@ The platform supports multi-language content (English as default, French for lau
 ### 6.2 Data Model Changes
 
 Specific content types have localization enabled:
-- **Interest**, **Institution**: Enabled for name/title and description fields. No new models were created; localization was strictly applied to the existing implementation.
+- **Interest**, **InterestCategory**, **Institution**: Enabled for name/title and description fields. No new models were created; localization was strictly applied to the existing implementation.
 
 ### 6.3 Locale Awareness
 
@@ -834,31 +839,48 @@ While most onboarding data is held in local client state (`Zustand`) to ensure a
 ### 8.2 Partial Sync Robustness
 The partial sync in Step 3 is designed to be **non-blocking**. If the API call fails (e.g., due to temporary network issues), the frontend logs the error but still allows the user to proceed to Step 4. This prioritizes the user's progress while accepting a minor risk that the institution might not be searchable in Step 5 if the sync failed.
 
-## 9. Collaboration Security
+## 9. Interest Management Security
+
+To ensure data integrity and prevent accidental deletion of system-critical taxonomies, the `Interest` and `InterestCategory` models implement a two-tier protection system.
+
+### 9.1 Protection Layers
+1.  **Intentional Deactivation (`isActive`)**:
+    - Both models include an `isActive` boolean flag (default: `true`).
+    - The onboarding frontend explicitly filters out any interests or categories where `isActive` is `false`.
+    - This allows administrators to "soft-delete" or temporarily hide interests without breaking historical data relations on existing user profiles.
+2.  **Accident Prevention (Delete Blocking)**:
+    - The `delete` core controller is overridden for both `api::interest.interest` and `api::interest-category.interest-category`.
+    - Any attempt to delete a record via the API returns a **403 Forbidden** error.
+    - Administrators must use the `isActive` flag for management.
+
+### 9.2 Data Synchronization
+The system seeder uses the Strapi v5 Document Service to maintain relational integrity between interests and their categories, ensuring consistent `documentId` linking across all environments.
+
+## 10. Collaboration Security
 
 The platform enforces membership-level security for collaboration spaces to ensure professional and focused project work.
 
-### 9.1 Invitation-Based Membership
+### 10.1 Invitation-Based Membership
 Participation in a collaboration space is gated by an invitation system (`api::collaboration-invite`).
 - **Visitor**: Users who have not yet accepted an invitation. They have read-only access to the collaboration thread.
 - **Member**: Users who have clicked "Accept" on a pending invitation. They gain permission to post messages and contribute content.
 - **Creator**: The user who created the collaboration call. They have inherent membership permissions.
 
-### 9.2 Chat Interaction Gating
+### 10.2 Chat Interaction Gating
 Security is enforced at two levels:
 1.  **Frontend (UI/UX)**: The `ChatComposer` is replaced by a "Join to post" banner for non-members, preventing interaction attempts before membership is confirmed.
 2.  **Backend (API Guard)**: The `chat-message.create` controller explicitly verifies that the requester is either the `createdByUser` of the collaboration call or has an invitation with `inviteStatus: Accepted`. Requests from non-members are rejected with a `403 Forbidden` status.
 
-## 10. Legal and Privacy Policy
+## 11. Legal and Privacy Policy
 
 The platform provides a centralized legal documentation page at `/privacy-policy`.
 
-### 10.1 Architecture
+### 11.1 Architecture
 - **Single Page**: All legal documents (Privacy Policy, Terms of Use, Community Guidelines) are hosted on a single, long-form scrollable page.
 - **Localization**: Content is managed via `frontend/public/locales/{lang}/privacy-policy.json`.
 - **SEO**: Metadata is managed via the `Meta` component with localized titles and descriptions.
 
-### 10.2 Content Structure
+### 11.2 Content Structure
 The page is divided into three main logical sections, each with its own typography and visual identifiers:
 1.  **Privacy Policy**: Covers data collection, lawful basis, principles, and user rights.
 2.  **Terms of Use**: Covers registration, acceptable use, and governing law.

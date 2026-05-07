@@ -1,24 +1,29 @@
 "use strict";
 
 const { createStrapi } = require("@strapi/strapi");
+const { seedProd } = require("../src/utils/prod-seeder");
+const path = require("path");
 
-async function seed() {
-  console.log("Initializing Strapi...");
-  const app = await createStrapi().load();
-
-  const { seedProd } = require("../src/utils/prod-seeder");
+async function run() {
+  console.log("🚀 Initializing Strapi for Production Seeding...");
 
   try {
-    console.log("🚀 Starting manual production seeding...");
+    // Load Strapi without starting the server
+    const app = await createStrapi({
+      appDir: path.resolve(__dirname, ".."),
+    }).load();
+
+    console.log("🔄 Running Production Seeders...");
+
+    // 1. Run main production seeder
     await seedProd(app);
+
     console.log("✅ Production seeding completed successfully.");
-  } catch (error) {
-    console.error("❌ Production seeding failed:", error);
-    process.exit(1);
-  } finally {
-    await app.destroy();
     process.exit(0);
+  } catch (err) {
+    console.error("❌ Production seeding failed:", err);
+    process.exit(1);
   }
 }
 
-seed();
+run();

@@ -1,11 +1,11 @@
 {
   "kind": "collectionType",
-  "collectionName": "interests",
+  "collectionName": "interest_categories",
   "info": {
-    "singularName": "interest",
-    "pluralName": "interests",
-    "displayName": "Interest",
-    "description": "Scientific Research Interests and Expertise"
+    "singularName": "interest-category",
+    "pluralName": "interest-categories",
+    "displayName": "Interest Category",
+    "description": "Categories for Scientific Research Interests"
   },
   "options": {
     "draftAndPublish": false
@@ -19,17 +19,18 @@
     "name": {
       "type": "string",
       "required": true,
+      "unique": true,
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       }
     },
-    "interestCategory": {
+    "interests": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::interest-category.interest-category",
-      "inversedBy": "interests"
+      "relation": "oneToMany",
+      "target": "api::interest.interest",
+      "mappedBy": "interestCategory"
     },
     "isActive": {
       "type": "boolean",

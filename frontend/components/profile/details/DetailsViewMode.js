@@ -1,14 +1,33 @@
 import React from "react";
 import Image from "next/image";
-import { User as UserIcon } from "lucide-react";
+import { User as UserIcon, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ViewRow } from "./SharedComponents";
 import VerificationBadge from "@/components/shared/VerificationBadge";
-import { getStrapiMedia } from "@/lib/strapi";
+import { getStrapiMedia, validateOrcid } from "@/lib/strapi";
+import { useTranslation } from "next-i18next";
 
-const DetailsViewMode = ({ user, t, onEdit }) => {
+const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
+  const { t: tCommon } = useTranslation("common");
+  const [validating, setValidating] = React.useState(false);
+  const [orcidError, setOrcidError] = React.useState(null);
+  const [orcidInput, setOrcidInput] = React.useState("");
+
+  const handleValidate = async (orcidId) => {
+    if (!orcidId?.trim()) return;
+    setValidating(true);
+    setOrcidError(null);
+    const res = await validateOrcid(orcidId.trim());
+    setValidating(false);
+    if (res?.data?.verified) {
+      onUserUpdate?.();
+    } else {
+      setOrcidError(res?.error || tCommon("verification.orcid_verify_failed"));
+    }
+  };
   return (
     <div className="animate-in fade-in duration-500">
       <div className="flex items-center justify-between pb-9 border-b border-brand-gray-100">
@@ -137,7 +156,57 @@ const DetailsViewMode = ({ user, t, onEdit }) => {
           value={t(`languages.${user?.languagePreferences || "en"}`)}
           t={t}
         />
-        <ViewRow label={t("details.orcid_label")} value={user?.orcidId} t={t} />
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-4 pb-9 border-b border-brand-gray-100 items-start">
+          <div className="md:col-span-4 pt-2">
+            <span className="text-[15px] font-bold text-brand-gray-900">
+              {t("details.orcid_label")}
+            </span>
+          </div>
+          <div className="md:col-span-8 space-y-2">
+            {user?.verified && user?.orcidId ? (
+              <div className="flex items-center gap-2 h-11">
+                <CheckCircle2 className="size-4 text-green-600 shrink-0" />
+                <span className="text-[15px] font-medium text-brand-gray-700">
+                  {user.orcidId}
+                </span>
+                <span className="text-xs text-green-600 font-medium">
+                  {tCommon("verification.verified")}
+                </span>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center gap-3">
+                  <Input
+                    placeholder="0000-0000-0000-0000"
+                    value={user?.orcidId || orcidInput}
+                    onChange={(e) => setOrcidInput(e.target.value)}
+                    disabled={!!user?.orcidId}
+                    className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 max-w-xs"
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={validating || !(user?.orcidId || orcidInput.trim())}
+                    onClick={() => handleValidate(user?.orcidId || orcidInput)}
+                    className="rounded-full text-xs h-10 px-6 border-brand-teal-800 text-brand-teal-800 hover:bg-brand-teal-50 shrink-0"
+                  >
+                    {validating ? (
+                      <>
+                        <Loader2 className="size-3 animate-spin mr-1" />
+                        {tCommon("verification.verifying")}
+                      </>
+                    ) : (
+                      tCommon("verification.verify_orcid")
+                    )}
+                  </Button>
+                </div>
+                {orcidError && (
+                  <p className="text-xs text-red-600">{orcidError}</p>
+                )}
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

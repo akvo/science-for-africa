@@ -259,6 +259,20 @@ export function transformProfileUpdatePayload(userData) {
 }
 
 /**
+ * Validate an ORCID iD against the public API and fetch profile data.
+ * @param {string} orcidId – e.g. "0000-0002-1825-0097"
+ */
+export async function validateOrcid(orcidId) {
+  try {
+    const response = await apiClient.post("/orcid-auth/validate", { orcidId });
+    return response.data;
+  } catch (error) {
+    console.error("Error validating ORCID:", error);
+    return error;
+  }
+}
+
+/**
  * Create a collaboration call with invites
  */
 export async function createCollaborationCall(payload) {

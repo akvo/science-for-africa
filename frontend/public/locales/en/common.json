@@ -160,7 +160,11 @@
   "verification": {
     "pending": "Pending",
     "tooltip_user": "pending account details confirmation",
-    "tooltip_institution": "pending institution details confirmation"
+    "tooltip_institution": "pending institution details confirmation",
+    "verified": "Verified",
+    "verify_orcid": "Verify ORCID",
+    "verifying": "Verifying...",
+    "orcid_verify_failed": "Could not verify this ORCID iD"
   },
   "footer": {
     "newsletter": {

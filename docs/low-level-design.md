@@ -863,3 +863,42 @@ The page is divided into three main logical sections, each with its own typograp
 1.  **Privacy Policy**: Covers data collection, lawful basis, principles, and user rights.
 2.  **Terms of Use**: Covers registration, acceptable use, and governing law.
 3.  **Community Guidelines**: Covers professional conduct and reporting.
+## 11. Seeding & Data Management
+
+The platform implements a robust seeding strategy to maintain taxonomy consistency across environments while protecting production data.
+
+### 11.1 Seeding Strategy
+
+The seeding logic is split into two layers:
+1.  **Production Metadata (`seedProd`)**: Critical system metadata including Countries, Institution Types, and Individual Roles.
+2.  **Development Data (`seed`)**: Sample data for testing including Interests, Institutions, Communities, Users, and Resources.
+
+**Execution Contexts:**
+- **Development (`NODE_ENV !== "production"`)**: Both seeders run **automatically** on server bootstrap.
+- **Production (`NODE_ENV === "production"`)**: Automatic seeding is disabled. Seeding must be triggered manually.
+
+### 11.2 Manual Seeding CLI
+
+A dedicated NPM script is available for manually synchronizing production metadata:
+- `npm run seed:prod` — Synchronizes critical production metadata (Countries, Institution Types, etc.).
+
+> [!NOTE]
+> There is no manual `seed:dev` command. Development sample data is synchronized **automatically** on every server bootstrap in non-production environments to ensure the workspace is always ready for testing.
+
+### 11.3 Idempotent Upsert Pattern
+
+To prevent data duplication and allow for safe re-runs, the seeders use an **Idempotent Upsert** pattern. Instead of checking for an empty table, the system checks for the existence of individual records (usually by `name` or `slug`).
+- If the record exists: It is updated with the latest configuration from the seeder.
+- If the record is missing: It is created.
+
+### 11.4 Centralized Constants
+
+Taxonomy masters and system constants are centralized in `src/utils/constants.js`. This ensures that the same data sets are used by both the seeders and any other system utilities (like migrations or permission hardening).
+
+| Constant | Model |
+|---|---|
+| `COUNTRIES` | `api::country.country` |
+| `INSTITUTION_TYPES` | `api::institution-type.institution-type` |
+| `INDIVIDUAL_ROLES` | `api::individual-role.individual-role` |
+
+This centralization simplifies maintenance when updating official lists (e.g., adding a new country or modifying an institution category).

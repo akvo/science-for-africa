@@ -215,6 +215,39 @@ const syncPermissions = async (strapi) => {
 };
 
 /**
+ * Synchronize Metadata with Soft Migration (Countries, Institution Types, Individual Roles)
+ */
+const syncMetadata = async (strapi, uid, names, label) => {
+  strapi.log.info(`Synchronizing ${label} (Soft Migration)...`);
+
+  // 1. Deactivate records no longer in the constants
+  const existingRecords = await strapi.db.query(uid).findMany({
+    where: { isActive: true },
+  });
+
+  for (const record of existingRecords) {
+    if (!names.includes(record.name)) {
+      strapi.log.info(`Deactivating legacy ${label}: ${record.name}`);
+      await strapi.db.query(uid).update({
+        where: { id: record.id },
+        data: { isActive: false },
+      });
+    }
+  }
+
+  // 2. Upsert current records
+  for (let i = 0; i < names.length; i++) {
+    const name = names[i];
+    await upsertEntry(strapi, uid, {
+      name,
+      isActive: true,
+      sortOrder: i + 1,
+      locale: "en",
+    });
+  }
+};
+
+/**
  * Main Production Seeder
  */
 const seedProd = async (strapi) => {
@@ -226,41 +259,20 @@ const seedProd = async (strapi) => {
   // 2. Sync Permissions
   await syncPermissions(strapi);
 
-  // 3. Seed Institution Types
-  strapi.log.info("Synchronizing Institution Types (Production)...");
-  for (let i = 0; i < INSTITUTION_TYPES.length; i++) {
-    const name = INSTITUTION_TYPES[i];
-    await upsertEntry(strapi, "api::institution-type.institution-type", {
-      name,
-      isActive: true,
-      sortOrder: i + 1,
-      locale: "en",
-    });
-  }
-
-  // 4. Seed Countries
-  strapi.log.info("Synchronizing Countries (Production)...");
-  for (let i = 0; i < COUNTRIES.length; i++) {
-    const name = COUNTRIES[i];
-    await upsertEntry(strapi, "api::country.country", {
-      name,
-      isActive: true,
-      sortOrder: i + 1,
-      locale: "en",
-    });
-  }
-
-  // 5. Seed Individual Roles
-  strapi.log.info("Synchronizing Individual Roles (Production)...");
-  for (let i = 0; i < INDIVIDUAL_ROLES.length; i++) {
-    const name = INDIVIDUAL_ROLES[i];
-    await upsertEntry(strapi, "api::individual-role.individual-role", {
-      name,
-      isActive: true,
-      sortOrder: i + 1,
-      locale: "en",
-    });
-  }
+  // 3. Sync Metadata (Institution Types, Countries, Individual Roles)
+  await syncMetadata(
+    strapi,
+    "api::institution-type.institution-type",
+    INSTITUTION_TYPES,
+    "Institution Types",
+  );
+  await syncMetadata(strapi, "api::country.country", COUNTRIES, "Countries");
+  await syncMetadata(
+    strapi,
+    "api::individual-role.individual-role",
+    INDIVIDUAL_ROLES,
+    "Individual Roles",
+  );
 
   // 6. Backfill existing users with fallback Individual Role "Knowledge Consumer"
   const knowledgeConsumer = await strapi.db
@@ -290,4 +302,9 @@ const seedProd = async (strapi) => {
   strapi.log.info("Production Seeding complete.");
 };
 
-module.exports = { seedProd, syncInterestTaxonomy, syncPermissions };
+module.exports = {
+  seedProd,
+  syncInterestTaxonomy,
+  syncPermissions,
+  syncMetadata,
+};

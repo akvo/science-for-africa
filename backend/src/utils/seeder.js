@@ -1,5 +1,9 @@
 const { grantPermission } = require("./permission-helpers");
-const { syncInterestTaxonomy, syncPermissions } = require("./prod-seeder");
+const {
+  syncInterestTaxonomy,
+  syncPermissions,
+  syncMetadata,
+} = require("./prod-seeder");
 const {
   INSTITUTION_TYPES,
   COUNTRIES,
@@ -423,38 +427,19 @@ const seed = async (strapi) => {
   };
 
   // 1. Seed Metadata (Institution Types, Countries, Individual Roles)
-  strapi.log.info("Synchronizing Institution Types...");
-  for (let i = 0; i < INSTITUTION_TYPES.length; i++) {
-    const name = INSTITUTION_TYPES[i];
-    await upsertEntry("api::institution-type.institution-type", {
-      name,
-      isActive: true,
-      sortOrder: i + 1,
-      locale: "en",
-    });
-  }
-
-  strapi.log.info("Synchronizing Countries...");
-  for (let i = 0; i < COUNTRIES.length; i++) {
-    const name = COUNTRIES[i];
-    await upsertEntry("api::country.country", {
-      name,
-      isActive: true,
-      sortOrder: i + 1,
-      locale: "en",
-    });
-  }
-
-  strapi.log.info("Synchronizing Individual Roles...");
-  for (let i = 0; i < INDIVIDUAL_ROLES.length; i++) {
-    const name = INDIVIDUAL_ROLES[i];
-    await upsertEntry("api::individual-role.individual-role", {
-      name,
-      isActive: true,
-      sortOrder: i + 1,
-      locale: "en",
-    });
-  }
+  await syncMetadata(
+    strapi,
+    "api::institution-type.institution-type",
+    INSTITUTION_TYPES,
+    "Institution Types",
+  );
+  await syncMetadata(strapi, "api::country.country", COUNTRIES, "Countries");
+  await syncMetadata(
+    strapi,
+    "api::individual-role.individual-role",
+    INDIVIDUAL_ROLES,
+    "Individual Roles",
+  );
 
   // 2. Seed Interests (Taxonomy Sync with Soft Migration)
   await syncInterestTaxonomy(strapi);

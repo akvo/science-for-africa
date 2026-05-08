@@ -52,7 +52,7 @@ export default function StepAssignMentor() {
         fullName:
           user.fullName ||
           `${user.firstName || ""} ${user.lastName || ""}`.trim(),
-        position: user.position || user.roleType || "",
+        position: user.position || user.roleType?.name || user.roleType || "",
         verified: user.verified,
       });
       setSelectedUserId("");

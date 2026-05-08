@@ -12,24 +12,14 @@
     "description": "Select your account type to personalize your experience.",
     "individual_tab": "Individual",
     "institution_tab": "Institution",
-    "individual_desc": "Lorem ipsum dolor sit amet consectetur. Rhoncus quis nunc ipsum pellentesque praesent facilisis tempor.",
-    "institution_desc": "Lorem ipsum dolor sit amet consectetur. Rhoncus quis nunc ipsum pellentesque praesent facilisis tempor.",
+    "individual_desc": "Help us identify who you are within the research and innovation management ecosystem.",
+    "institution_desc": "Select the category that best describes your primary institution.",
     "role_label": "Role",
     "role_placeholder": "Select role",
     "institution_label": "Institution",
     "institution_placeholder": "Type your institution name",
     "no_institutions_found": "No institutions found. You can continue with what you typed.",
     "dismiss": "Dismiss"
-  },
-  "roles": {
-    "Researcher": "Researcher",
-    "Principal Investigator / Lab Lead": "Principal Investigator / Lab Lead",
-    "Post-doctoral Fellow": "Post-doctoral Fellow",
-    "PhD Candidate": "PhD Candidate",
-    "Graduate / Undergraduate Student": "Graduate / Undergraduate Student",
-    "Administrator / Support Staff": "Administrator / Support Staff",
-    "Program Manager / Funder representative": "Program Manager / Funder representative",
-    "External Reviewer": "External Reviewer"
   },
   "education_levels": {
     "Postgraduate Student (Masters)": "Postgraduate Student (Masters)",

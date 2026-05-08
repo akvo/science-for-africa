@@ -71,14 +71,28 @@ describe("Mentorship API", () => {
         status: "published",
       });
 
-    // 2. Create an institution for the mentee
+    // 2. Create InstitutionType and Country for the institution (unique names for test)
+    const instType = await strapi
+      .documents("api::institution-type.institution-type")
+      .create({
+        data: { name: "Academic Test", isActive: true },
+        locale: "en",
+        status: "published",
+      });
+
+    const country = await strapi.documents("api::country.country").create({
+      data: { name: "Kenya Test", isActive: true },
+      locale: "en",
+      status: "published",
+    });
+
     const institution = await strapi
       .documents("api::institution.institution")
       .create({
         data: {
-          name: "University of Science",
-          type: "Academic",
-          country: "Kenya",
+          name: "University of Science Test",
+          institutionType: instType.id,
+          country: country.id,
         },
         status: "published",
       });
@@ -134,7 +148,7 @@ describe("Mentorship API", () => {
     expect(foundMentee).toBeDefined();
     expect(foundMentee.educationLevel).toBe("PhD in Science");
     expect(foundMentee.highestEducationInstitution.name).toBe(
-      "University of Science",
+      "University of Science Test",
     );
   });
 

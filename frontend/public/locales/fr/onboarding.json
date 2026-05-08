@@ -12,24 +12,14 @@
     "description": "Sélectionnez votre type de compte pour personnaliser votre expérience.",
     "individual_tab": "Individuel",
     "institution_tab": "Institution",
-    "individual_desc": "Lorem ipsum dolor sit amet consectetur. Rhoncus quis nunc ipsum pellentesque praesent facilisis tempor.",
-    "institution_desc": "Lorem ipsum dolor sit amet consectetur. Rhoncus quis nunc ipsum pellentesque praesent facilisis tempor.",
+    "individual_desc": "Aidez-nous à vous identifier au sein de l'écosystème de gestion de la recherche et de l'innovation.",
+    "institution_desc": "Sélectionnez la catégorie qui décrit le mieux votre institution principale.",
     "role_label": "Rôle",
     "role_placeholder": "Sélectionnez un rôle",
     "institution_label": "Institution",
     "institution_placeholder": "Tapez le nom de votre institution",
     "no_institutions_found": "Aucune institution trouvée. Vous pouvez continuer avec ce que vous avez tapé.",
     "dismiss": "Ignorer"
-  },
-  "roles": {
-    "Researcher": "Chercheur",
-    "Principal Investigator / Lab Lead": "Chercheur principal / Chef de laboratoire",
-    "Post-doctoral Fellow": "Chercheur post-doctoral",
-    "PhD Candidate": "Candidat au doctorat",
-    "Graduate / Undergraduate Student": "Étudiant diplômé / de premier cycle",
-    "Administrator / Support Staff": "Administrateur / Personnel de soutien",
-    "Program Manager / Funder representative": "Responsable de programme / Représentant du bailleur de fonds",
-    "External Reviewer": "Réviseur externe"
   },
   "education_levels": {
     "Postgraduate Student (Masters)": "Étudiant de troisième cycle (Master)",

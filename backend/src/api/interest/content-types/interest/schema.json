@@ -25,8 +25,15 @@
         }
       }
     },
-    "category": {
-      "type": "string",
+    "interestCategory": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::interest-category.interest-category",
+      "inversedBy": "interests"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true,
       "required": true
     }
   }

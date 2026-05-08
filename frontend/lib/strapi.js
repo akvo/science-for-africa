@@ -298,6 +298,17 @@ export async function fetchCommunities() {
 }
 
 /**
+ * Fetch all active individual roles for onboarding, sorted by sortOrder.
+ * Uses localized names based on the current locale.
+ */
+export async function fetchIndividualRoles(locale = "en") {
+  return fetchLocalized(
+    "/individual-roles?filters[isActive][$eq]=true&sort=sortOrder:asc",
+    locale,
+  );
+}
+
+/**
  * Fetch a single community by slug (with relations populated)
  */
 export async function fetchCommunity(slug) {
@@ -507,7 +518,7 @@ export async function createResource({
  */
 export async function fetchResource(documentId) {
   return fetchFromStrapi(
-    `/resources/${documentId}?populate[file]=true&populate[uploadedBy]=true&populate[community]=true`,
+    `/resources/${documentId}?populate[file]=true&populate[uploadedBy][populate][roleType]=true&populate[community]=true`,
   );
 }
 
@@ -516,7 +527,7 @@ export async function fetchResource(documentId) {
  */
 export async function fetchResourceComments(resourceDocumentId) {
   return fetchFromStrapi(
-    `/resource-comments?filters[resource][documentId][$eq]=${encodeURIComponent(resourceDocumentId)}&populate[author]=true&sort=createdAt:asc`,
+    `/resource-comments?filters[resource][documentId][$eq]=${encodeURIComponent(resourceDocumentId)}&populate[author][populate][roleType]=true&sort=createdAt:asc`,
   );
 }
 

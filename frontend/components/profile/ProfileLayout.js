@@ -105,9 +105,10 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                         {user?.fullName || user?.username}
                       </h2>
                       <p className="text-xs text-brand-gray-500 mt-0.5">
-                        {user?.roleType
-                          ? t(`profile:roles.${user.roleType}`)
-                          : t("profile:details.not_provided")}
+                        {user?.roleType?.name ||
+                          (typeof user?.roleType === "string"
+                            ? t(`profile:roles.${user.roleType}`)
+                            : t("profile:details.not_provided"))}
                       </p>
                       <div className="mt-2">
                         <VerificationBadge verified={user?.verified} />
@@ -164,7 +165,9 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                   <p className="text-[15px] font-bold text-brand-gray-900 leading-snug">
                     {user?.educationLevel
                       ? t(`profile:education_levels.${user.educationLevel}`)
-                      : t("profile:education_levels.Master's Degree")}
+                      : t(
+                          "profile:education_levels.Postgraduate Student (Masters)",
+                        )}
                   </p>
                   <p className="text-sm text-brand-gray-500">
                     {user?.highestEducationInstitution?.name ||
@@ -185,7 +188,7 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                         <Badge
                           key={tag}
                           variant="outline"
-                          className="rounded-full px-3.5 py-1.5 text-[12px] font-medium text-brand-gray-600 border-brand-gray-300 bg-white"
+                          className="rounded-xl px-3 py-1.5 text-[12px] font-medium text-brand-gray-600 border-brand-gray-300 bg-white text-left flex items-center justify-start h-auto min-h-7 leading-relaxed whitespace-normal max-w-full"
                         >
                           #{tag.replace("#", "")}
                         </Badge>

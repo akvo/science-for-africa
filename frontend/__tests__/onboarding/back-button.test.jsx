@@ -39,6 +39,7 @@ jest.mock("@/lib/auth-store", () => ({
 // Mock Strapi
 jest.mock("@/lib/strapi", () => ({
   fetchLocalized: jest.fn().mockResolvedValue({ data: [] }),
+  fetchIndividualRoles: jest.fn().mockResolvedValue({ data: [] }),
 }));
 
 describe("Onboarding Back Button Visibility", () => {

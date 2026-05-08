@@ -116,6 +116,16 @@
       "locale": null
     },
     {
+      "documentId": "indivrolefind001",
+      "action": "api::individual-role.individual-role.find",
+      "locale": null
+    },
+    {
+      "documentId": "ww1a0bnihode0z4jacl0d5cs",
+      "action": "api::institution-type.institution-type.find",
+      "locale": null
+    },
+    {
       "documentId": "t98wfv4ar1wdd04yqdjduh6a",
       "action": "api::institution.institution.find",
       "locale": null

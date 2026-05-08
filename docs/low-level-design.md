@@ -470,7 +470,10 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 | **Event** | Community events (Webinar / Workshop / In-person). Capacity limits, certificate issuance |
 | **EventRegistration** | User + Event + status (registered / waitlisted / attended) |
 | **Interest** | Scientific and professional interests (e.g., Grants Management, STI Policy). Soft-migrated via `isActive` flag. |
-| **InterestCategory** | Thematic and competency-based grouping for interests (e.g., Governance, Strategy & Leadership). |
+| **InterestCategory** | thematic and competency-based grouping for interests. Soft-migrated via `isActive` flag. |
+| **InstitutionType** | Relational categories for institutions. Soft-migrated via `isActive` flag. |
+| **Country** | Relational countries. Soft-migrated via `isActive` flag. |
+| **IndividualRole** | Relational user roles. Soft-migrated via `isActive` flag. |
 | **Tag** | Cross-entity taxonomy (expertise, region, topic) — applied to Resources, Threads, Users, Communities |
 | **Report** | Content flagging for moderation (Spam / Harassment / Misinformation / Other) |
 | **Notification** | Email notification log with delivery status |
@@ -498,7 +501,7 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 
 **Resource Visibility & Moderation.** Resources only appear in public community lists when `status` is `approved`. Users can see their own `pending` or `declined` uploads in their profile. This is enforced at the controller layer by overwriting the core `find` and `findOne` methods to apply user-contextual filters.
 
-**Soft Migration Taxonomy.** To evolve the Interest taxonomy without breaking legacy user profiles, the platform implements a non-destructive migration strategy. Existing `Interest` and `InterestCategory` records are never deleted; instead, they are marked with an `isActive: false` flag. The onboarding flow and tag filters are restricted to `isActive: true` records. This ensures that historical data on user profiles remains visible (as the user entity stores interest names as strings) while only the new, approved taxonomy is available for future selections and platform-wide filtering.
+**Soft Migration Strategy.** To evolve critical data (Interests, Countries, Institution Types, and Individual Roles) without breaking legacy user profiles, the platform implements a non-destructive soft migration strategy. Existing records are never deleted; instead, they are marked with an `isActive: false` flag if they are removed from the system constants. The onboarding flow, profile selection, and platform filters are restricted to `isActive: true` records. This ensures that historical data on user profiles (which may store these values as references or strings) remains intact and visible while only the new, approved data is available for future selections.
 
 **Community Membership Synchronization Pattern.** To ensure data consistency between the primary `Community` entity (which tracks `members` for counts and listing) and the `CommunityMembership` collection (which drives the "My Communities" profile tab), the backend implements a dual-write pattern in the `join` and `leave` controllers.
 - **Join**: Creates a `CommunityMembership` record AND links the user to the community's `members` relation.

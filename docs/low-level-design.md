@@ -158,6 +158,8 @@ erDiagram
 
     Institution ||--o{ InstitutionMembership : "has_members"
     Institution ||--o{ User : "alumni"
+    Institution }o--|| InstitutionType : "of_type"
+    Institution }o--|| Country : "located_in"
 
     Community ||--o| Community : "parent"
     Community ||--o{ CommunityMembership : "has_members"
@@ -251,9 +253,16 @@ erDiagram
     Institution {
         string id PK
         string name UK
-        enum type
+        string type
+        string institutionType FK
         string country
         boolean verified
+    }
+
+    InstitutionType {
+        string id PK
+        string name UK
+        boolean isActive
     }
 
     InstitutionMembership {
@@ -446,6 +455,8 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 |---|---|
 | **User** | Extended Strapi user: bio, orcidId, careerStage, highestEducationInstitution, mentorAvailability, notificationPreferences, socialLinks |
 | **Institution** | Organisations (Academic / Research / NGO / Government / Private). Verified list. |
+| **InstitutionType** | Relational categories for institutions with `isActive` protection. |
+| **Country** | Relational countries with `isActive` protection. |
 | **InstitutionMembership** | Explicit join table: User + Institution + role (member / owner) + verificationStatus |
 | **Community** | Top-level communities and sub-communities. Self-referential `parent` field for hierarchy. Privacy, type, branding |
 | **CommunityMembership** | Explicit join table: User + Community + role (admin / moderator / curator / member) |
@@ -459,7 +470,10 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 | **Event** | Community events (Webinar / Workshop / In-person). Capacity limits, certificate issuance |
 | **EventRegistration** | User + Event + status (registered / waitlisted / attended) |
 | **Interest** | Scientific and professional interests (e.g., Grants Management, STI Policy). Soft-migrated via `isActive` flag. |
-| **InterestCategory** | Thematic and competency-based grouping for interests (e.g., Governance, Strategy & Leadership). |
+| **InterestCategory** | thematic and competency-based grouping for interests. Soft-migrated via `isActive` flag. |
+| **InstitutionType** | Relational categories for institutions. Soft-migrated via `isActive` flag. |
+| **Country** | Relational countries. Soft-migrated via `isActive` flag. |
+| **IndividualRole** | Relational user roles. Soft-migrated via `isActive` flag. |
 | **Tag** | Cross-entity taxonomy (expertise, region, topic) — applied to Resources, Threads, Users, Communities |
 | **Report** | Content flagging for moderation (Spam / Harassment / Misinformation / Other) |
 | **Notification** | Email notification log with delivery status |
@@ -487,7 +501,7 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 
 **Resource Visibility & Moderation.** Resources only appear in public community lists when `status` is `approved`. Users can see their own `pending` or `declined` uploads in their profile. This is enforced at the controller layer by overwriting the core `find` and `findOne` methods to apply user-contextual filters.
 
-**Soft Migration Taxonomy.** To evolve the Interest taxonomy without breaking legacy user profiles, the platform implements a non-destructive migration strategy. Existing `Interest` and `InterestCategory` records are never deleted; instead, they are marked with an `isActive: false` flag. The onboarding flow and tag filters are restricted to `isActive: true` records. This ensures that historical data on user profiles remains visible (as the user entity stores interest names as strings) while only the new, approved taxonomy is available for future selections and platform-wide filtering.
+**Soft Migration Strategy.** To evolve critical data (Interests, Countries, Institution Types, and Individual Roles) without breaking legacy user profiles, the platform implements a non-destructive soft migration strategy. Existing records are never deleted; instead, they are marked with an `isActive: false` flag if they are removed from the system constants. The onboarding flow, profile selection, and platform filters are restricted to `isActive: true` records. This ensures that historical data on user profiles (which may store these values as references or strings) remains intact and visible while only the new, approved data is available for future selections.
 
 **Community Membership Synchronization Pattern.** To ensure data consistency between the primary `Community` entity (which tracks `members` for counts and listing) and the `CommunityMembership` collection (which drives the "My Communities" profile tab), the backend implements a dual-write pattern in the `join` and `leave` controllers.
 - **Join**: Creates a `CommunityMembership` record AND links the user to the community's `members` relation.
@@ -874,3 +888,42 @@ The page is divided into three main logical sections, each with its own typograp
 1.  **Privacy Policy**: Covers data collection, lawful basis, principles, and user rights.
 2.  **Terms of Use**: Covers registration, acceptable use, and governing law.
 3.  **Community Guidelines**: Covers professional conduct and reporting.
+## 11. Seeding & Data Management
+
+The platform implements a robust seeding strategy to maintain taxonomy consistency across environments while protecting production data.
+
+### 11.1 Seeding Strategy
+
+The seeding logic is split into two layers:
+1.  **Production Metadata (`seedProd`)**: Critical system metadata including Countries, Institution Types, and Individual Roles.
+2.  **Development Data (`seed`)**: Sample data for testing including Interests, Institutions, Communities, Users, and Resources.
+
+**Execution Contexts:**
+- **Development (`NODE_ENV !== "production"`)**: Both seeders run **automatically** on server bootstrap.
+- **Production (`NODE_ENV === "production"`)**: Automatic seeding is disabled. Seeding must be triggered manually.
+
+### 11.2 Manual Seeding CLI
+
+A dedicated NPM script is available for manually synchronizing production metadata:
+- `npm run seed:prod` — Synchronizes critical production metadata (Countries, Institution Types, etc.).
+
+> [!NOTE]
+> There is no manual `seed:dev` command. Development sample data is synchronized **automatically** on every server bootstrap in non-production environments to ensure the workspace is always ready for testing.
+
+### 11.3 Idempotent Upsert Pattern
+
+To prevent data duplication and allow for safe re-runs, the seeders use an **Idempotent Upsert** pattern. Instead of checking for an empty table, the system checks for the existence of individual records (usually by `name` or `slug`).
+- If the record exists: It is updated with the latest configuration from the seeder.
+- If the record is missing: It is created.
+
+### 11.4 Centralized Constants
+
+Taxonomy masters and system constants are centralized in `src/utils/constants.js`. This ensures that the same data sets are used by both the seeders and any other system utilities (like migrations or permission hardening).
+
+| Constant | Model |
+|---|---|
+| `COUNTRIES` | `api::country.country` |
+| `INSTITUTION_TYPES` | `api::institution-type.institution-type` |
+| `INDIVIDUAL_ROLES` | `api::individual-role.individual-role` |
+
+This centralization simplifies maintenance when updating official lists (e.g., adding a new country or modifying an institution category).

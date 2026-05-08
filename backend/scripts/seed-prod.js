@@ -1,3 +1,5 @@
+"use strict";
+
 const { createStrapi } = require("@strapi/strapi");
 const { seedProd } = require("../src/utils/prod-seeder");
 const path = require("path");
@@ -7,20 +9,14 @@ async function run() {
 
   try {
     // Load Strapi without starting the server
-    const app = createStrapi({
+    const app = await createStrapi({
       appDir: path.resolve(__dirname, ".."),
-    });
-
-    await app.load();
+    }).load();
 
     console.log("🔄 Running Production Seeders...");
 
-    // 1. Sync Interests & Categories (Taxonomy)
-    console.log("   - Syncing Taxonomy...");
+    // 1. Run main production seeder
     await seedProd(app);
-
-    // Future seeders can be added here
-    // e.g., await seedRoles(app);
 
     console.log("✅ Production seeding completed successfully.");
     process.exit(0);

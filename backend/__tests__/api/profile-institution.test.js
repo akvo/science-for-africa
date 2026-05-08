@@ -46,13 +46,16 @@ describe("Profile Institution API", () => {
   });
 
   it("should update profile with highestEducationInstitution", async () => {
+    const kenya = await strapi.db
+      .query("api::country.country")
+      .findOne({ where: { name: "Kenya" } });
+
     const institution = await strapi
       .documents("api::institution.institution")
       .create({
         data: {
           name: "Education University",
-          country: "KE",
-          type: "Academic",
+          country: kenya ? kenya.documentId : null,
           locale: "en",
         },
       });
@@ -76,13 +79,16 @@ describe("Profile Institution API", () => {
   });
 
   it("should return institutionMemberships in profile", async () => {
+    const kenya = await strapi.db
+      .query("api::country.country")
+      .findOne({ where: { name: "Kenya" } });
+
     const institution = await strapi
       .documents("api::institution.institution")
       .create({
         data: {
           name: "Work Institute",
-          country: "KE",
-          type: "Research",
+          country: kenya ? kenya.documentId : null,
           locale: "en",
         },
       });
@@ -123,6 +129,9 @@ describe("Profile Institution API", () => {
       .set("Authorization", `Bearer ${jwt}`)
       .send(updateData);
 
+    if (response.status !== 200) {
+      console.log(response.body);
+    }
     expect(response.status).toBe(200);
 
     // Check highestEducationInstitution

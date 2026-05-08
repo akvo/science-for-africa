@@ -34,17 +34,13 @@
     "not_provided": "Not provided",
     "no_bio": "No biography provided yet."
   },
-  "roles": {
-    "Researcher": "Researcher",
-    "Principal Investigator / Lab Lead": "Principal Investigator / Lab Lead",
-    "Post-doctoral Fellow": "Post-doctoral Fellow",
-    "PhD Candidate": "PhD Candidate",
-    "Graduate / Undergraduate Student": "Graduate / Undergraduate Student",
-    "Administrator / Support Staff": "Administrator / Support Staff",
-    "Program Manager / Funder representative": "Program Manager / Funder representative",
-    "External Reviewer": "External Reviewer"
-  },
   "education_levels": {
+    "Postgraduate Student (Masters)": "Postgraduate Student (Masters)",
+    "Doctoral Candidate (PhD Student)": "Doctoral Candidate (PhD Student)",
+    "Early-Career Researcher / Research management professional (0 - 5 years post-qualification)": "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)",
+    "Mid-Career Researcher / Research management professional (6 - 15 years)": "Mid-Career Researcher / Research management professional (6 – 15 years)",
+    "Senior Researcher / Research management professional (16+ years)": "Senior Researcher / Research management professional (16+ years)",
+    "Emeritus / Retired": "Emeritus / Retired",
     "High School": "High School",
     "Bachelor's Degree": "Bachelor's Degree",
     "Master's Degree": "Master's Degree",

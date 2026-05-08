@@ -1,60 +1,73 @@
-const { INTEREST_TAXONOMY } = require("./taxonomy");
-const { grantPermission, revokePermission } = require("./permission-helpers");
-const { syncInterestTaxonomy, syncPermissions } = require("./prod-seeder");
+const { grantPermission } = require("./permission-helpers");
+const {
+  syncInterestTaxonomy,
+  syncPermissions,
+  syncMetadata,
+} = require("./prod-seeder");
+const {
+  INSTITUTION_TYPES,
+  COUNTRIES,
+  INDIVIDUAL_ROLES,
+} = require("./constants");
 
 const INSTITUTIONS = [
   {
     name: "University of Nairobi",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Kenya",
     verified: true,
   },
   {
     name: "Makerere University",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Uganda",
     verified: true,
   },
   {
     name: "University of Cape Town",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "South Africa",
     verified: true,
   },
   {
     name: "Kwame Nkrumah University of Science and Technology",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Ghana",
     verified: true,
   },
   {
     name: "Addis Ababa University",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Ethiopia",
     verified: true,
   },
   {
     name: "Cairo University",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Egypt",
     verified: true,
   },
   {
     name: "University of Ibadan",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Nigeria",
     verified: true,
   },
   {
     name: "Stellenbosch University",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "South Africa",
     verified: true,
   },
-  { name: "Science Foundation", type: "NGO", country: "Kenya", verified: true },
+  {
+    name: "Science Foundation",
+    institutionTypeName: "Civil Society / NGO",
+    country: "Kenya",
+    verified: true,
+  },
   {
     name: "African Academy of Sciences",
-    type: "NGO",
+    institutionTypeName: "Civil Society / NGO",
     country: "Kenya",
     verified: true,
   },
@@ -361,17 +374,15 @@ const seed = async (strapi) => {
       .query("api::institution.institution")
       .findMany();
 
+    const individualRoles = await strapi.db
+      .query("api::individual-role.individual-role")
+      .findMany();
+
     const sampleDegrees = [
       "Doctorate (PhD)",
       "Master's Degree",
       "Bachelor's Degree",
       "PhD Candidate",
-    ];
-    const sampleRoles = [
-      "Principal Investigator",
-      "Post-doctoral Fellow",
-      "Researcher",
-      "Student",
     ];
 
     for (let i = 0; i < users.length; i++) {
@@ -380,7 +391,8 @@ const seed = async (strapi) => {
       if (!user.educationLevel || !user.highestEducationInstitution) {
         const institution = allInstitutions[i % allInstitutions.length];
         const degree = sampleDegrees[i % sampleDegrees.length];
-        const role = sampleRoles[i % sampleRoles.length];
+        const roleRelation =
+          individualRoles[i % individualRoles.length] || individualRoles[0];
 
         await strapi.db.query("plugin::users-permissions.user").update({
           where: { id: user.id },
@@ -388,7 +400,7 @@ const seed = async (strapi) => {
             educationLevel: user.educationLevel || degree,
             highestEducationInstitution:
               user.highestEducationInstitution || institution?.id,
-            roleType: user.roleType || role,
+            roleType: user.roleType || roleRelation?.id,
             onboardingComplete: true,
           },
         });
@@ -396,21 +408,66 @@ const seed = async (strapi) => {
     }
   }
 
-  // 1. Seed Interests (Taxonomy Sync with Soft Migration)
-  await syncInterestTaxonomy(strapi);
+  // Helper for upsert
+  const upsertEntry = async (uid, data, lookupField = "name") => {
+    const existing = await strapi.db.query(uid).findOne({
+      where: { [lookupField]: data[lookupField] },
+    });
 
-  // 2. Seed Institutions
-  const institutionCount = await strapi.db
-    .query("api::institution.institution")
-    .count();
-  if (institutionCount === 0) {
-    strapi.log.info("Seeding Institutions...");
-    for (const data of INSTITUTIONS) {
-      await strapi.db.query("api::institution.institution").create({
+    if (existing) {
+      return await strapi.db.query(uid).update({
+        where: { id: existing.id },
+        data,
+      });
+    } else {
+      return await strapi.db.query(uid).create({
         data,
       });
     }
-    strapi.log.info(`Seeded ${INSTITUTIONS.length} Institutions.`);
+  };
+
+  // 1. Seed Metadata (Institution Types, Countries, Individual Roles)
+  await syncMetadata(
+    strapi,
+    "api::institution-type.institution-type",
+    INSTITUTION_TYPES,
+    "Institution Types",
+  );
+  await syncMetadata(strapi, "api::country.country", COUNTRIES, "Countries");
+  await syncMetadata(
+    strapi,
+    "api::individual-role.individual-role",
+    INDIVIDUAL_ROLES,
+    "Individual Roles",
+  );
+
+  // 2. Seed Interests (Taxonomy Sync with Soft Migration)
+  await syncInterestTaxonomy(strapi);
+
+  // 2. Seed Institutions
+  strapi.log.info("Synchronizing Institutions...");
+  const types = await strapi.db
+    .query("api::institution-type.institution-type")
+    .findMany();
+
+  const countries = await strapi.db.query("api::country.country").findMany();
+
+  for (const data of INSTITUTIONS) {
+    const typeRelation = types.find(
+      (t) => t.name.toLowerCase() === data.institutionTypeName.toLowerCase(),
+    );
+
+    const countryRelation = countries.find(
+      (c) => c.name.toLowerCase() === data.country.toLowerCase(),
+    );
+
+    const { institutionTypeName, country, ...instData } = data;
+
+    await upsertEntry("api::institution.institution", {
+      ...instData,
+      institutionType: typeRelation ? typeRelation.id : null,
+      country: countryRelation ? countryRelation.id : null,
+    });
   }
 
   // 3. Seed Communities (upsert by slug — skip existing ones)
@@ -677,6 +734,10 @@ const seed = async (strapi) => {
   // 3b. Synchronize French Translations for critical collections
   strapi.log.info("Synchronizing French translations...");
   await synchronizeTranslations(strapi, "api::interest.interest");
+  await synchronizeTranslations(
+    strapi,
+    "api::institution-type.institution-type",
+  );
   await synchronizeTranslations(strapi, "api::institution.institution");
 
   // Permissions synchronization

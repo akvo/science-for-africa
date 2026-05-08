@@ -87,7 +87,12 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
 
         <ViewRow
           label={t("details.role")}
-          value={user?.roleType ? t(`roles.${user.roleType}`) : null}
+          value={
+            user?.roleType?.name ||
+            (typeof user?.roleType === "string"
+              ? t(`roles.${user.roleType}`)
+              : null)
+          }
           t={t}
         />
 

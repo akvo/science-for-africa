@@ -1,7 +1,32 @@
 "use strict";
 
+const {
+  INSTITUTION_TYPES,
+  COUNTRIES,
+  INDIVIDUAL_ROLES,
+} = require("./constants");
 const { INTEREST_TAXONOMY } = require("./taxonomy");
 const { grantPermission, revokePermission } = require("./permission-helpers");
+
+/**
+ * Helper for upsert
+ */
+const upsertEntry = async (strapi, uid, data, lookupField = "name") => {
+  const existing = await strapi.db.query(uid).findOne({
+    where: { [lookupField]: data[lookupField] },
+  });
+
+  if (existing) {
+    return await strapi.db.query(uid).update({
+      where: { id: existing.id },
+      data,
+    });
+  } else {
+    return await strapi.db.query(uid).create({
+      data,
+    });
+  }
+};
 
 /**
  * Synchronize Interest Taxonomy (Categories and Interests)
@@ -161,7 +186,10 @@ const syncPermissions = async (strapi) => {
   const actions = [
     "api::interest.interest.find",
     "api::interest-category.interest-category.find",
+    "api::institution-type.institution-type.find",
     "api::institution.institution.find",
+    "api::country.country.find",
+    "api::individual-role.individual-role.find",
     "api::community.community.find",
     "api::community.community.findOne",
     "api::collaboration-invite.collaboration-invite.accept",
@@ -187,13 +215,96 @@ const syncPermissions = async (strapi) => {
 };
 
 /**
+ * Synchronize Metadata with Soft Migration (Countries, Institution Types, Individual Roles)
+ */
+const syncMetadata = async (strapi, uid, names, label) => {
+  strapi.log.info(`Synchronizing ${label} (Soft Migration)...`);
+
+  // 1. Deactivate records no longer in the constants
+  const existingRecords = await strapi.db.query(uid).findMany({
+    where: { isActive: true },
+  });
+
+  for (const record of existingRecords) {
+    if (!names.includes(record.name)) {
+      strapi.log.info(`Deactivating legacy ${label}: ${record.name}`);
+      await strapi.db.query(uid).update({
+        where: { id: record.id },
+        data: { isActive: false },
+      });
+    }
+  }
+
+  // 2. Upsert current records
+  for (let i = 0; i < names.length; i++) {
+    const name = names[i];
+    await upsertEntry(strapi, uid, {
+      name,
+      isActive: true,
+      sortOrder: i + 1,
+      locale: "en",
+    });
+  }
+};
+
+/**
  * Main Production Seeder
  */
 const seedProd = async (strapi) => {
   strapi.log.info("Running Production Seeder...");
+
+  // 1. Sync Taxonomy
   await syncInterestTaxonomy(strapi);
+
+  // 2. Sync Permissions
   await syncPermissions(strapi);
+
+  // 3. Sync Metadata (Institution Types, Countries, Individual Roles)
+  await syncMetadata(
+    strapi,
+    "api::institution-type.institution-type",
+    INSTITUTION_TYPES,
+    "Institution Types",
+  );
+  await syncMetadata(strapi, "api::country.country", COUNTRIES, "Countries");
+  await syncMetadata(
+    strapi,
+    "api::individual-role.individual-role",
+    INDIVIDUAL_ROLES,
+    "Individual Roles",
+  );
+
+  // 6. Backfill existing users with fallback Individual Role "Knowledge Consumer"
+  const knowledgeConsumer = await strapi.db
+    .query("api::individual-role.individual-role")
+    .findOne({ where: { name: "Knowledge Consumer" } });
+
+  if (knowledgeConsumer) {
+    const usersToUpdate = await strapi.db
+      .query("plugin::users-permissions.user")
+      .findMany({
+        where: { roleType: { id: { $null: true } } },
+      });
+
+    if (usersToUpdate.length > 0) {
+      strapi.log.info(
+        `Backfilling ${usersToUpdate.length} users with fallback role 'Knowledge Consumer'...`,
+      );
+      for (const user of usersToUpdate) {
+        await strapi.db.query("plugin::users-permissions.user").update({
+          where: { id: user.id },
+          data: { roleType: knowledgeConsumer.id },
+        });
+      }
+    }
+  }
+
   strapi.log.info("Production Seeding complete.");
 };
 
-module.exports = { seedProd, syncInterestTaxonomy, syncPermissions };
+module.exports = {
+  seedProd,
+  syncInterestTaxonomy,
+  syncPermissions,
+  syncMetadata,
+};

@@ -13,7 +13,6 @@
       "properties": {
         "fields": [
           "name",
-          "type",
           "country",
           "verified"
         ]
@@ -29,7 +28,6 @@
       "properties": {
         "fields": [
           "name",
-          "type",
           "country",
           "verified"
         ]
@@ -45,7 +43,6 @@
       "properties": {
         "fields": [
           "name",
-          "type",
           "country",
           "verified"
         ]
@@ -60,8 +57,7 @@
       "subject": "api::interest.interest",
       "properties": {
         "fields": [
-          "name",
-          "category"
+          "name"
         ]
       },
       "conditions": [],
@@ -74,8 +70,7 @@
       "subject": "api::interest.interest",
       "properties": {
         "fields": [
-          "name",
-          "category"
+          "name"
         ]
       },
       "conditions": [],
@@ -88,8 +83,7 @@
       "subject": "api::interest.interest",
       "properties": {
         "fields": [
-          "name",
-          "category"
+          "name"
         ]
       },
       "conditions": [],

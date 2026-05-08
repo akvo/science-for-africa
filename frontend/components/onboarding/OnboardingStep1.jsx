@@ -12,11 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Search, Loader2 } from "lucide-react";
-import { fetchLocalized } from "@/lib/strapi";
+import { fetchLocalized, fetchIndividualRoles } from "@/lib/strapi";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-
-import { ROLE_OPTIONS } from "@/lib/onboarding-constants";
 
 const OnboardingStep1 = () => {
   const { t } = useTranslation("onboarding");
@@ -31,12 +29,26 @@ const OnboardingStep1 = () => {
     skipStep,
   } = useOnboardingStore();
 
+  const [roles, setRoles] = useState([]);
   const [institutions, setInstitutions] = useState([]);
   const [searchTerm, setSearchTerm] = useState(
     formData.affiliationInstitution?.name || formData.institutionName || "",
   );
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingRoles, setLoadingRoles] = useState(true);
+
+  React.useEffect(() => {
+    const getRoles = async () => {
+      setLoadingRoles(true);
+      const response = await fetchIndividualRoles(locale);
+      if (response?.data) {
+        setRoles(response.data);
+      }
+      setLoadingRoles(false);
+    };
+    getRoles();
+  }, [locale]);
 
   const handleTabChange = (value) => {
     setUserType(value);
@@ -166,14 +178,26 @@ const OnboardingStep1 = () => {
                 id="role-type"
                 className="w-full h-11 px-3.5 py-2.5 bg-white border-brand-gray-100 rounded-8 focus:ring-1 focus:ring-brand-teal-500 shadow-xs text-md"
               >
-                <SelectValue placeholder={t("step1.role_placeholder")} />
+                <SelectValue placeholder={t("step1.role_placeholder")}>
+                  {roles.find((r) => r.documentId === formData.roleType)?.name}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent alignItemWithTrigger={false}>
-                {ROLE_OPTIONS.map((role) => (
-                  <SelectItem key={role} value={role} className="text-md">
-                    {t(`roles.${role}`)}
-                  </SelectItem>
-                ))}
+                {loadingRoles ? (
+                  <div className="flex items-center justify-center p-4">
+                    <Loader2 className="w-5 h-5 animate-spin text-brand-teal-500" />
+                  </div>
+                ) : (
+                  roles.map((role) => (
+                    <SelectItem
+                      key={role.documentId}
+                      value={role.documentId}
+                      className="text-md"
+                    >
+                      {role.name}
+                    </SelectItem>
+                  ))
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -197,14 +221,26 @@ const OnboardingStep1 = () => {
                 id="inst-role-type"
                 className="w-full h-11 px-3.5 py-2.5 bg-white border-brand-gray-100 rounded-8 focus:ring-1 focus:ring-brand-teal-500 shadow-xs text-md"
               >
-                <SelectValue placeholder={t("step1.role_placeholder")} />
+                <SelectValue placeholder={t("step1.role_placeholder")}>
+                  {roles.find((r) => r.documentId === formData.roleType)?.name}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent alignItemWithTrigger={false}>
-                {ROLE_OPTIONS.map((role) => (
-                  <SelectItem key={role} value={role} className="text-md">
-                    {t(`roles.${role}`)}
-                  </SelectItem>
-                ))}
+                {loadingRoles ? (
+                  <div className="flex items-center justify-center p-4">
+                    <Loader2 className="w-5 h-5 animate-spin text-brand-teal-500" />
+                  </div>
+                ) : (
+                  roles.map((role) => (
+                    <SelectItem
+                      key={role.documentId}
+                      value={role.documentId}
+                      className="text-md"
+                    >
+                      {role.name}
+                    </SelectItem>
+                  ))
+                )}
               </SelectContent>
             </Select>
           </div>

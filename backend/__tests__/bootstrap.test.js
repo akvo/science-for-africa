@@ -11,6 +11,12 @@ jest.mock("../src/utils/seeder", () => ({
   seed: jest.fn().mockResolvedValue(true),
 }));
 
+// Mock the prod-seeder to avoid DB calls
+jest.mock("../src/utils/prod-seeder", () => ({
+  seedProd: jest.fn().mockResolvedValue(true),
+  INSTITUTION_TYPES: [],
+}));
+
 describe("Strapi Bootstrap - Email Templates TDD", () => {
   let strapi;
   let mockAdvancedSettings;

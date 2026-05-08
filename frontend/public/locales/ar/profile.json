@@ -1,6 +1,6 @@
 {
   "details": {
-    "title": "تفاصيل مهنية",
+    "title": "الملف الشخصي",
     "description": "قم بتحديث صورتك وتفاصيلك الشخصية هنا.",
     "edit_button": "تحرير",
     "save_button": "حفظ",
@@ -17,6 +17,7 @@
     "role_placeholder": "اختر الدور",
     "education_title": "التعليم",
     "education_level_label": "مستوى التعليم",
+    "education_level_placeholder": "اختر مستوى التعليم",
     "university_label": "نوع المؤسسة التعليمية",
     "university_placeholder": "نوع المؤسسة التعليمية",
     "affiliation_title": "الانتماء المؤسسي",
@@ -30,7 +31,22 @@
     "request_button": "طلب",
     "save_success": "تم تحديث الملف الشخصي بنجاح",
     "save_error": "فشل في تحديث الملف الشخصي",
-    "not_provided": "غير متوفر"
+    "not_provided": "غير متوفر",
+    "no_bio": "لم يتم تقديم سيرة ذاتية بعد."
+  },
+  "education_levels": {
+    "Postgraduate Student (Masters)": "طالب دراسات عليا (ماجستير)",
+    "Doctoral Candidate (PhD Student)": "طالب دكتوراه",
+    "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)": "باحث في بداية مساره المهني / باحث في بداية مساره المهني (0 – 5 سنوات بعد المؤهل)",
+    "Mid-Career Researcher / Research management professional (6 – 15 years)": "باحث في منتصف مساره المهني / باحث في منتصف مساره المهني (6 – 15 سنة)",
+    "Senior Researcher / Research management professional (16+ years)": "باحث متقدم / باحث متقدم (16+ سنة)",
+    "Emeritus / Retired": "باحث فخري / متقاعد",
+    "High School": "المدرسة الثانوية",
+    "Bachelor's Degree": "درجة البكالوريوس",
+    "Master's Degree": "درجة الماجستير",
+    "Doctorate (PhD)": "الدكتوراة (PhD)",
+    "Post-Doctorate": "ما بعد الدكتوراة",
+    "Professional Certificate": "شهادة مهنية"
   },
   "languages": {
     "en": "الإنجليزية",
@@ -48,13 +64,5 @@
     "Administrator / Support Staff": "إداري / موظف دعم",
     "Program Manager / Funder representative": "مدير برنامج / ممثل جهة تمويل",
     "External Reviewer": "مقيم خارجي"
-  },
-  "education_levels": {
-    "High School": "المدرسة الثانوية",
-    "Bachelor's Degree": "درجة البكالوريوس",
-    "Master's Degree": "درجة الماجستير",
-    "Doctorate (PhD)": "الدكتوراة (PhD)",
-    "Post-Doctorate": "ما بعد الدكتوراة",
-    "Professional Certificate": "شهادة مهنية"
   }
 }

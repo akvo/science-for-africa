@@ -30,6 +30,7 @@ jest.mock("next/router", () => ({
 jest.mock("@/lib/strapi", () => ({
   updateUserProfile: jest.fn().mockResolvedValue({ success: true }),
   fetchLocalized: jest.fn().mockResolvedValue({ data: [] }),
+  fetchIndividualRoles: jest.fn().mockResolvedValue({ data: [] }),
 }));
 
 jest.mock("@/lib/auth-store", () => ({

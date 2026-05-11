@@ -16,6 +16,22 @@
     "logout": "Sign out",
     "publish": "Publish",
     "back": "Back",
+    "community_dropdown": {
+      "subtitle": "Get started and learn more about communities and collaboration.",
+      "community_label": "Community",
+      "collaboration_label": "Collaboration",
+      "trending": "Trending now",
+      "trending_desc": "Find the best solution for you.",
+      "communities": "Communities",
+      "communities_desc": "Find the best solution for you.",
+      "discussions": "Active discussions",
+      "discussions_desc": "Find the best solution for you.",
+      "collaboration_hub": "Collaboration Hub",
+      "collaboration_hub_desc": "Find the best solution for you.",
+      "events": "Events",
+      "events_desc": "Find the best solution for you.",
+      "learn_more": "Learn more"
+    },
     "profile_dropdown": {
       "details": "Details",
       "communities": "Communities",

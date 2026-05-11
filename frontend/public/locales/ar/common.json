@@ -16,6 +16,22 @@
     "logout": "تسجيل الخروج",
     "publish": "نشر",
     "back": "عودة",
+    "community_dropdown": {
+      "subtitle": "ابدأ واعرف المزيد عن المجتمعات والتعاون.",
+      "community_label": "مجتمع",
+      "collaboration_label": "تعاون",
+      "trending": "الموضوعات الرائجة",
+      "trending_desc": "اعثر على أفضل حل لك.",
+      "communities": "مجتمعات",
+      "communities_desc": "اعثر على أفضل حل لك.",
+      "discussions": "نقاشات نشطة",
+      "discussions_desc": "اعثر على أفضل حل لك.",
+      "collaboration_hub": "مركز التعاون",
+      "collaboration_hub_desc": "اعثر على أفضل حل لك.",
+      "events": "أحداث",
+      "events_desc": "اعثر على أفضل حل لك.",
+      "learn_more": "اعرف المزيد"
+    },
     "profile_dropdown": {
       "details": "تفاصيل",
       "communities": "مجتمعات",

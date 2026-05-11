@@ -14,7 +14,8 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut, Plus } from "lucide-react";
+import { ArrowRight, CalendarDays, Globe, LogOut, MessageSquare, Plus, TrendingUp } from "lucide-react";
+import CollaborationIcon from "@/components/icons/CollaborationIcon";
 import Image from "next/image";
 
 import VerificationBadge from "@/components/shared/VerificationBadge";
@@ -28,9 +29,22 @@ const PROFILE_MENU_ITEMS = [
   { key: "courses", href: "/coming-soon" },
 ];
 
+const COMMUNITY_MENU = {
+  community: [
+    { key: "trending", href: "/community/trending", icon: TrendingUp },
+    { key: "communities", href: "/community", icon: Globe },
+    { key: "discussions", href: "/community/discussions", icon: MessageSquare },
+  ],
+  collaboration: [
+    { key: "collaboration_hub", href: "/community/collaboration-hub", icon: CollaborationIcon },
+    { key: "events", href: "/community/events", icon: CalendarDays },
+  ],
+};
+
 const Navbar = () => {
   const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState(false);
+  const [communityOpen, setCommunityOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
@@ -106,52 +120,132 @@ const Navbar = () => {
 
             {/* Desktop Menu */}
             <nav className="hidden xl:flex items-center gap-6">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="flex items-center gap-1 text-base font-medium text-brand-gray-900 hover:text-primary-500 transition-colors"
-                >
-                  {link.name}
-                  {link.hasDropdown && (
-                    <svg
-                      className="w-4 h-4 text-brand-gray-900"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+              {navLinks.map((link) =>
+                link.hasDropdown ? (
+                  <div
+                    key={link.name}
+                    className="relative"
+                    onMouseEnter={() => setCommunityOpen(true)}
+                    onMouseLeave={() => setCommunityOpen(false)}
+                  >
+                    <Link
+                      href={link.href}
+                      className="flex items-center gap-1 text-base font-medium text-brand-gray-900 hover:text-primary-500 transition-colors"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  )}
-                </Link>
-              ))}
+                      {link.name}
+                      <svg
+                        className={`w-4 h-4 transition-transform ${communityOpen ? "rotate-180" : ""}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </Link>
+
+                    {communityOpen && (
+                      <div className="absolute left-1/2 -translate-x-1/2 top-full pt-2 z-50">
+                        <div className="w-[560px] rounded-2xl border border-brand-gray-100 bg-white p-6 shadow-xl">
+                          <h3 className="text-base font-bold text-brand-gray-900 mb-1">
+                            {t("navbar.community")}
+                          </h3>
+                          <p className="text-sm text-brand-gray-500 mb-5">
+                            {t("navbar.community_dropdown.subtitle")}
+                          </p>
+
+                          <div className="grid grid-cols-2 gap-x-8">
+                            {/* Community column */}
+                            <div>
+                              <h4 className="text-xs font-semibold text-primary-500 uppercase tracking-wider mb-3">
+                                {t("navbar.community_dropdown.community_label")}
+                              </h4>
+                              <div className="flex flex-col gap-1">
+                                {COMMUNITY_MENU.community.map((item) => {
+                                  const Icon = item.icon;
+                                  return (
+                                    <Link
+                                      key={item.key}
+                                      href={item.href}
+                                      onClick={() => setCommunityOpen(false)}
+                                      className="group flex flex-col gap-1 rounded-lg p-3 hover:bg-brand-gray-50 transition-colors"
+                                    >
+                                      <div className="flex items-center gap-2.5">
+                                        <Icon className="size-5 text-brand-gray-500 group-hover:text-primary-500 transition-colors" />
+                                        <span className="text-sm font-semibold text-brand-gray-900">
+                                          {t(`navbar.community_dropdown.${item.key}`)}
+                                        </span>
+                                      </div>
+                                      <p className="text-xs text-brand-gray-500 ml-[30px]">
+                                        {t(`navbar.community_dropdown.${item.key}_desc`)}
+                                      </p>
+                                      <span className="ml-[30px] mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary-500">
+                                        {t("navbar.community_dropdown.learn_more")}
+                                        <ArrowRight className="size-3" />
+                                      </span>
+                                    </Link>
+                                  );
+                                })}
+                              </div>
+                            </div>
+
+                            {/* Collaboration column */}
+                            <div>
+                              <h4 className="text-xs font-semibold text-primary-500 uppercase tracking-wider mb-3">
+                                {t("navbar.community_dropdown.collaboration_label")}
+                              </h4>
+                              <div className="flex flex-col gap-1">
+                                {COMMUNITY_MENU.collaboration.map((item) => {
+                                  const Icon = item.icon;
+                                  return (
+                                    <Link
+                                      key={item.key}
+                                      href={item.href}
+                                      onClick={() => setCommunityOpen(false)}
+                                      className="group flex flex-col gap-1 rounded-lg p-3 hover:bg-brand-gray-50 transition-colors"
+                                    >
+                                      <div className="flex items-center gap-2.5">
+                                        <Icon className="size-5 text-brand-gray-500 group-hover:text-primary-500 transition-colors" />
+                                        <span className="text-sm font-semibold text-brand-gray-900">
+                                          {t(`navbar.community_dropdown.${item.key}`)}
+                                        </span>
+                                      </div>
+                                      <p className="text-xs text-brand-gray-500 ml-[30px]">
+                                        {t(`navbar.community_dropdown.${item.key}_desc`)}
+                                      </p>
+                                      <span className="ml-[30px] mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary-500">
+                                        {t("navbar.community_dropdown.learn_more")}
+                                        <ArrowRight className="size-3" />
+                                      </span>
+                                    </Link>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className="flex items-center gap-1 text-base font-medium text-brand-gray-900 hover:text-primary-500 transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                ),
+              )}
             </nav>
           </div>
 
-          {/* Search & Actions */}
+          {/* Actions */}
           <div className="flex items-center gap-4">
-            {/* Search Icon */}
-            <Button variant="outline" size="icon-xl" className="rounded-full">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </Button>
-
             {mounted && isAuthenticated ? (
               <div className="flex items-center gap-4">
                 {/* Publish Button */}

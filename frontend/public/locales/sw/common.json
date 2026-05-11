@@ -16,6 +16,22 @@
     "logout": "Toka",
     "publish": "Chapisha",
     "back": "Nyuma",
+    "community_dropdown": {
+      "subtitle": "Anza na ujifunze zaidi kuhusu jumuiya na ushirikiano.",
+      "community_label": "Jumuiya",
+      "collaboration_label": "Ushirikiano",
+      "trending": "Mada zinazopendwa",
+      "trending_desc": "Pata suluhisho bora kwako.",
+      "communities": "Jumuiya",
+      "communities_desc": "Pata suluhisho bora kwako.",
+      "discussions": "Majadiliano hai",
+      "discussions_desc": "Pata suluhisho bora kwako.",
+      "collaboration_hub": "Kituo cha ushirikiano",
+      "collaboration_hub_desc": "Pata suluhisho bora kwako.",
+      "events": "Matukio",
+      "events_desc": "Pata suluhisho bora kwako.",
+      "learn_more": "Jifunze zaidi"
+    },
     "profile_dropdown": {
       "details": "Maelezo",
       "communities": "Jumuiya",

@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
-import { TrendingUp, Users, Globe } from "lucide-react";
+import CollaborationIcon from "@/components/icons/CollaborationIcon";
 import { cn } from "@/lib/utils";
 
 const NAV_KEYS = [
-  { key: "trending", i18nKey: "community.left_nav.trending", href: "/community/trending", icon: TrendingUp },
-  { key: "communities", i18nKey: "community.left_nav.communities", href: "/community", icon: Users },
-  { key: "collaboration-hub", i18nKey: "community.left_nav.collaboration", href: "/community/collaboration-hub", icon: Globe },
+  { key: "trending", i18nKey: "community.left_nav.trending", href: "/community/trending" },
+  { key: "communities", i18nKey: "community.left_nav.communities", href: "/community" },
+  { key: "active-discussions", i18nKey: "community.left_nav.discussions", href: "/community/discussions" },
+  { key: "collaboration-hub", i18nKey: "community.left_nav.collaboration", href: "/community/collaboration-hub", icon: CollaborationIcon },
+  { key: "events", i18nKey: "community.left_nav.events", href: "/community/events" },
 ];
 
 export default function CommunityLeftNav({

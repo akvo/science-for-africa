@@ -25,9 +25,9 @@ const useHasHydrated = () => {
 };
 
 const FILTERS = [
-  { key: "all", label: "All" },
-  { key: "active", label: "Active" },
-  { key: "completed", label: "Completed" },
+  { key: "all", labelKey: "hub.all" },
+  { key: "active", labelKey: "hub.active" },
+  { key: "completed", labelKey: "hub.completed" },
 ];
 
 function formatDate(value) {
@@ -56,9 +56,9 @@ function initialsOf(name = "") {
 
 /* ─────────────── Collaboration Call Card (hub variant) ─────────────── */
 
-function CollaborationHubCard({ call, onView }) {
+function CollaborationHubCard({ call, onView, t }) {
   const isActive = new Date(call.endDate) >= new Date();
-  const datePrefix = isActive ? "Valid till" : "Ended";
+  const datePrefix = isActive ? t("call_card.valid_till") : t("call_card.ended");
 
   return (
     <article className="flex items-start justify-between gap-4 border-b border-brand-gray-100 py-5 lg:px-6">
@@ -69,7 +69,7 @@ function CollaborationHubCard({ call, onView }) {
             <span
               className={`size-2 rounded-full ${isActive ? "bg-emerald-500" : "bg-red-500"}`}
             />
-            {isActive ? "Active" : "Completed"}
+            {isActive ? t("call_card.active") : t("call_card.completed")}
           </span>
           <span className="inline-flex h-full items-center gap-2 px-4">
             <Calendar className="size-4" />
@@ -82,7 +82,7 @@ function CollaborationHubCard({ call, onView }) {
               ) : (
                 <Link2 className="size-3.5" />
               )}
-              {call.visibility === "private" ? "Private" : "Limited access"}
+              {call.visibility === "private" ? t("call_card.private") : t("call_card.limited_access")}
             </span>
           )}
         </div>
@@ -123,7 +123,7 @@ function CollaborationHubCard({ call, onView }) {
               }}
               className="font-medium text-primary-500 hover:underline"
             >
-              View community
+              {t("call_card.view_community")}
             </button>
           </div>
         )}
@@ -135,7 +135,7 @@ function CollaborationHubCard({ call, onView }) {
         className="border-transparent bg-[#E8ECEF] hover:bg-[#dde2e6] shrink-0"
         onClick={() => onView?.(call)}
       >
-        View
+        {t("call_card.view")}
       </Button>
     </article>
   );
@@ -145,7 +145,7 @@ function CollaborationHubCard({ call, onView }) {
 
 function RightSidebar({ communities, isAuthenticated }) {
   const router = useRouter();
-  const { t } = useTranslation("common");
+  const { t: tCommunity } = useTranslation("community");
 
   return (
     <aside className="hidden xl:flex xl:w-72 xl:flex-none xl:flex-col xl:gap-6 xl:border-l xl:border-brand-gray-100 xl:pl-6 xl:pt-4">
@@ -159,10 +159,10 @@ function RightSidebar({ communities, isAuthenticated }) {
           }}
         >
           <h3 className="text-sm font-semibold text-brand-gray-900">
-            New to the platform?
+            {tCommunity("hub.new_to_platform")}
           </h3>
           <p className="mt-1 text-xs text-brand-gray-500">
-            Create your account and connect with a world of communities.
+            {tCommunity("hub.new_to_platform_description")}
           </p>
           <div className="mt-4 flex flex-col gap-2">
             <Button
@@ -171,13 +171,12 @@ function RightSidebar({ communities, isAuthenticated }) {
               className="w-full rounded-full border-primary-500 text-primary-500 bg-transparent hover:bg-primary-50"
               onClick={() => router.push("/signup")}
             >
-              Continue with email address
+              {tCommunity("hub.continue_with_email")}
             </Button>
             <SocialButton provider="google" className="w-full !h-auto !py-1.5 !text-sm !rounded-full" />
           </div>
           <p className="mt-3 text-[10px] text-brand-gray-400 leading-tight">
-            By continuing, you agree to our User Agreement and acknowledge that
-            you understand the Privacy Policy.
+            {tCommunity("hub.terms_agreement")}
           </p>
         </div>
       )}
@@ -186,7 +185,7 @@ function RightSidebar({ communities, isAuthenticated }) {
       {communities.length > 0 && (
         <div>
           <h3 className="text-sm font-semibold text-brand-gray-900 mb-3">
-            Popular communities
+            {tCommunity("hub.popular_communities")}
           </h3>
           <ul className="flex flex-col gap-3">
             {communities.slice(0, 4).map((c) => (
@@ -206,7 +205,7 @@ function RightSidebar({ communities, isAuthenticated }) {
                       {c.name}
                     </div>
                     <div className="text-xs text-brand-gray-500">
-                      {formatCount(c.subscribers)} Subscribers
+                      {formatCount(c.subscribers)} {tCommunity("hub.subscribers")}
                     </div>
                   </div>
                 </button>
@@ -218,7 +217,7 @@ function RightSidebar({ communities, isAuthenticated }) {
             onClick={() => router.push("/community")}
             className="mt-3 text-xs font-medium text-primary-500 hover:underline"
           >
-            Explore all
+            {tCommunity("hub.explore_all")}
           </button>
         </div>
       )}
@@ -229,7 +228,7 @@ function RightSidebar({ communities, isAuthenticated }) {
 /* ─────────────────── Main Page ─────────────────── */
 
 export default function CollaborationHubPage() {
-  const { t } = useTranslation("common");
+  const { t: tCommunity } = useTranslation("community");
   const router = useRouter();
   const hydrated = useHasHydrated();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -286,7 +285,7 @@ export default function CollaborationHubPage() {
           {/* Header with filter chips */}
           <div className="flex items-center gap-4 mb-4 lg:pl-6 flex-wrap">
             <h1 className="text-lg font-semibold text-brand-gray-900">
-              Collaboration hub
+              {tCommunity("hub.title")}
             </h1>
             <div className="flex items-center gap-2 flex-wrap">
               {FILTERS.map((f) => {
@@ -303,7 +302,7 @@ export default function CollaborationHubPage() {
                         : "border-brand-gray-200 bg-white text-brand-gray-700 hover:bg-brand-gray-50",
                     )}
                   >
-                    {f.label}
+                    {tCommunity(f.labelKey)}
                   </button>
                 );
               })}
@@ -313,11 +312,11 @@ export default function CollaborationHubPage() {
           {/* List */}
           {loading ? (
             <div className="py-10 text-center text-sm text-brand-gray-500">
-              Loading collaborations...
+              {tCommunity("hub.loading")}
             </div>
           ) : filtered.length === 0 ? (
             <div className="mx-6 rounded-xl border border-dashed border-brand-gray-200 p-10 text-center text-sm text-brand-gray-500">
-              No collaboration calls found.
+              {tCommunity("hub.no_calls")}
             </div>
           ) : (
             <div className="flex flex-col">
@@ -326,6 +325,7 @@ export default function CollaborationHubPage() {
                   key={call.documentId || call.id}
                   call={call}
                   onView={handleView}
+                  t={tCommunity}
                 />
               ))}
             </div>
@@ -345,7 +345,7 @@ export default function CollaborationHubPage() {
 export async function getServerSideProps({ locale }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, ["common", "community"])),
     },
   };
 }

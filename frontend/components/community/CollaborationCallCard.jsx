@@ -1,3 +1,4 @@
+import { useTranslation } from "next-i18next";
 import { Calendar, Globe, Link2, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -5,11 +6,11 @@ import { COLLABORATION_CALL_STATUS } from "@/lib/community-mock-data";
 
 const STATUS_META = {
   [COLLABORATION_CALL_STATUS.ACTIVE]: {
-    label: "Active",
+    labelKey: "call_card.active",
     dotClass: "bg-emerald-500",
   },
   [COLLABORATION_CALL_STATUS.COMPLETED]: {
-    label: "Completed",
+    labelKey: "call_card.completed",
     dotClass: "bg-red-500",
   },
 };
@@ -34,9 +35,10 @@ function formatDate(value) {
  * Pass `onView` to handle navigation; if omitted, the View button is hidden.
  */
 export default function CollaborationCallCard({ call, onView }) {
+  const { t } = useTranslation("community");
   const status = STATUS_META[call.status] ?? STATUS_META.active;
   const datePrefix =
-    call.status === COLLABORATION_CALL_STATUS.COMPLETED ? "Ended" : "Valid till";
+    call.status === COLLABORATION_CALL_STATUS.COMPLETED ? t("call_card.ended") : t("call_card.valid_till");
 
   const handleClick = () => {
     if (onView) onView(call);
@@ -66,7 +68,7 @@ export default function CollaborationCallCard({ call, onView }) {
         <div className="mb-3 inline-flex h-[34px] w-fit items-center divide-x divide-brand-gray-200 rounded-full bg-[#E8ECEF] text-sm font-medium text-brand-gray-700">
           <span className="inline-flex h-full items-center gap-2 px-4">
             <span className={`size-2 rounded-full ${status.dotClass}`} />
-            {status.label}
+            {t(status.labelKey)}
           </span>
           <span className="inline-flex h-full items-center gap-2 px-4">
             <Calendar className="size-4" />
@@ -79,7 +81,7 @@ export default function CollaborationCallCard({ call, onView }) {
               ) : (
                 <Link2 className="size-3.5" />
               )}
-              {call.visibility === "private" ? "Private" : "Limited access"}
+              {call.visibility === "private" ? t("call_card.private") : t("call_card.limited_access")}
             </span>
           )}
         </div>
@@ -115,7 +117,7 @@ export default function CollaborationCallCard({ call, onView }) {
             onView(call);
           }}
         >
-          View
+          {t("call_card.view")}
         </Button>
       ) : null}
     </article>

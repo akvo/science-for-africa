@@ -1,4 +1,5 @@
 import { useCollaborationStore } from "@/lib/collaboration-store";
+import { useTranslation } from "next-i18next";
 import { Button } from "@/components/ui/button";
 import { Globe, Link2, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -6,27 +7,26 @@ import { cn } from "@/lib/utils";
 const VISIBILITY_OPTIONS = [
   {
     value: "public",
-    label: "Public",
-    description:
-      "Everyone can view and add posts and comments in this community.",
+    labelKey: "visibility.public",
+    descriptionKey: "visibility.public_description",
     icon: Globe,
   },
   {
     value: "restricted",
-    label: "With limited access",
-    description:
-      "Everyone can view posts and comments, but only verified users can add them.",
+    labelKey: "visibility.restricted",
+    descriptionKey: "visibility.restricted_description",
     icon: Link2,
   },
   {
     value: "private",
-    label: "Private",
-    description: "Only approved users can see and publish content",
+    labelKey: "visibility.private",
+    descriptionKey: "visibility.private_description",
     icon: Lock,
   },
 ];
 
 export default function StepVisibility() {
+  const { t } = useTranslation("community");
   const { formData, updateFormData, prevStep, nextStep } =
     useCollaborationStore();
   const selected = formData.visibility || "public";
@@ -34,10 +34,7 @@ export default function StepVisibility() {
   return (
     <div className="flex flex-col gap-5">
       <p className="text-sm text-brand-gray-500">
-        Decide who can view and add posts in your community. Only public
-        communities are displayed in search results. Important: After setting up
-        your community, you will need to submit a request to change the community
-        type.
+        {t("visibility.description")}
       </p>
 
       <div className="flex flex-col gap-3">
@@ -68,10 +65,10 @@ export default function StepVisibility() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-semibold text-brand-gray-900">
-                  {opt.label}
+                  {t(opt.labelKey)}
                 </div>
                 <div className="text-sm text-brand-gray-500">
-                  {opt.description}
+                  {t(opt.descriptionKey)}
                 </div>
               </div>
               <div
@@ -120,10 +117,10 @@ export default function StepVisibility() {
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={prevStep} className="rounded-full">
-            Back
+            {t("visibility.back")}
           </Button>
           <Button onClick={nextStep} className="rounded-full">
-            Next
+            {t("visibility.next")}
           </Button>
         </div>
       </div>

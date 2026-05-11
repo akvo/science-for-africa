@@ -22,11 +22,7 @@ import VerificationBadge from "@/components/shared/VerificationBadge";
 
 const PROFILE_MENU_ITEMS = [
   { key: "details", href: "/profile" },
-  { key: "communities", href: "/coming-soon" },
-  { key: "content", href: "/coming-soon" },
-  { key: "saved_posts", href: "/coming-soon" },
-  { key: "my_events", href: "/coming-soon" },
-  { key: "courses", href: "/coming-soon" },
+  { key: "communities", href: "/profile/communities" },
 ];
 
 const COMMUNITY_MENU = {

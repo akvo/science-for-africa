@@ -138,13 +138,8 @@ const MentorshipTab = () => {
   if (!mentorships || mentorships.length === 0) {
     return (
       <EmptyState
-        icon={User}
         title={t("mentorship.empty_title", {
-          defaultValue: "You don't have any mentees yet",
-        })}
-        description={t("mentorship.empty_desc", {
-          defaultValue:
-            "When you are assigned as a mentor to a collaboration, your mentees will appear here.",
+          defaultValue: "You don't have any requests yet",
         })}
       />
     );

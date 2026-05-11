@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowRight, Globe, LogOut, Plus } from "lucide-react";
+import { ArrowRight, Globe, LogOut } from "lucide-react";
 import CollaborationIcon from "@/components/icons/CollaborationIcon";
 import Image from "next/image";
 
@@ -243,19 +243,6 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             {mounted && isAuthenticated ? (
               <div className="flex items-center gap-4">
-                {/* Publish Button */}
-                <Button
-                  variant="outline"
-                  size="xl"
-                  className="hidden sm:flex"
-                  asChild
-                >
-                  <Link href="/publish" className="gap-2 font-medium">
-                    <Plus className="w-4 h-4" strokeWidth={2.5} />
-                    {t("navbar.publish")}
-                  </Link>
-                </Button>
-
                 {/* User Dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

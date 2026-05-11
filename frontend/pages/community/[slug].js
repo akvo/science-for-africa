@@ -207,12 +207,6 @@ export default function CommunityDetailPage() {
                 })}
               </TabsList>
 
-              <TabsContent value="feed" className="pt-2">
-                <EmptyTab label={t("community.tab_feed")} comingSoon={t("community.coming_soon")} />
-              </TabsContent>
-              <TabsContent value="discussions" className="pt-2">
-                <EmptyTab label={t("community.tab_discussions")} comingSoon={t("community.coming_soon")} />
-              </TabsContent>
               <TabsContent value="collaboration-calls" className="pt-2">
                 <CollaborationCallsList
                   calls={calls}
@@ -237,18 +231,11 @@ export default function CommunityDetailPage() {
   );
 }
 
-function EmptyTab({ label, comingSoon }) {
-  return (
-    <div className="rounded-xl border border-dashed border-brand-gray-200 p-10 text-center text-sm text-brand-gray-500">
-      {label} {comingSoon}
-    </div>
-  );
-}
 
 export async function getServerSideProps({ locale }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, ["common", "community"])),
     },
   };
 }

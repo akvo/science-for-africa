@@ -3,27 +3,38 @@
 const { createCoreController } = require("@strapi/strapi").factories;
 
 /**
- * Augment a community entity with live counts:
+ * Augment a community entity with live counts using the community-membership
+ * content type (the single source of truth for membership).
+ *
  * - `posts`       → collaboration-call records referencing this community
- * - `subscribers` → number of users in the `members` relation
+ * - `subscribers` → number of community-membership records for this community
+ * - `isMember`    → whether the current user has a membership record
  */
 async function augmentWithCounts(strapi, item, userId) {
-  if (!item || !item.name) return item;
+  if (!item || !item.documentId) return item;
 
   const postsCount = await strapi.db
     .query("api::collaboration-call.collaboration-call")
     .count({ where: { communityName: item.name } });
 
-  const full = await strapi.db.query("api::community.community").findOne({
-    where: { documentId: item.documentId },
-    populate: { members: { select: ["id"] } },
-  });
-  const members = full?.members || [];
+  const subscribersCount = await strapi.db
+    .query("api::community-membership.community-membership")
+    .count({ where: { community: { documentId: item.documentId } } });
 
-  const augmented = { ...item, posts: postsCount, subscribers: members.length };
+  const augmented = { ...item, posts: postsCount, subscribers: subscribersCount };
+
   if (userId) {
-    augmented.isMember = members.some((m) => m.id === userId);
+    const membership = await strapi.db
+      .query("api::community-membership.community-membership")
+      .findOne({
+        where: {
+          user: { id: userId },
+          community: { documentId: item.documentId },
+        },
+      });
+    augmented.isMember = !!membership;
   }
+
   return augmented;
 }
 
@@ -57,44 +68,48 @@ module.exports = createCoreController(
       const user = ctx.state.user;
       if (!user) return ctx.unauthorized();
 
-      const { id } = ctx.params;
+      const { id } = ctx.params; // community documentId
+
+      // Verify community exists
       const community = await strapi.db
         .query("api::community.community")
-        .findOne({
-          where: { documentId: id },
-          populate: { members: { select: ["id"] } },
-        });
+        .findOne({ where: { documentId: id } });
 
       if (!community) return ctx.notFound("Community not found");
 
-      const alreadyMember = community.members.some((m) => m.id === user.id);
-      if (alreadyMember) {
+      // Check if already a member
+      const existing = await strapi.db
+        .query("api::community-membership.community-membership")
+        .findOne({
+          where: {
+            user: { id: user.id },
+            community: { documentId: id },
+          },
+        });
+
+      const subscribersCount = await strapi.db
+        .query("api::community-membership.community-membership")
+        .count({ where: { community: { documentId: id } } });
+
+      if (existing) {
         return {
-          success: true,
-          data: { isMember: true, subscribers: community.members.length },
+          data: { isMember: true, subscribers: subscribersCount },
         };
       }
 
-      await strapi.db.query("api::community.community").update({
-        where: { id: community.id },
-        data: { members: { connect: [{ id: user.id }] } },
+      // Create membership record
+      await strapi.documents("api::community-membership.community-membership").create({
+        data: {
+          user: user.id,
+          community: community.documentId,
+          role: "Member",
+          joinedAt: new Date(),
+        },
+        status: "published",
       });
 
-      // Create community-membership record for the "My Communities" tab
-      await strapi
-        .documents("api::community-membership.community-membership")
-        .create({
-          data: {
-            user: user.id,
-            community: community.id,
-            role: "Member",
-          },
-          status: "published",
-        });
-
       return {
-        success: true,
-        data: { isMember: true, subscribers: community.members.length + 1 },
+        data: { isMember: true, subscribers: subscribersCount + 1 },
       };
     },
 
@@ -105,61 +120,35 @@ module.exports = createCoreController(
       const user = ctx.state.user;
       if (!user) return ctx.unauthorized();
 
-      const { id: communityDocId } = ctx.params;
+      const { id } = ctx.params; // community documentId
 
-      // 1. Fetch community to verify existence and get numeric ID
-      const community = await strapi
-        .documents("api::community.community")
+      // Find existing membership
+      const membership = await strapi.db
+        .query("api::community-membership.community-membership")
         .findOne({
-          documentId: communityDocId,
-          populate: ["members"],
+          where: {
+            user: { id: user.id },
+            community: { documentId: id },
+          },
         });
 
-      if (!community) return ctx.notFound("Community not found");
+      const subscribersCount = await strapi.db
+        .query("api::community-membership.community-membership")
+        .count({ where: { community: { documentId: id } } });
 
-      const communityId = community.id;
-      const userId = user.id;
+      if (!membership) {
+        return {
+          data: { isMember: false, subscribers: subscribersCount },
+        };
+      }
 
-      // 2. Disconnect user from community (Many-to-Many)
-      // Use both Document Service and DB layer for maximum sync reliability
-      await strapi.documents("api::community.community").update({
-        documentId: communityDocId,
-        data: {
-          members: {
-            disconnect: [user.documentId || user.id],
-          },
-        },
+      // Delete membership record
+      await strapi.documents("api::community-membership.community-membership").delete({
+        documentId: membership.documentId,
       });
 
-      // 3. Delete membership records (One-to-Many)
-      // We use the database layer directly for deletion as it's most reliable for clearing relations
-      const deletedRecords = await strapi.db
-        .query("api::community-membership.community-membership")
-        .deleteMany({
-          where: {
-            $or: [
-              {
-                user: userId,
-                community: communityId,
-              },
-              {
-                user: { documentId: user.documentId },
-                community: { documentId: communityDocId },
-              },
-            ],
-          },
-        });
-
-      strapi.log.info(
-        `User ${user.username} left community ${community.name}. Deleted ${deletedRecords?.count || 0} membership records.`,
-      );
-
       return {
-        success: true,
-        data: {
-          isMember: false,
-          subscribers: Math.max(0, (community.members || []).length - 1),
-        },
+        data: { isMember: false, subscribers: Math.max(0, subscribersCount - 1) },
       };
     },
   }),

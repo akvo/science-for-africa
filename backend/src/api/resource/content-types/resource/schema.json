@@ -16,6 +16,9 @@
       "type": "string",
       "required": true
     },
+    "description": {
+      "type": "text"
+    },
     "resourceType": {
       "type": "enumeration",
       "enum": ["report", "publication", "practice-note", "case-study"],

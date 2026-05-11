@@ -59,6 +59,7 @@ export default function StepInviteUsers() {
         endDate: formData.endDate,
         topics: formData.topics,
         communityName: formData.communityName,
+        visibility: formData.visibility || "public",
         inviteEmails: validEmails,
         mentorEmails: formData.mentorEmails,
       });
@@ -88,6 +89,7 @@ export default function StepInviteUsers() {
         endDate: formData.endDate,
         topics: formData.topics,
         communityName: formData.communityName,
+        visibility: formData.visibility || "public",
         inviteEmails: [],
         mentorEmails: formData.mentorEmails,
       });

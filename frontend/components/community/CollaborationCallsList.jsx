@@ -30,7 +30,14 @@ export default function CollaborationCallsList({
 
   const visibleCalls = useMemo(() => {
     if (filter === "all") return calls;
-    return calls.filter((c) => c.status === filter);
+    const now = new Date();
+    if (filter === COLLABORATION_CALL_STATUS.ACTIVE) {
+      return calls.filter((c) => new Date(c.endDate) >= now);
+    }
+    if (filter === COLLABORATION_CALL_STATUS.COMPLETED) {
+      return calls.filter((c) => new Date(c.endDate) < now);
+    }
+    return calls;
   }, [calls, filter]);
 
   return (

@@ -30,6 +30,67 @@ module.exports = createCoreController(
      * permission sanitizer. We query the DB directly and shape the response
      * ourselves.
      */
+    /**
+     * Override `find` to hide private collaboration calls from non-members.
+     * Public and restricted calls are always visible in listings.
+     */
+    async find(ctx) {
+      const userId = ctx.state?.user?.id;
+
+      // Let the core controller handle query parsing (filters, sort, pagination)
+      const response = await super.find(ctx);
+
+      if (Array.isArray(response?.data)) {
+        // For any private calls, check membership. We need to load
+        // invites for private calls only.
+        const privateCalls = response.data.filter(
+          (c) => c.visibility === "private",
+        );
+
+        const privateCallIds = privateCalls.map((c) => c.documentId);
+        let allowedCallIds = new Set();
+
+        if (privateCallIds.length > 0 && userId) {
+          // Check invites
+          const invites = await strapi.db
+            .query("api::collaboration-invite.collaboration-invite")
+            .findMany({
+              where: {
+                collaborationCall: { documentId: { $in: privateCallIds } },
+                invitedUser: { id: userId },
+              },
+              populate: { collaborationCall: { select: ["documentId"] } },
+            });
+          for (const inv of invites) {
+            const docId = inv.collaborationCall?.documentId;
+            if (docId) allowedCallIds.add(docId);
+          }
+
+          // Check creator
+          const createdCalls = await strapi.db
+            .query("api::collaboration-call.collaboration-call")
+            .findMany({
+              where: {
+                documentId: { $in: privateCallIds },
+                createdByUser: { id: userId },
+              },
+              select: ["documentId"],
+            });
+          for (const c of createdCalls) {
+            allowedCallIds.add(c.documentId);
+          }
+        }
+
+        response.data = response.data.filter((call) => {
+          if (call.visibility !== "private") return true;
+          if (!userId) return false;
+          return allowedCallIds.has(call.documentId);
+        });
+      }
+
+      return response;
+    },
+
     async findOne(ctx) {
       const { id } = ctx.params;
       const call = await strapi.db
@@ -45,6 +106,18 @@ module.exports = createCoreController(
         });
 
       if (!call) return ctx.notFound("Collaboration call not found");
+
+      // Private calls: only creator and invited users can view
+      if (call.visibility === "private") {
+        const userId = ctx.state?.user?.id;
+        const isCreator = userId && call.createdByUser?.id === userId;
+        const isInvited =
+          userId &&
+          (call.invites || []).some((i) => i.invitedUser?.id === userId);
+        if (!isCreator && !isInvited) {
+          return ctx.notFound("Collaboration call not found");
+        }
+      }
 
       return { data: call, meta: {} };
     },
@@ -62,6 +135,7 @@ module.exports = createCoreController(
         endDate,
         topics,
         communityName,
+        visibility,
         inviteEmails,
         mentorEmails,
       } = ctx.request.body;
@@ -97,6 +171,7 @@ module.exports = createCoreController(
               endDate,
               topics: topics || [],
               communityName: communityName || "",
+              visibility: visibility || "public",
               status: "Active",
               createdByUser: user.id,
             },

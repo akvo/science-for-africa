@@ -759,6 +759,7 @@ const seed = async (strapi) => {
     "api::collaboration-call.collaboration-call.findOne",
     "api::collaboration-invite.collaboration-invite.create",
     "api::collaboration-invite.collaboration-invite.find",
+    "api::collaboration-invite.collaboration-invite.requestJoin",
     "api::collaboration-invite.collaboration-invite.decline",
     "api::chat-message.chat-message.find",
     "api::chat-message.chat-message.create",

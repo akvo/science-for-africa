@@ -8,6 +8,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CommunityLeftNav from "@/components/community/CommunityLeftNav";
 import { fetchCommunities, joinCommunity, leaveCommunity } from "@/lib/strapi";
 import { useAuthStore } from "@/lib/auth-store";
+
+const useHasHydrated = () => {
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    const unsub = useAuthStore.persist.onFinishHydration(() => setHydrated(true));
+    // Already hydrated (e.g. sync storage)
+    if (useAuthStore.persist.hasHydrated()) setHydrated(true);
+    return unsub;
+  }, []);
+  return hydrated;
+};
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const ALL_TAG = "All";
@@ -72,6 +83,7 @@ export default function CommunitiesPage() {
   const { t } = useTranslation("common");
   const router = useRouter();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const hydrated = useHasHydrated();
   const [communities, setCommunities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTag, setActiveTag] = useState(ALL_TAG);
@@ -80,12 +92,14 @@ export default function CommunitiesPage() {
   const [canScrollRight, setCanScrollRight] = useState(false);
 
   useEffect(() => {
+    if (!hydrated) return;
+    setLoading(true);
     fetchCommunities().then((res) => {
       const items = res?.data || [];
       setCommunities(items);
       setLoading(false);
     });
-  }, []);
+  }, [hydrated]);
 
   const handleJoin = async (community) => {
     if (!isAuthenticated) {
@@ -161,6 +175,7 @@ export default function CommunitiesPage() {
               {t("community.explore_description")}
             </p>
           </div>
+          {/* TODO: re-enable when community creation is ready
           <Button
             variant="outline"
             size="md"
@@ -170,6 +185,7 @@ export default function CommunitiesPage() {
             <Plus className="size-4" />
             {t("community.create_community")}
           </Button>
+          */}
         </div>
 
         {/* Tag filter chips */}

@@ -1,5 +1,5 @@
 import { useTranslation } from "next-i18next";
-import { Calendar, Globe, Link2, Lock } from "lucide-react";
+import { Calendar, Link2, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { COLLABORATION_CALL_STATUS } from "@/lib/community-mock-data";

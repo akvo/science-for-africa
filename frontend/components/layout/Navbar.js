@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowRight, CalendarDays, Globe, LogOut, MessageSquare, Plus, TrendingUp } from "lucide-react";
+import { ArrowRight, Globe, LogOut, Plus } from "lucide-react";
 import CollaborationIcon from "@/components/icons/CollaborationIcon";
 import Image from "next/image";
 
@@ -31,13 +31,10 @@ const PROFILE_MENU_ITEMS = [
 
 const COMMUNITY_MENU = {
   community: [
-    { key: "trending", href: "/community/trending", icon: TrendingUp },
     { key: "communities", href: "/community", icon: Globe },
-    { key: "discussions", href: "/community/discussions", icon: MessageSquare },
   ],
   collaboration: [
     { key: "collaboration_hub", href: "/community/collaboration-hub", icon: CollaborationIcon },
-    { key: "events", href: "/community/events", icon: CalendarDays },
   ],
 };
 
@@ -77,8 +74,6 @@ const Navbar = () => {
       href: "/community",
       hasDropdown: true,
     },
-    { name: t("navbar.opportunities"), href: "/opportunities" },
-    { name: t("navbar.learning"), href: "/learning" },
     { name: t("navbar.resources"), href: "/resources" },
   ];
 

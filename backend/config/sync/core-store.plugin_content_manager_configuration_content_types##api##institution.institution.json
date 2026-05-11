@@ -33,16 +33,17 @@
           "sortable": true
         }
       },
-      "type": {
+      "institutionType": {
         "edit": {
-          "label": "type",
+          "label": "institutionType",
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true
+          "editable": true,
+          "mainField": "name"
         },
         "list": {
-          "label": "type",
+          "label": "institutionType",
           "searchable": true,
           "sortable": true
         }
@@ -53,7 +54,8 @@
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true
+          "editable": true,
+          "mainField": "name"
         },
         "list": {
           "label": "country",
@@ -173,12 +175,7 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "name",
-        "type",
-        "country"
-      ],
+      "list": ["id", "name", "institutionType", "country"],
       "edit": [
         [
           {
@@ -186,18 +183,18 @@
             "size": 6
           },
           {
-            "name": "type",
-            "size": 6
+            "name": "verified",
+            "size": 4
           }
         ],
         [
           {
-            "name": "country",
+            "name": "institutionType",
             "size": 6
           },
           {
-            "name": "verified",
-            "size": 4
+            "name": "country",
+            "size": 6
           }
         ],
         [

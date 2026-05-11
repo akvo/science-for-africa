@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "individual_roles",
+  "info": {
+    "singularName": "individual-role",
+    "pluralName": "individual-roles",
+    "displayName": "Individual Role",
+    "description": "User individual roles (e.g., Knowledge Consumer, Knowledge Contributor)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "users": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "roleType"
+    }
+  }
+}

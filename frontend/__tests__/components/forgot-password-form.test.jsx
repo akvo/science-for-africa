@@ -11,6 +11,7 @@ jest.mock("next/router", () => ({
 // Mock lib/strapi
 jest.mock("@/lib/strapi", () => ({
   forgotPassword: jest.fn(),
+  fetchIndividualRoles: jest.fn().mockResolvedValue({ data: [] }),
 }));
 
 // Mock next-i18next

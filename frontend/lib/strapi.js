@@ -259,6 +259,20 @@ export function transformProfileUpdatePayload(userData) {
 }
 
 /**
+ * Validate an ORCID iD against the public API and fetch profile data.
+ * @param {string} orcidId – e.g. "0000-0002-1825-0097"
+ */
+export async function validateOrcid(orcidId) {
+  try {
+    const response = await apiClient.post("/orcid-auth/validate", { orcidId });
+    return response.data;
+  } catch (error) {
+    console.error("Error validating ORCID:", error);
+    return error;
+  }
+}
+
+/**
  * Create a collaboration call with invites
  */
 export async function createCollaborationCall(payload) {
@@ -280,6 +294,17 @@ export async function createCollaborationCall(payload) {
 export async function fetchCommunities() {
   return fetchFromStrapi(
     "/communities?populate[subCommunities]=true&populate[parent]=true&sort=name:asc",
+  );
+}
+
+/**
+ * Fetch all active individual roles for onboarding, sorted by sortOrder.
+ * Uses localized names based on the current locale.
+ */
+export async function fetchIndividualRoles(locale = "en") {
+  return fetchLocalized(
+    "/individual-roles?filters[isActive][$eq]=true&sort=sortOrder:asc",
+    locale,
   );
 }
 
@@ -512,7 +537,7 @@ export async function createResource({
  */
 export async function fetchResource(documentId) {
   return fetchFromStrapi(
-    `/resources/${documentId}?populate[file]=true&populate[uploadedBy]=true&populate[community]=true`,
+    `/resources/${documentId}?populate[file]=true&populate[uploadedBy][populate][roleType]=true&populate[community]=true`,
   );
 }
 
@@ -521,7 +546,7 @@ export async function fetchResource(documentId) {
  */
 export async function fetchResourceComments(resourceDocumentId) {
   return fetchFromStrapi(
-    `/resource-comments?filters[resource][documentId][$eq]=${encodeURIComponent(resourceDocumentId)}&filters[parentComment][id][$null]=true&populate[author]=true&populate[replies][populate][author]=true&populate[replies][populate][replies][populate][author]=true&sort=createdAt:asc`,
+    `/resource-comments?filters[resource][documentId][$eq]=${encodeURIComponent(resourceDocumentId)}&filters[parentComment][id][$null]=true&populate[author][populate][roleType]=true&populate[replies][populate][author][populate][roleType]=true&populate[replies][populate][replies][populate][author][populate][roleType]=true&sort=createdAt:asc`,
   );
 }
 
@@ -558,13 +583,30 @@ export async function updateUserProfile(userData) {
  */
 export async function fetchMyCollaborations(page = 1, pageSize = 6) {
   try {
+    // We fetch all invites (Pending/Accepted) and filter/sort in the UI if needed,
+    // or just let the dashboard show both.
     const response = await fetchFromStrapi(
-      `/collaboration-invites?filters[inviteStatus]=Accepted&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+      `/collaboration-invites?pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
     );
     return response;
   } catch (error) {
     console.error("Error fetching collaborations:", error);
     return null;
+  }
+}
+
+/**
+ * Decline a collaboration invite by its numeric id.
+ */
+export async function declineCollaborationInvite(id) {
+  try {
+    const response = await apiClient.post(
+      `/collaboration-invites/${id}/decline`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error declining collaboration invite:", error);
+    return error;
   }
 }
 
@@ -608,6 +650,19 @@ export async function fetchMyResources() {
     return response;
   } catch (error) {
     console.error("Error fetching my resources:", error);
+    return null;
+  }
+}
+
+/**
+ * Fetch mentees for the current authenticated mentor
+ */
+export async function fetchMentees() {
+  try {
+    const response = await apiClient.get("/auth/mentees");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching mentees:", error);
     return null;
   }
 }

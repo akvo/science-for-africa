@@ -35,8 +35,6 @@ module.exports = async ({ strapi }) => {
     akvo = await strapi.db.query("api::institution.institution").create({
       data: {
         name: "Akvo",
-        type: "NGO",
-        country: "Netherlands",
         verified: true,
         locale: "en",
       },

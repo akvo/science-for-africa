@@ -1,154 +1,77 @@
-"use strict";
-
-const INTEREST_CATEGORIES = {
-  Popular: [
-    "Bioinformatics",
-    "Genetics",
-    "Virology",
-    "Immunology",
-    "Ecology",
-    "Epidemiology",
-    "Public Health",
-    "Climate Change",
-  ],
-  Education: [
-    "Curriculum Design",
-    "STEM Outreach",
-    "University Management",
-    "Teacher Training",
-  ],
-  "Clinical & Medical": [
-    "Clinical Trials",
-    "Diagnostics",
-    "Pharmacology",
-    "Neuroscience",
-    "Infectious Diseases",
-  ],
-  "Environmental & Earth": [
-    "Sustainability",
-    "Geophysics",
-    "Hydrology",
-    "Renewable Energy",
-  ],
-  "Socio-Economic": [
-    "Health Economics",
-    "Policy Analysis",
-    "Social Informatics",
-    "Gender Studies",
-  ],
-};
+const { grantPermission } = require("./permission-helpers");
+const {
+  syncInterestTaxonomy,
+  syncPermissions,
+  syncMetadata,
+} = require("./prod-seeder");
+const {
+  INSTITUTION_TYPES,
+  COUNTRIES,
+  INDIVIDUAL_ROLES,
+} = require("./constants");
 
 const INSTITUTIONS = [
   {
     name: "University of Nairobi",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Kenya",
     verified: true,
   },
   {
     name: "Makerere University",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Uganda",
     verified: true,
   },
   {
     name: "University of Cape Town",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "South Africa",
     verified: true,
   },
   {
     name: "Kwame Nkrumah University of Science and Technology",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Ghana",
     verified: true,
   },
   {
     name: "Addis Ababa University",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Ethiopia",
     verified: true,
   },
   {
     name: "Cairo University",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Egypt",
     verified: true,
   },
   {
     name: "University of Ibadan",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Nigeria",
     verified: true,
   },
   {
     name: "Stellenbosch University",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "South Africa",
     verified: true,
   },
-  { name: "Science Foundation", type: "NGO", country: "Kenya", verified: true },
+  {
+    name: "Science Foundation",
+    institutionTypeName: "Civil Society / NGO",
+    country: "Kenya",
+    verified: true,
+  },
   {
     name: "African Academy of Sciences",
-    type: "NGO",
+    institutionTypeName: "Civil Society / NGO",
     country: "Kenya",
     verified: true,
   },
 ];
-
-/**
- * Helper to grant permissions to a role
- */
-const grantPermission = async (strapi, roleType, action) => {
-  const role = await strapi.db
-    .query("plugin::users-permissions.role")
-    .findOne({ where: { type: roleType } });
-
-  if (role) {
-    const existing = await strapi.db
-      .query("plugin::users-permissions.permission")
-      .findOne({
-        where: {
-          role: role.id,
-          action: action,
-        },
-      });
-
-    if (!existing) {
-      strapi.log.info(`Granting ${action} to ${roleType}...`);
-      await strapi.db.query("plugin::users-permissions.permission").create({
-        data: {
-          action: action,
-          role: role.id,
-        },
-      });
-    }
-  }
-};
-
-/**
- * Helper to revoke a permission from a role (inverse of grantPermission).
- * Used to clean up permissions that were granted in earlier seeder runs but
- * shouldn't be present anymore.
- */
-const revokePermission = async (strapi, roleType, action) => {
-  const role = await strapi.db
-    .query("plugin::users-permissions.role")
-    .findOne({ where: { type: roleType } });
-
-  if (!role) return;
-
-  const existing = await strapi.db
-    .query("plugin::users-permissions.permission")
-    .findOne({ where: { role: role.id, action } });
-
-  if (existing) {
-    strapi.log.info(`Revoking ${action} from ${roleType}...`);
-    await strapi.db
-      .query("plugin::users-permissions.permission")
-      .delete({ where: { id: existing.id } });
-  }
-};
 
 const COMMUNITIES = [
   {
@@ -245,33 +168,104 @@ const COMMUNITIES = [
 const COLLABORATION_CALLS = [
   {
     title: "Bio-Diversity Research Project",
-    description:
-      "Join our cross-border research team to study biodiversity patterns across East Africa.",
+    description: "Study biodiversity patterns across East Africa.",
     startDate: "2024-01-01T00:00:00.000Z",
     endDate: "2024-12-31T23:59:59.000Z",
     status: "Active",
-    topics: ["Biodiversity", "Ecology", "East Africa"],
+    topics: ["Biodiversity", "Ecology"],
     communityName: "Community of Researchers",
+    mentorIndex: 0,
+    forcedStatus: "Pending", // For seeder logic
   },
   {
     title: "Climate Change Impact Study",
-    description:
-      "A collaborative study on the socioeconomic impacts of climate change on small-scale farmers.",
+    description: "Socioeconomic impacts on small-scale farmers.",
     startDate: "2024-03-01T00:00:00.000Z",
     endDate: "2025-02-28T23:59:59.000Z",
     status: "Active",
-    topics: ["Climate Change", "Agriculture", "Socioeconomic"],
+    topics: ["Climate Change"],
     communityName: "Community of Innovators",
+    mentorIndex: 1,
+    forcedStatus: "Accepted",
   },
   {
     title: "Global Health Initiative",
-    description:
-      "Past collaboration focusing on vaccine distribution strategies in sub-Saharan Africa.",
+    description: "Vaccine distribution strategies.",
     startDate: "2023-01-01T00:00:00.000Z",
     endDate: "2023-12-31T23:59:59.000Z",
     status: "Completed",
-    topics: ["Public Health", "Vaccines", "Africa"],
+    topics: ["Public Health"],
     communityName: "Health and Wellness",
+    mentorIndex: null, // No Mentor Assigned
+    forcedStatus: "Accepted",
+  },
+  {
+    title: "Sustainable Urban Development",
+    description: "Green infrastructure models.",
+    startDate: "2024-06-01T00:00:00.000Z",
+    endDate: "2025-05-31T23:59:59.000Z",
+    status: "Active",
+    topics: ["Urban Planning"],
+    communityName: "Community of Innovators",
+    mentorIndex: 2,
+    forcedStatus: "Pending",
+  },
+  {
+    title: "Renewable Energy Access",
+    description: "Solar micro-grids for rural communities.",
+    startDate: "2023-06-01T00:00:00.000Z",
+    endDate: "2024-05-31T23:59:59.000Z",
+    status: "Completed",
+    topics: ["Energy", "Sustainability"],
+    communityName: "Community of Researchers",
+    mentorIndex: 0,
+    forcedStatus: "Pending", // Pending but project completed
+  },
+  {
+    title: "AI in African Agriculture",
+    description: "Machine learning models for crop yield prediction.",
+    startDate: "2024-08-01T00:00:00.000Z",
+    endDate: "2025-07-31T23:59:59.000Z",
+    status: "Active",
+    topics: ["AI", "AgriTech"],
+    communityName: "Community of Innovators",
+    mentorIndex: null, // No Mentor Assigned
+    forcedStatus: "Accepted",
+  },
+];
+
+const RESOURCES = [
+  {
+    name: "Draft Research Plan: Bio-Diversity",
+    description: "Initial draft for East Africa biodiversity study.",
+    resourceType: "report",
+    status: "approved",
+    communityName: "Community of Researchers",
+    uploadedBy: 0, // Index in users
+  },
+  {
+    name: "Climate Change Policy Brief",
+    description: "Impact on small-scale farming in the region.",
+    resourceType: "publication",
+    status: "pending",
+    communityName: "Community of Innovators",
+    uploadedBy: 1,
+  },
+  {
+    name: "Global Health Best Practices",
+    description: "Dataset for vaccine distribution.",
+    resourceType: "case-study",
+    status: "approved",
+    communityName: "Health and Wellness",
+    uploadedBy: 2,
+  },
+  {
+    name: "Urban Planning Framework",
+    description: "Legacy urban development models (unsupported).",
+    resourceType: "practice-note",
+    status: "declined",
+    communityName: "Community of Innovators",
+    uploadedBy: 1,
   },
 ];
 
@@ -363,34 +357,117 @@ const synchronizeTranslations = async (strapi, uid) => {
 const seed = async (strapi) => {
   strapi.log.info("Checking if database needs seeding...");
 
-  // 1. Seed Interests
-  const interestCount = await strapi.db.query("api::interest.interest").count();
-  if (interestCount === 0) {
-    strapi.log.info("Seeding Interests...");
-    for (const [category, items] of Object.entries(INTEREST_CATEGORIES)) {
-      for (const name of items) {
-        await strapi.db.query("api::interest.interest").create({
-          data: { name, category },
+  const allCommunities = await strapi.db
+    .query("api::community.community")
+    .findMany();
+
+  // 0. Update Existing Users with educational data (Development only)
+  const users = await strapi.db
+    .query("plugin::users-permissions.user")
+    .findMany();
+
+  if (users.length > 0) {
+    strapi.log.info(
+      `Enriching ${users.length} existing users with sample data...`,
+    );
+    const allInstitutions = await strapi.db
+      .query("api::institution.institution")
+      .findMany();
+
+    const individualRoles = await strapi.db
+      .query("api::individual-role.individual-role")
+      .findMany();
+
+    const sampleDegrees = [
+      "Doctorate (PhD)",
+      "Master's Degree",
+      "Bachelor's Degree",
+      "PhD Candidate",
+    ];
+
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+      // Only update if data is missing
+      if (!user.educationLevel || !user.highestEducationInstitution) {
+        const institution = allInstitutions[i % allInstitutions.length];
+        const degree = sampleDegrees[i % sampleDegrees.length];
+        const roleRelation =
+          individualRoles[i % individualRoles.length] || individualRoles[0];
+
+        await strapi.db.query("plugin::users-permissions.user").update({
+          where: { id: user.id },
+          data: {
+            educationLevel: user.educationLevel || degree,
+            highestEducationInstitution:
+              user.highestEducationInstitution || institution?.id,
+            roleType: user.roleType || roleRelation?.id,
+            onboardingComplete: true,
+          },
         });
       }
     }
-    strapi.log.info(
-      `Seeded ${Object.values(INTEREST_CATEGORIES).flat().length} Interests.`,
-    );
   }
 
-  // 2. Seed Institutions
-  const institutionCount = await strapi.db
-    .query("api::institution.institution")
-    .count();
-  if (institutionCount === 0) {
-    strapi.log.info("Seeding Institutions...");
-    for (const data of INSTITUTIONS) {
-      await strapi.db.query("api::institution.institution").create({
+  // Helper for upsert
+  const upsertEntry = async (uid, data, lookupField = "name") => {
+    const existing = await strapi.db.query(uid).findOne({
+      where: { [lookupField]: data[lookupField] },
+    });
+
+    if (existing) {
+      return await strapi.db.query(uid).update({
+        where: { id: existing.id },
+        data,
+      });
+    } else {
+      return await strapi.db.query(uid).create({
         data,
       });
     }
-    strapi.log.info(`Seeded ${INSTITUTIONS.length} Institutions.`);
+  };
+
+  // 1. Seed Metadata (Institution Types, Countries, Individual Roles)
+  await syncMetadata(
+    strapi,
+    "api::institution-type.institution-type",
+    INSTITUTION_TYPES,
+    "Institution Types",
+  );
+  await syncMetadata(strapi, "api::country.country", COUNTRIES, "Countries");
+  await syncMetadata(
+    strapi,
+    "api::individual-role.individual-role",
+    INDIVIDUAL_ROLES,
+    "Individual Roles",
+  );
+
+  // 2. Seed Interests (Taxonomy Sync with Soft Migration)
+  await syncInterestTaxonomy(strapi);
+
+  // 2. Seed Institutions
+  strapi.log.info("Synchronizing Institutions...");
+  const types = await strapi.db
+    .query("api::institution-type.institution-type")
+    .findMany();
+
+  const countries = await strapi.db.query("api::country.country").findMany();
+
+  for (const data of INSTITUTIONS) {
+    const typeRelation = types.find(
+      (t) => t.name.toLowerCase() === data.institutionTypeName.toLowerCase(),
+    );
+
+    const countryRelation = countries.find(
+      (c) => c.name.toLowerCase() === data.country.toLowerCase(),
+    );
+
+    const { institutionTypeName, country, ...instData } = data;
+
+    await upsertEntry("api::institution.institution", {
+      ...instData,
+      institutionType: typeRelation ? typeRelation.id : null,
+      country: countryRelation ? countryRelation.id : null,
+    });
   }
 
   // 3. Seed Communities (upsert by slug — skip existing ones)
@@ -420,15 +497,7 @@ const seed = async (strapi) => {
   }
 
   // 4. Seed memberships for existing users (Development only)
-  const users = await strapi.db
-    .query("plugin::users-permissions.user")
-    .findMany();
-
-  if (users.length > 0) {
-    const allCommunities = await strapi.db
-      .query("api::community.community")
-      .findMany();
-
+  if (users.length > 0 && allCommunities.length > 0) {
     if (allCommunities.length > 0) {
       strapi.log.info(
         `Checking community memberships for ${users.length} users...`,
@@ -472,23 +541,75 @@ const seed = async (strapi) => {
   strapi.log.info("Ensuring collaboration calls and invites exist...");
 
   const allCalls = [];
+
+  // 5a. Create specific mentorship calls for EACH user to ensure they all have mentees
+  for (let i = 0; i < users.length; i++) {
+    const mentorUser = users[i];
+    const title = `Collaboration with ${mentorUser.fullName || mentorUser.username}`;
+    const community = allCommunities[i % allCommunities.length];
+
+    let call = await strapi.db
+      .query("api::collaboration-call.collaboration-call")
+      .findOne({ where: { title } });
+
+    if (!call) {
+      strapi.log.info(
+        `Creating mentorship call for user: ${mentorUser.username} in community: ${community?.name}`,
+      );
+      call = await strapi.db
+        .query("api::collaboration-call.collaboration-call")
+        .create({
+          data: {
+            title,
+            description: `A shared research initiative led by ${mentorUser.fullName || mentorUser.username}.`,
+            startDate: new Date(),
+            endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), // 1 year from now
+            status: "Active",
+            createdByUser: mentorUser.id,
+            community: community?.id,
+          },
+        });
+    }
+
+    allCalls.push({
+      ...call,
+      forcedStatus: "Accepted",
+      mentorId: mentorUser.id,
+    });
+  }
+
+  // 5b. Seed original static collaboration calls
   for (const data of COLLABORATION_CALLS) {
     let call = await strapi.db
       .query("api::collaboration-call.collaboration-call")
       .findOne({ where: { title: data.title } });
 
     if (!call) {
-      strapi.log.info(`Creating collaboration call: ${data.title}`);
+      strapi.log.info(`Creating static collaboration call: ${data.title}`);
+      const { mentorIndex, ...callData } = data;
+      const mentorUser =
+        mentorIndex !== null ? users[mentorIndex] || users[0] : null;
+      const creatorId = mentorUser?.id || null;
+
+      const community = await strapi.db
+        .query("api::community.community")
+        .findOne({ where: { name: data.communityName } });
+
       call = await strapi.db
         .query("api::collaboration-call.collaboration-call")
         .create({
           data: {
-            ...data,
-            createdByUser: users[0]?.id, // Default to first user as creator
+            ...callData,
+            community: community?.id,
+            createdByUser: creatorId,
           },
         });
     }
-    allCalls.push(call);
+    allCalls.push({
+      ...call,
+      forcedStatus: data.forcedStatus,
+      mentorId: call.createdByUser,
+    });
   }
 
   // Ensure every user has an invite for every call
@@ -512,21 +633,19 @@ const seed = async (strapi) => {
               invitedUser: user.id,
               collaborationCall: call.id,
               email: user.email,
-              inviteStatus: "Accepted",
-              role: "Collaborator",
+              inviteStatus: call.forcedStatus || "Accepted",
+              role: call.mentorId === user.id ? "Mentor" : "Collaborator",
               invitedAt: new Date(),
             },
           });
         inviteCreatedCount++;
       } else {
-        // Check if status is missing and update if necessary
         const existing = await strapi.db
           .query("api::collaboration-invite.collaboration-invite")
           .findOne({
             where: {
               invitedUser: user.id,
               collaborationCall: call.id,
-              inviteStatus: { $null: true },
             },
           });
 
@@ -535,7 +654,10 @@ const seed = async (strapi) => {
             .query("api::collaboration-invite.collaboration-invite")
             .update({
               where: { id: existing.id },
-              data: { inviteStatus: "Accepted" },
+              data: {
+                inviteStatus: call.forcedStatus || "Accepted",
+                role: call.mentorId === user.id ? "Mentor" : "Collaborator",
+              },
             });
         }
       }
@@ -548,44 +670,86 @@ const seed = async (strapi) => {
     );
   }
 
-  // 3b. Synchronize French Translations for critical collections
-  strapi.log.info("Synchronizing French translations...");
-  await synchronizeTranslations(strapi, "api::interest.interest");
-  await synchronizeTranslations(strapi, "api::institution.institution");
+  // 6. Seed Resources (Development only)
+  strapi.log.info("Ensuring resources exist...");
 
-  // Permissions must be synchronized in ALL environments
-  strapi.log.info("Synchronizing permissions...");
-  // 4. Set Permissions (Ensure Public and Authenticated can search)
-  const roles = ["public", "authenticated"];
-  const actions = [
-    "api::interest.interest.find",
-    "api::institution.institution.find",
-    "api::community.community.find",
-    "api::community.community.findOne",
-    "api::collaboration-invite.collaboration-invite.accept",
-  ];
-  for (const role of roles) {
-    for (const action of actions) {
-      await grantPermission(strapi, role, action);
+  // 6a. Seed static resources
+  for (const data of RESOURCES) {
+    const existing = await strapi.db
+      .query("api::resource.resource")
+      .findOne({ where: { name: data.name } });
+
+    if (!existing) {
+      strapi.log.info(`Creating static resource: ${data.name}`);
+      const { communityName, uploadedBy, ...resourceData } = data;
+
+      const community = await strapi.db
+        .query("api::community.community")
+        .findOne({ where: { name: communityName } });
+
+      const user = users[uploadedBy] || users[0];
+
+      await strapi.db.query("api::resource.resource").create({
+        data: {
+          ...resourceData,
+          community: community?.id,
+          uploadedBy: user?.id,
+          slug: data.name
+            .toLowerCase()
+            .replace(/ /g, "-")
+            .replace(/[^\w-]/g, ""),
+        },
+      });
     }
   }
 
-  // Grant Public access to OTP verification (New custom API routes)
-  const publicAuthActions = [
-    "api::auth.auth.verifyOtp",
-    "api::auth.auth.resendOtp",
-    "api::auth.auth.registrationStatus",
-  ];
-  for (const action of publicAuthActions) {
-    await grantPermission(strapi, "public", action);
+  // 6b. Ensure EVERY user has at least one resource (Development only)
+  for (const user of users) {
+    const resourceCount = await strapi.db
+      .query("api::resource.resource")
+      .count({ where: { uploadedBy: user.id } });
+
+    if (resourceCount === 0) {
+      strapi.log.info(`Creating default resource for user: ${user.username}`);
+      const community = allCommunities[0]; // Link to first community
+      const title = `Technical Note - ${user.username}`;
+
+      await strapi.db.query("api::resource.resource").create({
+        data: {
+          name: title,
+          description: `Automatically generated research note for ${user.username}.`,
+          resourceType: "practice-note",
+          status: "approved",
+          community: community?.id,
+          uploadedBy: user.id,
+          slug: title
+            .toLowerCase()
+            .replace(/ /g, "-")
+            .replace(/[^\w-]/g, ""),
+        },
+      });
+    }
   }
 
-  // 5. Collaboration Call and Profile permissions (Authenticated only)
-  const collaborationActions = [
+  // 3b. Synchronize French Translations for critical collections
+  strapi.log.info("Synchronizing French translations...");
+  await synchronizeTranslations(strapi, "api::interest.interest");
+  await synchronizeTranslations(
+    strapi,
+    "api::institution-type.institution-type",
+  );
+  await synchronizeTranslations(strapi, "api::institution.institution");
+
+  // Permissions synchronization
+  await syncPermissions(strapi);
+
+  // 5. Collaboration Call and Profile permissions (Authenticated only - Dev specific extensions)
+  const devCollaborationActions = [
     "api::auth.profile.getMe",
     "api::auth.profile.update",
     "api::auth.profile.me",
     "api::auth.profile.findUsers",
+    "api::auth.profile.mentees",
     "api::community-membership.community-membership.find",
     "api::community-membership.community-membership.leave",
     "api::collaboration-call.collaboration-call.createWithInvites",
@@ -596,6 +760,7 @@ const seed = async (strapi) => {
     "api::collaboration-invite.collaboration-invite.create",
     "api::collaboration-invite.collaboration-invite.find",
     "api::collaboration-invite.collaboration-invite.requestJoin",
+    "api::collaboration-invite.collaboration-invite.decline",
     "api::chat-message.chat-message.find",
     "api::chat-message.chat-message.create",
     "api::resource.resource.find",
@@ -609,17 +774,8 @@ const seed = async (strapi) => {
     "api::resource-comment.resource-comment.create",
   ];
 
-  for (const action of collaborationActions) {
+  for (const action of devCollaborationActions) {
     await grantPermission(strapi, "authenticated", action);
-  }
-
-  // 6. Revoke permissions that were previously granted in error.
-  const publicRevokes = [
-    "api::collaboration-call.collaboration-call.find",
-    "api::collaboration-call.collaboration-call.findOne",
-  ];
-  for (const action of publicRevokes) {
-    await revokePermission(strapi, "public", action);
   }
 };
 

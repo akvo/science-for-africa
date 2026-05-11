@@ -89,7 +89,7 @@ function Comment({ comment, onReply, t, depth = 0 }) {
             </span>
             {author?.roleType && (
               <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-primary-50 text-primary-700">
-                {author.roleType}
+                {author.roleType.name || author.roleType}
               </span>
             )}
             <span className="text-xs text-brand-gray-400">
@@ -290,7 +290,7 @@ export default function ViewResourceDialog({
                   </span>
                   {uploader?.roleType && (
                     <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-primary-50 text-primary-700">
-                      {uploader.roleType}
+                      {uploader.roleType.name || uploader.roleType}
                     </span>
                   )}
                 </div>

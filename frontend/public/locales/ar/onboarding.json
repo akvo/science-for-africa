@@ -1,0 +1,69 @@
+{
+  "steps": {
+    "step_count": "الخطوة {{current}} من {{total}}",
+    "back": "عودة",
+    "skip": "تخطي",
+    "confirm": "تأكيد",
+    "next": "التالي",
+    "finish": "إنهاء"
+  },
+  "step1": {
+    "title": "ما هو نوع الحساب الذي ترغب في إنشائه؟",
+    "description": "اختر نوع حسابك لتخصيص تجربتك.",
+    "individual_tab": "فردي",
+    "institution_tab": "مؤسسة",
+    "individual_desc": "ساعدنا في تحديد هويتك داخل منظومة إدارة البحث والابتكار.",
+    "institution_desc": "اختر الفئة التي تصف مؤسستك الأساسية بشكل أفضل.",
+    "role_label": "الدور",
+    "role_placeholder": "اختر الدور",
+    "institution_label": "المؤسسة",
+    "institution_placeholder": "اكتب اسم مؤسستك",
+    "no_institutions_found": "لم يتم العثور على مؤسسات. يمكنك المتابعة بما كتبته.",
+    "dismiss": "إغلاق"
+  },
+  "education_levels": {
+    "Postgraduate Student (Masters)": "طالب دراسات عليا (ماجستير)",
+    "Doctoral Candidate (PhD Student)": "طالب دكتوراه (PhD)",
+    "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)": "باحث مبتدئ / أخصائي إدارة الأبحاث (0 – 5 سنوات بعد المؤهل)",
+    "Mid-Career Researcher / Research management professional (6 – 15 years)": "باحث متوسط المسار المهني / أخصائي إدارة الأبحاث (6 – 15 سنة)",
+    "Senior Researcher / Research management professional (16+ years)": "باحث كبير / أخصائي إدارة الأبحاث (16+ سنة)",
+    "Emeritus / Retired": "أستاذ فخري / متقاعد",
+    "High School": "المدرسة الثانوية",
+    "Bachelor's Degree": "درجة البكالوريوس",
+    "Master's Degree": "درجة الماجستير",
+    "Doctorate (PhD)": "دكتوراه (PhD)",
+    "Post-Doctorate": "ما بعد الدكتوراه",
+    "Professional Certificate": "شهادة مهنية"
+  },
+  "step2": {
+    "title": "مجالات الاهتمام",
+    "description": "اختر على الأقل 3 مجالات تهمك أكثر.",
+    "search_placeholder": "ابحث عن الاهتمامات...",
+    "selected_count": "{{count}} مختارة",
+    "min_required": "الرجاء اختيار على الأقل 3 اهتمامات للمتابعة",
+    "loading_interests": "جاري تحميل الاهتمامات...",
+    "limit_reached": "تم الوصول إلى الحد الأقصى (5 اهتمامات)"
+  },
+  "step3": {
+    "title": "التعليم والمسار الوظيفي",
+    "description": "ساعدنا على فهم خلفيتك لتقديم فرص علمية أكثر صلة.",
+    "level_label": "مرحلة العمل",
+    "level_placeholder": "اختر مرحلة العمل",
+    "institution_label": "المؤسسة التعليمية (حيث درست)",
+    "institution_placeholder": "ابحث أو اكتب اسم جامعتك"
+  },
+  "step4": {
+    "title": "هل لديك ORCID؟",
+    "description": "ORCID يوفر معرفًا رقميًا مستمرًا يميزك عن باقي الباحثين.",
+    "orcid_label": "أدخل ORCID الخاص بك",
+    "orcid_placeholder": "0000-0000-0000-0000"
+  },
+  "step5": {
+    "title": "الانتماء الحالي",
+    "description": "سنقترح شركاء بحث وممولين بناءً على انتمائك المؤسسي الحالي.",
+    "search_label": "ابحث عن المؤسسة",
+    "search_placeholder": "اكتب اسم مؤسستك الرئيسية",
+    "finishing": "جارٍ الانتهاء...",
+    "complete_button": "إكمال الإعداد"
+  }
+}

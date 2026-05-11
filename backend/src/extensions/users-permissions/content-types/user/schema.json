@@ -118,7 +118,10 @@
       "enum": ["individual", "institution"]
     },
     "roleType": {
-      "type": "string"
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::individual-role.individual-role",
+      "inversedBy": "users"
     },
     "otpCode": {
       "type": "string"
@@ -169,6 +172,10 @@
       "type": "enumeration",
       "enum": ["en", "fr"],
       "default": "en"
+    },
+    "verified": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

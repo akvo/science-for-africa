@@ -15,5 +15,13 @@ module.exports = {
       path: "/collaboration-invites/request-join",
       handler: "collaboration-invite.requestJoin",
     },
+    {
+      method: "POST",
+      path: "/collaboration-invites/:id/decline",
+      handler: "collaboration-invite.decline",
+      config: {
+        auth: false,
+      },
+    },
   ],
 };

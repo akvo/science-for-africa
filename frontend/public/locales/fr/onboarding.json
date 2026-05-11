@@ -12,8 +12,8 @@
     "description": "Sélectionnez votre type de compte pour personnaliser votre expérience.",
     "individual_tab": "Individuel",
     "institution_tab": "Institution",
-    "individual_desc": "Lorem ipsum dolor sit amet consectetur. Rhoncus quis nunc ipsum pellentesque praesent facilisis tempor.",
-    "institution_desc": "Lorem ipsum dolor sit amet consectetur. Rhoncus quis nunc ipsum pellentesque praesent facilisis tempor.",
+    "individual_desc": "Aidez-nous à vous identifier au sein de l'écosystème de gestion de la recherche et de l'innovation.",
+    "institution_desc": "Sélectionnez la catégorie qui décrit le mieux votre institution principale.",
     "role_label": "Rôle",
     "role_placeholder": "Sélectionnez un rôle",
     "institution_label": "Institution",
@@ -21,17 +21,13 @@
     "no_institutions_found": "Aucune institution trouvée. Vous pouvez continuer avec ce que vous avez tapé.",
     "dismiss": "Ignorer"
   },
-  "roles": {
-    "Researcher": "Chercheur",
-    "Principal Investigator / Lab Lead": "Chercheur principal / Chef de laboratoire",
-    "Post-doctoral Fellow": "Chercheur post-doctoral",
-    "PhD Candidate": "Candidat au doctorat",
-    "Graduate / Undergraduate Student": "Étudiant diplômé / de premier cycle",
-    "Administrator / Support Staff": "Administrateur / Personnel de soutien",
-    "Program Manager / Funder representative": "Responsable de programme / Représentant du bailleur de fonds",
-    "External Reviewer": "Réviseur externe"
-  },
   "education_levels": {
+    "Postgraduate Student (Masters)": "Étudiant de troisième cycle (Master)",
+    "Doctoral Candidate (PhD Student)": "Candidat au doctorat (Étudiant en PhD)",
+    "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)": "Chercheur en début de carrière / Professionnel de la gestion de la recherche (0 – 5 ans après qualification)",
+    "Mid-Career Researcher / Research management professional (6 – 15 years)": "Chercheur en milieu de carrière / Professionnel de la gestion de la recherche (6 – 15 ans)",
+    "Senior Researcher / Research management professional (16+ years)": "Chercheur senior / Professionnel de la gestion de la recherche (16+ ans)",
+    "Emeritus / Retired": "Émérite / Retraité",
     "High School": "Lycée",
     "Bachelor's Degree": "Licence",
     "Master's Degree": "Master",
@@ -51,8 +47,8 @@
   "step3": {
     "title": "Éducation et carrière",
     "description": "Aidez-nous à comprendre votre parcours pour vous proposer des opportunités scientifiques plus pertinentes.",
-    "level_label": "Niveau d'études",
-    "level_placeholder": "Sélectionnez le niveau d'études",
+    "level_label": "Étape de carrière",
+    "level_placeholder": "Sélectionnez l'étape de carrière",
     "institution_label": "Institution d'enseignement (où vous avez étudié)",
     "institution_placeholder": "Rechercher ou taper votre université"
   },

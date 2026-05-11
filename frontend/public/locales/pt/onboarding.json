@@ -1,0 +1,69 @@
+{
+  "steps": {
+    "step_count": "Etapa {{current}} de {{total}}",
+    "back": "Voltar",
+    "skip": "Pular",
+    "confirm": "Confirmar",
+    "next": "Próximo",
+    "finish": "Concluir"
+  },
+  "step1": {
+    "title": "Qual tipo de conta você gostaria de criar?",
+    "description": "Selecione o tipo de conta para personalizar sua experiência.",
+    "individual_tab": "Individual",
+    "institution_tab": "Instituição",
+    "individual_desc": "Ajude-nos a identificar quem você é no ecossistema de gestão de pesquisa e inovação.",
+    "institution_desc": "Selecione a categoria que melhor descreve sua instituição principal.",
+    "role_label": "Função",
+    "role_placeholder": "Selecione a função",
+    "institution_label": "Instituição",
+    "institution_placeholder": "Digite o nome da sua instituição",
+    "no_institutions_found": "Nenhuma instituição encontrada. Você pode continuar com o que digitou.",
+    "dismiss": "Fechar"
+  },
+  "education_levels": {
+    "Postgraduate Student (Masters)": "Pós-graduando (Mestrado)",
+    "Doctoral Candidate (PhD Student)": "Doutorando (PhD)",
+    "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)": "Pesquisador em início de carreira / Profissional de gestão de pesquisa (0 – 5 anos após qualificação)",
+    "Mid-Career Researcher / Research management professional (6 – 15 years)": "Pesquisador em meio de carreira / Profissional de gestão de pesquisa (6 – 15 anos)",
+    "Senior Researcher / Research management professional (16+ years)": "Senior Researcher / Research management professional (16+ years)",
+    "Emeritus / Retired": "Emeritus / Retired",
+    "High School": "Ensino Médio",
+    "Bachelor's Degree": "Graduação",
+    "Master's Degree": "Mestrado",
+    "Doctorate (PhD)": "Doutorado (PhD)",
+    "Post-Doctorate": "Pós‑Doutorado",
+    "Professional Certificate": "Certificado Profissional"
+  },
+  "step2": {
+    "title": "Áreas de Interesse",
+    "description": "Selecione ao menos 3 áreas que mais lhe interessam.",
+    "search_placeholder": "Buscar interesses...",
+    "selected_count": "{{count}} selecionado(s)",
+    "min_required": "Selecione ao menos 3 interesses para continuar",
+    "loading_interests": "Carregando interesses...",
+    "limit_reached": "Máximo de 5 interesses permitido"
+  },
+  "step3": {
+    "title": "Educação e Carreira",
+    "description": "Ajude‑nos a entender seu histórico para oferecer oportunidades científicas mais relevantes.",
+    "level_label": "Estágio de carreira",
+    "level_placeholder": "Selecione o estágio de carreira",
+    "institution_label": "Instituição de ensino (onde estudou)",
+    "institution_placeholder": "Buscar ou digitar sua universidade"
+  },
+  "step4": {
+    "title": "Você tem ORCID?",
+    "description": "ORCID fornece um identificador digital persistente que o diferencia de todos os demais pesquisadores.",
+    "orcid_label": "Insira seu ORCID",
+    "orcid_placeholder": "0000-0000-0000-0000"
+  },
+  "step5": {
+    "title": "Afiliação atual",
+    "description": "Sugeriremos parceiros de pesquisa e financiadores com base na sua afiliação institucional atual.",
+    "search_label": "Buscar instituição",
+    "search_placeholder": "Digite sua instituição principal",
+    "finishing": "Finalizando...",
+    "complete_button": "Concluir Configuração"
+  }
+}

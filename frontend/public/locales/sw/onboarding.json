@@ -1,0 +1,69 @@
+{
+  "steps": {
+    "step_count": "Hatua {{current}} ya {{total}}",
+    "back": "Nyuma",
+    "skip": "Ruka",
+    "confirm": "Thibitisha",
+    "next": "Ifuatayo",
+    "finish": "Maliza"
+  },
+  "step1": {
+    "title": "Unapendelea kuunda akaunti ya aina gani?",
+    "description": "Chagua aina ya akaunti yako kuifanyia binafsi uzoefu wako.",
+    "individual_tab": "Mtu binafsi",
+    "institution_tab": "Shirika",
+    "individual_desc": "Tusaidie kukutambua wewe ni nani ndani ya mfumo wa usimamizi wa utafiti na uvumbuzi.",
+    "institution_desc": "Chagua aina inayofafanua vyema shirika lako kuu.",
+    "role_label": "Jukumu",
+    "role_placeholder": "Chagua jukumu",
+    "institution_label": "Shirika",
+    "institution_placeholder": "Andika jina la shirika lako",
+    "no_institutions_found": "Hakuna mashirika yaliyopatikana. Unaweza kuendelea na kile ulichokuchapisha.",
+    "dismiss": "Funga"
+  },
+  "education_levels": {
+    "Postgraduate Student (Masters)": "Mwanafunzi wa Uzamili (Masters)",
+    "Doctoral Candidate (PhD Student)": "Daktari (PhD)",
+    "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)": "Mtafiti wa ngazi ya chini / Mtaalamu wa usimamizi wa utafiti (miaka 0 – 5 baada ya kuhitimu)",
+    "Mid-Career Researcher / Research management professional (6 – 15 years)": "Mtafiti wa ngazi ya kati / Mtaalamu wa usimamizi wa utafiti (miaka 6 – 15)",
+    "Senior Researcher / Research management professional (16+ years)": "Mtafiti mkuu / Mtaalamu wa usimamizi wa utafiti (miaka 16+)",
+    "Emeritus / Retired": "Emeritus / Retired",
+    "High School": "Shule ya Upili",
+    "Bachelor's Degree": "Shahada ya Udhamini",
+    "Master's Degree": "Shahada ya Uzamili",
+    "Doctorate (PhD)": "Daktari (PhD)",
+    "Post-Doctorate": "Baada ya Daktari",
+    "Professional Certificate": "Cheti cha Kitaalamu"
+  },
+  "step2": {
+    "title": "Masomo ya Maslahi",
+    "description": "Chagua angalau 3 maslahi yanayokuvutia zaidi.",
+    "search_placeholder": "Tafuta maslahi...",
+    "selected_count": "{{count}} imechaguliwa",
+    "min_required": "Tafadhali chagua angalau 3 maslahi ili kuendelea",
+    "loading_interests": "Inapakia maslahi...",
+    "limit_reached": "Upeo wa 5 maslahi umefikiwa"
+  },
+  "step3": {
+    "title": "Elimu na Kazi",
+    "description": "Tusaidie kuelewa historia yako ili kutoa fursa za kisayansi zinazokubaliana zaidi.",
+    "level_label": "Hatua ya kazi",
+    "level_placeholder": "Chagua hatua ya kazi",
+    "institution_label": "Taasisi ya elimu (ambako ulisomea)",
+    "institution_placeholder": "Tafuta au andika chuo chako"
+  },
+  "step4": {
+    "title": "Una ORCID?",
+    "description": "ORCID hutoa kitambulisho cha kidijitali kinachodumu kinachokutofautisha kutoka kwa wasomi wengine.",
+    "orcid_label": "Weka ORCID yako",
+    "orcid_placeholder": "0000-0000-0000-0000"
+  },
+  "step5": {
+    "title": "Uhusiano wa sasa",
+    "description": "Tutapendekeza washirika wa utafiti na wafadhili kulingana na uhusiano wako wa taasisi ya sasa.",
+    "search_label": "Tafuta taasisi",
+    "search_placeholder": "Andika taasisi yako kuu",
+    "finishing": "Inakamilika...",
+    "complete_button": "Maliza Usanidi"
+  }
+}

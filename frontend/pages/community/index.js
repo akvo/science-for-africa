@@ -109,6 +109,7 @@ export default function CommunitiesPage() {
       setCommunities(items);
       setLoading(false);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated]);
 
   const handleJoin = async (community) => {

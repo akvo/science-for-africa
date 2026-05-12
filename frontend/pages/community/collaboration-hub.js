@@ -259,6 +259,7 @@ export default function CollaborationHubPage() {
         setLoading(false);
       },
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated]);
 
   // Collect unique topics for filter chips

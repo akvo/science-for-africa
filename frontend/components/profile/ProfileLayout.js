@@ -12,6 +12,20 @@ import { toast } from "sonner";
 import ProfileCard from "./ProfileCard";
 import CommunityLeftNav from "@/components/community/CommunityLeftNav";
 
+const useHasHydrated = () => {
+  const [hydrated, setHydrated] = React.useState(false);
+  useEffect(() => {
+    const unsub = useAuthStore.persist.onFinishHydration(() =>
+      setHydrated(true),
+    );
+    if (useAuthStore.persist.hasHydrated()) {
+      setTimeout(() => setHydrated(true), 0);
+    }
+    return unsub;
+  }, []);
+  return hydrated;
+};
+
 const TABS = [
   { id: "details", label: "tabs.details", href: "/profile" },
   {
@@ -40,6 +54,7 @@ const ProfileLayout = ({
   const { t } = useTranslation(["profile", "common"]);
   const { user: authUser, updateUser, isAuthenticated } = useAuthStore();
   const router = useRouter();
+  const hydrated = useHasHydrated();
 
   const user = profileUser || authUser;
   const isOwnProfile =
@@ -55,6 +70,18 @@ const ProfileLayout = ({
       });
     }
   }, [isAuthenticated, updateUser, isOwnProfile]);
+
+  // Auth Guard: Redirect to login if not authenticated after hydration
+  useEffect(() => {
+    if (hydrated && !isAuthenticated && variant === "private") {
+      router.push("/login");
+    }
+  }, [hydrated, isAuthenticated, router, variant]);
+
+  // Show loading state while hydrating
+  if (!hydrated && variant === "private") {
+    return <div className="min-h-screen bg-brand-gray-25" />;
+  }
 
   const handleShare = () => {
     const url =

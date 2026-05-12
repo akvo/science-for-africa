@@ -32,7 +32,8 @@
     "save_success": "Wasifu wako umesasishwa kwa mafanikio",
     "save_error": "Imeshindwa kusasisha wasifu",
     "not_provided": "Haijatolewa",
-    "no_bio": "Hakuna wasifu uliotolewa."
+    "no_bio": "Hakuna wasifu uliotolewa.",
+    "no_bio_public": "Hakuna wasifu uliotolewa."
   },
   "education_levels": {
     "Postgraduate Student (Masters)": "Mwanafunzi wa Uzamili (Masters)",
@@ -47,6 +48,13 @@
     "Doctorate (PhD)": "Daktari (PhD)",
     "Post-Doctorate": "Baada ya Daktari",
     "Professional Certificate": "Cheti cha Kitaalamu"
+  },
+  "languages": {
+    "en": "Kiingereza",
+    "fr": "Kifaransa",
+    "pt": "Kireno",
+    "ar": "Kiarabu",
+    "sw": "Kiswahili"
   },
   "tabs": {
     "profile": "Wasifu",
@@ -77,5 +85,62 @@
     "communities": "Jamii",
     "see_all": "Ona zote",
     "no_communities": "Bado hujaungana na jamii yoyote."
+  },
+  "communities": {
+    "description": "Dhibiti uanachama wako wa jamii na chunguza jamii mpya.",
+    "joined": "Umejiunga",
+    "leave_title": "Ondoka kwenye Jamii",
+    "leave_btn": "Ondoka",
+    "leave_confirm": "Je, una uhakika unataka kuondoka {{name}}?",
+    "leave_success": "Umeondoka {{name}} kwa mafanikio.",
+    "leave_error": "Imeshindwa kuondoka kwenye jamii. Tafadhali jaribu tena.",
+    "empty_title": "Bado huna jamii yoyote",
+    "empty_description": "Jiunge na jamii ili kuwasiliana na watafiti wengine na kushiriki katika majadiliano.",
+    "explore": "Chunguza jamii",
+    "no_description": "Hakuna maelezo yanayopatikana."
+  },
+  "collaboration": {
+    "title": "Ushirikiano Wangu",
+    "description": "Fuatilia miradi yako ya ushirikiano inayofanya kazi na iliyokamilika.",
+    "status_active": "Inafanya kazi",
+    "status_completed": "Imekamilika",
+    "valid_till": "Inafaa hadi:",
+    "ended": "Imeisha:",
+    "view_community": "Ona jamii",
+    "empty_title": "Bado huna ushirikiano wowote",
+    "empty_desc": "Anza kujiunga na jamii na kujibu mialiko ili kuanza kushirikiana.",
+    "explore_calls": "Chunguza mialiko ya ushirikiano"
+  },
+  "resources": {
+    "title": "Rasilimali Zangu",
+    "description": "Fikia na udhibiti nyaraka zako za kiufundi na ripoti ulizopakia.",
+    "empty_title": "Bado huna rasilimali yoyote",
+    "empty_description": "Chunguza jamii ili kupata na kuhifadhi rasilimali au pakia zako mwenyewe kwenye jamii.",
+    "explore": "Chunguza jamii",
+    "delete_confirm_title": "Futa Rasilimali",
+    "delete_confirm_description": "Je, una uhakika unataka kufuta rasilimali hii? Hatua hii haiwezi kubadilishwa."
+  },
+  "mentorship": {
+    "title": "Ushauri",
+    "description": "Ona na udhibiti uhusiano wako wa ushauri.",
+    "header_space": "Nafasi ya ushirikiano",
+    "header_mentees": "Watumiaji unaowashauri",
+    "header_education": "Elimu",
+    "header_actions": "Hatua",
+    "collaborator": "Mshiriki",
+    "researcher": "Mtafiti",
+    "empty_title": "Bado huna watu unaowashauri",
+    "empty_desc": "Wakati utakapoteuliwa kama mshauri kwenye ushirikiano, watu unaowashauri wataonekana hapa.",
+    "explore_calls": "Chunguza mialiko ya ushirikiano"
+  },
+  "roles": {
+    "Researcher": "Mtafiti",
+    "Principal Investigator / Lab Lead": "Mchunguzi Mkuu / Kiongozi wa Maabara",
+    "Post-doctoral Fellow": "Mwanachama wa Baada ya Daktari",
+    "PhD Candidate": "Mgombea wa PhD",
+    "Graduate / Undergraduate Student": "Mwanafunzi wa Uzamili / Shahada ya Kwanza",
+    "Administrator / Support Staff": "Msimamizi / Msaidizi",
+    "Program Manager / Funder representative": "Meneja wa Mpango / Mwakilishi wa Mfadhili",
+    "External Reviewer": "Mkaguzi wa Nje"
   }
 }

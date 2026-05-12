@@ -56,7 +56,7 @@ const Custom404 = () => {
         </div>
 
         <div className="mt-32 pt-8 border-t border-brand-gray-100 text-sm text-brand-gray-400">
-          <p>{t("common.copyright")}</p>
+          <p>{t("copyright")}</p>
         </div>
       </div>
     </>

@@ -136,7 +136,7 @@ const Footer = () => {
             />
           </div>
           <p className="text-sm font-medium text-brand-gray-400">
-            {t("footer.copyright")}
+            {t("copyright")}
           </p>
         </div>
       </div>

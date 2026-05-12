@@ -118,7 +118,9 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate, isPublic }) => {
           value={
             user?.roleType?.name ||
             (typeof user?.roleType === "string"
-              ? t(`roles.${user.roleType}`)
+              ? t(`roles.${user.roleType}`, {
+                  defaultValue: t("details.not_provided"),
+                })
               : null)
           }
           t={t}
@@ -133,7 +135,9 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate, isPublic }) => {
           <div className="md:col-span-8 space-y-4">
             <p className="text-[15px] text-brand-gray-500 font-medium">
               {user?.educationLevel
-                ? t(`education_levels.${user.educationLevel}`)
+                ? t(`education_levels.${user.educationLevel}`, {
+                    defaultValue: t("details.not_provided"),
+                  })
                 : t("details.not_provided")}
             </p>
             <p className="text-[15px] text-brand-gray-500 font-medium">

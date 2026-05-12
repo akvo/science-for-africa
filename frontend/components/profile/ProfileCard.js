@@ -77,7 +77,9 @@ const ProfileCard = ({
               <p className="text-xs text-brand-gray-500 mt-0.5">
                 {user?.roleType?.name ||
                   (typeof user?.roleType === "string"
-                    ? t(`profile:roles.${user.roleType}`)
+                    ? t(`profile:roles.${user.roleType}`, {
+                        defaultValue: t("profile:details.not_provided"),
+                      })
                     : t("profile:details.not_provided"))}
               </p>
               <div className="mt-2">
@@ -177,7 +179,9 @@ const ProfileCard = ({
         <div className="space-y-1">
           <p className="text-[15px] font-bold text-brand-gray-900 leading-snug">
             {user?.educationLevel
-              ? t(`profile:education_levels.${user.educationLevel}`)
+              ? t(`profile:education_levels.${user.educationLevel}`, {
+                  defaultValue: t("profile:details.not_provided"),
+                })
               : t("profile:details.not_provided")}
           </p>
           <p className="text-sm text-brand-gray-500">
@@ -197,7 +201,7 @@ const ProfileCard = ({
                 <Badge
                   key={tag}
                   variant="outline"
-                  className="rounded-xl px-3 py-1.5 text-[12px] font-medium text-brand-gray-600 border-brand-gray-300 bg-white"
+                  className="h-auto rounded-xl px-3 py-1.5 text-[12px] font-medium text-brand-gray-600 border-brand-gray-300 bg-white leading-relaxed"
                 >
                   #{tag.replace("#", "")}
                 </Badge>

@@ -26,7 +26,7 @@
       "locale": null
     },
     {
-      "documentId": "wu9i2jtr1dnm89whob1v00n2",
+      "documentId": "p49r58gzd0n295jrsogkha0s",
       "action": "api::auth.profile.getMe",
       "locale": null
     },
@@ -66,7 +66,7 @@
       "locale": null
     },
     {
-      "documentId": "fb3jlvl0y1dpupqx4uzqldf3",
+      "documentId": "m8p44j3igudzul6lq7atggs6",
       "action": "api::collaboration-call.collaboration-call.create-with-invites",
       "locale": null
     },

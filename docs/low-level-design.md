@@ -503,6 +503,9 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 
 **Soft Migration Strategy.** To evolve critical data (Interests, Countries, Institution Types, and Individual Roles) without breaking legacy user profiles, the platform implements a non-destructive soft migration strategy. Existing records are never deleted; instead, they are marked with an `isActive: false` flag if they are removed from the system constants. The onboarding flow, profile selection, and platform filters are restricted to `isActive: true` records. This ensures that historical data on user profiles (which may store these values as references or strings) remains intact and visible while only the new, approved data is available for future selections.
 
+> [!IMPORTANT]
+> **Permission Enforcement**: In Strapi v5, if a user role lacks `find` permission for a related content-type (e.g., `interest-category`), any attempt to filter by that relation will result in a `400 ValidationError: Invalid key`. This is a security feature to prevent leaking the existence of related schemas. The production seeder (`npm run seed:prod`) must be run to ensure these permissions are synchronized.
+
 **Community Membership Synchronization Pattern.** To ensure data consistency between the primary `Community` entity (which tracks `members` for counts and listing) and the `CommunityMembership` collection (which drives the "My Communities" profile tab), the backend implements a dual-write pattern in the `join` and `leave` controllers.
 - **Join**: Creates a `CommunityMembership` record AND links the user to the community's `members` relation.
 - **Leave**: Deletes the `CommunityMembership` record (using a robust ID/Object manual filter to handle Strapi v5 variations) AND removes the user from the community's `members` relation.
@@ -797,7 +800,7 @@ Specific content types have localization enabled:
 
 ### 6.3 Locale Awareness
 
-- **API Client**: The `api-client.js` includes a request interceptor that automatically extracts the current locale from the URL subpath and appends it as a `locale` query parameter to all Strapi requests, **excluding public authentication endpoints** to ensure compatibility with Strapi's built-in controllers.
+- **API Client**: The `api-client.js` includes a request interceptor that automatically extracts the current locale from the URL subpath and appends it as a `locale` query parameter to all Strapi requests. It includes logic to prevent duplicate locale injection if the parameter is already present in the URL or manual params, and **excludes public authentication endpoints** to ensure compatibility with Strapi's built-in controllers.
 - **Dictionary Parity**: All translation files (`common.json`, `profile.json`, etc.) maintain 100% key parity across all 5 locales. This prevents hydration errors and ensures that fallbacks are unnecessary for UI labels.
 - **Namespace Resolution**: Critical global keys such as `style_guide` and `copyright` are positioned at the top level of the `common` namespace to facilitate direct lookup from any component without deep nesting resolution issues.
 - **UI Switcher**: A premium `LocaleSwitcher` component in the `Navbar` allows users to toggle between all 5 supported languages. This triggers a client-side route change via `next/router` with the new locale.

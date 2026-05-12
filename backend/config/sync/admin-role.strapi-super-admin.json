@@ -11,12 +11,7 @@
       "actionParameters": {},
       "subject": "api::chat-message.chat-message",
       "properties": {
-        "fields": [
-          "text",
-          "collaborationCall",
-          "author",
-          "attachment"
-        ]
+        "fields": ["text", "collaborationCall", "author", "attachment"]
       },
       "conditions": [],
       "locale": null
@@ -45,12 +40,7 @@
       "actionParameters": {},
       "subject": "api::chat-message.chat-message",
       "properties": {
-        "fields": [
-          "text",
-          "collaborationCall",
-          "author",
-          "attachment"
-        ]
+        "fields": ["text", "collaborationCall", "author", "attachment"]
       },
       "conditions": [],
       "locale": null
@@ -61,12 +51,7 @@
       "actionParameters": {},
       "subject": "api::chat-message.chat-message",
       "properties": {
-        "fields": [
-          "text",
-          "collaborationCall",
-          "author",
-          "attachment"
-        ]
+        "fields": ["text", "collaborationCall", "author", "attachment"]
       },
       "conditions": [],
       "locale": null
@@ -236,12 +221,7 @@
       "actionParameters": {},
       "subject": "api::community-membership.community-membership",
       "properties": {
-        "fields": [
-          "user",
-          "community",
-          "role",
-          "joinedAt"
-        ]
+        "fields": ["user", "community", "role", "joinedAt"]
       },
       "conditions": [],
       "locale": null
@@ -270,12 +250,7 @@
       "actionParameters": {},
       "subject": "api::community-membership.community-membership",
       "properties": {
-        "fields": [
-          "user",
-          "community",
-          "role",
-          "joinedAt"
-        ]
+        "fields": ["user", "community", "role", "joinedAt"]
       },
       "conditions": [],
       "locale": null
@@ -286,12 +261,7 @@
       "actionParameters": {},
       "subject": "api::community-membership.community-membership",
       "properties": {
-        "fields": [
-          "user",
-          "community",
-          "role",
-          "joinedAt"
-        ]
+        "fields": ["user", "community", "role", "joinedAt"]
       },
       "conditions": [],
       "locale": null
@@ -407,19 +377,8 @@
       "actionParameters": {},
       "subject": "api::country.country",
       "properties": {
-        "fields": [
-          "name",
-          "isActive",
-          "sortOrder",
-          "institutions"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "isActive", "sortOrder", "institutions"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -430,13 +389,7 @@
       "actionParameters": {},
       "subject": "api::country.country",
       "properties": {
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -447,13 +400,7 @@
       "actionParameters": {},
       "subject": "api::country.country",
       "properties": {
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -464,19 +411,8 @@
       "actionParameters": {},
       "subject": "api::country.country",
       "properties": {
-        "fields": [
-          "name",
-          "isActive",
-          "sortOrder",
-          "institutions"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "isActive", "sortOrder", "institutions"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -487,19 +423,8 @@
       "actionParameters": {},
       "subject": "api::country.country",
       "properties": {
-        "fields": [
-          "name",
-          "isActive",
-          "sortOrder",
-          "institutions"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "isActive", "sortOrder", "institutions"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -510,19 +435,8 @@
       "actionParameters": {},
       "subject": "api::individual-role.individual-role",
       "properties": {
-        "fields": [
-          "name",
-          "isActive",
-          "sortOrder",
-          "users"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "isActive", "sortOrder", "users"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -533,13 +447,7 @@
       "actionParameters": {},
       "subject": "api::individual-role.individual-role",
       "properties": {
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -550,13 +458,7 @@
       "actionParameters": {},
       "subject": "api::individual-role.individual-role",
       "properties": {
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -567,19 +469,8 @@
       "actionParameters": {},
       "subject": "api::individual-role.individual-role",
       "properties": {
-        "fields": [
-          "name",
-          "isActive",
-          "sortOrder",
-          "users"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "isActive", "sortOrder", "users"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -590,19 +481,8 @@
       "actionParameters": {},
       "subject": "api::individual-role.individual-role",
       "properties": {
-        "fields": [
-          "name",
-          "isActive",
-          "sortOrder",
-          "users"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "isActive", "sortOrder", "users"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -613,19 +493,8 @@
       "actionParameters": {},
       "subject": "api::institution-membership.institution-membership",
       "properties": {
-        "fields": [
-          "user",
-          "institution",
-          "type",
-          "verificationStatus"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["user", "institution", "type", "verificationStatus"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -636,13 +505,7 @@
       "actionParameters": {},
       "subject": "api::institution-membership.institution-membership",
       "properties": {
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -653,13 +516,7 @@
       "actionParameters": {},
       "subject": "api::institution-membership.institution-membership",
       "properties": {
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -670,19 +527,8 @@
       "actionParameters": {},
       "subject": "api::institution-membership.institution-membership",
       "properties": {
-        "fields": [
-          "user",
-          "institution",
-          "type",
-          "verificationStatus"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["user", "institution", "type", "verificationStatus"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -693,19 +539,8 @@
       "actionParameters": {},
       "subject": "api::institution-membership.institution-membership",
       "properties": {
-        "fields": [
-          "user",
-          "institution",
-          "type",
-          "verificationStatus"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["user", "institution", "type", "verificationStatus"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -716,19 +551,8 @@
       "actionParameters": {},
       "subject": "api::institution-type.institution-type",
       "properties": {
-        "fields": [
-          "name",
-          "isActive",
-          "sortOrder",
-          "institutions"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "isActive", "sortOrder", "institutions"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -739,13 +563,7 @@
       "actionParameters": {},
       "subject": "api::institution-type.institution-type",
       "properties": {
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -756,13 +574,7 @@
       "actionParameters": {},
       "subject": "api::institution-type.institution-type",
       "properties": {
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -773,19 +585,8 @@
       "actionParameters": {},
       "subject": "api::institution-type.institution-type",
       "properties": {
-        "fields": [
-          "name",
-          "isActive",
-          "sortOrder",
-          "institutions"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "isActive", "sortOrder", "institutions"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -796,19 +597,8 @@
       "actionParameters": {},
       "subject": "api::institution-type.institution-type",
       "properties": {
-        "fields": [
-          "name",
-          "isActive",
-          "sortOrder",
-          "institutions"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "isActive", "sortOrder", "institutions"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -827,13 +617,7 @@
           "memberships",
           "alumni"
         ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -844,13 +628,7 @@
       "actionParameters": {},
       "subject": "api::institution.institution",
       "properties": {
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -861,13 +639,7 @@
       "actionParameters": {},
       "subject": "api::institution.institution",
       "properties": {
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -886,13 +658,7 @@
           "memberships",
           "alumni"
         ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -911,13 +677,7 @@
           "memberships",
           "alumni"
         ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -928,18 +688,8 @@
       "actionParameters": {},
       "subject": "api::interest-category.interest-category",
       "properties": {
-        "fields": [
-          "name",
-          "interests",
-          "isActive"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "interests", "isActive"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -950,13 +700,7 @@
       "actionParameters": {},
       "subject": "api::interest-category.interest-category",
       "properties": {
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -967,13 +711,7 @@
       "actionParameters": {},
       "subject": "api::interest-category.interest-category",
       "properties": {
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -984,18 +722,8 @@
       "actionParameters": {},
       "subject": "api::interest-category.interest-category",
       "properties": {
-        "fields": [
-          "name",
-          "interests",
-          "isActive"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "interests", "isActive"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -1006,18 +734,8 @@
       "actionParameters": {},
       "subject": "api::interest-category.interest-category",
       "properties": {
-        "fields": [
-          "name",
-          "interests",
-          "isActive"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "interests", "isActive"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -1028,18 +746,8 @@
       "actionParameters": {},
       "subject": "api::interest.interest",
       "properties": {
-        "fields": [
-          "name",
-          "interestCategory",
-          "isActive"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "interestCategory", "isActive"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -1050,13 +758,7 @@
       "actionParameters": {},
       "subject": "api::interest.interest",
       "properties": {
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -1067,13 +769,7 @@
       "actionParameters": {},
       "subject": "api::interest.interest",
       "properties": {
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -1084,18 +780,8 @@
       "actionParameters": {},
       "subject": "api::interest.interest",
       "properties": {
-        "fields": [
-          "name",
-          "interestCategory",
-          "isActive"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "interestCategory", "isActive"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -1106,18 +792,8 @@
       "actionParameters": {},
       "subject": "api::interest.interest",
       "properties": {
-        "fields": [
-          "name",
-          "interestCategory",
-          "isActive"
-        ],
-        "locales": [
-          "en",
-          "fr",
-          "pt",
-          "sw",
-          "ar"
-        ]
+        "fields": ["name", "interestCategory", "isActive"],
+        "locales": ["en", "fr", "pt", "sw", "ar"]
       },
       "conditions": [],
       "locale": null
@@ -1128,13 +804,7 @@
       "actionParameters": {},
       "subject": "api::resource-comment.resource-comment",
       "properties": {
-        "fields": [
-          "text",
-          "resource",
-          "author",
-          "parentComment",
-          "replies"
-        ]
+        "fields": ["text", "resource", "author", "parentComment", "replies"]
       },
       "conditions": [],
       "locale": null
@@ -1163,13 +833,7 @@
       "actionParameters": {},
       "subject": "api::resource-comment.resource-comment",
       "properties": {
-        "fields": [
-          "text",
-          "resource",
-          "author",
-          "parentComment",
-          "replies"
-        ]
+        "fields": ["text", "resource", "author", "parentComment", "replies"]
       },
       "conditions": [],
       "locale": null
@@ -1180,13 +844,7 @@
       "actionParameters": {},
       "subject": "api::resource-comment.resource-comment",
       "properties": {
-        "fields": [
-          "text",
-          "resource",
-          "author",
-          "parentComment",
-          "replies"
-        ]
+        "fields": ["text", "resource", "author", "parentComment", "replies"]
       },
       "conditions": [],
       "locale": null

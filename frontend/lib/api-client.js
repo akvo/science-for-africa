@@ -59,10 +59,18 @@ apiClient.interceptors.request.use(
         ? pathParts[1]
         : "en";
 
-      config.params = {
-        ...config.params,
-        locale: currentLocale,
-      };
+      // Only inject if not already present in params or as a string in the URL
+      const hasLocaleInParams = config.params && config.params.locale;
+      const hasLocaleInUrl =
+        config.url &&
+        (config.url.includes("locale=") || config.url.includes("locale%3D"));
+
+      if (!hasLocaleInParams && !hasLocaleInUrl) {
+        config.params = {
+          ...config.params,
+          locale: currentLocale,
+        };
+      }
     }
 
     // Handle Content-Type for uploads and JSON

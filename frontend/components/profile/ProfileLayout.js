@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, ChevronDown } from "lucide-react";
 import { getMe } from "@/lib/strapi";
+import { toast } from "sonner";
 import ProfileCard from "./ProfileCard";
 import CommunityLeftNav from "@/components/community/CommunityLeftNav";
 
@@ -56,7 +57,8 @@ const ProfileLayout = ({
   }, [isAuthenticated, updateUser, isOwnProfile]);
 
   const handleShare = () => {
-    const url = window.location.origin + `/profile/${user?.id || ""}`;
+    const url =
+      window.location.origin + `/profile/${user?.documentId || user?.id || ""}`;
     if (navigator.share) {
       navigator
         .share({
@@ -66,7 +68,7 @@ const ProfileLayout = ({
         .catch(() => {});
     } else {
       navigator.clipboard.writeText(url);
-      alert(
+      toast.success(
         t("profile:share.copied_to_clipboard", {
           defaultValue: "Profile link copied to clipboard!",
         }),

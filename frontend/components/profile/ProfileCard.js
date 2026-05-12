@@ -10,6 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, Share2, UserPlus, UserMinus } from "lucide-react";
 import VerificationBadge from "@/components/shared/VerificationBadge";
@@ -95,12 +96,17 @@ const ProfileCard = ({
                 <MoreHorizontal size={20} />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem onClick={handleShare} className="gap-2">
-                <Share2 size={16} />
-                {t("profile:share.share_profile")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
+            <DropdownMenuPortal>
+              <DropdownMenuContent align="end" className="w-auto min-w-60">
+                <DropdownMenuItem
+                  onClick={handleShare}
+                  className="gap-2 cursor-pointer whitespace-nowrap"
+                >
+                  <Share2 size={16} />
+                  {t("profile:share.share_profile")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenuPortal>
           </DropdownMenu>
         </div>
 

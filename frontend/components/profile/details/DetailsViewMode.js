@@ -8,6 +8,7 @@ import { ViewRow } from "./SharedComponents";
 import VerificationBadge from "@/components/shared/VerificationBadge";
 import { getStrapiMedia, validateOrcid } from "@/lib/strapi";
 import { useTranslation } from "next-i18next";
+import { toast } from "sonner";
 
 const DetailsViewMode = ({ user, t, onEdit, onUserUpdate, isPublic }) => {
   const { t: tCommon } = useTranslation("common");
@@ -45,7 +46,8 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate, isPublic }) => {
               size="sm"
               onClick={() => {
                 const url =
-                  window.location.origin + `/profile/${user?.id || ""}`;
+                  window.location.origin +
+                  `/profile/${user?.documentId || user?.id || ""}`;
                 if (navigator.share) {
                   navigator
                     .share({
@@ -55,7 +57,7 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate, isPublic }) => {
                     .catch(() => {});
                 } else {
                   navigator.clipboard.writeText(url);
-                  alert(t("profile:share.copied_to_clipboard"));
+                  toast.success(t("profile:share.copied_to_clipboard"));
                 }
               }}
               className="px-6 font-bold shadow-sm gap-2"

@@ -641,12 +641,7 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "username",
-        "email",
-        "confirmed"
-      ],
+      "list": ["id", "username", "email", "confirmed"],
       "edit": [
         [
           {

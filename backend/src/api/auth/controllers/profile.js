@@ -210,7 +210,11 @@ module.exports = ({ strapi }) => ({
               inst = await strapi.db
                 .query("api::institution.institution")
                 .create({
-                  data: { name, verified: false, locale: "en" },
+                  data: {
+                    name,
+                    verified: false,
+                    locale: ctx.query.locale || "en",
+                  },
                 });
             }
             data.highestEducationInstitution = inst.id;
@@ -260,7 +264,11 @@ module.exports = ({ strapi }) => ({
               inst = await strapi.db
                 .query("api::institution.institution")
                 .create({
-                  data: { name, verified: false, locale: "en" },
+                  data: {
+                    name,
+                    verified: false,
+                    locale: ctx.query.locale || "en",
+                  },
                 });
             }
           } else if (targetId) {
@@ -302,7 +310,7 @@ module.exports = ({ strapi }) => ({
                   institution: inst.id,
                   isPrimary: false,
                   verified: false,
-                  locale: "en",
+                  locale: ctx.query.locale || "en",
                 },
               });
           }

@@ -27,7 +27,11 @@ const PublicProfilePage = () => {
 
 export const getServerSideProps = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ["profile", "common"])),
+    ...(await serverSideTranslations(locale, [
+      "profile",
+      "common",
+      "community",
+    ])),
   },
 });
 

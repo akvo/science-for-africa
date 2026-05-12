@@ -66,7 +66,11 @@ const ProfileLayout = ({
         .catch(() => {});
     } else {
       navigator.clipboard.writeText(url);
-      alert(t("profile:share.copied_to_clipboard"));
+      alert(
+        t("profile:share.copied_to_clipboard", {
+          defaultValue: "Profile link copied to clipboard!",
+        }),
+      );
     }
   };
 
@@ -160,7 +164,9 @@ const ProfileLayout = ({
                         variant="outline"
                         className="rounded-full border-brand-gray-200 text-brand-gray-700 h-10 px-6 font-bold"
                       >
-                        Sort by
+                        {t("common:community.sort_by", {
+                          defaultValue: "Sort by",
+                        })}
                         <ChevronDown size={16} className="ml-2" />
                       </Button>
                     </div>

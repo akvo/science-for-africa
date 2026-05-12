@@ -8,7 +8,7 @@ import { fetchPublicProfile, followUser, unfollowUser } from "@/lib/strapi";
 const PublicProfileWrapper = ({ children, activeTab = "posts" }) => {
   const router = useRouter();
   const { id } = router.query;
-  const { t } = useTranslation(["profile", "common"]);
+  const { t } = useTranslation(["profile", "common", "community"]);
 
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);

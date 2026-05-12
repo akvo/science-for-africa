@@ -48,11 +48,34 @@
     "Post-Doctorate": "Baada ya Daktari",
     "Professional Certificate": "Cheti cha Kitaalamu"
   },
-  "languages": {
-    "en": "Kiingereza",
-    "fr": "Kifaransa",
-    "pt": "Kireno",
-    "ar": "Kiarabu",
-    "sw": "Kiswahili"
+  "tabs": {
+    "profile": "Wasifu",
+    "public_profile": "Wasifu wa Umma",
+    "posts": "Machapisho",
+    "details": "Maelezo",
+    "communities": "Jamii Zangu",
+    "resources": "Rasilimali",
+    "content": "Maudhui",
+    "saved": "Iliyohifadhiwa",
+    "events": "Matukio yangu",
+    "collaboration": "Ushirikiano",
+    "courses": "Kozi na vyeti",
+    "mentorship": "Ushauri"
+  },
+  "share": {
+    "share_profile": "Shiriki Wasifu",
+    "copied_to_clipboard": "Kiungo kimenakiliwa!"
+  },
+  "actions": {
+    "follow": "Fuata",
+    "unfollow": "Acha kufuata"
+  },
+  "sidebar": {
+    "subscribers": "Wafuatiliaji",
+    "posts": "Machapisho",
+    "education": "Elimu",
+    "communities": "Jamii",
+    "see_all": "Ona zote",
+    "no_communities": "Bado hujaungana na jamii yoyote."
   }
 }

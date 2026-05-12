@@ -48,11 +48,34 @@
     "Post-Doctorate": "Pós‑Doutorado",
     "Professional Certificate": "Certificado Profissional"
   },
-  "languages": {
-    "en": "Inglês",
-    "fr": "Francês",
-    "pt": "Português",
-    "ar": "Árabe",
-    "sw": "Suaíli"
+  "tabs": {
+    "profile": "Perfil",
+    "public_profile": "Perfil Público",
+    "posts": "Postagens",
+    "details": "Detalhes",
+    "communities": "Minhas Comunidades",
+    "resources": "Recursos",
+    "content": "Conteúdo",
+    "saved": "Salvos",
+    "events": "Meus eventos",
+    "collaboration": "Colaboração",
+    "courses": "Cursos e certificações",
+    "mentorship": "Mentoria"
+  },
+  "share": {
+    "share_profile": "Compartilhar Perfil",
+    "copied_to_clipboard": "Link copiado para a área de transferência!"
+  },
+  "actions": {
+    "follow": "Seguir",
+    "unfollow": "Deixar de seguir"
+  },
+  "sidebar": {
+    "subscribers": "Inscritos",
+    "posts": "Postagens",
+    "education": "Educação",
+    "communities": "Comunidades",
+    "see_all": "Ver tudo",
+    "no_communities": "Nenhuma comunidade associada ainda."
   }
 }

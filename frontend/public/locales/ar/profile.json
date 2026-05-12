@@ -55,6 +55,36 @@
     "ar": "العربية",
     "sw": "السواحيلية"
   },
+  "tabs": {
+    "profile": "الملف الشخصي",
+    "public_profile": "الملف الشخصي العام",
+    "posts": "المنشورات",
+    "details": "التفاصيل",
+    "communities": "مجتمعاتي",
+    "resources": "الموارد",
+    "content": "المحتوى",
+    "saved": "المحفوظات",
+    "events": "فعالياتي",
+    "collaboration": "التعاون",
+    "courses": "الدورات والشهادات",
+    "mentorship": "الإرشاد"
+  },
+  "share": {
+    "share_profile": "مشاركة الملف الشخصي",
+    "copied_to_clipboard": "تم نسخ الرابط إلى الحافظة!"
+  },
+  "actions": {
+    "follow": "متابعة",
+    "unfollow": "إلغاء المتابعة"
+  },
+  "sidebar": {
+    "subscribers": "المشتركين",
+    "posts": "المنشورات",
+    "education": "التعليم",
+    "communities": "المجتمعات",
+    "see_all": "عرض الكل",
+    "no_communities": "لم يتم الانضمام إلى أي مجتمع بعد."
+  },
   "roles": {
     "Researcher": "باحث",
     "Principal Investigator / Lab Lead": "باحث رئيسي / رئيس مختبر",

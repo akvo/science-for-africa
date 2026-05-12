@@ -105,9 +105,12 @@ export default function CommunityAboutCard({ community }) {
 
       {rules.length ? (
         <div className="border-t border-brand-gray-100 pt-4">
-          <h3 className="mb-3 text-sm font-semibold text-brand-gray-900">
+          <h3 className="text-sm font-semibold text-brand-gray-900">
             {t("community.community_rules")}
           </h3>
+          <p className="mt-1 mb-3 text-xs text-brand-gray-500">
+            {community.about || "Lorem ipsum dolor sit amet consectetur. Nunc et posuere cras bibendum cras. Diam felis sagittis suspendisse scelerisque quam eu."}
+          </p>
           <ol className="flex flex-col">
             {rules.map((r, i) => (
               <li key={r.id}>

@@ -50,9 +50,6 @@ export default function CommunityHeader({
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="md" onClick={onCreatePost}>
-            {t("community.create_post")}
-          </Button>
           <Button variant="primary" size="md" onClick={onJoin}>
             {isJoined ? t("community.joined") : t("community.join")}
           </Button>

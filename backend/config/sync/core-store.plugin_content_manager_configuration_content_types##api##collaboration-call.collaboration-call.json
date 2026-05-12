@@ -147,6 +147,20 @@
           "sortable": true
         }
       },
+      "visibility": {
+        "edit": {
+          "label": "visibility",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "visibility",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "invites": {
         "edit": {
           "label": "invites",
@@ -286,6 +300,12 @@
           },
           {
             "name": "community",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "visibility",
             "size": 6
           }
         ]

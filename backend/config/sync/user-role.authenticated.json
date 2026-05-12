@@ -6,12 +6,27 @@
   "locale": null,
   "permissions": [
     {
+      "documentId": "m4ibdx41p9i4q2ma40r4l4x0",
+      "action": "api::auth.auth.registrationStatus",
+      "locale": null
+    },
+    {
+      "documentId": "cmp37s4dmyjw1favgbdwsx1c",
+      "action": "api::auth.auth.resendOtp",
+      "locale": null
+    },
+    {
+      "documentId": "qgsv08qjz32mu0h14cfz1r0d",
+      "action": "api::auth.auth.verifyOtp",
+      "locale": null
+    },
+    {
       "documentId": "k5qee6qg0mk823ls5o7ug4yx",
       "action": "api::auth.profile.findUsers",
       "locale": null
     },
     {
-      "documentId": "h49k4jth39597zt0xzllcu1a",
+      "documentId": "p49r58gzd0n295jrsogkha0s",
       "action": "api::auth.profile.getMe",
       "locale": null
     },
@@ -46,7 +61,7 @@
       "locale": null
     },
     {
-      "documentId": "t1w5rvphe5esgqvcw5ny0ts0",
+      "documentId": "m8p44j3igudzul6lq7atggs6",
       "action": "api::collaboration-call.collaboration-call.create-with-invites",
       "locale": null
     },
@@ -86,6 +101,11 @@
       "locale": null
     },
     {
+      "documentId": "fc4m3ggaegty39m63hcbzrpr",
+      "action": "api::collaboration-invite.collaboration-invite.requestJoin",
+      "locale": null
+    },
+    {
       "documentId": "jpazzzttr9lnitz7k24r0aue",
       "action": "api::community-membership.community-membership.find",
       "locale": null
@@ -116,6 +136,11 @@
       "locale": null
     },
     {
+      "documentId": "bib8qxryd4p7hq4d9al0qv0e",
+      "action": "api::country.country.find",
+      "locale": null
+    },
+    {
       "documentId": "indivrolefind001",
       "action": "api::individual-role.individual-role.find",
       "locale": null
@@ -131,13 +156,18 @@
       "locale": null
     },
     {
-      "documentId": "orcidvalidate001",
-      "action": "api::orcid-auth.orcid-auth.validate",
+      "documentId": "e53j1a4b21hdhojp0ps7c0le",
+      "action": "api::interest-category.interest-category.find",
       "locale": null
     },
     {
       "documentId": "wt0awwpc8bl6zktg1spucdgs",
       "action": "api::interest.interest.find",
+      "locale": null
+    },
+    {
+      "documentId": "orcidvalidate001",
+      "action": "api::orcid-auth.orcid-auth.validate",
       "locale": null
     },
     {

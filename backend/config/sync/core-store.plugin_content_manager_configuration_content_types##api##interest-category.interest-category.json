@@ -1,5 +1,5 @@
 {
-  "key": "plugin_content_manager_configuration_content_types::api::resource.resource",
+  "key": "plugin_content_manager_configuration_content_types::api::interest-category.interest-category",
   "value": {
     "settings": {
       "bulkable": true,
@@ -33,51 +33,9 @@
           "sortable": true
         }
       },
-      "description": {
+      "interests": {
         "edit": {
-          "label": "description",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "description",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "resourceType": {
-        "edit": {
-          "label": "resourceType",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "resourceType",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "file": {
-        "edit": {
-          "label": "file",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "file",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "community": {
-        "edit": {
-          "label": "community",
+          "label": "interests",
           "description": "",
           "placeholder": "",
           "visible": true,
@@ -85,52 +43,23 @@
           "mainField": "name"
         },
         "list": {
-          "label": "community",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "uploadedBy": {
-        "edit": {
-          "label": "uploadedBy",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true,
-          "mainField": "username"
-        },
-        "list": {
-          "label": "uploadedBy",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "status": {
-        "edit": {
-          "label": "status",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "status",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "topics": {
-        "edit": {
-          "label": "topics",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "topics",
+          "label": "interests",
           "searchable": false,
           "sortable": false
+        }
+      },
+      "isActive": {
+        "edit": {
+          "label": "isActive",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "isActive",
+          "searchable": true,
+          "sortable": true
         }
       },
       "createdAt": {
@@ -204,8 +133,8 @@
       "list": [
         "id",
         "name",
-        "resourceType",
-        "file"
+        "interests",
+        "isActive"
       ],
       "edit": [
         [
@@ -214,45 +143,19 @@
             "size": 6
           },
           {
-            "name": "resourceType",
+            "name": "interests",
             "size": 6
           }
         ],
         [
           {
-            "name": "file",
-            "size": 6
-          },
-          {
-            "name": "community",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "uploadedBy",
-            "size": 6
-          },
-          {
-            "name": "status",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "topics",
-            "size": 12
-          }
-        ],
-        [
-          {
-            "name": "description",
-            "size": 6
+            "name": "isActive",
+            "size": 4
           }
         ]
       ]
     },
-    "uid": "api::resource.resource"
+    "uid": "api::interest-category.interest-category"
   },
   "type": "object",
   "environment": null,

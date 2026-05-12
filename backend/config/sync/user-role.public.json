@@ -36,6 +36,11 @@
       "locale": null
     },
     {
+      "documentId": "g9qkn6r8ca0fpnnppe3qvglz",
+      "action": "api::country.country.find",
+      "locale": null
+    },
+    {
       "documentId": "indivrolefindpub001",
       "action": "api::individual-role.individual-role.find",
       "locale": null
@@ -48,6 +53,11 @@
     {
       "documentId": "d2kupfblkd5ybfc6hdjidhjo",
       "action": "api::institution.institution.find",
+      "locale": null
+    },
+    {
+      "documentId": "ru371vi7e2fhv5aypr1vwiz8",
+      "action": "api::interest-category.interest-category.find",
       "locale": null
     },
     {

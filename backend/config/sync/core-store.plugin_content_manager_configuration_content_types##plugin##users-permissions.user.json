@@ -515,6 +515,20 @@
           "sortable": true
         }
       },
+      "verified": {
+        "edit": {
+          "label": "verified",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "verified",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -752,6 +766,10 @@
           {
             "name": "languagePreferences",
             "size": 6
+          },
+          {
+            "name": "verified",
+            "size": 4
           }
         ]
       ]

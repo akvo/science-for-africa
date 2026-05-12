@@ -508,6 +508,8 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 - **Leave**: Deletes the `CommunityMembership` record (using a robust ID/Object manual filter to handle Strapi v5 variations) AND removes the user from the community's `members` relation.
 This pattern prevents stale membership listings in the user profile even if the direct relation is somehow decoupled.
 
+**Secure Profile Routing via documentId.** To prevent ID enumeration and enhance security, all public profile routes transition from numeric IDs to secure Strapi v5 `documentId`. The `ProfileLink` component standardizes this routing across the platform, while the backend implements a dual-lookup strategy (`$or: [{id}, {documentId}]`) to ensure backward compatibility and seamless navigation from various platform contexts (chat, resources, communities).
+
 **Unified Profile & Community Layout.** To ensure visual consistency across the platform, the `ProfileLayout` adopts a 3-column architecture (Left Nav, Main Feed, Right Profile Card) mirroring the `Community` pages. This unified layout facilitates seamless navigation between personal identity and community-driven collaboration features.
 
 
@@ -781,12 +783,12 @@ The frontend uses a Server-Side Rendering (SSR) handshake via `getServerSideProp
 
 ## 6. Globalization & Localization
 
-The platform supports multi-language content (English as default, French for launch) using a full-stack localization strategy.
+The platform supports multi-language content across 5 target locales (English, French, Portuguese, Arabic, and Swahili) using a full-stack localization strategy.
 
 ### 6.1 Architecture
 
 - **Backend (Strapi)**: Uses the `@strapi/plugin-i18n` to enable localized fields and entries. Localized content is fetched via the `locale` query parameter.
-- **Frontend (Next.js)**: Uses `next-i18next` for subpath routing (`/` for English, `/fr` for French) and translation management.
+- **Frontend (Next.js)**: Uses `next-i18next` for subpath routing (`/en`, `/fr`, `/pt`, `/ar`, `/sw`) and translation management.
 
 ### 6.2 Data Model Changes
 
@@ -796,8 +798,9 @@ Specific content types have localization enabled:
 ### 6.3 Locale Awareness
 
 - **API Client**: The `api-client.js` includes a request interceptor that automatically extracts the current locale from the URL subpath and appends it as a `locale` query parameter to all Strapi requests, **excluding public authentication endpoints** to ensure compatibility with Strapi's built-in controllers.
-- **UI Switcher**: A premium `LocaleSwitcher` component in the `Navbar` allows users to toggle languages. This triggers a client-side route change via `next/router` with the new locale.
-- **Fallback Logic**: The frontend implements a "Fallback-to-Default" pattern via `fetchLocalized`. If a localized dataset (e.g., Institutions) is empty in a secondary locale (like French), the system automatically defaults to the English version to prevent empty UI states.
+- **UI Switcher**: A premium `LocaleSwitcher` component in the `Navbar` allows users to toggle between all 5 supported languages. This triggers a client-side route change via `next/router` with the new locale.
+- **Dynamic Backend Creation**: Custom controllers (e.g., `auth/me`, `profile.js`) extract the active locale from the request context to ensure on-the-fly entities like institutions are tagged with the correct language metadata.
+- **Fallback Logic**: The frontend implements a "Fallback-to-Default" pattern via `fetchLocalized`. If a localized dataset (e.g., Institutions) is empty in a secondary locale (like Swahili), the system automatically defaults to the English version to prevent empty UI states.
 - **Automated Synchronization**: The system's `seeder.js` automatically clones core English data (Interests, Institutions) to available secondary locales during development seeding, ensuring translation parity across the platform.
 - **Locale-Aware Uniqueness**: Integrity is enforced at the application layer via `lifecycles.js` to ensure names are unique **within** a specific locale, allowing the same name (e.g., "Oxford University") to exist in multiple language records (different locales) without conflict.
 

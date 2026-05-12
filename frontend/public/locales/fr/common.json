@@ -45,12 +45,30 @@
   },
   "common": {
     "loading": "Chargement...",
-    "back": "Retour"
+    "back": "Retour",
+    "edit": "Modifier",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "not_provided": "Non fourni",
+    "coming_soon": {
+      "title": "Bientôt disponible",
+      "description": "Nous travaillons dur pour vous apporter cette fonctionnalité. Restez à l'écoute !",
+      "back_home": "Retour à l'accueil"
+    },
+    "error_404": {
+      "title": "Page non trouvée",
+      "description": "Désolé, la page que vous recherchez n'existe pas ou a été déplacée.",
+      "back_home": "Retour à l'accueil"
+    }
   },
   "verification": {
     "pending": "En attente",
     "tooltip_user": "en attente de confirmation des détails du compte",
-    "tooltip_institution": "en attente de confirmation des détails de l'institution"
+    "tooltip_institution": "en attente de confirmation des détails de l'institution",
+    "verified": "Vérifié",
+    "verify_orcid": "Vérifier ORCID",
+    "verifying": "Vérification...",
+    "orcid_verify_failed": "Impossible de vérifier cet ORCID iD"
   },
   "resources": {
     "all": "Tous",
@@ -68,6 +86,8 @@
     "select_type": "Sélectionner le type de ressource",
     "resource_name": "Nom de la ressource",
     "name_placeholder": "Tapez quelque chose",
+    "description": "Description",
+    "description_placeholder": "Ajoutez une brève description de cette ressource",
     "upload_file": "Téléverser un fichier",
     "click_to_upload": "Cliquez pour téléverser",
     "or_drag_drop": "ou glisser-déposer",
@@ -101,7 +121,6 @@
     "next": "Suivant",
     "public": "Public",
     "uploaded": "Téléversé",
-    "description": "Description",
     "no_description": "Aucune description fournie.",
     "discussion": "Discussion",
     "comment": "commentaire",
@@ -160,7 +179,9 @@
     "description": "Faire progresser l'avenir de la science en Afrique. Rejoignez la communauté de scientifiques, de chercheurs et d'innovateurs.",
     "home_title": "Système de Conception | Guide de Style",
     "onboarding_title": "Complétez Votre Profil",
-    "community_title": "Communauté"
+    "community_title": "Communauté",
+    "profile_title": "Profil professionnel | Science for Africa",
+    "profile_description": "Gérez votre identité professionnelle, vos communautés et vos collaborations."
   },
   "footer": {
     "newsletter": {

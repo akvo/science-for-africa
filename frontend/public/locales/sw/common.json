@@ -59,6 +59,8 @@
     "select_type": "Chagua aina ya rasilimali",
     "resource_name": "Jina la rasilimali",
     "name_placeholder": "Andika lolote",
+    "description": "Maelezo",
+    "description_placeholder": "Ongeza maelezo mafupi ya rasilimali hii",
     "upload_file": "Pakia faili",
     "click_to_upload": "Bofya kupakia",
     "or_drag_drop": "au buruta na uache",
@@ -92,7 +94,6 @@
     "next": "Ifuatayo",
     "public": "Umma",
     "uploaded": "Imepakiwa",
-    "description": "Maelezo",
     "no_description": "Hakuna maelezo",
     "discussion": "Majadiliano",
     "comment": "Maoni",
@@ -176,7 +177,11 @@
   "verification": {
     "pending": "Inasubiri",
     "tooltip_user": "Maelezo ya akaunti ya mtumiaji yanasasishwa",
-    "tooltip_institution": "Maelezo ya akaunti ya taasisi yasasishwa"
+    "tooltip_institution": "Maelezo ya akaunti ya taasisi yasasishwa",
+    "verified": "Imethibitishwa",
+    "verify_orcid": "Thibitisha ORCID",
+    "verifying": "Tunathibitisha...",
+    "orcid_verify_failed": "Haikuweza kuthibitisha hii ID ya ORCID"
   },
   "footer": {
     "newsletter": {

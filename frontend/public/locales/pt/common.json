@@ -59,6 +59,8 @@
     "select_type": "Selecionar tipo de recurso",
     "resource_name": "Nome do recurso",
     "name_placeholder": "Digite algo",
+    "description": "Descrição",
+    "description_placeholder": "Adicione uma breve descrição deste recurso",
     "upload_file": "Enviar arquivo",
     "click_to_upload": "Clique para enviar",
     "or_drag_drop": "ou arraste e solte",
@@ -92,7 +94,6 @@
     "next": "Próximo",
     "public": "Público",
     "uploaded": "Enviado",
-    "description": "Descrição",
     "no_description": "Sem descrição",
     "discussion": "Discussão",
     "comment": "Comentário",
@@ -176,7 +177,11 @@
   "verification": {
     "pending": "Pendente",
     "tooltip_user": "detalhes da conta do usuário em confirmação",
-    "tooltip_institution": "detalhes da conta institucional em confirmação"
+    "tooltip_institution": "detalhes da conta institucional em confirmação",
+    "verified": "Verificado",
+    "verify_orcid": "Verificar ORCID",
+    "verifying": "Verificando...",
+    "orcid_verify_failed": "Não foi possível verificar este ORCID iD"
   },
   "footer": {
     "newsletter": {

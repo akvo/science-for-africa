@@ -132,5 +132,15 @@
     "empty_title": "You don't have any mentees yet",
     "empty_desc": "When you are assigned as a mentor to a collaboration, your mentees will appear here.",
     "explore_calls": "Explore collaboration calls"
+  },
+  "roles": {
+    "Researcher": "Researcher",
+    "Principal Investigator / Lab Lead": "Principal Investigator / Lab Lead",
+    "Post-doctoral Fellow": "Post-doctoral Fellow",
+    "PhD Candidate": "PhD Candidate",
+    "Graduate / Undergraduate Student": "Graduate / Undergraduate Student",
+    "Administrator / Support Staff": "Administrator / Support Staff",
+    "Program Manager / Funder representative": "Program Manager / Funder representative",
+    "External Reviewer": "External Reviewer"
   }
 }

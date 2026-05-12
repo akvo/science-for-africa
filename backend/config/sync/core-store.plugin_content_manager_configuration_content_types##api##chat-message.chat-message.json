@@ -63,6 +63,20 @@
           "sortable": true
         }
       },
+      "attachment": {
+        "edit": {
+          "label": "attachment",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "attachment",
+          "searchable": false,
+          "sortable": false
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -151,6 +165,10 @@
         [
           {
             "name": "author",
+            "size": 6
+          },
+          {
+            "name": "attachment",
             "size": 6
           }
         ]

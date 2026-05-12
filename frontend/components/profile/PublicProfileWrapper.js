@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 import ProfileLayout from "@/components/profile/ProfileLayout";
 import LoadingState from "@/components/shared/LoadingState";
 import { fetchPublicProfile, followUser, unfollowUser } from "@/lib/strapi";
+import { useAuthStore } from "@/lib/auth-store";
 
 const PublicProfileWrapper = ({ children, activeTab = "posts" }) => {
   const router = useRouter();
@@ -16,6 +17,8 @@ const PublicProfileWrapper = ({ children, activeTab = "posts" }) => {
   const [subscriberCount, setSubscriberCount] = useState(0);
   const [isLoadingFollow, setIsLoadingFollow] = useState(false);
 
+  const jwt = useAuthStore((state) => state.jwt);
+
   useEffect(() => {
     if (id) {
       fetchPublicProfile(id).then((data) => {
@@ -27,7 +30,7 @@ const PublicProfileWrapper = ({ children, activeTab = "posts" }) => {
         setLoading(false);
       });
     }
-  }, [id]);
+  }, [id, jwt]);
 
   const handleFollowToggle = async () => {
     if (!id) return;

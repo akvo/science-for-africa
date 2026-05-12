@@ -63,6 +63,36 @@
           "sortable": true
         }
       },
+      "parentComment": {
+        "edit": {
+          "label": "parentComment",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "documentId"
+        },
+        "list": {
+          "label": "parentComment",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "replies": {
+        "edit": {
+          "label": "replies",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "documentId"
+        },
+        "list": {
+          "label": "replies",
+          "searchable": false,
+          "sortable": false
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -151,6 +181,16 @@
         [
           {
             "name": "author",
+            "size": 6
+          },
+          {
+            "name": "parentComment",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "replies",
             "size": 6
           }
         ]

@@ -22,16 +22,34 @@ module.exports = (plugin) => {
 
       try {
         // Fetch target user with followers to check if already following
-        const targetUser = await strapi.db
-          .query("plugin::users-permissions.user")
-          .findOne({
-            where: { id: targetUserId },
-            populate: ["followers"],
-          });
+        // Support both numeric id and documentId
+        let targetUser;
+        const isNumeric =
+          !isNaN(targetUserId) && !isNaN(parseFloat(targetUserId));
+
+        if (isNumeric) {
+          targetUser = await strapi.db
+            .query("plugin::users-permissions.user")
+            .findOne({
+              where: { id: targetUserId },
+              populate: ["followers"],
+            });
+        }
+
+        if (!targetUser) {
+          targetUser = await strapi.db
+            .query("plugin::users-permissions.user")
+            .findOne({
+              where: { documentId: targetUserId },
+              populate: ["followers"],
+            });
+        }
 
         if (!targetUser) {
           return ctx.notFound("User not found");
         }
+
+        const actualTargetId = targetUser.id;
 
         const isFollowing = targetUser.followers?.some(
           (f) => f.id === currentUserId,
@@ -46,7 +64,7 @@ module.exports = (plugin) => {
 
         await strapi.entityService.update(
           "plugin::users-permissions.user",
-          targetUserId,
+          actualTargetId,
           {
             data: {
               followers: {
@@ -78,16 +96,34 @@ module.exports = (plugin) => {
 
       try {
         // Fetch target user with followers to check if following
-        const targetUser = await strapi.db
-          .query("plugin::users-permissions.user")
-          .findOne({
-            where: { id: targetUserId },
-            populate: ["followers"],
-          });
+        // Support both numeric id and documentId
+        let targetUser;
+        const isNumeric =
+          !isNaN(targetUserId) && !isNaN(parseFloat(targetUserId));
+
+        if (isNumeric) {
+          targetUser = await strapi.db
+            .query("plugin::users-permissions.user")
+            .findOne({
+              where: { id: targetUserId },
+              populate: ["followers"],
+            });
+        }
+
+        if (!targetUser) {
+          targetUser = await strapi.db
+            .query("plugin::users-permissions.user")
+            .findOne({
+              where: { documentId: targetUserId },
+              populate: ["followers"],
+            });
+        }
 
         if (!targetUser) {
           return ctx.notFound("User not found");
         }
+
+        const actualTargetId = targetUser.id;
 
         const isFollowing = targetUser.followers?.some(
           (f) => f.id === currentUserId,
@@ -102,7 +138,7 @@ module.exports = (plugin) => {
 
         await strapi.entityService.update(
           "plugin::users-permissions.user",
-          targetUserId,
+          actualTargetId,
           {
             data: {
               followers: {

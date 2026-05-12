@@ -772,6 +772,9 @@ const seed = async (strapi) => {
     "api::community.community.leave",
     "api::resource-comment.resource-comment.find",
     "api::resource-comment.resource-comment.create",
+    "plugin::users-permissions.user.follow",
+    "plugin::users-permissions.user.unfollow",
+    "api::auth.profile.publicProfile",
   ];
 
   for (const action of devCollaborationActions) {

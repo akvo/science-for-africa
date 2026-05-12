@@ -21,6 +21,11 @@
       "locale": null
     },
     {
+      "documentId": "x8jh20bdcyuh3g16y7y78zdb",
+      "action": "api::auth.profile.publicProfile",
+      "locale": null
+    },
+    {
       "documentId": "k13k8p81qmamn60rcwnc6hbn",
       "action": "api::collaboration-invite.collaboration-invite.accept",
       "locale": null
@@ -36,6 +41,11 @@
       "locale": null
     },
     {
+      "documentId": "g9qkn6r8ca0fpnnppe3qvglz",
+      "action": "api::country.country.find",
+      "locale": null
+    },
+    {
       "documentId": "indivrolefindpub001",
       "action": "api::individual-role.individual-role.find",
       "locale": null
@@ -48,6 +58,11 @@
     {
       "documentId": "d2kupfblkd5ybfc6hdjidhjo",
       "action": "api::institution.institution.find",
+      "locale": null
+    },
+    {
+      "documentId": "ru371vi7e2fhv5aypr1vwiz8",
+      "action": "api::interest-category.interest-category.find",
       "locale": null
     },
     {
@@ -93,6 +108,16 @@
     {
       "documentId": "l11dp06tiunl66akr5nx57x6",
       "action": "plugin::users-permissions.auth.sendEmailConfirmation",
+      "locale": null
+    },
+    {
+      "documentId": "j3tq5wuavubetmws46q3t705",
+      "action": "plugin::users-permissions.user.follow",
+      "locale": null
+    },
+    {
+      "documentId": "zbu966q7tpzt6zbqdm7irm4e",
+      "action": "plugin::users-permissions.user.unfollow",
       "locale": null
     }
   ]

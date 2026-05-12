@@ -70,7 +70,6 @@ module.exports = {
       path: "/auth/profile/:id",
       handler: "profile.publicProfile",
       config: {
-        auth: false,
         description: "Get public profile by ID",
       },
     },

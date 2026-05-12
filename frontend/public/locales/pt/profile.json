@@ -70,6 +70,11 @@
     "courses": "Cursos e certificações",
     "mentorship": "Mentoria"
   },
+  "posts": {
+    "empty_title": "Nenhum post ainda",
+    "empty_description_public": "Posts públicos aparecerão aqui",
+    "empty_description_own": "Seus posts aparecerão aqui"
+  },
   "share": {
     "share_profile": "Compartilhar Perfil",
     "copied_to_clipboard": "Link copiado para a área de transferência!"

@@ -25,7 +25,7 @@ const Custom404 = () => {
           <span className="text-sm font-bold text-brand-teal-900">SFA</span>
           <span className="text-brand-gray-300">/</span>
           <span className="text-sm font-medium text-brand-gray-500">
-            Error 404
+            {t("common.error_404.subtitle")}
           </span>
         </div>
 
@@ -56,7 +56,7 @@ const Custom404 = () => {
         </div>
 
         <div className="mt-32 pt-8 border-t border-brand-gray-100 text-sm text-brand-gray-400">
-          <p>© 2026 Science for Africa. All rights reserved.</p>
+          <p>{t("common.copyright")}</p>
         </div>
       </div>
     </>

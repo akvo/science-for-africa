@@ -45,18 +45,29 @@
   },
   "common": {
     "loading": "Chargement...",
+    "loading_dots": "Chargement...",
     "back": "Retour",
     "edit": "Modifier",
     "save": "Enregistrer",
+    "save_changes": "Enregistrer les modifications",
     "cancel": "Annuler",
+    "cancel_request": "Annuler la demande",
+    "type_primary_institution": "Tapez votre institution principale",
     "not_provided": "Non fourni",
+    "button": "Bouton",
+    "new": "Nouveau",
     "coming_soon": {
-      "title": "Bientôt disponible",
-      "description": "Nous travaillons dur pour vous apporter cette fonctionnalité. Restez à l'écoute !",
-      "back_home": "Retour à l'accueil"
+      "title": "Bientôt Disponible",
+      "description": "Nous travaillons dur pour vous proposer cette fonctionnalité. Restez à l'écoute !",
+      "back_home": "Retour à l'accueil",
+      "feature_optimization_title": "Intégration de la plateforme",
+      "feature_optimization_desc": "Nous optimisons actuellement cette fonctionnalité pour votre flux de travail de recherche.",
+      "secure_environment_title": "Environnement sécurisé",
+      "secure_environment_desc": "Garantir les normes les plus élevées de sécurité des données et d'accessibilité."
     },
     "error_404": {
-      "title": "Page non trouvée",
+      "title": "Page Non Trouvée",
+      "subtitle": "Erreur 404",
       "description": "Désolé, la page que vous recherchez n'existe pas ou a été déplacée.",
       "back_home": "Retour à l'accueil"
     }
@@ -216,6 +227,52 @@
         "contact": "Contact"
       }
     },
-    "copyright": "© Science for Africa 2026"
+    "copyright": "© Science for Africa 2026",
+    "style_guide": {
+      "components": "Composants",
+      "design_system": "Système de Design",
+      "official_button_system": "Système de Boutons Officiel",
+      "standard_sizes": "Tailles Standard (Échelle Figma)",
+      "standard_sizes_desc": "Du SM au 2XL avec des hauteurs et des marges précises.",
+      "social_auth": "Authentification Sociale",
+      "social_auth_desc": "Variante dédiée à la connexion Google et Apple.",
+      "login_to_sfa": "Connexion à SFA",
+      "or_individual": "Ou Individuel",
+      "continue_with_google": "Continuer avec Google",
+      "form_elements": "Éléments de Formulaire et Typographie",
+      "inputs_selection": "Entrées et Sélection",
+      "inputs_selection_desc": "Typographie cohérente et hauteur premium de 48px.",
+      "email_address": "Adresse Email",
+      "country_selector": "Sélecteur de Pays (Police de titres appliquée)",
+      "select_country": "Sélectionnez un pays",
+      "selection_controls": "Contrôles de Sélection",
+      "selection_controls_desc": "États actifs Bleu Canard avec des rayons de 8px/complets.",
+      "push_notifications": "Notifications Push",
+      "agree_to_terms": "Accepter les Conditions",
+      "premium_ui": "Éléments d'Interface Premium",
+      "avatar_scale": "Échelle d'Avatar",
+      "avatar_scale_desc": "Tailles de marque du XS (24px) au 2XL (64px).",
+      "dialogs_modals": "Dialogues et Fenêtres Modales",
+      "dialogs_modals_desc": "Affiné pour SFA avec un rayon de 16px.",
+      "open_modal": "Ouvrir l'exemple de modal",
+      "profile_info": "Informations du Profil",
+      "profile_info_desc": "Mettez à jour votre profil de chercheur et vos détails d'affiliation ici.",
+      "full_name": "Nom Complet",
+      "community_card": "Carte de la Communauté",
+      "members_count": "{{count}} Membres",
+      "community_desc": "Explorer de nouvelles frontières dans la collaboration scientifique et technologique en Afrique.",
+      "join_community": "Rejoindre la Communauté",
+      "event_card": "Carte de l'Événement",
+      "upcoming": "À venir",
+      "event_title": "Sommet de la Science 2026",
+      "event_desc": "Rejoignez les plus grands scientifiques à Nairobi pour le sommet annuel de SFA.",
+      "register_now": "S'inscrire Maintenant",
+      "metadata": "Métadonnées",
+      "badges": "Badges",
+      "primary": "Primaire",
+      "secondary": "Secondaire",
+      "success": "Succès",
+      "error_lg": "Erreur LG"
+    }
   }
 }

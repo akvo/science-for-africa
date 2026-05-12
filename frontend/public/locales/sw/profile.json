@@ -70,6 +70,11 @@
     "courses": "Kozi na vyeti",
     "mentorship": "Ushauri"
   },
+  "posts": {
+    "empty_title": "Bado hakuna machapisho",
+    "empty_description_public": "Machapisho ya umma yataonekana hapa",
+    "empty_description_own": "Machapisho yako yataonekana hapa"
+  },
   "share": {
     "share_profile": "Shiriki Wasifu",
     "copied_to_clipboard": "Kiungo kimenakiliwa!"

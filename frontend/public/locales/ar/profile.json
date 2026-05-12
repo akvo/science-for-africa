@@ -70,6 +70,11 @@
     "courses": "الدورات والشهادات",
     "mentorship": "الإرشاد"
   },
+  "posts": {
+    "empty_title": "لا توجد منشورات بعد",
+    "empty_description_public": "المنشورات العامة ستظهر هنا",
+    "empty_description_own": "منشوراتك ستظهر هنا"
+  },
   "share": {
     "share_profile": "مشاركة الملف الشخصي",
     "copied_to_clipboard": "تم نسخ الرابط إلى الحافظة!"

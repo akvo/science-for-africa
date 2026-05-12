@@ -111,7 +111,7 @@ const Footer = () => {
                           variant="secondary"
                           className="bg-brand-teal-50 text-brand-teal-600 border-brand-teal-100 px-2 py-0.5 text-[10px] font-bold"
                         >
-                          New
+                          {t("common.new")}
                         </Badge>
                       )}
                     </Link>

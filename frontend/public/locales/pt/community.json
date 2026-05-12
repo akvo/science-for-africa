@@ -60,5 +60,22 @@
     "replying_to": "Respondendo a",
     "post": "Postar",
     "reply": "Responder"
+  },
+  "call_detail": {
+    "loading": "Carregando chamada de colaboração...",
+    "not_found": "Chamada de colaboração não encontrada.",
+    "request_to_join": "Pedir para participar",
+    "requested": "Solicitado",
+    "joined": "Ingressou",
+    "back": "Voltar"
+  },
+  "chat": {
+    "no_messages": "Ainda não há mensagens.",
+    "no_messages_can_post": "Ainda não há mensagens — comece a conversa abaixo.",
+    "you": "Você",
+    "write_placeholder": "Escreva uma mensagem...",
+    "attach_file": "Anexar arquivo",
+    "send": "Enviar",
+    "cancel": "Cancelar"
   }
 }

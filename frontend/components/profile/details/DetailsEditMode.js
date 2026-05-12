@@ -432,7 +432,7 @@ const DetailsEditMode = ({
                     {loadingRoles ? (
                       <div className="p-2 text-sm text-brand-gray-400 flex items-center gap-2">
                         <Loader2 size={14} className="animate-spin" />
-                        Loading...
+                        {tCommon("loading_dots")}
                       </div>
                     ) : (
                       roles.map((role) => (
@@ -515,7 +515,7 @@ const DetailsEditMode = ({
                           {loadingInstitutions ? (
                             <div className="flex items-center gap-2 text-brand-gray-400">
                               <Loader2 size={14} className="animate-spin" />
-                              Loading...
+                              {tCommon("loading_dots")}
                             </div>
                           ) : (
                             <SelectValue>
@@ -539,7 +539,7 @@ const DetailsEditMode = ({
                           {loadingInstitutions ? (
                             <div className="p-2 text-sm text-brand-gray-400 flex items-center gap-2">
                               <Loader2 size={14} className="animate-spin" />
-                              Loading...
+                              {tCommon("loading_dots")}
                             </div>
                           ) : (
                             institutions.map((inst) => (
@@ -574,7 +574,7 @@ const DetailsEditMode = ({
                     }}
                     className="text-sm font-bold text-brand-teal-600 hover:bg-brand-teal-50 px-0 ml-auto flex"
                   >
-                    Cancel Request
+                    {tCommon("cancel_request")}
                   </Button>
                 </div>
               ) : (
@@ -627,7 +627,7 @@ const DetailsEditMode = ({
                       {loadingInstitutions ? (
                         <div className="flex items-center gap-2 text-brand-gray-400">
                           <Loader2 size={14} className="animate-spin" />
-                          Loading...
+                          {tCommon("loading_dots")}
                         </div>
                       ) : (
                         <SelectValue>
@@ -654,7 +654,7 @@ const DetailsEditMode = ({
                       {loadingInstitutions ? (
                         <div className="p-2 text-sm text-brand-gray-400 flex items-center gap-2">
                           <Loader2 size={14} className="animate-spin" />
-                          Loading...
+                          {tCommon("loading_dots")}
                         </div>
                       ) : (
                         institutions.map((inst) => (
@@ -676,7 +676,7 @@ const DetailsEditMode = ({
               <div className="animate-in slide-in-from-top-2 duration-300 space-y-4">
                 <Input
                   {...register("affiliationInstitution.name")}
-                  placeholder="Type your primary institution"
+                  placeholder={tCommon("type_primary_institution")}
                   className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 w-full"
                 />
                 <Button
@@ -688,7 +688,7 @@ const DetailsEditMode = ({
                   }}
                   className="text-sm font-bold text-brand-teal-600 hover:bg-brand-teal-50 px-0 ml-auto flex"
                 >
-                  Cancel Request
+                  {tCommon("cancel_request")}
                 </Button>
               </div>
             ) : (

@@ -70,6 +70,11 @@
     "courses": "Cours et certifications",
     "mentorship": "Mentorat"
   },
+  "posts": {
+    "empty_title": "Aucun article pour le moment",
+    "empty_description_public": "Les articles publics apparaîtront ici",
+    "empty_description_own": "Vos articles apparaîtront ici"
+  },
   "share": {
     "share_profile": "Partager le profil",
     "copied_to_clipboard": "Lien copié dans le presse-papiers !"

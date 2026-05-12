@@ -60,5 +60,22 @@
     "replying_to": "Kujibu kwa",
     "post": "Chapisha",
     "reply": "Jibu"
+  },
+  "call_detail": {
+    "loading": "Inapakia wito wa ushirikiano...",
+    "not_found": "Wito wa ushirikiano haujapatikana.",
+    "request_to_join": "Omba kujiunga",
+    "requested": "Imeombwa",
+    "joined": "Imejiunga",
+    "back": "Nyuma"
+  },
+  "chat": {
+    "no_messages": "Bado hakuna ujumbe.",
+    "no_messages_can_post": "Bado hakuna ujumbe — anza mazungumzo hapa chini.",
+    "you": "Wewe",
+    "write_placeholder": "Andika ujumbe...",
+    "attach_file": "Ambatisha faili",
+    "send": "Tuma",
+    "cancel": "Ghairi"
   }
 }

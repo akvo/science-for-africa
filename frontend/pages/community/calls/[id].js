@@ -78,7 +78,7 @@ function mapChatMessage(row, currentUserId) {
  * `api::chat-message` content type.
  */
 export default function CollaborationCallDetailPage() {
-  const { t } = useTranslation("profile");
+  const { t } = useTranslation(["profile", "common", "community"]);
   const router = useRouter();
   const { id } = router.query;
   const user = useAuthStore((state) => state.user);
@@ -241,7 +241,9 @@ export default function CollaborationCallDetailPage() {
   if (loading) {
     return (
       <div className="flex flex-1 items-center justify-center py-20 text-sm text-brand-gray-500">
-        Loading collaboration call...
+        {t("community:call_detail.loading", {
+          defaultValue: "Loading collaboration call...",
+        })}
       </div>
     );
   }
@@ -249,7 +251,9 @@ export default function CollaborationCallDetailPage() {
   if (!call) {
     return (
       <div className="flex flex-1 items-center justify-center py-20 text-sm text-brand-gray-500">
-        Collaboration call not found.
+        {t("community:call_detail.not_found", {
+          defaultValue: "Collaboration call not found.",
+        })}
       </div>
     );
   }
@@ -281,6 +285,7 @@ export default function CollaborationCallDetailPage() {
         mentors={mentors}
         joinedUsers={joinedUsers}
         attachments={chatAttachments}
+        t={t}
       />
 
       <section className="flex min-w-0 flex-col">
@@ -293,6 +298,7 @@ export default function CollaborationCallDetailPage() {
           showRequestJoin={showRequestJoin}
           onRequestJoin={handleRequestJoin}
           onBack={() => router.back()}
+          t={t}
         />
         <ChatThread messages={messages} canPost={canPost} />
         {canPost ? (
@@ -327,12 +333,17 @@ function CommunityDetailsSidebar({
   mentors = [],
   joinedUsers = [],
   attachments = [],
+  t,
 }) {
   const [showUsersModal, setShowUsersModal] = useState(false);
   if (!community) {
     return (
       <aside className="flex flex-col gap-5 border-b border-brand-gray-100 bg-brand-gray-50 p-5 lg:border-b-0 lg:border-r lg:min-h-[calc(100vh-114px)]">
-        <p className="text-xs text-brand-gray-500">Loading community...</p>
+        <p className="text-xs text-brand-gray-500">
+          {t("community:call_detail.loading_community", {
+            defaultValue: "Loading community...",
+          })}
+        </p>
       </aside>
     );
   }
@@ -371,7 +382,10 @@ function CommunityDetailsSidebar({
         ) : null}
 
         {createdLabel ? (
-          <p className="text-xs text-brand-gray-500">Created: {createdLabel}</p>
+          <p className="text-xs text-brand-gray-500">
+            {t("common:community.created", { defaultValue: "Created" })}:{" "}
+            {createdLabel}
+          </p>
         ) : null}
 
         {tags.length ? (
@@ -388,7 +402,11 @@ function CommunityDetailsSidebar({
         ) : null}
 
         {moderators.length ? (
-          <Section title="Moderators">
+          <Section
+            title={t("common:community.moderators", {
+              defaultValue: "Moderators",
+            })}
+          >
             <ul className="flex flex-col gap-2 text-sm text-brand-gray-700">
               {moderators.map((m) => (
                 <li key={m.documentId || m.id}>
@@ -406,9 +424,13 @@ function CommunityDetailsSidebar({
 
         {joinedUsers.length ? (
           <Section
-            title="Users"
+            title={t("common:navbar.profile_dropdown.communities", {
+              defaultValue: "Communities",
+            })}
             action={
-              joinedUsers.length > MAX_AVATAR_COUNT ? "See all" : undefined
+              joinedUsers.length > MAX_AVATAR_COUNT
+                ? t("common:community.see_all", { defaultValue: "See all" })
+                : undefined
             }
             onAction={() => setShowUsersModal(true)}
           >
@@ -433,7 +455,9 @@ function CommunityDetailsSidebar({
         ) : null}
 
         {mentors.length ? (
-          <Section title="Mentors">
+          <Section
+            title={t("profile:tabs.mentorship", { defaultValue: "Mentorship" })}
+          >
             <ul className="flex flex-col gap-3">
               {mentors.map((m) => (
                 <li key={m.id} className="flex items-center gap-3">
@@ -453,7 +477,9 @@ function CommunityDetailsSidebar({
                         </span>
                       </ProfileLink>
                       <span className="inline-flex items-center rounded-full bg-brand-orange-50 px-2 py-0.5 text-[10px] font-medium text-brand-orange-500">
-                        Mentor
+                        {t("profile:tabs.mentorship", {
+                          defaultValue: "Mentor",
+                        })}
                       </span>
                     </div>
                     <div className="truncate text-xs text-brand-gray-500">
@@ -467,7 +493,11 @@ function CommunityDetailsSidebar({
         ) : null}
 
         {subCommunities.length ? (
-          <Section title="Sub-Communities">
+          <Section
+            title={t("common:community.sub_communities", {
+              defaultValue: "Sub-Communities",
+            })}
+          >
             <ul className="flex flex-col gap-2">
               {subCommunities.map((sc) => (
                 <li key={sc.documentId || sc.id} className="text-sm">
@@ -476,7 +506,10 @@ function CommunityDetailsSidebar({
                   </div>
                   {sc.subscribers ? (
                     <div className="text-xs text-brand-gray-500">
-                      {formatNumber(sc.subscribers)} Subscribers
+                      {formatNumber(sc.subscribers)}{" "}
+                      {t("profile:sidebar.subscribers", {
+                        defaultValue: "Subscribers",
+                      })}
                     </div>
                   ) : null}
                 </li>
@@ -487,8 +520,12 @@ function CommunityDetailsSidebar({
 
         {attachments.length ? (
           <Section
-            title="Attachments"
-            action={attachments.length > 3 ? "See all" : undefined}
+            title={t("profile:tabs.resources", { defaultValue: "Resources" })}
+            action={
+              attachments.length > 3
+                ? t("common:community.see_all", { defaultValue: "See all" })
+                : undefined
+            }
           >
             <ul className="flex flex-col gap-3">
               {attachments.slice(0, 3).map((att, idx) => (
@@ -558,14 +595,26 @@ function UsersListModal({ open, onClose, users = [] }) {
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-2xl p-0">
         <DialogHeader className="px-6 pt-6 pb-4">
-          <DialogTitle>List of users</DialogTitle>
+          <DialogTitle>
+            {t("common:navbar.profile_dropdown.communities", {
+              defaultValue: "Users",
+            })}
+          </DialogTitle>
         </DialogHeader>
         <div className="overflow-y-auto max-h-[60vh]">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-brand-gray-100 bg-brand-gray-50 text-xs text-brand-gray-500">
-                <th className="px-6 py-3 font-medium">User name</th>
-                <th className="px-6 py-3 font-medium">Education</th>
+                <th className="px-6 py-3 font-medium">
+                  {t("profile:details.full_name", {
+                    defaultValue: "User name",
+                  })}
+                </th>
+                <th className="px-6 py-3 font-medium">
+                  {t("profile:details.education_title", {
+                    defaultValue: "Education",
+                  })}
+                </th>
                 <th className="px-6 py-3 w-10" />
               </tr>
             </thead>
@@ -626,11 +675,13 @@ function UsersListModal({ open, onClose, users = [] }) {
 
 /* -------------------------------- Chat ---------------------------------- */
 
-const VISIBILITY_LABELS = {
-  public: "Public",
-  restricted: "Limited access",
-  private: "Private",
-};
+const VISIBILITY_LABELS = (t) => ({
+  public: t("community:visibility.public", { defaultValue: "Public" }),
+  restricted: t("community:call_card.limited_access", {
+    defaultValue: "Limited access",
+  }),
+  private: t("community:visibility.private", { defaultValue: "Private" }),
+});
 
 function ChatHeader({
   call,
@@ -641,15 +692,18 @@ function ChatHeader({
   hasJoined,
   hasPendingRequest,
   showRequestJoin,
+  t,
 }) {
-  const datePrefix = isActive ? "Valid till" : "Ended";
+  const datePrefix = isActive
+    ? t("community:call_card.valid_till", { defaultValue: "Valid till" })
+    : t("community:call_card.ended", { defaultValue: "Ended" });
   return (
     <div className="flex items-center justify-between gap-4 border-b border-brand-gray-100 px-6 py-4">
       <div className="flex min-w-0 items-center gap-3">
         <button
           type="button"
           onClick={onBack}
-          aria-label="Back"
+          aria-label={t("common:common.back", { defaultValue: "Back" })}
           className="inline-flex size-[34px] flex-none items-center justify-center rounded-full border border-[#E8ECEF] bg-[#E8ECEF] text-brand-gray-700 hover:bg-[#dde1e4]"
         >
           <ArrowLeft className="size-[14px]" />
@@ -661,12 +715,11 @@ function ChatHeader({
       <div className="flex items-center gap-3">
         <div className="inline-flex h-[34px] w-fit items-center divide-x divide-brand-gray-200 rounded-full bg-[#E8ECEF] text-sm font-medium text-brand-gray-700">
           <span className="inline-flex h-full items-center gap-2 px-4">
-            <span
-              className={`size-2 rounded-full ${
-                isActive ? "bg-emerald-500" : "bg-red-500"
-              }`}
-            />
-            {isActive ? "Active" : "Completed"}
+            {isActive
+              ? t("community:call_card.active", { defaultValue: "Active" })
+              : t("community:call_card.completed", {
+                  defaultValue: "Completed",
+                })}
           </span>
           <span className="inline-flex h-full items-center gap-2 px-4">
             <Calendar className="size-4" />
@@ -674,7 +727,7 @@ function ChatHeader({
           </span>
           {visibility && visibility !== "public" && (
             <span className="inline-flex h-full items-center gap-2 px-4">
-              {VISIBILITY_LABELS[visibility] || visibility}
+              {VISIBILITY_LABELS(t)[visibility] || visibility}
             </span>
           )}
         </div>
@@ -685,17 +738,21 @@ function ChatHeader({
             className="rounded-full border-primary-500 text-primary-500 bg-transparent hover:bg-primary-50"
             onClick={onRequestJoin}
           >
-            Request to join
+            {t("community:call_detail.request_to_join", {
+              defaultValue: "Request to join",
+            })}
           </Button>
         ) : null}
         {hasPendingRequest && !hasJoined ? (
           <span className="inline-flex h-[34px] items-center rounded-full bg-amber-50 px-4 text-sm font-medium text-amber-700">
-            Requested
+            {t("community:call_detail.requested", {
+              defaultValue: "Requested",
+            })}
           </span>
         ) : null}
         {hasJoined ? (
           <span className="inline-flex h-[34px] items-center rounded-full bg-primary-50 px-4 text-sm font-medium text-primary-700">
-            Joined
+            {t("community:call_detail.joined", { defaultValue: "Joined" })}
           </span>
         ) : null}
       </div>
@@ -704,15 +761,17 @@ function ChatHeader({
 }
 
 function ChatThread({ messages = [], canPost = false }) {
-  if (!messages.length) {
-    return (
-      <div className="flex flex-1 items-center justify-center px-6 py-10 text-sm text-brand-gray-500">
-        {canPost
-          ? "No messages yet — start the conversation below."
-          : "No messages yet."}
-      </div>
-    );
-  }
+  return (
+    <div className="flex flex-1 items-center justify-center px-6 py-10 text-sm text-brand-gray-500">
+      {canPost
+        ? t("community:chat.no_messages_can_post", {
+            defaultValue: "No messages yet — start the conversation below.",
+          })
+        : t("community:chat.no_messages", {
+            defaultValue: "No messages yet.",
+          })}
+    </div>
+  );
 
   return (
     <div className="flex-1 overflow-y-auto px-6 py-5">
@@ -734,7 +793,7 @@ function ChatThread({ messages = [], canPost = false }) {
                 <div className="flex max-w-[70%] flex-col items-end gap-1">
                   <div className="mb-1 flex items-center gap-2">
                     <span className="text-sm font-semibold text-brand-gray-900">
-                      You
+                      {t("community:chat.you", { defaultValue: "You" })}
                     </span>
                     <span className="text-[11px] text-brand-gray-400">
                       {m.time}
@@ -849,13 +908,17 @@ function ChatComposer({ onSend, disabled = false }) {
         value={value}
         onChange={setValue}
         onKeyDown={handleKeyDown}
-        placeholder="Write a message..."
+        placeholder={t("community:chat.write_placeholder", {
+          defaultValue: "Write a message...",
+        })}
         minHeight={96}
         toolbarExtras={
           <>
             <button
               type="button"
-              aria-label="Attach file"
+              aria-label={t("community:chat.attach_file", {
+                defaultValue: "Attach file",
+              })}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => fileInputRef.current?.click()}
               className="inline-flex size-7 items-center justify-center rounded-md text-brand-gray-500 hover:bg-brand-gray-50"
@@ -893,7 +956,7 @@ function ChatComposer({ onSend, disabled = false }) {
           onClick={submit}
           disabled={!canSend}
         >
-          Send
+          {t("community:chat.send", { defaultValue: "Send" })}
         </Button>
         <Button
           size="sm"
@@ -905,7 +968,7 @@ function ChatComposer({ onSend, disabled = false }) {
           }}
           disabled={!value.length && !file}
         >
-          Cancel
+          {t("community:chat.cancel", { defaultValue: "Cancel" })}
         </Button>
       </div>
     </div>
@@ -988,7 +1051,11 @@ function formatChatTime(date) {
 export async function getServerSideProps({ locale }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, [
+        "common",
+        "profile",
+        "community",
+      ])),
     },
   };
 }

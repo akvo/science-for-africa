@@ -60,5 +60,22 @@
     "replying_to": "الرد على",
     "post": "نشر",
     "reply": "رد"
+  },
+  "call_detail": {
+    "loading": "جاري تحميل مكالمة التعاون...",
+    "not_found": "لم يتم العثور على مكالمة التعاون.",
+    "request_to_join": "طلب الانضمام",
+    "requested": "تم الطلب",
+    "joined": "تم الانضمام",
+    "back": "رجوع"
+  },
+  "chat": {
+    "no_messages": "لا توجد رسائل بعد.",
+    "no_messages_can_post": "لا توجد رسائل بعد - ابدأ المحادثة أدناه.",
+    "you": "أنت",
+    "write_placeholder": "اكتب رسالة...",
+    "attach_file": "إرفاق ملف",
+    "send": "إرسال",
+    "cancel": "إلغاء"
   }
 }

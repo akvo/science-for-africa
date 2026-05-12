@@ -37,13 +37,17 @@ import { SocialAuth, SocialButton } from "@/components/auth/social-auth";
 export async function getStaticProps({ locale }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, [
+        "common",
+        "profile",
+        "community",
+      ])),
     },
   };
 }
 
 export default function StyleGuide() {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation(["common", "profile", "community"]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -54,10 +58,10 @@ export default function StyleGuide() {
           <div className="flex items-center gap-2 font-bold text-brand-teal-900">
             <span className="text-2xl">SFA</span>
             <span className="text-brand-gray-400">/</span>
-            <span>Design System</span>
+            <span>{t("navbar.about", { defaultValue: "Design System" })}</span>
           </div>
           <Badge variant="primary" size="sm">
-            Components
+            {t("style_guide.components")}
           </Badge>
         </div>
       </nav>
@@ -66,10 +70,13 @@ export default function StyleGuide() {
         {/* Hero Section */}
         <header className="max-w-3xl space-y-4">
           <h1 className="text-display-lg text-brand-teal-900 uppercase">
-            Brand Expansion
+            {t("common.brand_expansion", { defaultValue: "Brand Expansion" })}
           </h1>
           <p className="text-xl text-brand-gray-600">
-            Official Button System, Avatars, Cards, and Modals.
+            {t("common.style_guide_desc", {
+              defaultValue:
+                "Official Button System, Avatars, Cards, and Modals.",
+            })}
           </p>
         </header>
 
@@ -77,7 +84,7 @@ export default function StyleGuide() {
         <section className="space-y-12">
           <div className="space-y-2">
             <h2 className="text-display-xs text-brand-teal-900 uppercase tracking-wider">
-              00. Official Button System
+              00. {t("style_guide.official_button_system")}
             </h2>
             <div className="h-1 w-20 bg-brand-orange-500 rounded-full" />
           </div>
@@ -86,16 +93,18 @@ export default function StyleGuide() {
             {/* Standard Sizes */}
             <Card>
               <CardHeader>
-                <CardTitle>Standard Sizes (Figma Scale)</CardTitle>
+                <CardTitle>{t("style_guide.standard_sizes")}</CardTitle>
                 <CardDescription>
-                  SM to 2XL with precise heights and padding.
+                  {t("style_guide.standard_sizes_desc")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-8">
                 <div className="flex flex-wrap items-end gap-4">
                   {["sm", "md", "lg", "xl", "2xl"].map((s) => (
                     <div key={s} className="flex flex-col items-center gap-2">
-                      <Button size={s}>Button {s.toUpperCase()}</Button>
+                      <Button size={s}>
+                        {t("common.button")} {s.toUpperCase()}
+                      </Button>
                       <span className="text-[10px] font-mono text-brand-gray-400">
                         {s === "sm"
                           ? "34px"
@@ -144,15 +153,15 @@ export default function StyleGuide() {
             {/* Social Authentication */}
             <Card>
               <CardHeader>
-                <CardTitle>Social Authentication</CardTitle>
+                <CardTitle>{t("style_guide.social_auth")}</CardTitle>
                 <CardDescription>
-                  Dedicated variant for Google and Apple sign-in.
+                  {t("style_guide.social_auth_desc")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="max-w-sm mx-auto p-6 bg-brand-gray-50 rounded-xl border border-brand-gray-100">
                   <h4 className="text-sm font-bold text-brand-gray-700 mb-6 text-center uppercase tracking-widest">
-                    Login to SFA
+                    {t("style_guide.login_to_sfa")}
                   </h4>
                   <SocialAuth />
                   <div className="relative my-6 text-center">
@@ -160,12 +169,12 @@ export default function StyleGuide() {
                       <span className="w-full border-t border-brand-gray-200"></span>
                     </span>
                     <span className="relative px-2 bg-brand-gray-50 text-brand-gray-400 text-[10px] uppercase">
-                      Or Individual
+                      {t("style_guide.or_individual")}
                     </span>
                   </div>
                   <SocialButton
                     provider="google"
-                    text="Continue with Google"
+                    text={t("style_guide.continue_with_google")}
                     className="w-full"
                   />
                 </div>
@@ -186,7 +195,7 @@ export default function StyleGuide() {
         <section className="space-y-12">
           <div className="space-y-2">
             <h2 className="text-display-xs text-brand-teal-900 uppercase tracking-wider">
-              01. Form Elements & Typography
+              01. {t("style_guide.form_elements")}
             </h2>
             <div className="h-1 w-20 bg-brand-orange-500 rounded-full" />
           </div>
@@ -194,21 +203,23 @@ export default function StyleGuide() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <Card>
               <CardHeader>
-                <CardTitle>Inputs & Selection</CardTitle>
+                <CardTitle>{t("style_guide.inputs_selection")}</CardTitle>
                 <CardDescription>
-                  Consistent typography and premium 48px height.
+                  {t("style_guide.inputs_selection_desc")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-8">
                 <div className="space-y-2">
-                  <Label>Email Address</Label>
+                  <Label>{t("style_guide.email_address")}</Label>
                   <Input placeholder="olivia@untitledui.com" />
                 </div>
                 <div className="space-y-2">
-                  <Label>Country Selector (Heading Font applied)</Label>
+                  <Label>{t("style_guide.country_selector")}</Label>
                   <Select>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a country" />
+                      <SelectValue
+                        placeholder={t("style_guide.select_country")}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="ke">Kenya</SelectItem>
@@ -222,19 +233,23 @@ export default function StyleGuide() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Selection Controls</CardTitle>
+                <CardTitle>{t("style_guide.selection_controls")}</CardTitle>
                 <CardDescription>
-                  Brand Teal active states with 8px/full radii.
+                  {t("style_guide.selection_controls_desc")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="flex items-center justify-between p-4 bg-brand-gray-50 rounded-lg">
-                  <Label className="text-base">Push Notifications</Label>
+                  <Label className="text-base">
+                    {t("style_guide.push_notifications")}
+                  </Label>
                   <Switch defaultChecked />
                 </div>
                 <div className="flex items-center gap-3">
                   <Checkbox id="terms" defaultChecked />
-                  <Label htmlFor="terms">Agree to Terms</Label>
+                  <Label htmlFor="terms">
+                    {t("style_guide.agree_to_terms")}
+                  </Label>
                 </div>
               </CardContent>
             </Card>
@@ -245,7 +260,7 @@ export default function StyleGuide() {
         <section className="space-y-12">
           <div className="space-y-2">
             <h2 className="text-display-xs text-brand-teal-900 uppercase tracking-wider">
-              02. Premium UI Elements
+              02. {t("style_guide.premium_ui")}
             </h2>
             <div className="h-1 w-20 bg-brand-orange-500 rounded-full" />
           </div>
@@ -254,9 +269,9 @@ export default function StyleGuide() {
             {/* Avatars */}
             <Card className="md:col-span-2">
               <CardHeader>
-                <CardTitle>Avatar Scale</CardTitle>
+                <CardTitle>{t("style_guide.avatar_scale")}</CardTitle>
                 <CardDescription>
-                  Brand sizes from XS (24px) to 2XL (64px).
+                  {t("style_guide.avatar_scale_desc")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -287,32 +302,35 @@ export default function StyleGuide() {
             {/* Modals */}
             <Card>
               <CardHeader>
-                <CardTitle>Dialogs & Modals</CardTitle>
+                <CardTitle>{t("style_guide.dialogs_modals")}</CardTitle>
                 <CardDescription>
-                  Refined for SFA with 16px radius.
+                  {t("style_guide.dialogs_modals_desc")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button className="w-full">Open Modal Example</Button>
+                    <Button className="w-full">
+                      {t("style_guide.open_modal")}
+                    </Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Profile Information</DialogTitle>
+                      <DialogTitle>{t("style_guide.profile_info")}</DialogTitle>
                       <DialogDescription>
-                        Update your researcher profile and affiliation details
-                        here.
+                        {t("style_guide.profile_info_desc")}
                       </DialogDescription>
                     </DialogHeader>
                     <div className="py-4 space-y-4">
                       <div className="space-y-2">
-                        <Label>Full Name</Label>
+                        <Label>{t("style_guide.full_name")}</Label>
                         <Input defaultValue="Dr. Olivia Rhye" />
                       </div>
                     </div>
                     <DialogFooter showCloseButton>
-                      <Button variant="primary">Save Changes</Button>
+                      <Button variant="primary">
+                        {t("common.save_changes")}
+                      </Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -324,7 +342,7 @@ export default function StyleGuide() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card>
               <CardHeader className="border-b mb-4">
-                <CardTitle>Community Card</CardTitle>
+                <CardTitle>{t("style_guide.community_card")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-4">
@@ -335,41 +353,44 @@ export default function StyleGuide() {
                     <h4 className="font-bold text-brand-gray-900">
                       Research & Dev
                     </h4>
-                    <p className="text-xs text-brand-gray-500">1.2k Members</p>
+                    <p className="text-xs text-brand-gray-500">
+                      {t("style_guide.members_count", { count: "1.2k" })}
+                    </p>
                   </div>
                 </div>
                 <p className="text-sm text-brand-gray-600 line-clamp-2">
-                  Exploring new frontiers in African science and technology
-                  collaboration.
+                  {t("style_guide.community_desc")}
                 </p>
               </CardContent>
               <CardFooter>
                 <Button variant="secondary" className="w-full">
-                  Join Community
+                  {t("style_guide.join_community")}
                 </Button>
               </CardFooter>
             </Card>
 
             <Card>
               <CardHeader className="border-b mb-4">
-                <CardTitle>Event Card</CardTitle>
+                <CardTitle>{t("style_guide.event_card")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-start">
-                  <Badge variant="secondary">Upcoming</Badge>
+                  <Badge variant="secondary">{t("style_guide.upcoming")}</Badge>
                   <span className="text-xs font-bold text-brand-orange-500 uppercase">
                     24 Mar 2026
                   </span>
                 </div>
                 <h4 className="font-bold text-brand-gray-900 text-lg">
-                  Science Summit 2026
+                  {t("style_guide.event_title")}
                 </h4>
                 <p className="text-sm text-brand-gray-600">
-                  Join leading scientists in Nairobi for the annual SFA summit.
+                  {t("style_guide.event_desc")}
                 </p>
               </CardContent>
               <CardFooter className="bg-brand-gray-50">
-                <Button className="w-full">Register Now</Button>
+                <Button className="w-full">
+                  {t("style_guide.register_now")}
+                </Button>
               </CardFooter>
             </Card>
           </div>
@@ -379,7 +400,7 @@ export default function StyleGuide() {
         <section className="space-y-12 pb-24">
           <div className="space-y-2">
             <h2 className="text-display-xs text-brand-teal-900 uppercase tracking-wider">
-              03. Metadata
+              03. {t("style_guide.metadata")}
             </h2>
             <div className="h-1 w-20 bg-brand-orange-500 rounded-full" />
           </div>
@@ -387,14 +408,14 @@ export default function StyleGuide() {
           <div className="flex flex-wrap gap-8">
             <div className="space-y-4">
               <Label className="text-brand-gray-400 uppercase text-[10px] tracking-widest">
-                Badges
+                {t("style_guide.badges")}
               </Label>
               <div className="flex gap-2 flex-wrap">
-                <Badge variant="primary">Primary</Badge>
-                <Badge variant="secondary">Secondary</Badge>
-                <Badge variant="success">Success</Badge>
+                <Badge variant="primary">{t("style_guide.primary")}</Badge>
+                <Badge variant="secondary">{t("style_guide.secondary")}</Badge>
+                <Badge variant="success">{t("style_guide.success")}</Badge>
                 <Badge variant="error" size="lg">
-                  Error LG
+                  {t("style_guide.error_lg")}
                 </Badge>
               </div>
             </div>

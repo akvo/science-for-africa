@@ -68,7 +68,7 @@ function CollaborationHubCard({ call, onView, t }) {
     <article className="flex items-start justify-between gap-4 border-b border-brand-gray-100 py-5 lg:px-6">
       <div className="min-w-0 flex-1">
         {/* Status pill */}
-        <div className="mb-3 inline-flex h-[34px] w-fit items-center divide-x divide-brand-gray-200 rounded-full bg-[#E8ECEF] text-sm font-medium text-brand-gray-700">
+        <div className="mb-3 inline-flex h-8.5 w-fit items-center divide-x divide-brand-gray-200 rounded-full bg-[#E8ECEF] text-sm font-medium text-brand-gray-700">
           <span className="inline-flex h-full items-center gap-2 px-4">
             <span
               className={`size-2 rounded-full ${isActive ? "bg-emerald-500" : "bg-red-500"}`}

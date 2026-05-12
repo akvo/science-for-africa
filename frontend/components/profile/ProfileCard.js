@@ -117,10 +117,10 @@ const ProfileCard = ({
               disabled={isLoadingFollow}
               variant={isFollowing ? "outline" : "default"}
               className={cn(
-                "w-full rounded-xl font-bold h-11",
+                "w-full rounded-full font-bold h-9",
                 isFollowing
                   ? "border-brand-gray-200 text-brand-gray-700 hover:bg-brand-gray-50"
-                  : "bg-brand-teal-600 text-white hover:bg-brand-teal-700",
+                  : "bg-brand-teal-900 text-white hover:bg-brand-teal-800",
               )}
             >
               {isFollowing ? (

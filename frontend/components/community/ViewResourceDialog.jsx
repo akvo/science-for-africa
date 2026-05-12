@@ -241,8 +241,10 @@ export default function ViewResourceDialog({
               </span>
               {fileSize && (
                 <>
-                  <span className="size-1 rounded-full bg-brand-gray-300" />
-                  <span>{fileSize}</span>
+                  <Button className="h-auto! py-1.5! text-sm! rounded-full!">
+                    <span className="size-1 rounded-full bg-brand-gray-300" />
+                    <span>{fileSize}</span>
+                  </Button>
                 </>
               )}
               <span className="size-1 rounded-full bg-brand-gray-300" />
@@ -325,7 +327,7 @@ export default function ViewResourceDialog({
         {/* Description */}
         {resource.description && (
           <div className="shrink-0 border-t border-brand-gray-100 px-6 py-4">
-            <h3 className="text-sm font-semibold text-brand-gray-900 mb-2">
+            <h3 className="mb-2 text-sm font-semibold text-brand-gray-900">
               {tCommunity("resource_dialog.description")}
             </h3>
             <p className="text-sm leading-relaxed text-brand-gray-700 whitespace-pre-line">
@@ -340,7 +342,7 @@ export default function ViewResourceDialog({
           className="flex-1 min-h-0 overflow-y-auto border-t border-brand-gray-100"
         >
           <div className="px-6 py-4">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="mb-4 flex items-center gap-2">
               <h3 className="text-sm font-semibold text-brand-gray-900">
                 {t("resources.discussion")}
               </h3>

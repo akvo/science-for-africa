@@ -143,7 +143,7 @@ const Navbar = () => {
 
                     {communityOpen && (
                       <div className="absolute left-1/2 -translate-x-1/2 top-full pt-2 z-50">
-                        <div className="w-[560px] rounded-2xl border border-brand-gray-100 bg-white p-6 shadow-xl">
+                        <div className="w-140 rounded-2xl border border-brand-gray-100 bg-white p-6 shadow-xl">
                           <h3 className="text-base font-bold text-brand-gray-900 mb-1">
                             {t("navbar.community")}
                           </h3>
@@ -175,12 +175,12 @@ const Navbar = () => {
                                           )}
                                         </span>
                                       </div>
-                                      <p className="text-xs text-brand-gray-500 ml-[30px]">
+                                      <p className="text-xs text-brand-gray-500 ml-7.5">
                                         {t(
                                           `navbar.community_dropdown.${item.key}_desc`,
                                         )}
                                       </p>
-                                      <span className="ml-[30px] mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary-500">
+                                      <span className="ml-7.5 mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary-500">
                                         {t(
                                           "navbar.community_dropdown.learn_more",
                                         )}

@@ -35,9 +35,9 @@ export const useAuthStore = create(
       user: null,
       jwt: null,
       isAuthenticated: false,
-      isPersistent: false,
+      isPersistent: true,
 
-      setAuth: (user, jwt, isPersistent = false) =>
+      setAuth: (user, jwt, isPersistent = true) =>
         set({
           user,
           jwt,
@@ -50,7 +50,7 @@ export const useAuthStore = create(
           user: null,
           jwt: null,
           isAuthenticated: false,
-          isPersistent: false,
+          rememberMe: true,
         }),
 
       updateUser: (userData) =>

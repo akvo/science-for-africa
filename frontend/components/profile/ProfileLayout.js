@@ -43,7 +43,7 @@ const ProfileLayout = ({
 
   const user = profileUser || authUser;
   const isOwnProfile =
-    !profileUser || (authUser && authUser.id === profileUser.id);
+    !profileUser || (authUser && authUser.id == profileUser.id);
 
   // Sync user data on mount ONLY for own profile
   useEffect(() => {

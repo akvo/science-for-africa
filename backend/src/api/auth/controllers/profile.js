@@ -569,7 +569,7 @@ module.exports = ({ strapi }) => ({
 
       // Check if current user is following this profile
       const following = currentUser
-        ? profile.followers?.some((f) => f.id === currentUser.id)
+        ? profile.followers?.some((f) => f.id == currentUser.id)
         : false;
 
       // Sanitize profile (exclude private fields like email, password, etc.)

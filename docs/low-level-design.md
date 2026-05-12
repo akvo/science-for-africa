@@ -798,6 +798,8 @@ Specific content types have localization enabled:
 ### 6.3 Locale Awareness
 
 - **API Client**: The `api-client.js` includes a request interceptor that automatically extracts the current locale from the URL subpath and appends it as a `locale` query parameter to all Strapi requests, **excluding public authentication endpoints** to ensure compatibility with Strapi's built-in controllers.
+- **Dictionary Parity**: All translation files (`common.json`, `profile.json`, etc.) maintain 100% key parity across all 5 locales. This prevents hydration errors and ensures that fallbacks are unnecessary for UI labels.
+- **Namespace Resolution**: Critical global keys such as `style_guide` and `copyright` are positioned at the top level of the `common` namespace to facilitate direct lookup from any component without deep nesting resolution issues.
 - **UI Switcher**: A premium `LocaleSwitcher` component in the `Navbar` allows users to toggle between all 5 supported languages. This triggers a client-side route change via `next/router` with the new locale.
 - **Dynamic Backend Creation**: Custom controllers (e.g., `auth/me`, `profile.js`) extract the active locale from the request context to ensure on-the-fly entities like institutions are tagged with the correct language metadata.
 - **Fallback Logic**: The frontend implements a "Fallback-to-Default" pattern via `fetchLocalized`. If a localized dataset (e.g., Institutions) is empty in a secondary locale (like Swahili), the system automatically defaults to the English version to prevent empty UI states.
@@ -811,8 +813,17 @@ The platform supports professional networking through public-facing user profile
 ### 7.1 Architecture
 
 - **Backend (Strapi)**: Extended the `users-permissions.user` model with `followers`, `following` (Many-to-Many self-references), and `subscriberCount` (Integer).
-- **Public Profile API**: A custom `/api/auth/profile/:id` endpoint securely exposes sanitized user data (name, bio, role, interests, stats) while strictly excluding sensitive information like email, phone numbers, or tokens.
-- **Networking API**: Custom `/api/users/:id/follow` and `/api/users/:id/unfollow` endpoints manage the relationships and atomically update the `subscriberCount` using Strapi's `db.query`.
+- **Public Profile API**: A custom `/api/auth/profile/:documentId` endpoint securely exposes sanitized user data (name, bio, role, interests, stats) while strictly excluding sensitive information like email, phone numbers, or tokens.
+- **Networking API**: Custom `/api/users/:documentId/follow` and `/api/users/:documentId/unfollow` endpoints manage the relationships and atomically update the `subscriberCount` using Strapi's `db.query`.
+
+```mermaid
+graph TD
+    A[User Icon/Link] -->|Click| B[Public Profile Page /profile/documentId]
+    B -->|Fetch| C[GET /api/users/documentId?populate=...]
+    B -->|Follow| D[POST /api/users/documentId/follow]
+    B -->|Unfollow| E[POST /api/users/documentId/unfollow]
+    B -->|Share| F[Share Menu / Web Share API]
+```
 
 ### 7.2 Key Implementation Details
 

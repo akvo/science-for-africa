@@ -143,6 +143,7 @@ All content fetches should append the `locale` parameter.
 - [x] Strapi content filters correctly by all 5 locales
 - [x] SEO tags (`hreflang`) are automatically injected by Next.js for all languages
 - [x] Verification email links preserve the user's selected locale
+- [x] **Namespace Resolution**: Global keys (`style_guide`, `copyright`) are moved to the top level of the `common` namespace for direct component access.
 
 ---
 

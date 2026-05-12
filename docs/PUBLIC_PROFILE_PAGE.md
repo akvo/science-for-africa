@@ -103,10 +103,10 @@ graph TD
 
 ### Follow User
 - **Method**: `POST`
-- **Path**: `/api/users/:id/follow`
+- **Path**: `/api/users/:documentId/follow`
 - **Response**: `200 OK` with updated `subscriberCount`.
 
 ### Unfollow User
 - **Method**: `POST`
-- **Path**: `/api/users/:id/unfollow`
+- **Path**: `/api/users/:documentId/unfollow`
 - **Response**: `200 OK` with updated `subscriberCount`.

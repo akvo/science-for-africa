@@ -17,9 +17,9 @@ jest.mock("next/link", () => {
 
 describe("ProfileLink Component", () => {
   it("should render a link when userId is provided", () => {
-    render(<ProfileLink userId="123">John Doe</ProfileLink>);
+    render(<ProfileLink userId="doc-123">John Doe</ProfileLink>);
     const link = screen.getByRole("link");
-    expect(link).toHaveAttribute("href", "/profile/123");
+    expect(link).toHaveAttribute("href", "/profile/doc-123");
     expect(link).toHaveTextContent("John Doe");
   });
 
@@ -32,11 +32,12 @@ describe("ProfileLink Component", () => {
 
   it("should apply custom className", () => {
     render(
-      <ProfileLink userId="123" className="custom-class">
+      <ProfileLink userId="doc-123" className="custom-class">
         John Doe
       </ProfileLink>,
     );
     const link = screen.getByRole("link");
     expect(link).toHaveClass("custom-class");
+    expect(link).toHaveAttribute("href", "/profile/doc-123");
   });
 });

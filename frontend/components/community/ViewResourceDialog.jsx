@@ -80,7 +80,7 @@ function Comment({ comment, onReply, t, depth = 0 }) {
       className={depth > 0 ? "ml-8 border-l border-brand-gray-100 pl-4" : ""}
     >
       <div className="flex gap-3 py-4">
-        <ProfileLink userId={author?.id}>
+        <ProfileLink userId={author?.documentId || author?.id}>
           <Avatar size="sm" className="shrink-0 mt-0.5">
             <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-semibold">
               {getInitials(name)}
@@ -286,7 +286,7 @@ export default function ViewResourceDialog({
         {uploaderName && (
           <div className="shrink-0 flex items-center justify-between gap-3 border-t border-brand-gray-100 px-6 py-3">
             <div className="flex items-center gap-3">
-              <ProfileLink userId={uploader?.id}>
+              <ProfileLink userId={uploader?.documentId || uploader?.id}>
                 <Avatar size="sm">
                   <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-semibold">
                     {getInitials(uploaderName)}
@@ -295,7 +295,7 @@ export default function ViewResourceDialog({
               </ProfileLink>
               <div>
                 <div className="flex items-center gap-2">
-                  <ProfileLink userId={uploader?.id}>
+                  <ProfileLink userId={uploader?.documentId || uploader?.id}>
                     <span className="text-sm font-semibold text-brand-gray-900 hover:text-brand-teal-600 cursor-pointer">
                       {uploaderName}
                     </span>
@@ -314,7 +314,7 @@ export default function ViewResourceDialog({
               </div>
             </div>
             <ProfileLink
-              userId={uploader?.id}
+              userId={uploader?.documentId || uploader?.id}
               className="text-sm font-medium text-primary-600 hover:text-primary-700 hover:underline"
             >
               {tCommunity("resource_dialog.view_profile")}

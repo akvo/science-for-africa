@@ -58,6 +58,7 @@ function mapChatMessage(row, currentUserId) {
     : null;
   return {
     id: row.id,
+    authorId: author.documentId || author.id,
     self: currentUserId != null && author.id === currentUserId,
     author: authorName,
     time: formatChatTime(row.createdAt),

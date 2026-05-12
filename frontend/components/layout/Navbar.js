@@ -277,7 +277,7 @@ const Navbar = () => {
                   >
                     {/* Identity Header */}
                     <Link
-                      href={`/profile/${user?.id}`}
+                      href={`/profile/${user?.documentId || user?.id}`}
                       className="flex items-center gap-4 px-5 py-4 bg-white hover:bg-brand-gray-50 transition-colors"
                     >
                       <Avatar size="lg" className="shrink-0">

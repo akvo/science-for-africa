@@ -46,7 +46,7 @@ const CollaborationRow = ({ invite, onAccept, onDecline, processingId }) => {
       {/* Mentor Column */}
       <td className="py-6 px-6 align-top">
         <div className="flex items-start gap-3">
-          <ProfileLink userId={mentor?.id}>
+          <ProfileLink userId={mentor?.documentId || mentor?.id}>
             <Avatar className="size-10 border border-brand-gray-100 bg-brand-teal-50 shrink-0">
               <AvatarFallback className="text-sm text-brand-teal-700 font-bold bg-brand-teal-50">
                 <Handshake className="size-5" />
@@ -55,7 +55,7 @@ const CollaborationRow = ({ invite, onAccept, onDecline, processingId }) => {
           </ProfileLink>
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <ProfileLink userId={mentor?.id}>
+              <ProfileLink userId={mentor?.documentId || mentor?.id}>
                 <span className="text-sm font-normal text-brand-gray-900 truncate hover:underline">
                   {mentor?.fullName ||
                     mentor?.username ||

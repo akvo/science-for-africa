@@ -12,6 +12,7 @@ import {
   Paperclip,
   X,
 } from "lucide-react";
+import ProfileLink from "@/components/shared/ProfileLink";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -156,9 +157,7 @@ export default function CollaborationCallDetailPage() {
 
   // Collect all attachments from chat messages
   const chatAttachments = useMemo(() => {
-    return messages
-      .filter((m) => m.attachment)
-      .map((m) => m.attachment);
+    return messages.filter((m) => m.attachment).map((m) => m.attachment);
   }, [messages]);
 
   // Users who have accepted their invite (joined the call)
@@ -183,7 +182,9 @@ export default function CollaborationCallDetailPage() {
     // Also include the creator if present
     if (call?.createdByUser) {
       const creator = call.createdByUser;
-      const alreadyIncluded = users.some((u) => u.id === (creator.documentId || creator.id));
+      const alreadyIncluded = users.some(
+        (u) => u.id === (creator.documentId || creator.id),
+      );
       if (!alreadyIncluded) {
         users.unshift(mapUser(creator));
       }
@@ -204,9 +205,7 @@ export default function CollaborationCallDetailPage() {
   const hasJoined = useMemo(() => {
     if (!user || !call?.invites) return false;
     return call.invites.some(
-      (i) =>
-        i.invitedUser?.id === user.id &&
-        i.inviteStatus === "Accepted",
+      (i) => i.invitedUser?.id === user.id && i.inviteStatus === "Accepted",
     );
   }, [call, user]);
 
@@ -220,9 +219,7 @@ export default function CollaborationCallDetailPage() {
   const hasPendingRequest = useMemo(() => {
     if (!user || !call?.invites) return false;
     return call.invites.some(
-      (i) =>
-        i.invitedUser?.id === user.id &&
-        i.inviteStatus === "Pending",
+      (i) => i.invitedUser?.id === user.id && i.inviteStatus === "Pending",
     );
   }, [call, user]);
 
@@ -239,7 +236,6 @@ export default function CollaborationCallDetailPage() {
       setCall(updated?.data || null);
     }
   };
-
 
   if (loading) {
     return (
@@ -264,10 +260,7 @@ export default function CollaborationCallDetailPage() {
   // Public: any signed-in user can post
   // Restricted: only accepted members / creator can post
   // Private: only invited members / creator can post (and only they can see the page)
-  const canPost =
-    visibility === "public"
-      ? !!user
-      : hasJoined || isCreator;
+  const canPost = visibility === "public" ? !!user : hasJoined || isCreator;
 
   // Determine if "Request to join" should be shown
   // Public: no need (anyone can post)
@@ -282,7 +275,12 @@ export default function CollaborationCallDetailPage() {
 
   return (
     <div className="grid min-w-0 grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)]">
-      <CommunityDetailsSidebar community={community} mentors={mentors} joinedUsers={joinedUsers} attachments={chatAttachments} />
+      <CommunityDetailsSidebar
+        community={community}
+        mentors={mentors}
+        joinedUsers={joinedUsers}
+        attachments={chatAttachments}
+      />
 
       <section className="flex min-w-0 flex-col">
         <ChatHeader
@@ -323,7 +321,12 @@ export default function CollaborationCallDetailPage() {
 
 const MAX_AVATAR_COUNT = 8;
 
-function CommunityDetailsSidebar({ community, mentors = [], joinedUsers = [], attachments = [] }) {
+function CommunityDetailsSidebar({
+  community,
+  mentors = [],
+  joinedUsers = [],
+  attachments = [],
+}) {
   const [showUsersModal, setShowUsersModal] = useState(false);
   if (!community) {
     return (
@@ -388,7 +391,12 @@ function CommunityDetailsSidebar({ community, mentors = [], joinedUsers = [], at
             <ul className="flex flex-col gap-2 text-sm text-brand-gray-700">
               {moderators.map((m) => (
                 <li key={m.documentId || m.id}>
-                  {m.username || m.email || "Moderator"}
+                  <ProfileLink
+                    userId={m.documentId || m.id}
+                    className="hover:text-brand-teal-600"
+                  >
+                    {m.username || m.email || "Moderator"}
+                  </ProfileLink>
                 </li>
               ))}
             </ul>
@@ -398,17 +406,21 @@ function CommunityDetailsSidebar({ community, mentors = [], joinedUsers = [], at
         {joinedUsers.length ? (
           <Section
             title="Users"
-            action={joinedUsers.length > MAX_AVATAR_COUNT ? "See all" : undefined}
+            action={
+              joinedUsers.length > MAX_AVATAR_COUNT ? "See all" : undefined
+            }
             onAction={() => setShowUsersModal(true)}
           >
             <div className="flex -space-x-2">
               {joinedUsers.slice(0, MAX_AVATAR_COUNT).map((u) => (
-                <Avatar key={u.id} size="sm" className="ring-2 ring-white">
-                  {u.avatarUrl ? (
-                    <AvatarImage src={u.avatarUrl} alt={u.name} />
-                  ) : null}
-                  <AvatarFallback>{initialsOf(u.name)}</AvatarFallback>
-                </Avatar>
+                <ProfileLink key={u.id} userId={u.id}>
+                  <Avatar size="sm" className="ring-2 ring-white">
+                    {u.avatarUrl ? (
+                      <AvatarImage src={u.avatarUrl} alt={u.name} />
+                    ) : null}
+                    <AvatarFallback>{initialsOf(u.name)}</AvatarFallback>
+                  </Avatar>
+                </ProfileLink>
               ))}
               {joinedUsers.length > MAX_AVATAR_COUNT ? (
                 <div className="flex size-8 items-center justify-center rounded-full bg-brand-gray-100 text-xs font-medium text-brand-gray-600 ring-2 ring-white">
@@ -424,17 +436,21 @@ function CommunityDetailsSidebar({ community, mentors = [], joinedUsers = [], at
             <ul className="flex flex-col gap-3">
               {mentors.map((m) => (
                 <li key={m.id} className="flex items-center gap-3">
-                  <Avatar size="sm">
-                    {m.avatarUrl ? (
-                      <AvatarImage src={m.avatarUrl} alt={m.name} />
-                    ) : null}
-                    <AvatarFallback>{initialsOf(m.name)}</AvatarFallback>
-                  </Avatar>
+                  <ProfileLink userId={m.id}>
+                    <Avatar size="sm">
+                      {m.avatarUrl ? (
+                        <AvatarImage src={m.avatarUrl} alt={m.name} />
+                      ) : null}
+                      <AvatarFallback>{initialsOf(m.name)}</AvatarFallback>
+                    </Avatar>
+                  </ProfileLink>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="truncate text-sm font-medium text-brand-gray-900">
-                        {m.name}
-                      </span>
+                      <ProfileLink userId={m.id}>
+                        <span className="truncate text-sm font-medium text-brand-gray-900 hover:text-brand-teal-600">
+                          {m.name}
+                        </span>
+                      </ProfileLink>
                       <span className="inline-flex items-center rounded-full bg-brand-orange-50 px-2 py-0.5 text-[10px] font-medium text-brand-orange-500">
                         Mentor
                       </span>
@@ -454,7 +470,9 @@ function CommunityDetailsSidebar({ community, mentors = [], joinedUsers = [], at
             <ul className="flex flex-col gap-2">
               {subCommunities.map((sc) => (
                 <li key={sc.documentId || sc.id} className="text-sm">
-                  <div className="font-medium text-brand-gray-900">{sc.name}</div>
+                  <div className="font-medium text-brand-gray-900">
+                    {sc.name}
+                  </div>
                   {sc.subscribers ? (
                     <div className="text-xs text-brand-gray-500">
                       {formatNumber(sc.subscribers)} Subscribers
@@ -467,7 +485,10 @@ function CommunityDetailsSidebar({ community, mentors = [], joinedUsers = [], at
         ) : null}
 
         {attachments.length ? (
-          <Section title="Attachments" action={attachments.length > 3 ? "See all" : undefined}>
+          <Section
+            title="Attachments"
+            action={attachments.length > 3 ? "See all" : undefined}
+          >
             <ul className="flex flex-col gap-3">
               {attachments.slice(0, 3).map((att, idx) => (
                 <li key={idx}>
@@ -552,16 +573,20 @@ function UsersListModal({ open, onClose, users = [] }) {
                 <tr key={u.id}>
                   <td className="px-6 py-3">
                     <div className="flex items-center gap-3">
-                      <Avatar size="sm">
-                        {u.avatarUrl ? (
-                          <AvatarImage src={u.avatarUrl} alt={u.name} />
-                        ) : null}
-                        <AvatarFallback>{initialsOf(u.name)}</AvatarFallback>
-                      </Avatar>
+                      <ProfileLink userId={u.id}>
+                        <Avatar size="sm">
+                          {u.avatarUrl ? (
+                            <AvatarImage src={u.avatarUrl} alt={u.name} />
+                          ) : null}
+                          <AvatarFallback>{initialsOf(u.name)}</AvatarFallback>
+                        </Avatar>
+                      </ProfileLink>
                       <div className="min-w-0">
-                        <div className="font-medium text-brand-gray-900 truncate">
-                          {u.name}
-                        </div>
+                        <ProfileLink userId={u.id}>
+                          <div className="font-medium text-brand-gray-900 truncate hover:text-brand-teal-600">
+                            {u.name}
+                          </div>
+                        </ProfileLink>
                         {u.position ? (
                           <div className="text-xs text-brand-gray-500 truncate">
                             {u.position}
@@ -606,7 +631,16 @@ const VISIBILITY_LABELS = {
   private: "Private",
 };
 
-function ChatHeader({ call, isActive, visibility, onBack, onRequestJoin, hasJoined, hasPendingRequest, showRequestJoin }) {
+function ChatHeader({
+  call,
+  isActive,
+  visibility,
+  onBack,
+  onRequestJoin,
+  hasJoined,
+  hasPendingRequest,
+  showRequestJoin,
+}) {
   const datePrefix = isActive ? "Valid till" : "Ended";
   return (
     <div className="flex items-center justify-between gap-4 border-b border-brand-gray-100 px-6 py-4">
@@ -720,15 +754,19 @@ function ChatThread({ messages = [], canPost = false }) {
           }
           return (
             <li key={key} className="flex items-start gap-3">
-              <Avatar size="sm">
-                <AvatarImage src={m.avatarUrl} alt={m.author} />
-                <AvatarFallback>{initialsOf(m.author)}</AvatarFallback>
-              </Avatar>
+              <ProfileLink userId={m.authorId || m.author?.id || m.author}>
+                <Avatar size="sm">
+                  <AvatarImage src={m.avatarUrl} alt={m.author} />
+                  <AvatarFallback>{initialsOf(m.author)}</AvatarFallback>
+                </Avatar>
+              </ProfileLink>
               <div className="min-w-0 flex-1">
                 <div className="mb-1 flex items-center gap-2">
-                  <span className="text-sm font-semibold text-brand-gray-900">
-                    {m.author}
-                  </span>
+                  <ProfileLink userId={m.authorId || m.author?.id || m.author}>
+                    <span className="text-sm font-semibold text-brand-gray-900 hover:text-brand-teal-600">
+                      {m.author}
+                    </span>
+                  </ProfileLink>
                   <span className="text-[11px] text-brand-gray-400">
                     {m.time}
                   </span>
@@ -738,7 +776,7 @@ function ChatThread({ messages = [], canPost = false }) {
                 ) : null}
                 {m.text && m.text.replace(/<[^>]*>/g, "").trim() ? (
                   <div
-                    className="w-fit rounded-2xl rounded-tl-sm bg-brand-gray-50 px-4 py-2.5 text-sm text-brand-gray-800 break-words [&_a]:underline [&_a]:text-primary-500 [&_ul]:ml-5 [&_ul]:list-disc [&_ol]:ml-5 [&_ol]:list-decimal [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_p]:m-0 [&_blockquote]:border-l-2 [&_blockquote]:border-brand-gray-200 [&_blockquote]:pl-3 [&_pre]:bg-white [&_pre]:rounded-md [&_pre]:p-2 [&_pre]:font-mono [&_pre]:text-xs"
+                    className="w-fit rounded-2xl rounded-tl-sm bg-brand-gray-50 px-4 py-2.5 text-sm text-brand-gray-800 wrap-break-word [&_a]:underline [&_a]:text-primary-500 [&_ul]:ml-5 [&_ul]:list-disc [&_ol]:ml-5 [&_ol]:list-decimal [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_p]:m-0 [&_blockquote]:border-l-2 [&_blockquote]:border-brand-gray-200 [&_blockquote]:pl-3 [&_pre]:bg-white [&_pre]:rounded-md [&_pre]:p-2 [&_pre]:font-mono [&_pre]:text-xs"
                     dangerouslySetInnerHTML={{ __html: sanitizeHtml(m.text) }}
                   />
                 ) : null}
@@ -770,9 +808,7 @@ function ChatAttachment({ attachment }) {
         <div className="text-sm font-medium text-brand-gray-900">
           {attachment.name}
         </div>
-        <div className="text-xs text-brand-gray-500">
-          {attachment.size}
-        </div>
+        <div className="text-xs text-brand-gray-500">{attachment.size}</div>
       </div>
     </a>
   );
@@ -862,7 +898,10 @@ function ChatComposer({ onSend, disabled = false }) {
           size="sm"
           variant="outline"
           className="rounded-full"
-          onClick={() => { setValue(""); setFile(null); }}
+          onClick={() => {
+            setValue("");
+            setFile(null);
+          }}
           disabled={!value.length && !file}
         >
           Cancel

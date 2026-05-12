@@ -12,9 +12,13 @@ import { useAuthStore } from "@/lib/auth-store";
 const useHasHydrated = () => {
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
-    const unsub = useAuthStore.persist.onFinishHydration(() => setHydrated(true));
+    const unsub = useAuthStore.persist.onFinishHydration(() =>
+      setHydrated(true),
+    );
     // Already hydrated (e.g. sync storage)
-    if (useAuthStore.persist.hasHydrated()) setHydrated(true);
+    if (useAuthStore.persist.hasHydrated()) {
+      setTimeout(() => setHydrated(true), 0);
+    }
     return unsub;
   }, []);
   return hydrated;
@@ -60,7 +64,11 @@ function CommunityCard({ community, onJoin, t }) {
         <Button
           variant={joined ? "primary" : "tertiary"}
           size="sm"
-          className={joined ? "flex-none" : "flex-none bg-[#E8ECEF] text-black hover:bg-[#dde1e4]"}
+          className={
+            joined
+              ? "flex-none"
+              : "flex-none bg-[#E8ECEF] text-black hover:bg-[#dde1e4]"
+          }
           onClick={(e) => {
             e.stopPropagation();
             onJoin?.(community);
@@ -93,7 +101,9 @@ export default function CommunitiesPage() {
 
   useEffect(() => {
     if (!hydrated) return;
-    setLoading(true);
+    if (!loading) {
+      setTimeout(() => setLoading(true), 0);
+    }
     fetchCommunities().then((res) => {
       const items = res?.data || [];
       setCommunities(items);
@@ -112,7 +122,11 @@ export default function CommunitiesPage() {
       setCommunities((prev) =>
         prev.map((c) =>
           c.documentId === community.documentId
-            ? { ...c, isMember: res.data.isMember, subscribers: res.data.subscribers }
+            ? {
+                ...c,
+                isMember: res.data.isMember,
+                subscribers: res.data.subscribers,
+              }
             : c,
         ),
       );

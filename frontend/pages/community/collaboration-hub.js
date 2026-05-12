@@ -18,7 +18,9 @@ const useHasHydrated = () => {
     const unsub = useAuthStore.persist.onFinishHydration(() =>
       setHydrated(true),
     );
-    if (useAuthStore.persist.hasHydrated()) setHydrated(true);
+    if (useAuthStore.persist.hasHydrated()) {
+      setTimeout(() => setHydrated(true), 0);
+    }
     return unsub;
   }, []);
   return hydrated;
@@ -58,7 +60,9 @@ function initialsOf(name = "") {
 
 function CollaborationHubCard({ call, onView, t }) {
   const isActive = new Date(call.endDate) >= new Date();
-  const datePrefix = isActive ? t("call_card.valid_till") : t("call_card.ended");
+  const datePrefix = isActive
+    ? t("call_card.valid_till")
+    : t("call_card.ended");
 
   return (
     <article className="flex items-start justify-between gap-4 border-b border-brand-gray-100 py-5 lg:px-6">
@@ -82,7 +86,9 @@ function CollaborationHubCard({ call, onView, t }) {
               ) : (
                 <Link2 className="size-3.5" />
               )}
-              {call.visibility === "private" ? t("call_card.private") : t("call_card.limited_access")}
+              {call.visibility === "private"
+                ? t("call_card.private")
+                : t("call_card.limited_access")}
             </span>
           )}
         </div>
@@ -173,7 +179,10 @@ function RightSidebar({ communities, isAuthenticated }) {
             >
               {tCommunity("hub.continue_with_email")}
             </Button>
-            <SocialButton provider="google" className="w-full !h-auto !py-1.5 !text-sm !rounded-full" />
+            <SocialButton
+              provider="google"
+              className="w-full !h-auto !py-1.5 !text-sm !rounded-full"
+            />
           </div>
           <p className="mt-3 text-[10px] text-brand-gray-400 leading-tight">
             {tCommunity("hub.terms_agreement")}
@@ -205,7 +214,8 @@ function RightSidebar({ communities, isAuthenticated }) {
                       {c.name}
                     </div>
                     <div className="text-xs text-brand-gray-500">
-                      {formatCount(c.subscribers)} {tCommunity("hub.subscribers")}
+                      {formatCount(c.subscribers)}{" "}
+                      {tCommunity("hub.subscribers")}
                     </div>
                   </div>
                 </button>
@@ -239,15 +249,16 @@ export default function CollaborationHubPage() {
 
   useEffect(() => {
     if (!hydrated) return;
-    setLoading(true);
-    Promise.all([
-      fetchCollaborationCalls(),
-      fetchCommunities(),
-    ]).then(([callsRes, commRes]) => {
-      setCalls(Array.isArray(callsRes?.data) ? callsRes.data : []);
-      setCommunities(Array.isArray(commRes?.data) ? commRes.data : []);
-      setLoading(false);
-    });
+    if (!loading) {
+      setTimeout(() => setLoading(true), 0);
+    }
+    Promise.all([fetchCollaborationCalls(), fetchCommunities()]).then(
+      ([callsRes, commRes]) => {
+        setCalls(Array.isArray(callsRes?.data) ? callsRes.data : []);
+        setCommunities(Array.isArray(commRes?.data) ? commRes.data : []);
+        setLoading(false);
+      },
+    );
   }, [hydrated]);
 
   // Collect unique topics for filter chips

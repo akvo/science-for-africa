@@ -12,6 +12,7 @@ import {
 import { Loader2, ArrowRight, Handshake } from "lucide-react";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
+import ProfileLink from "@/components/shared/ProfileLink";
 import { toast } from "sonner";
 
 const CollaborationRow = ({ invite, onAccept, onDecline, processingId }) => {
@@ -45,20 +46,24 @@ const CollaborationRow = ({ invite, onAccept, onDecline, processingId }) => {
       {/* Mentor Column */}
       <td className="py-6 px-6 align-top">
         <div className="flex items-start gap-3">
-          <Avatar className="size-10 border border-brand-gray-100 bg-brand-teal-50 shrink-0">
-            <AvatarFallback className="text-sm text-brand-teal-700 font-bold bg-brand-teal-50">
-              <Handshake className="size-5" />
-            </AvatarFallback>
-          </Avatar>
+          <ProfileLink userId={mentor?.id}>
+            <Avatar className="size-10 border border-brand-gray-100 bg-brand-teal-50 shrink-0">
+              <AvatarFallback className="text-sm text-brand-teal-700 font-bold bg-brand-teal-50">
+                <Handshake className="size-5" />
+              </AvatarFallback>
+            </Avatar>
+          </ProfileLink>
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm font-normal text-brand-gray-900 truncate">
-                {mentor?.fullName ||
-                  mentor?.username ||
-                  t("collaboration.no_mentor", {
-                    defaultValue: "No mentor assigned",
-                  })}
-              </span>
+              <ProfileLink userId={mentor?.id}>
+                <span className="text-sm font-normal text-brand-gray-900 truncate hover:underline">
+                  {mentor?.fullName ||
+                    mentor?.username ||
+                    t("collaboration.no_mentor", {
+                      defaultValue: "No mentor assigned",
+                    })}
+                </span>
+              </ProfileLink>
               {mentor && (
                 <Badge className="bg-brand-orange-50 text-brand-orange-600 border-none rounded-full px-2.5 py-0.5 text-[11px] font-bold">
                   {t("collaboration.mentor_badge", { defaultValue: "Mentor" })}

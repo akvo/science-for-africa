@@ -32,7 +32,8 @@
     "save_success": "Profile updated successfully",
     "save_error": "Failed to update profile",
     "not_provided": "Not provided",
-    "no_bio": "No biography provided yet."
+    "no_bio": "No biography provided yet.",
+    "no_bio_public": "No biography provided."
   },
   "education_levels": {
     "Postgraduate Student (Masters)": "Postgraduate Student (Masters)",
@@ -57,6 +58,8 @@
   },
   "tabs": {
     "profile": "Profile",
+    "public_profile": "Public Profile",
+    "posts": "Posts",
     "details": "Details",
     "communities": "My Communities",
     "resources": "Resources",
@@ -67,12 +70,21 @@
     "courses": "Courses and certifications",
     "mentorship": "Mentorship"
   },
+  "share": {
+    "share_profile": "Share Profile",
+    "copied_to_clipboard": "Link copied to clipboard!"
+  },
+  "actions": {
+    "follow": "Follow",
+    "unfollow": "Unfollow"
+  },
   "sidebar": {
     "subscribers": "Subscribers",
     "posts": "Posts",
     "education": "Education",
     "communities": "Communities",
-    "see_all": "See all"
+    "see_all": "See all",
+    "no_communities": "No communities joined yet."
   },
   "communities": {
     "description": "Manage your community memberships and explore new ones.",

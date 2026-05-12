@@ -6,9 +6,13 @@ import { toast } from "sonner";
 import DetailsViewMode from "./details/DetailsViewMode";
 import DetailsEditMode from "./details/DetailsEditMode";
 
-const DetailsTab = () => {
+const DetailsTab = ({ profileUser }) => {
   const { t } = useTranslation("profile");
-  const { user, updateUser } = useAuthStore();
+  const { user: authUser, updateUser } = useAuthStore();
+  const user = profileUser || authUser;
+
+  // For public profile, we never show edit mode
+  const isPublic = !!profileUser;
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 

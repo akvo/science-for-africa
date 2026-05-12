@@ -1,16 +1,15 @@
 import React from "react";
 import Image from "next/image";
-import { User as UserIcon, CheckCircle2, Loader2 } from "lucide-react";
+import { User as UserIcon, CheckCircle2, Loader2, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ViewRow } from "./SharedComponents";
 import VerificationBadge from "@/components/shared/VerificationBadge";
 import { getStrapiMedia, validateOrcid } from "@/lib/strapi";
 import { useTranslation } from "next-i18next";
 
-const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
+const DetailsViewMode = ({ user, t, onEdit, onUserUpdate, isPublic }) => {
   const { t: tCommon } = useTranslation("common");
   const [validating, setValidating] = React.useState(false);
   const [orcidError, setOrcidError] = React.useState(null);
@@ -39,14 +38,41 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
             {t("details.description")}
           </p>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onEdit}
-          className="px-6 font-bold shadow-sm"
-        >
-          {t("details.edit_button")}
-        </Button>
+        {!isPublic && (
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const url =
+                  window.location.origin + `/profile/${user?.id || ""}`;
+                if (navigator.share) {
+                  navigator
+                    .share({
+                      title: user?.fullName || "Profile",
+                      url: url,
+                    })
+                    .catch(() => {});
+                } else {
+                  navigator.clipboard.writeText(url);
+                  alert(t("profile:share.copied_to_clipboard"));
+                }
+              }}
+              className="px-6 font-bold shadow-sm gap-2"
+            >
+              <Share2 size={16} />
+              {t("profile:share.share_profile")}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onEdit}
+              className="px-6 font-bold shadow-sm"
+            >
+              {t("details.edit_button")}
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="max-w-4xl">
@@ -180,33 +206,44 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
               </div>
             ) : (
               <>
-                <div className="flex items-center gap-3">
-                  <Input
-                    placeholder="0000-0000-0000-0000"
-                    value={user?.orcidId || orcidInput}
-                    onChange={(e) => setOrcidInput(e.target.value)}
-                    disabled={!!user?.orcidId}
-                    className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 max-w-xs"
-                  />
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={validating || !(user?.orcidId || orcidInput.trim())}
-                    onClick={() => handleValidate(user?.orcidId || orcidInput)}
-                    className="rounded-full text-xs h-10 px-6 border-brand-teal-800 text-brand-teal-800 hover:bg-brand-teal-50 shrink-0"
-                  >
-                    {validating ? (
-                      <>
-                        <Loader2 className="size-3 animate-spin mr-1" />
-                        {tCommon("verification.verifying")}
-                      </>
-                    ) : (
-                      tCommon("verification.verify_orcid")
-                    )}
-                  </Button>
-                </div>
-                {orcidError && (
+                {!isPublic && (
+                  <div className="flex items-center gap-3">
+                    <Input
+                      placeholder="0000-0000-0000-0000"
+                      value={user?.orcidId || orcidInput}
+                      onChange={(e) => setOrcidInput(e.target.value)}
+                      disabled={!!user?.orcidId}
+                      className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 max-w-xs"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={
+                        validating || !(user?.orcidId || orcidInput.trim())
+                      }
+                      onClick={() =>
+                        handleValidate(user?.orcidId || orcidInput)
+                      }
+                      className="rounded-full text-xs h-10 px-6 border-brand-teal-800 text-brand-teal-800 hover:bg-brand-teal-50 shrink-0"
+                    >
+                      {validating ? (
+                        <>
+                          <Loader2 className="size-3 animate-spin mr-1" />
+                          {tCommon("verification.verifying")}
+                        </>
+                      ) : (
+                        tCommon("verification.verify_orcid")
+                      )}
+                    </Button>
+                  </div>
+                )}
+                {!isPublic && orcidError && (
                   <p className="text-xs text-red-600">{orcidError}</p>
+                )}
+                {isPublic && !user?.orcidId && (
+                  <p className="text-[15px] text-brand-gray-500 font-medium">
+                    {t("details.not_provided")}
+                  </p>
                 )}
               </>
             )}

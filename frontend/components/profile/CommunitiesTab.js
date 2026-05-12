@@ -11,7 +11,7 @@ import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import ConfirmationModal from "@/components/shared/ConfirmationModal";
 
-const CommunityCard = ({ membership, onLeave, index }) => {
+const CommunityCard = ({ membership, onLeave, index, isPublic }) => {
   const { t } = useTranslation(["profile", "common"]);
   const community = membership.community;
   const [isLeaving, setIsLeaving] = useState(false);
@@ -115,24 +115,26 @@ const CommunityCard = ({ membership, onLeave, index }) => {
             </div>
           </div>
 
-          <div className="pointer-events-auto">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setShowConfirmModal(true);
-              }}
-              disabled={isLeaving}
-              className="rounded-full bg-[#E5E7EB] border-transparent text-[#1F2937] hover:bg-gray-300 font-semibold text-sm px-4 h-9"
-            >
-              {isLeaving ? (
-                <Loader2 className="size-3 animate-spin mr-1" />
-              ) : null}
-              {t("communities.joined", { defaultValue: "Joined" })}
-            </Button>
-          </div>
+          {!isPublic && (
+            <div className="pointer-events-auto">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowConfirmModal(true);
+                }}
+                disabled={isLeaving}
+                className="rounded-full bg-[#E5E7EB] border-transparent text-[#1F2937] hover:bg-gray-300 font-semibold text-sm px-4 h-9"
+              >
+                {isLeaving ? (
+                  <Loader2 className="size-3 animate-spin mr-1" />
+                ) : null}
+                {t("communities.joined", { defaultValue: "Joined" })}
+              </Button>
+            </div>
+          )}
         </div>
 
         <p className="text-sm text-brand-gray-500 line-clamp-2 leading-relaxed relative z-10 pointer-events-none">
@@ -146,14 +148,16 @@ const CommunityCard = ({ membership, onLeave, index }) => {
   );
 };
 
-const CommunitiesTab = () => {
+const CommunitiesTab = ({ profileUser }) => {
   const { t } = useTranslation(["profile", "common"]);
+  const { user: authUser } = useAuthStore();
+  const isPublic = !!profileUser;
+
   const [memberships, setMemberships] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!isPublic); // Don't load if public (already in prop)
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
-  const { user } = useAuthStore();
   const PAGE_SIZE = 6;
 
   const loadMemberships = async (pageNum, isInitial = false) => {
@@ -187,10 +191,14 @@ const CommunitiesTab = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (isPublic && profileUser) {
+      setMemberships(profileUser.memberships || []);
+      setHasMore(false); // For now, no pagination for public view
+      setIsLoading(false);
+    } else if (authUser) {
       loadMemberships(1, true);
     }
-  }, [user]);
+  }, [authUser, profileUser, isPublic]);
 
   const handleLoadMore = () => {
     const nextPage = page + 1;
@@ -240,6 +248,7 @@ const CommunitiesTab = () => {
             membership={membership}
             onLeave={removeMembershipFromList}
             index={idx}
+            isPublic={isPublic}
           />
         ))}
       </div>

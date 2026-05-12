@@ -553,7 +553,11 @@ export async function fetchResourceComments(resourceDocumentId) {
 /**
  * Post a comment on a resource. Pass parentCommentId for threaded replies.
  */
-export async function postResourceComment(resourceDocumentId, text, parentCommentId) {
+export async function postResourceComment(
+  resourceDocumentId,
+  text,
+  parentCommentId,
+) {
   const data = {
     text,
     resource: { connect: [resourceDocumentId] },
@@ -664,5 +668,44 @@ export async function fetchMentees() {
   } catch (error) {
     console.error("Error fetching mentees:", error);
     return null;
+  }
+}
+
+/**
+ * Fetch a public user profile by ID
+ */
+export async function fetchPublicProfile(id) {
+  try {
+    const response = await apiClient.get(`/auth/profile/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching public profile:", error);
+    return null;
+  }
+}
+
+/**
+ * Follow a user
+ */
+export async function followUser(id) {
+  try {
+    const response = await apiClient.post(`/users/${id}/follow`);
+    return response.data;
+  } catch (error) {
+    console.error("Error following user:", error);
+    return error;
+  }
+}
+
+/**
+ * Unfollow a user
+ */
+export async function unfollowUser(id) {
+  try {
+    const response = await apiClient.post(`/users/${id}/unfollow`);
+    return response.data;
+  } catch (error) {
+    console.error("Error unfollowing user:", error);
+    return error;
   }
 }

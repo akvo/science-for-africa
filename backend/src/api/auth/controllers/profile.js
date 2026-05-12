@@ -523,4 +523,75 @@ module.exports = ({ strapi }) => ({
       return ctx.internalServerError(error.message);
     }
   },
+
+  /**
+   * Returns a public profile by ID, sanitizing sensitive information
+   */
+  async publicProfile(ctx) {
+    const { id } = ctx.params;
+    const currentUser = ctx.state.user;
+
+    try {
+      // Determine if ID is numeric or a documentId
+      const isNumericId = !isNaN(parseInt(id)) && /^\d+$/.test(id);
+
+      const profile = await strapi.db
+        .query("plugin::users-permissions.user")
+        .findOne({
+          where: {
+            $or: [{ id: isNumericId ? parseInt(id) : -1 }, { documentId: id }],
+          },
+          populate: {
+            roleType: true,
+            highestEducationInstitution: true,
+            institutionMemberships: {
+              populate: { institution: true },
+            },
+            interests: true,
+            profilePhoto: true,
+            pageCover: true,
+            followers: true,
+          },
+        });
+
+      if (!profile) {
+        strapi.log.warn(`Public Profile not found for ID: ${id}`);
+        return ctx.notFound("Profile not found");
+      }
+
+      // Check if current user is following this profile
+      const following = currentUser
+        ? profile.followers?.some((f) => f.id === currentUser.id)
+        : false;
+
+      // Sanitize profile (exclude private fields like email, password, etc.)
+      const publicProfile = {
+        id: profile.id,
+        documentId: profile.documentId,
+        username: profile.username,
+        fullName: profile.fullName,
+        displayName: profile.displayName,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        position: profile.position,
+        biography: profile.biography,
+        interests: profile.interests,
+        educationTopic: profile.educationTopic,
+        educationLevel: profile.educationLevel,
+        highestEducationInstitution: profile.highestEducationInstitution,
+        institutionMemberships: profile.institutionMemberships,
+        profilePhoto: profile.profilePhoto,
+        pageCover: profile.pageCover,
+        subscriberCount: profile.subscriberCount || 0,
+        verified: profile.verified,
+        roleType: profile.roleType,
+        following,
+      };
+
+      return publicProfile;
+    } catch (error) {
+      strapi.log.error("Public Profile Fetch Error: " + error.message);
+      return ctx.internalServerError(error.message);
+    }
+  },
 });

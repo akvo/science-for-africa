@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_page_action_banners",
+  "info": {
+    "displayName": "Action Banner",
+    "icon": "picture",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

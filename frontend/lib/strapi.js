@@ -245,6 +245,8 @@ export function transformProfileUpdatePayload(userData) {
       "firstName",
       "lastName",
       "roleType",
+      "institutionName",
+      "institutionType",
     ];
     if (data[key] === "" && !identityFields.includes(key)) {
       delete data[key];
@@ -304,6 +306,17 @@ export async function fetchCommunities() {
 export async function fetchIndividualRoles(locale = "en") {
   return fetchLocalized(
     "/individual-roles?filters[isActive][$eq]=true&sort=sortOrder:asc",
+    locale,
+  );
+}
+
+/**
+ * Fetch all active institution types for onboarding.
+ * Uses localized names based on the current locale.
+ */
+export async function fetchInstitutionTypes(locale = "en") {
+  return fetchLocalized(
+    "/institution-types?filters[isActive][$eq]=true&sort=name:asc",
     locale,
   );
 }

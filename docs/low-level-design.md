@@ -515,6 +515,14 @@ This pattern prevents stale membership listings in the user profile even if the 
 
 **Unified Profile & Community Layout.** To ensure visual consistency across the platform, the `ProfileLayout` adopts a 3-column architecture (Left Nav, Main Feed, Right Profile Card) mirroring the `Community` pages. This unified layout facilitates seamless navigation between personal identity and community-driven collaboration features.
 
+**Institutional Account Support & Payload Sanitization.** To support both Individual and Institutional accounts, the platform implements a strict payload sanitization strategy in the `api/auth/me` PUT controller.
+- **Strapi v5 Document Service**: All profile updates use `strapi.documents("plugin::users-permissions.user").update` to ensure compatibility with v5's relational model (Document IDs).
+- **Identifier Standardization**: Relational fields (e.g., `roleType`, `highestEducationInstitution`) are resolved to their `documentId` before saving, ensuring Strapi can correctly link the entities.
+- **Cross-Type Purging**: To prevent "Invalid relations" errors and data contamination, the controller automatically purges fields that do not belong to the selected `userType`:
+    - If `userType` is **institution**: Individual-specific fields (`roleType`, `highestEducationInstitution`, `educationLevel`, `educationTopic`) are removed from the payload.
+    - If `userType` is **individual**: Institution-specific fields are cleaned up.
+- **Empty Field Protection**: The controller explicitly removes any empty string identifiers (`""`) or null values from relational fields before they reach the database, preventing validation failures.
+
 
 ## 3. Deployment & Infrastructure
 
@@ -966,8 +974,5 @@ Taxonomy masters and system constants are centralized in `src/utils/constants.js
 | `COUNTRIES` | `api::country.country` |
 | `INSTITUTION_TYPES` | `api::institution-type.institution-type` |
 | `INDIVIDUAL_ROLES` | `api::individual-role.individual-role` |
-
-This centralization simplifies maintenance when updating official lists (e.g., adding a new country or modifying an institution category).
-ual-role.individual-role` |
 
 This centralization simplifies maintenance when updating official lists (e.g., adding a new country or modifying an institution category).

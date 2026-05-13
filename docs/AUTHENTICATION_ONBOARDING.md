@@ -21,9 +21,9 @@ To provide a secure, seamless, and professional entry point for researchers and 
         - Step 4: ORCID Integration
         - Step 5: Affiliation (Final institutional link) — **Triggers final onboarding completion.**
     - **Path B: Institutional** (2 Steps):
-        - Step 1: Search and select Institution immediately.
+        - Step 1: Search and select Institution Name AND Institution Type.
         - Step 2: Interests (Select up to 5)
-        - Step 6: Completion (Skips Steps 3, 4, 5).
+        - Step 3: Completion (Skips Steps 3, 4, 5 of the individual path).
 4. **Completion**: User is automatically logged in and redirected to the homepage.
 
 ---
@@ -59,10 +59,12 @@ graph TD
 - `firstName`: String (Required)
 - `lastName`: String (Required)
 - `fullName`: String (Generated/Computed)
+- `userType`: Enumeration (individual, institution) - Default: individual
 - `interests`: JSON/Component (Array of strings, max 5)
 - `educationTopic`: String
 - `educationLevel`: String
-- `institution`: Relation (to Institution Collection)
+- `institution`: Relation (to Institution Collection) - Used for affiliation or institutional identity
+- `institutionType`: Relation (to InstitutionType Collection) - Used for institutional accounts
 - `affiliationStatus`: Enumeration (Pending, Approved, Rejected) - Default: Pending
 - `orcidId`: String (Optional, 16-digit format)
 - `onboardingComplete`: Boolean (Default: false)
@@ -87,7 +89,10 @@ graph TD
 - [x] **Email Verification**: Handler for unique links + success redirect to Login.
 
 ### Phase 4: Onboarding Journey (Step-by-Step)
-- [x] **Account Type & Institution**: Branching logic for Individual/Institutional, searchable dropdown. Integrated `fetchLocalized` with English fallback.
+- [x] **Account Type & Institution**: Branching logic for Individual/Institutional.
+    - **Individual**: Select Role Type and search for Institution.
+    - **Institution**: Search for Institution Name and select Institution Type.
+    - Integrated `fetchLocalized` for metadata fetching.
 - [x] **Expertise & Interests**: Category-based selection, visual highlights, max 5 limit check. Integrated `fetchLocalized` for multi-locale support.
 - [x] **Education & Career**: Education level dropdown, institution type field, "Skip" logic (Individual only). **Implementation**: Calls `updateUserProfile` on confirm to ensure the educational institution is persisted to the backend immediately.
 - [x] **ORCID Integration**: 16-digit regex validation, "Skip" logic (Individual only).

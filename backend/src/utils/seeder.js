@@ -410,18 +410,55 @@ const seed = async (strapi) => {
 
   // Helper for upsert
   const upsertEntry = async (uid, data, lookupField = "name") => {
-    const existing = await strapi.db.query(uid).findOne({
-      where: { [lookupField]: data[lookupField] },
+    const locale = data.locale || "en";
+
+    // 1. Use low-level db.query to find ALL records matching the lookup value across all locales/statuses
+    // This is the most reliable way to detect duplicates in v5
+    const matches = await strapi.db.query(uid).findMany({
+      where: { [lookupField]: data[lookupField], locale: locale },
     });
 
-    if (existing) {
-      return await strapi.db.query(uid).update({
-        where: { id: existing.id },
-        data,
+    if (matches.length > 0) {
+      // Take the first match as the "source of truth"
+      const existing = matches[0];
+
+      // 2. Brute-force cleanup of ANY other duplicates in the same locale
+      if (matches.length > 1) {
+        strapi.log.warn(
+          `Found ${matches.length} duplicates for ${uid} ('${data[lookupField]}'). Purging...`,
+        );
+        for (let i = 1; i < matches.length; i++) {
+          await strapi.db.query(uid).delete({
+            where: { id: matches[i].id },
+          });
+        }
+      }
+
+      const { id, documentId, locale: entryLocale, ...newData } = data;
+
+      // 3. Only update fields that have actually changed
+      const updateData = {};
+      Object.keys(newData).forEach((key) => {
+        if (newData[key] !== existing[key]) {
+          updateData[key] = newData[key];
+        }
+      });
+
+      if (Object.keys(updateData).length === 0) {
+        return existing;
+      }
+
+      // 4. Use Document Service for the final high-level update (ensures status/published/etc)
+      return await strapi.documents(uid).update({
+        documentId: existing.documentId,
+        data: updateData,
+        status: "published",
       });
     } else {
-      return await strapi.db.query(uid).create({
+      // 5. Create new if not found
+      return await strapi.documents(uid).create({
         data,
+        status: "published",
       });
     }
   };

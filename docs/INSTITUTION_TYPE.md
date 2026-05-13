@@ -25,6 +25,7 @@ To transition the `Institution` type classification from a static enumeration to
 ```mermaid
 erDiagram
     Institution ||--o{ InstitutionType : "classified_as"
+    User ||--o{ InstitutionType : "belongs_to_type"
 
     InstitutionType {
         string name UK

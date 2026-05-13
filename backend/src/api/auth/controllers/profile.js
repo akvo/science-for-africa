@@ -167,6 +167,7 @@ module.exports = ({ strapi }) => ({
       "roleType",
       "highestEducationInstitution",
       "affiliationInstitution",
+      "institutionType",
     ];
 
     const data = {};
@@ -217,31 +218,20 @@ module.exports = ({ strapi }) => ({
                   },
                 });
             }
-            data.highestEducationInstitution = inst.id;
+            data.highestEducationInstitution = inst.documentId;
           } else if (targetId) {
-            // Resolve to numeric ID
-            if (typeof targetId === "string" && isNaN(parseInt(targetId))) {
+            // In Strapi v5, relations prefer documentId
+            const isNumeric = !isNaN(parseInt(targetId));
+            if (isNumeric) {
               const inst = await strapi.db
                 .query("api::institution.institution")
                 .findOne({
-                  where: { documentId: targetId },
+                  where: { id: parseInt(targetId) },
                 });
-              data.highestEducationInstitution = inst?.id;
+              data.highestEducationInstitution = inst?.documentId;
             } else {
-              data.highestEducationInstitution = parseInt(targetId);
+              data.highestEducationInstitution = targetId;
             }
-          }
-        } else if (typeof data.highestEducationInstitution === "string") {
-          const targetId = data.highestEducationInstitution;
-          if (isNaN(parseInt(targetId))) {
-            const inst = await strapi.db
-              .query("api::institution.institution")
-              .findOne({
-                where: { documentId: targetId },
-              });
-            data.highestEducationInstitution = inst?.id;
-          } else {
-            data.highestEducationInstitution = parseInt(targetId);
           }
         }
       }
@@ -261,14 +251,33 @@ module.exports = ({ strapi }) => ({
               });
 
             if (!inst) {
+              const institutionData = {
+                name,
+                verified: false,
+                locale: ctx.query.locale || "en",
+              };
+
+              // If institutionType is provided, resolve it to numeric ID
+              if (data.institutionType) {
+                const it = await strapi.db
+                  .query("api::institution-type.institution-type")
+                  .findOne({
+                    where: {
+                      $or: [
+                        { name: data.institutionType },
+                        { documentId: data.institutionType },
+                      ],
+                    },
+                  });
+                if (it) {
+                  institutionData.institutionType = it.id;
+                }
+              }
+
               inst = await strapi.db
                 .query("api::institution.institution")
                 .create({
-                  data: {
-                    name,
-                    verified: false,
-                    locale: ctx.query.locale || "en",
-                  },
+                  data: institutionData,
                 });
             }
           } else if (targetId) {
@@ -283,15 +292,34 @@ module.exports = ({ strapi }) => ({
           }
         } else {
           const targetId = data.affiliationInstitution;
-          const isNumeric = !isNaN(parseInt(targetId));
           inst = await strapi.db.query("api::institution.institution").findOne({
-            where: isNumeric
+            where: !isNaN(parseInt(targetId))
               ? { id: parseInt(targetId) }
               : { documentId: targetId },
           });
         }
 
         if (inst) {
+          // If institution was found (not created) but institutionType is provided, update it
+          if (data.institutionType) {
+            const it = await strapi.db
+              .query("api::institution-type.institution-type")
+              .findOne({
+                where: {
+                  $or: [
+                    { name: data.institutionType },
+                    { documentId: data.institutionType },
+                  ],
+                },
+              });
+            if (it) {
+              await strapi.db.query("api::institution.institution").update({
+                where: { id: inst.id },
+                data: { institutionType: it.id },
+              });
+            }
+          }
+
           const existing = await strapi.db
             .query("api::institution-membership.institution-membership")
             .findOne({
@@ -316,6 +344,7 @@ module.exports = ({ strapi }) => ({
           }
         }
         delete data.affiliationInstitution;
+        delete data.institutionType;
       }
 
       // 3. Handle roleType (resolve name/documentId to numeric ID)
@@ -335,7 +364,7 @@ module.exports = ({ strapi }) => ({
               where: { name: data.roleType },
             });
         }
-        data.roleType = role?.id;
+        data.roleType = role?.documentId;
       }
 
       // 4. Handle interests (convert names to objects for component)
@@ -350,18 +379,40 @@ module.exports = ({ strapi }) => ({
           .filter((item) => !!item.name);
       }
 
-      // Clean up legacy fields
+      // 5. Cleanup for Institution user type (remove individual-only fields)
+      if (data.userType === "institution") {
+        delete data.roleType;
+        delete data.highestEducationInstitution;
+        delete data.educationTopic;
+        delete data.educationLevel;
+      }
+
+      // Final cleanup of non-schema fields before User update
       delete data.institutionName;
+      delete data.institutionType;
+      delete data.affiliationInstitution;
       delete data.educationInstitutionName;
 
-      // Update the user using Entity Service
-      await strapi.entityService.update(
-        "plugin::users-permissions.user",
-        user.id,
-        {
+      // Ensure no empty strings are passed for relations
+      if (data.roleType === "") delete data.roleType;
+      if (data.highestEducationInstitution === "")
+        delete data.highestEducationInstitution;
+
+      strapi.log.debug("FINAL Profile Update Payload: " + JSON.stringify(data));
+
+      try {
+        // Update the user using Document Service (Strapi v5 way)
+        await strapi.documents("plugin::users-permissions.user").update({
+          documentId: user.documentId,
           data,
-        },
-      );
+        });
+      } catch (error) {
+        strapi.log.error("UpdateMe Error: " + error.message);
+        if (error.details) {
+          strapi.log.error("Error Details: " + JSON.stringify(error.details));
+        }
+        throw error;
+      }
 
       // Fetch the updated user with full population using db.query to ensure consistency with ID
       const updatedUser = await strapi.db

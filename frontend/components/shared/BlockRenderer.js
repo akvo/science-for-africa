@@ -21,6 +21,13 @@ const components = {
   "page.info-accordion": InfoAccordion,
 };
 
+const NO_GAP_COMPONENTS = [
+  "page.hero",
+  "page.action-banner",
+  "page.identity-section",
+  "page.info-accordion",
+];
+
 const BlockRenderer = ({ blocks }) => {
   if (!blocks || !Array.isArray(blocks)) return null;
 
@@ -32,7 +39,15 @@ const BlockRenderer = ({ blocks }) => {
           console.warn(`No component found for ${block.__component}`);
           return null;
         }
-        return <Component key={`${block.__component}-${index}`} {...block} />;
+
+        const isNoGap = NO_GAP_COMPONENTS.includes(block.__component);
+        const marginClass = isNoGap || index === 0 ? "" : "mt-24 md:mt-32";
+
+        return (
+          <div key={`${block.__component}-${index}`} className={marginClass}>
+            <Component {...block} />
+          </div>
+        );
       })}
     </>
   );

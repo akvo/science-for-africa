@@ -20,17 +20,17 @@ const DEFAULT_LANDING_PAGE = {
     },
     {
       __component: "page.about-section",
-      title: "Empowering Africa's Research Ecosystem",
+      title: "",
       description:
-        "The SFA space for research managers is their digital home for connecting to the long term development of the profession across the continent. Bringing together individual practitioners, and leaders from African research institutions and networks, to build capacity and share leads.",
+        "The CoP supports research managers in their day to day practice while contributing to the longterm development of the profession across the continent. It brings together individuals, institutions, and partners to share experience, develop standards, build capacity, and collaborate.\n\nThis is not a static information portal. It is a peer-driven professional community where members:",
       checklist: [
-        { text: "address real-world practical challenges and opportunities" },
-        { text: "build lasting relationships with fellow peers" },
+        { text: "solve real operational and strategic challenges" },
+        { text: "build recognised professional identities" },
         {
-          text: "find safe space to share personal experiences - successes and failures",
+          text: "contribute to stronger research and innovation systems in Africa",
         },
-        { text: "stay up to date on news, events and opportunities" },
-        { text: "discover members and establish connections across Africa" },
+        { text: "exchange practicebased knowledge and tools" },
+        { text: "connect across institutions, countries, and career stages" },
       ],
     },
     {

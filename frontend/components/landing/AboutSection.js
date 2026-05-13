@@ -3,12 +3,13 @@ import Image from "next/image";
 import { getStrapiMedia } from "../../lib/strapi";
 
 const AboutSection = ({ title, description, image, checklist }) => {
-  const imageUrl = getStrapiMedia(image?.url) || "/images/about-fallback.jpg";
+  const imageUrl =
+    getStrapiMedia(image?.url) || "/assets/images/landing/about.png";
 
   return (
     <section className="py-24 bg-white overflow-hidden relative z-20">
       <div className="container mx-auto px-4 max-w-7xl flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-        <div className="w-full lg:w-1/2 relative aspect-4/3 rounded-3xl overflow-hidden shadow-2xl animate-in fade-in slide-in-from-left-8 duration-1000">
+        <div className="w-full lg:w-1/2 relative aspect-4/3 overflow-hidden animate-in fade-in slide-in-from-left-8 duration-1000">
           <Image
             src={imageUrl}
             alt={title || "About Science for Africa"}
@@ -18,10 +19,7 @@ const AboutSection = ({ title, description, image, checklist }) => {
         </div>
 
         <div className="w-full lg:w-1/2 animate-in fade-in slide-in-from-right-8 duration-1000">
-          <h2 className="text-display-sm md:text-display-md font-bold text-brand-teal-950 mb-8 leading-tight tracking-tight">
-            {title}
-          </h2>
-          <p className="text-lg md:text-xl text-brand-gray-700 mb-10 leading-relaxed">
+          <p className="text-base md:text-lg text-brand-gray-700 mb-10 leading-relaxed whitespace-pre-line">
             {description}
           </p>
 
@@ -43,7 +41,7 @@ const AboutSection = ({ title, description, image, checklist }) => {
                     />
                   </svg>
                 </div>
-                <span className="text-brand-teal-900 font-medium text-lg leading-snug">
+                <span className="text-brand-teal-900 font-medium text-base leading-snug">
                   {item.text}
                 </span>
               </li>

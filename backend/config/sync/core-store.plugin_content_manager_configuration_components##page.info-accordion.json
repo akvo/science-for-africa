@@ -1,13 +1,13 @@
 {
-  "key": "plugin_content_manager_configuration_components::page.image-section",
+  "key": "plugin_content_manager_configuration_components::page.info-accordion",
   "value": {
     "settings": {
       "bulkable": true,
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "documentId",
-      "defaultSortBy": "documentId",
+      "mainField": "title",
+      "defaultSortBy": "title",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -19,32 +19,32 @@
           "sortable": false
         }
       },
-      "image": {
+      "title": {
         "edit": {
-          "label": "image",
+          "label": "title",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "image",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "hasNoise": {
-        "edit": {
-          "label": "hasNoise",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "hasNoise",
+          "label": "title",
           "searchable": true,
           "sortable": true
+        }
+      },
+      "items": {
+        "edit": {
+          "label": "items",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "items",
+          "searchable": false,
+          "sortable": false
         }
       },
       "documentId": {
@@ -59,23 +59,25 @@
     "layouts": {
       "list": [
         "id",
-        "image",
-        "hasNoise"
+        "title",
+        "items"
       ],
       "edit": [
         [
           {
-            "name": "image",
+            "name": "title",
             "size": 6
-          },
+          }
+        ],
+        [
           {
-            "name": "hasNoise",
-            "size": 4
+            "name": "items",
+            "size": 12
           }
         ]
       ]
     },
-    "uid": "page.image-section",
+    "uid": "page.info-accordion",
     "isComponent": true
   },
   "type": "object",

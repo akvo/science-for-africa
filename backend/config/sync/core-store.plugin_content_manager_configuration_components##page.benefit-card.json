@@ -15,8 +15,8 @@
         "edit": {},
         "list": {
           "label": "id",
-          "searchable": true,
-          "sortable": true
+          "searchable": false,
+          "sortable": false
         }
       },
       "title": {
@@ -33,30 +33,44 @@
           "sortable": true
         }
       },
-      "text": {
+      "description": {
         "edit": {
-          "label": "text",
+          "label": "description",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "text",
+          "label": "description",
           "searchable": true,
           "sortable": true
         }
       },
-      "buttonText": {
+      "linkText": {
         "edit": {
-          "label": "buttonText",
+          "label": "linkText",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "buttonText",
+          "label": "linkText",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "linkUrl": {
+        "edit": {
+          "label": "linkUrl",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "linkUrl",
           "searchable": true,
           "sortable": true
         }
@@ -74,8 +88,8 @@
       "list": [
         "id",
         "title",
-        "text",
-        "buttonText"
+        "description",
+        "linkText"
       ],
       "edit": [
         [
@@ -84,13 +98,17 @@
             "size": 6
           },
           {
-            "name": "text",
+            "name": "description",
             "size": 6
           }
         ],
         [
           {
-            "name": "buttonText",
+            "name": "linkText",
+            "size": 6
+          },
+          {
+            "name": "linkUrl",
             "size": 6
           }
         ]

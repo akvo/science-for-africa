@@ -15,8 +15,8 @@
         "edit": {},
         "list": {
           "label": "id",
-          "searchable": true,
-          "sortable": true
+          "searchable": false,
+          "sortable": false
         }
       },
       "title": {
@@ -47,16 +47,30 @@
           "sortable": true
         }
       },
-      "buttonText": {
+      "linkText": {
         "edit": {
-          "label": "buttonText",
+          "label": "linkText",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "buttonText",
+          "label": "linkText",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "linkUrl": {
+        "edit": {
+          "label": "linkUrl",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "linkUrl",
           "searchable": true,
           "sortable": true
         }
@@ -75,7 +89,7 @@
         "id",
         "title",
         "description",
-        "buttonText"
+        "linkText"
       ],
       "edit": [
         [
@@ -90,7 +104,11 @@
         ],
         [
           {
-            "name": "buttonText",
+            "name": "linkText",
+            "size": 6
+          },
+          {
+            "name": "linkUrl",
             "size": 6
           }
         ]

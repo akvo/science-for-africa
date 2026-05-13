@@ -148,7 +148,7 @@
         "id",
         "name",
         "isActive",
-        "institutions"
+        "sortOrder"
       ],
       "edit": [
         [
@@ -163,12 +163,12 @@
         ],
         [
           {
-            "name": "institutions",
-            "size": 6
-          },
-          {
             "name": "sortOrder",
             "size": 4
+          },
+          {
+            "name": "institutions",
+            "size": 6
           }
         ]
       ]

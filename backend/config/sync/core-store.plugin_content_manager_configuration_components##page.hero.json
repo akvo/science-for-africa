@@ -15,20 +15,76 @@
         "edit": {},
         "list": {
           "label": "id",
-          "searchable": true,
-          "sortable": true
+          "searchable": false,
+          "sortable": false
         }
       },
-      "backgroundImage": {
+      "title": {
         "edit": {
-          "label": "backgroundImage",
+          "label": "title",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "backgroundImage",
+          "label": "title",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "description": {
+        "edit": {
+          "label": "description",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "description",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "linkText": {
+        "edit": {
+          "label": "linkText",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "linkText",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "linkUrl": {
+        "edit": {
+          "label": "linkUrl",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "linkUrl",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "image": {
+        "edit": {
+          "label": "image",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "image",
           "searchable": false,
           "sortable": false
         }
@@ -45,12 +101,34 @@
     "layouts": {
       "list": [
         "id",
-        "backgroundImage"
+        "title",
+        "description",
+        "linkText"
       ],
       "edit": [
         [
           {
-            "name": "backgroundImage",
+            "name": "title",
+            "size": 6
+          },
+          {
+            "name": "description",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "linkText",
+            "size": 6
+          },
+          {
+            "name": "linkUrl",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "image",
             "size": 6
           }
         ]

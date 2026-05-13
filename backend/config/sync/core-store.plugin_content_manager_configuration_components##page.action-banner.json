@@ -1,5 +1,5 @@
 {
-  "key": "plugin_content_manager_configuration_components::page.image-section",
+  "key": "plugin_content_manager_configuration_components::page.action-banner",
   "value": {
     "settings": {
       "bulkable": true,
@@ -33,20 +33,6 @@
           "sortable": false
         }
       },
-      "hasNoise": {
-        "edit": {
-          "label": "hasNoise",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "hasNoise",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "documentId": {
         "edit": {},
         "list": {
@@ -59,23 +45,18 @@
     "layouts": {
       "list": [
         "id",
-        "image",
-        "hasNoise"
+        "image"
       ],
       "edit": [
         [
           {
             "name": "image",
             "size": 6
-          },
-          {
-            "name": "hasNoise",
-            "size": 4
           }
         ]
       ]
     },
-    "uid": "page.image-section",
+    "uid": "page.action-banner",
     "isComponent": true
   },
   "type": "object",

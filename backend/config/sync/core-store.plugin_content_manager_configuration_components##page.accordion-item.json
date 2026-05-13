@@ -1,13 +1,13 @@
 {
-  "key": "plugin_content_manager_configuration_components::page.image-section",
+  "key": "plugin_content_manager_configuration_components::page.accordion-item",
   "value": {
     "settings": {
       "bulkable": true,
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "documentId",
-      "defaultSortBy": "documentId",
+      "mainField": "title",
+      "defaultSortBy": "title",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -19,30 +19,30 @@
           "sortable": false
         }
       },
-      "image": {
+      "title": {
         "edit": {
-          "label": "image",
+          "label": "title",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "image",
-          "searchable": false,
-          "sortable": false
+          "label": "title",
+          "searchable": true,
+          "sortable": true
         }
       },
-      "hasNoise": {
+      "content": {
         "edit": {
-          "label": "hasNoise",
+          "label": "content",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "hasNoise",
+          "label": "content",
           "searchable": true,
           "sortable": true
         }
@@ -59,23 +59,23 @@
     "layouts": {
       "list": [
         "id",
-        "image",
-        "hasNoise"
+        "title",
+        "content"
       ],
       "edit": [
         [
           {
-            "name": "image",
+            "name": "title",
             "size": 6
           },
           {
-            "name": "hasNoise",
-            "size": 4
+            "name": "content",
+            "size": 6
           }
         ]
       ]
     },
-    "uid": "page.image-section",
+    "uid": "page.accordion-item",
     "isComponent": true
   },
   "type": "object",

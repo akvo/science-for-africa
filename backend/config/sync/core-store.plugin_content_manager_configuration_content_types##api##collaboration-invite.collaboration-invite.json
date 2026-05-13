@@ -176,13 +176,17 @@
       "list": [
         "id",
         "email",
-        "role",
-        "inviteStatus"
+        "inviteStatus",
+        "role"
       ],
       "edit": [
         [
           {
             "name": "email",
+            "size": 6
+          },
+          {
+            "name": "inviteStatus",
             "size": 6
           }
         ],
@@ -203,12 +207,6 @@
           },
           {
             "name": "invitedAt",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "inviteStatus",
             "size": 6
           }
         ]

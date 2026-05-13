@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Search, Loader2, ArrowLeft } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import {
   fetchLocalized,
   fetchIndividualRoles,
@@ -133,14 +133,7 @@ const OnboardingStep1 = () => {
   return (
     <div className="flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-90 mx-auto">
       {/* Top Navigation Row */}
-      <div className="flex items-center justify-between mb-24">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-brand-gray-500 hover:text-brand-teal-700 transition-colors cursor-pointer text-md font-medium"
-        >
-          <ArrowLeft size={18} />
-          {t("steps.back")}
-        </button>
+      <div className="flex items-center justify-end mb-24">
         <button
           onClick={skipStep}
           className="text-brand-gray-500 hover:text-brand-teal-700 transition-colors cursor-pointer text-md font-medium"

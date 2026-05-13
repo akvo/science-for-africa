@@ -46,33 +46,35 @@ const DEFAULT_LANDING_PAGE = {
     },
     {
       __component: "page.benefits-grid",
+      tagline:
+        "A professional home for Africa’s research and innovation managers.",
       title: "What You Can Do on the Platform",
       items: [
         {
           title: "Collaborate",
           description:
-            "Work with other professionals on research management projects, build networks and share skills.",
+            "Connect with peers and institutions to develop proposals, tools and joint initiatives.",
           linkText: "Explore",
           linkUrl: "/collaboration",
         },
         {
           title: "Access Opportunities",
           description:
-            "Find latest grants, fellowships, and research management jobs available across the continent.",
+            "Find funding calls, jobs, consultancies, fellowships, and collaboration opportunities.",
           linkText: "Explore",
           linkUrl: "/resources",
         },
         {
           title: "Build Professional Recognition",
           description:
-            "Showcase your expertise, contribute to best practices, and build a verified professional profile.",
+            "Create a trusted professional profile, showcase certifications and contribute recognised knowledge.",
           linkText: "Explore",
           linkUrl: "/profile",
         },
         {
           title: "Mentor and Be Mentored",
           description:
-            "Engage in peer-to-peer learning, share knowledge, and support the next generation of managers.",
+            "Engage in structured mentorship across career stages and geographies.",
           linkText: "Explore",
           linkUrl: "/collaboration",
         },

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { getStrapiMedia } from "../../lib/strapi";
 
 const ActionBanner = ({ image }) => {
-  const imageUrl = getStrapiMedia(image?.url) || "/images/action-fallback.jpg";
+  const imageUrl = getStrapiMedia(image?.url) || "/assets/images/landing/action.png";
 
   return (
     <section className="relative aspect-21/9 w-full overflow-hidden">

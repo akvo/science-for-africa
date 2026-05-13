@@ -11,6 +11,9 @@
       "type": "string",
       "required": true
     },
+    "tagline": {
+      "type": "string"
+    },
     "items": {
       "type": "component",
       "repeatable": true,

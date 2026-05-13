@@ -20,28 +20,14 @@ describe("Landing Page API", () => {
     await teardownStrapi();
   });
 
-  it("should return 403 when public access is not granted", async () => {
+  it("should return 200 by default (granted by seeder)", async () => {
     const response = await request(strapi.server.httpServer).get(
       "/api/landing-page",
     );
-    expect(response.status).toBe(403);
-  });
-
-  it("should return 200 when public access is granted", async () => {
-    await grantPermissions("public", {
-      "landing-page": ["api::landing-page.landing-page.find"],
-    });
-
-    const response = await request(strapi.server.httpServer).get(
-      "/api/landing-page",
-    );
-
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("data");
   });
 
   it("should return seeded content from the production seeder", async () => {
-    // The seeder runs in bootstrap, so data should already be there.
     const response = await request(strapi.server.httpServer).get(
       "/api/landing-page?populate=blocks",
     );
@@ -51,9 +37,9 @@ describe("Landing Page API", () => {
     expect(response.body.data.blocks.length).toBeGreaterThan(0);
 
     // Verify specific seeded content from DEFAULT_LANDING_PAGE
-    const textSection = response.body.data.blocks.find(
-      (b) => b.__component === "page.text-section",
+    const hero = response.body.data.blocks.find(
+      (b) => b.__component === "page.hero",
     );
-    expect(textSection.title).toMatch(/professional home/i);
+    expect(hero.title).toMatch(/Pan-African Community/i);
   });
 });

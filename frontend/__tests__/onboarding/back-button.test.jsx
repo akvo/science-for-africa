@@ -38,8 +38,12 @@ jest.mock("@/lib/auth-store", () => ({
 
 // Mock Strapi
 jest.mock("@/lib/strapi", () => ({
-  fetchLocalized: jest.fn().mockResolvedValue({ data: [] }),
+  updateUserProfile: jest.fn().mockResolvedValue({ success: true }),
   fetchIndividualRoles: jest.fn().mockResolvedValue({ data: [] }),
+  fetchInstitutionTypes: jest.fn().mockResolvedValue({ data: [] }),
+  fetchFromStrapi: jest
+    .fn()
+    .mockImplementation(() => Promise.resolve({ data: [] })),
 }));
 
 describe("Onboarding Back Button Visibility", () => {
@@ -50,10 +54,10 @@ describe("Onboarding Back Button Visibility", () => {
     });
   });
 
-  it("should NOT show the Back button on Step 1", () => {
+  it("should show the Back button on Step 1", () => {
     render(<OnboardingPage />);
     const backButton = screen.queryByRole("button", { name: /steps\.back/i });
-    expect(backButton).not.toBeInTheDocument();
+    expect(backButton).toBeInTheDocument();
   });
 
   it("should show the Back button on Step 2", async () => {

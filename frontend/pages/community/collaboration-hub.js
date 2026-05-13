@@ -18,6 +18,7 @@ const useHasHydrated = () => {
     const unsub = useAuthStore.persist.onFinishHydration(() =>
       setHydrated(true),
     );
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (useAuthStore.persist.hasHydrated()) setHydrated(true);
     return unsub;
   }, []);
@@ -58,13 +59,15 @@ function initialsOf(name = "") {
 
 function CollaborationHubCard({ call, onView, t }) {
   const isActive = new Date(call.endDate) >= new Date();
-  const datePrefix = isActive ? t("call_card.valid_till") : t("call_card.ended");
+  const datePrefix = isActive
+    ? t("call_card.valid_till")
+    : t("call_card.ended");
 
   return (
     <article className="flex items-start justify-between gap-4 border-b border-brand-gray-100 py-5 lg:px-6">
       <div className="min-w-0 flex-1">
         {/* Status pill */}
-        <div className="mb-3 inline-flex h-[34px] w-fit items-center divide-x divide-brand-gray-200 rounded-full bg-[#E8ECEF] text-sm font-medium text-brand-gray-700">
+        <div className="mb-3 inline-flex h-8.5 w-fit items-center divide-x divide-brand-gray-200 rounded-full bg-[#E8ECEF] text-sm font-medium text-brand-gray-700">
           <span className="inline-flex h-full items-center gap-2 px-4">
             <span
               className={`size-2 rounded-full ${isActive ? "bg-emerald-500" : "bg-red-500"}`}
@@ -82,7 +85,9 @@ function CollaborationHubCard({ call, onView, t }) {
               ) : (
                 <Link2 className="size-3.5" />
               )}
-              {call.visibility === "private" ? t("call_card.private") : t("call_card.limited_access")}
+              {call.visibility === "private"
+                ? t("call_card.private")
+                : t("call_card.limited_access")}
             </span>
           )}
         </div>
@@ -173,7 +178,10 @@ function RightSidebar({ communities, isAuthenticated }) {
             >
               {tCommunity("hub.continue_with_email")}
             </Button>
-            <SocialButton provider="google" className="w-full !h-auto !py-1.5 !text-sm !rounded-full" />
+            <SocialButton
+              provider="google"
+              className="h-auto! py-1.5! text-sm! rounded-full! w-fit"
+            />
           </div>
           <p className="mt-3 text-[10px] text-brand-gray-400 leading-tight">
             {tCommunity("hub.terms_agreement")}
@@ -205,7 +213,8 @@ function RightSidebar({ communities, isAuthenticated }) {
                       {c.name}
                     </div>
                     <div className="text-xs text-brand-gray-500">
-                      {formatCount(c.subscribers)} {tCommunity("hub.subscribers")}
+                      {formatCount(c.subscribers)}{" "}
+                      {tCommunity("hub.subscribers")}
                     </div>
                   </div>
                 </button>
@@ -239,15 +248,15 @@ export default function CollaborationHubPage() {
 
   useEffect(() => {
     if (!hydrated) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
-    Promise.all([
-      fetchCollaborationCalls(),
-      fetchCommunities(),
-    ]).then(([callsRes, commRes]) => {
-      setCalls(Array.isArray(callsRes?.data) ? callsRes.data : []);
-      setCommunities(Array.isArray(commRes?.data) ? commRes.data : []);
-      setLoading(false);
-    });
+    Promise.all([fetchCollaborationCalls(), fetchCommunities()]).then(
+      ([callsRes, commRes]) => {
+        setCalls(Array.isArray(callsRes?.data) ? callsRes.data : []);
+        setCommunities(Array.isArray(commRes?.data) ? commRes.data : []);
+        setLoading(false);
+      },
+    );
   }, [hydrated]);
 
   // Collect unique topics for filter chips
@@ -296,7 +305,7 @@ export default function CollaborationHubPage() {
                     type="button"
                     onClick={() => setFilter(f.key)}
                     className={cn(
-                      "inline-flex h-[34px] items-center rounded-full px-3.5 text-sm font-medium transition-colors border",
+                      "inline-flex h-8.5 items-center rounded-full px-3.5 text-sm font-medium transition-colors border",
                       isActive
                         ? "border-[#D0D5DD] bg-primary-50 text-brand-gray-900"
                         : "border-brand-gray-200 bg-white text-brand-gray-700 hover:bg-brand-gray-50",

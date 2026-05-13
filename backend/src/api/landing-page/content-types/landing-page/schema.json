@@ -21,14 +21,12 @@
       "components": [
         "page.hero",
         "page.secondary-heading",
-        "page.text-section",
         "page.about-section",
         "page.explore-communities",
         "page.action-banner",
         "page.benefits-grid",
         "page.identity-section",
-        "page.info-accordion",
-        "page.newsletter-section"
+        "page.info-accordion"
       ],
       "pluginOptions": {
         "i18n": {

@@ -167,11 +167,12 @@
   },
   "seo": {
     "description": "Avançando o futuro da ciência para a África. Junte‑se à comunidade de cientistas, pesquisadores e inovadores.",
-    "home_title": "Sistema de Design | Guia de Estilo",
+    "home_title": "Início | Science for Africa",
     "onboarding_title": "Complete seu perfil",
     "community_title": "Comunidade",
     "profile_title": "Perfil profissional | Science for Africa",
-    "profile_description": "Gerencie sua identidade profissional, comunidades e colaborações."
+    "profile_description": "Gerencie sua identidade profissional, comunidades e colaborações.",
+    "home_description": "O lar profissional para gestores de pesquisa e inovação na África."
   },
   "verification": {
     "pending": "Pendente",

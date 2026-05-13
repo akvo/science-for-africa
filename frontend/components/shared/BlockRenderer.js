@@ -1,7 +1,6 @@
 import React from "react";
 import Hero from "../landing/Hero";
 import SecondaryHeading from "../landing/SecondaryHeading";
-import TextSection from "../landing/TextSection";
 import AboutSection from "../landing/AboutSection";
 import ExploreCommunities from "../landing/ExploreCommunities";
 import ActionBanner from "../landing/ActionBanner";
@@ -12,7 +11,6 @@ import InfoAccordion from "../landing/InfoAccordion";
 const components = {
   "page.hero": Hero,
   "page.secondary-heading": SecondaryHeading,
-  "page.text-section": TextSection,
   "page.about-section": AboutSection,
   "page.explore-communities": ExploreCommunities,
   "page.action-banner": ActionBanner,
@@ -23,6 +21,7 @@ const components = {
 
 const NO_GAP_COMPONENTS = [
   "page.hero",
+  "page.about-section",
   "page.action-banner",
   "page.identity-section",
   "page.info-accordion",

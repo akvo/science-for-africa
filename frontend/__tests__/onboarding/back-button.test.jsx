@@ -44,9 +44,7 @@ jest.mock("@/lib/strapi", () => ({
   fetchFromStrapi: jest
     .fn()
     .mockImplementation(() => Promise.resolve({ data: [] })),
-  fetchLocalized: jest
-    .fn()
-    .mockImplementation(() => Promise.resolve([])),
+  fetchLocalized: jest.fn().mockImplementation(() => Promise.resolve([])),
 }));
 
 describe("Onboarding Back Button Visibility", () => {

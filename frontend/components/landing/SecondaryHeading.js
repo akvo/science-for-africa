@@ -6,7 +6,7 @@ const SecondaryHeading = ({ tagline, title }) => {
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           {tagline && (
-            <p className="text-brand-teal-800 font-bold tracking-tight text-lg uppercase">
+            <p className="text-brand-teal-800 font-bold tracking-tight text-lg">
               {tagline}
             </p>
           )}

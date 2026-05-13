@@ -683,3 +683,13 @@ export async function fetchMentees() {
     return null;
   }
 }
+
+/**
+ * Fetch Landing Page data with blocks populated and localization fallback.
+ */
+export async function fetchLandingPage(locale = "en") {
+  return fetchLocalized(
+    "/landing-page?populate[blocks][populate]=*",
+    locale,
+  );
+}

@@ -8,7 +8,6 @@ import ActionBanner from "../landing/ActionBanner";
 import BenefitsGrid from "../landing/BenefitsGrid";
 import IdentitySection from "../landing/IdentitySection";
 import InfoAccordion from "../landing/InfoAccordion";
-import NewsletterSection from "../landing/NewsletterSection";
 
 const components = {
   "page.hero": Hero,
@@ -20,7 +19,6 @@ const components = {
   "page.benefits-grid": BenefitsGrid,
   "page.identity-section": IdentitySection,
   "page.info-accordion": InfoAccordion,
-  "page.newsletter-section": NewsletterSection,
 };
 
 const BlockRenderer = ({ blocks }) => {

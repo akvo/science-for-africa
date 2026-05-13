@@ -91,26 +91,19 @@ const DEFAULT_LANDING_PAGE = {
         {
           title: "Who the Community is For",
           content:
-            "The CoP is for research management professionals at all levels, from early career to senior leadership, across universities, research institutes, and funding agencies in Africa.",
+            "This CoP is designed for professionals and institutions involved in research and innovation management, including Research Managers, Universities, Research Funders, Innovation Offices, and more.supports individual goals.",
         },
         {
           title: "Core Platform Capabilities",
           content:
-            "The platform offers shared resources, community forums, collaboration tools, and professional networking to support the R&I management profession.",
+            "Personalised Home Feed, Thematic Communities, Q&A Spaces, Knowledge Repository, Mentorship Networks, and more.",
         },
         {
           title: "Why Members Return Regularly",
           content:
-            "Members return to stay connected with peers, discover new opportunities, and share knowledge that helps them advance their professional practice.",
+            "Members return to solve professional challenges, connect with peers, develop skills, access opportunities, and strengthen careers.",
         },
       ],
-    },
-    {
-      __component: "page.newsletter-section",
-      title: "Join our newsletter",
-      text: "Want news, latest collaboration and research ideas?",
-      buttonText: "Join",
-      inputPlaceholder: "Your email",
     },
   ],
 };

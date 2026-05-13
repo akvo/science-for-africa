@@ -1,66 +1,36 @@
-import React, { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import React from "react";
+import { Check } from "lucide-react";
 
-const AccordionItem = ({ title, content, isOpen, onClick }) => {
+const InfoItem = ({ title, content }) => {
   return (
-    <div className="border-b border-brand-gray-100 last:border-0">
-      <button
-        onClick={onClick}
-        className="w-full py-6 flex items-center justify-between text-left hover:text-brand-teal-700 transition-colors"
-      >
-        <span className="text-xl md:text-display-xs font-bold text-brand-teal-950">
-          {title}
-        </span>
-        <ChevronDown
-          className={`w-6 h-6 text-brand-teal-800 transition-transform duration-300 ${
-            isOpen ? "rotate-180" : ""
-          }`}
-        />
-      </button>
-      <div
-        className={`grid transition-all duration-300 ease-in-out ${
-          isOpen ? "grid-rows-[1fr] pb-6 opacity-100" : "grid-rows-[0fr] opacity-0"
-        }`}
-      >
-        <div className="overflow-hidden">
-          <p className="text-lg text-brand-gray-700 leading-relaxed">
-            {content}
-          </p>
+    <div className="py-32 md:py-40 border-b border-brand-gray-100 flex flex-col md:flex-row items-center gap-12 group last:border-b-0">
+      <div className="flex items-center gap-8 w-full md:w-[40%] pr-8">
+        <div className="w-6 h-6 rounded-full bg-brand-teal-900 flex items-center justify-center shrink-0">
+          <Check className="w-4 h-4 text-white" strokeWidth={3} />
         </div>
+        <h3 className="text-xl md:text-2xl font-bold text-brand-teal-900 tracking-tight leading-tight">
+          {title}
+        </h3>
+      </div>
+      <div className="w-full md:w-[60%]">
+        <p className="text-base text-brand-gray-700 leading-relaxed max-w-3xl">
+          {content}
+        </p>
       </div>
     </div>
   );
 };
 
-const InfoAccordion = ({ title, items }) => {
-  const [openIndex, setOpenIndex] = useState(0);
-
+const InfoAccordion = ({ items }) => {
   if (!items || !items.length) return null;
 
   return (
-    <section className="py-24 bg-brand-gray-50/30">
+    <section className="bg-white border-b border-brand-gray-100 relative z-20">
       <div className="container mx-auto px-4 max-w-7xl">
-        <div className="flex flex-col lg:flex-row gap-12">
-          {title && (
-            <div className="lg:w-1/3">
-              <h2 className="text-display-sm text-brand-teal-950 sticky top-32">
-                {title}
-              </h2>
-            </div>
-          )}
-          <div className={title ? "lg:w-2/3" : "w-full"}>
-            <div className="flex flex-col border-t border-brand-gray-100">
-              {items.map((item, index) => (
-                <AccordionItem
-                  key={index}
-                  title={item.title}
-                  content={item.content}
-                  isOpen={openIndex === index}
-                  onClick={() => setOpenIndex(openIndex === index ? -1 : index)}
-                />
-              ))}
-            </div>
-          </div>
+        <div className="flex flex-col border-t border-brand-gray-100">
+          {items.map((item, index) => (
+            <InfoItem key={index} title={item.title} content={item.content} />
+          ))}
         </div>
       </div>
     </section>

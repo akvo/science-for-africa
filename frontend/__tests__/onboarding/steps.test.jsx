@@ -60,6 +60,7 @@ jest.mock("../../components/layout/AuthLayout", () => ({
 jest.mock("@/lib/strapi", () => ({
   updateUserProfile: jest.fn().mockResolvedValue({ success: true }),
   fetchIndividualRoles: jest.fn().mockResolvedValue({ data: [] }),
+  fetchInstitutionTypes: jest.fn().mockResolvedValue({ data: [] }),
   fetchFromStrapi: jest.fn().mockImplementation((endpoint) => {
     if (endpoint.includes("/interests")) {
       return Promise.resolve({

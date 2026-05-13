@@ -37,9 +37,9 @@ const DEFAULT_LANDING_PAGE = {
       __component: "page.explore-communities",
       title: "Explore communities",
       description:
-        "Join focus themed groups, sharing threads within each community.",
+        "Dive into the world of creativity, from art history to modern expression.",
       linkText: "See all",
-      linkUrl: "/communities",
+      linkUrl: "/community",
     },
     {
       __component: "page.action-banner",

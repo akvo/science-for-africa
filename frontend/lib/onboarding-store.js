@@ -10,6 +10,7 @@ export const useOnboardingStore = create(
         // Step 1
         roleType: "",
         institutionName: "", // for Institutional account type tab
+        institutionType: "", // for Institutional account type tab
         // Step 2
         interests: [],
         // Step 3
@@ -96,6 +97,7 @@ export const useOnboardingStore = create(
           formData: {
             roleType: "",
             institutionName: "",
+            institutionType: "",
             interests: [],
             educationLevel: "",
             educationInstitution: { id: null, name: "" },

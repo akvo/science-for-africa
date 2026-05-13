@@ -54,6 +54,7 @@ jest.mock("@/lib/strapi", () => ({
   fetchFromStrapi: jest.fn().mockResolvedValue({ data: [] }),
   fetchLocalized: jest.fn().mockResolvedValue({ data: [] }),
   fetchIndividualRoles: jest.fn().mockResolvedValue({ data: [] }),
+  fetchInstitutionTypes: jest.fn().mockResolvedValue({ data: [] }),
   updateUserProfile: jest.fn().mockResolvedValue({ success: true }),
 }));
 

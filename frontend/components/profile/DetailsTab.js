@@ -75,6 +75,7 @@ const DetailsTab = ({ profileUser }) => {
       t={t}
       onEdit={() => setIsEditing(true)}
       onUserUpdate={handleUserUpdate}
+      isPublic={isPublic}
     />
   );
 };

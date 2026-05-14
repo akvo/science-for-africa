@@ -1012,4 +1012,40 @@ Taxonomy masters and system constants are centralized in `src/utils/constants.js
 | `INSTITUTION_TYPES` | `api::institution-type.institution-type` |
 | `INDIVIDUAL_ROLES` | `api::individual-role.individual-role` |
 
-This centralization simplifies maintenance when updating official lists (e.g., adding a new country or modifying an institution category).
+
+## 16. ORCID OAuth Authentication
+
+The platform supports researcher identity verification via ORCID OAuth 2.0, allowing users to link their professional profile and automatically import verified data.
+
+### 16.1 Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant Strapi
+    participant ORCID
+
+    User->>Frontend: Click "Verify ORCID"
+    Frontend->>Strapi: GET /api/orcid-auth/authorize?returnTo=...
+    Strapi-->>Frontend: { data: { authorizeUrl } }
+    Frontend->>ORCID: Redirect to OAuth Login
+    ORCID-->>User: Show Authorization Screen
+    User->>ORCID: Approve
+    ORCID-->>Frontend: Redirect to /auth/orcid/callback?code=...
+    Frontend->>Strapi: POST /api/orcid-auth/callback { code, state }
+    Strapi->>ORCID: Exchange code for access_token + orcid_id
+    Strapi->>ORCID: Fetch Public Data (Biography, Keywords)
+    Strapi-->>Frontend: { success: true, user }
+    Frontend->>User: Display Verified Badge
+```
+
+### 16.2 Key Features
+- **Secure Handshake**: Uses the official ORCID Public API for secure identity verification.
+- **Data Mapping**: Automatically maps ORCID keywords to `user.interest` components and populates the biography field.
+- **Verification Status**: Sets the `verified` flag on the user profile, enabling verification badges across the platform.
+- **Multi-context support**: The flow is integrated into both the onboarding process (Step 4) and the user profile management page.
+
+### 16.3 Security & Permissions
+- **Grant Permissions**: The `authorize` and `callback` actions are granted to the `authenticated` role via the production seeder.
+- **Environment Variables**: Client credentials and redirect URIs are managed via `ORCID_CLIENT_ID`, `ORCID_CLIENT_SECRET`, and `ORCID_REDIRECT_URI`.

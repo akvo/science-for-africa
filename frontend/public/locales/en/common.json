@@ -122,6 +122,8 @@
     "joined": "Joined",
     "create_post": "Create post",
     "sort_by": "Sort by",
+    "sort_newest": "Newest",
+    "sort_oldest": "Oldest",
     "loading": "Loading community...",
     "not_found": "Community not found.",
     "created": "Created",

@@ -129,6 +129,8 @@
     "joined": "Membre",
     "create_post": "Créer un post",
     "sort_by": "Trier par",
+    "sort_newest": "Le plus récent",
+    "sort_oldest": "Le plus ancien",
     "loading": "Chargement de la communauté...",
     "not_found": "Communauté introuvable.",
     "created": "Créée le",

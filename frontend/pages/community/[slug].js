@@ -3,9 +3,9 @@ import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Meta from "@/components/seo/Meta";
-import { ArrowLeft, ChevronDown, Plus } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import SortDropdown from "@/components/shared/SortDropdown";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
 import CommunityLeftNav from "@/components/community/CommunityLeftNav";
 import CommunityHeader from "@/components/community/CommunityHeader";
 import CommunityAboutCard from "@/components/community/CommunityAboutCard";
@@ -14,7 +14,12 @@ import ResourcesList from "@/components/community/ResourcesList";
 import CreateCollaborationDialog from "@/components/collaboration/CreateCollaborationDialog";
 import { useCollaborationStore } from "@/lib/collaboration-store";
 import { useAuthStore } from "@/lib/auth-store";
-import { fetchCommunity, fetchCollaborationCalls, joinCommunity, leaveCommunity } from "@/lib/strapi";
+import {
+  fetchCommunity,
+  fetchCollaborationCalls,
+  joinCommunity,
+  leaveCommunity,
+} from "@/lib/strapi";
 import { COMMUNITY_TABS } from "@/lib/community-mock-data";
 
 function mapCallFromApi(c) {
@@ -24,6 +29,7 @@ function mapCallFromApi(c) {
     description: c.description,
     status: (c.status || "Active").toLowerCase(),
     endsAt: c.endDate,
+    createdAt: c.createdAt,
     tags: Array.isArray(c.topics) ? c.topics : [],
   };
 }
@@ -47,6 +53,7 @@ export default function CommunityDetailPage() {
   const [loading, setLoading] = useState(true);
   const [calls, setCalls] = useState([]);
   const [isMember, setIsMember] = useState(false);
+  const [sortOrder, setSortOrder] = useState("");
   const { slug } = router.query;
 
   const openCollaboration = () => {
@@ -176,10 +183,7 @@ export default function CommunityDetailPage() {
                 <ArrowLeft className="size-4" />
               </button>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="md" className="gap-2">
-                  <ChevronDown className="size-4" />
-                  {t("community.sort_by")}
-                </Button>
+                <SortDropdown sortOrder={sortOrder} onChange={setSortOrder} />
               </div>
             </div>
 
@@ -210,12 +214,16 @@ export default function CommunityDetailPage() {
               <TabsContent value="collaboration-calls" className="pt-2">
                 <CollaborationCallsList
                   calls={calls}
+                  sortOrder={sortOrder}
                   onView={(call) => router.push(`/community/calls/${call.id}`)}
                   onCreate={openCollaboration}
                 />
               </TabsContent>
               <TabsContent value="resources" className="pt-2">
-                <ResourcesList communityDocumentId={community?.documentId} />
+                <ResourcesList
+                  communityDocumentId={community?.documentId}
+                  sortOrder={sortOrder}
+                />
               </TabsContent>
             </Tabs>
           </div>
@@ -230,7 +238,6 @@ export default function CommunityDetailPage() {
     </div>
   );
 }
-
 
 export async function getServerSideProps({ locale }) {
   return {

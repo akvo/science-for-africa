@@ -289,23 +289,23 @@
             "size": 6
           },
           {
-            "name": "createdByUser",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "invites",
-            "size": 6
-          },
-          {
             "name": "community",
             "size": 6
           }
         ],
         [
           {
+            "name": "createdByUser",
+            "size": 6
+          },
+          {
             "name": "visibility",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "invites",
             "size": 6
           }
         ]

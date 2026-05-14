@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_page_benefits_grids",
+  "info": {
+    "displayName": "Benefits Grid",
+    "icon": "grid",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "tagline": {
+      "type": "string"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "page.benefit-card",
+      "min": 1,
+      "max": 4
+    }
+  }
+}

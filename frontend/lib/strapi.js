@@ -300,6 +300,16 @@ export async function fetchCommunities() {
 }
 
 /**
+ * Fetch a limited set of communities for the landing page.
+ */
+export async function fetchLandingCommunities(limit = 6, locale = "en") {
+  return fetchLocalized(
+    `/communities?pagination[limit]=${limit}&populate[subCommunities]=true&populate[parent]=true&sort=name:asc`,
+    locale,
+  );
+}
+
+/**
  * Fetch all active individual roles for onboarding, sorted by sortOrder.
  * Uses localized names based on the current locale.
  */
@@ -682,4 +692,14 @@ export async function fetchMentees() {
     console.error("Error fetching mentees:", error);
     return null;
   }
+}
+
+/**
+ * Fetch Landing Page data with blocks populated and localization fallback.
+ */
+export async function fetchLandingPage(locale = "en") {
+  return fetchLocalized(
+    "/landing-page?populate[blocks][populate]=*",
+    locale,
+  );
 }

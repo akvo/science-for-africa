@@ -175,7 +175,12 @@
       }
     },
     "layouts": {
-      "list": ["id", "name", "institutionType", "country"],
+      "list": [
+        "id",
+        "name",
+        "institutionType",
+        "country"
+      ],
       "edit": [
         [
           {
@@ -183,18 +188,18 @@
             "size": 6
           },
           {
-            "name": "verified",
-            "size": 4
+            "name": "institutionType",
+            "size": 6
           }
         ],
         [
           {
-            "name": "institutionType",
+            "name": "country",
             "size": 6
           },
           {
-            "name": "country",
-            "size": 6
+            "name": "verified",
+            "size": 4
           }
         ],
         [

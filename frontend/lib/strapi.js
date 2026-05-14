@@ -273,6 +273,35 @@ export async function validateOrcid(orcidId) {
 }
 
 /**
+ * Get the ORCID OAuth authorization URL.
+ * @param {string} returnTo – "onboarding" or "profile"
+ */
+export async function getOrcidAuthorizeUrl(returnTo = "profile") {
+  try {
+    const response = await apiClient.get(`/orcid-auth/authorize?returnTo=${returnTo}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting ORCID authorize URL:", error);
+    return null;
+  }
+}
+
+/**
+ * Exchange ORCID OAuth code for profile data.
+ * @param {string} code – authorization code from ORCID redirect
+ * @param {string} state – state parameter from ORCID redirect
+ */
+export async function exchangeOrcidCode(code, state) {
+  try {
+    const response = await apiClient.post("/orcid-auth/callback", { code, state });
+    return response.data;
+  } catch (error) {
+    console.error("Error exchanging ORCID code:", error);
+    return null;
+  }
+}
+
+/**
  * Create a collaboration call with invites
  */
 export async function createCollaborationCall(payload) {

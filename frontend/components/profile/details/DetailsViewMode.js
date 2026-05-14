@@ -2,30 +2,24 @@ import React from "react";
 import Image from "next/image";
 import { User as UserIcon, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ViewRow } from "./SharedComponents";
 import VerificationBadge from "@/components/shared/VerificationBadge";
-import { getStrapiMedia, validateOrcid } from "@/lib/strapi";
+import { getStrapiMedia, getOrcidAuthorizeUrl } from "@/lib/strapi";
 import { useTranslation } from "next-i18next";
 
 const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
   const { t: tCommon } = useTranslation("common");
   const [validating, setValidating] = React.useState(false);
-  const [orcidError, setOrcidError] = React.useState(null);
-  const [orcidInput, setOrcidInput] = React.useState("");
 
-  const handleValidate = async (orcidId) => {
-    if (!orcidId?.trim()) return;
+  const handleValidateOrcid = async () => {
     setValidating(true);
-    setOrcidError(null);
-    const res = await validateOrcid(orcidId.trim());
-    setValidating(false);
-    if (res?.data?.verified) {
-      onUserUpdate?.();
+    const result = await getOrcidAuthorizeUrl("profile");
+    if (result?.data?.authorizeUrl) {
+      window.location.href = result.data.authorizeUrl;
     } else {
-      setOrcidError(res?.error || tCommon("verification.orcid_verify_failed"));
+      setValidating(false);
     }
   };
   return (
@@ -174,36 +168,22 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
                 </span>
               </div>
             ) : (
-              <>
-                <div className="flex items-center gap-3">
-                  <Input
-                    placeholder="0000-0000-0000-0000"
-                    value={user?.orcidId || orcidInput}
-                    onChange={(e) => setOrcidInput(e.target.value)}
-                    disabled={!!user?.orcidId}
-                    className="h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700 max-w-xs"
-                  />
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={validating || !(user?.orcidId || orcidInput.trim())}
-                    onClick={() => handleValidate(user?.orcidId || orcidInput)}
-                    className="rounded-full text-xs h-10 px-6 border-brand-teal-800 text-brand-teal-800 hover:bg-brand-teal-50 shrink-0"
-                  >
-                    {validating ? (
-                      <>
-                        <Loader2 className="size-3 animate-spin mr-1" />
-                        {tCommon("verification.verifying")}
-                      </>
-                    ) : (
-                      tCommon("verification.verify_orcid")
-                    )}
-                  </Button>
-                </div>
-                {orcidError && (
-                  <p className="text-xs text-red-600">{orcidError}</p>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={validating}
+                onClick={handleValidateOrcid}
+                className="rounded-full text-xs h-10 px-6 border-brand-teal-800 text-brand-teal-800 hover:bg-brand-teal-50 shrink-0"
+              >
+                {validating ? (
+                  <>
+                    <Loader2 className="size-3 animate-spin mr-1" />
+                    {tCommon("verification.verifying")}
+                  </>
+                ) : (
+                  tCommon("verification.verify_orcid")
                 )}
-              </>
+              </Button>
             )}
           </div>
         </div>

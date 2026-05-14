@@ -1,22 +1,98 @@
 "use strict";
 
 /**
- * ORCID Public API service.
- * Validates an ORCID iD and fetches public profile data.
- * No OAuth or user login required — uses the public API.
+ * ORCID OAuth + Public API service.
  *
- * Optional env:
- *   ORCID_API_URL – defaults to https://pub.orcid.org
+ * OAuth flow:
+ *   1. Frontend redirects user to ORCID authorize URL
+ *   2. ORCID redirects back with an authorization code
+ *   3. Backend exchanges code for access token + authenticated ORCID iD
+ *   4. Backend fetches public profile data using the ORCID iD
+ *   5. Backend updates user record and returns profile data
+ *
+ * Env vars:
+ *   ORCID_CLIENT_ID     – from ORCID developer tools
+ *   ORCID_CLIENT_SECRET – from ORCID developer tools
+ *   ORCID_API_URL       – defaults to https://pub.orcid.org
+ *   ORCID_OAUTH_URL     – defaults to https://orcid.org (use https://sandbox.orcid.org for dev)
+ *   NEXT_PUBLIC_FRONTEND_URL – frontend base URL for redirect
  */
 
 const ORCID_API_URL = () =>
   process.env.ORCID_API_URL || "https://pub.orcid.org";
+
+const ORCID_OAUTH_URL = () =>
+  process.env.ORCID_OAUTH_URL || "https://orcid.org";
 
 /**
  * Validate ORCID iD format (0000-0000-0000-000X)
  */
 function isValidOrcidFormat(orcidId) {
   return /^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/.test(orcidId);
+}
+
+/**
+ * Build the ORCID OAuth authorization URL.
+ * @param {string} redirectUri – the callback URL
+ * @param {string} state – opaque state parameter (e.g. JWT or user identifier)
+ */
+function buildAuthorizeUrl(redirectUri, state) {
+  const clientId = process.env.ORCID_CLIENT_ID;
+  if (!clientId) {
+    throw new Error("ORCID_CLIENT_ID is not configured");
+  }
+
+  const params = new URLSearchParams({
+    client_id: clientId,
+    response_type: "code",
+    scope: "/authenticate",
+    redirect_uri: redirectUri,
+    state,
+  });
+
+  return `${ORCID_OAUTH_URL()}/oauth/authorize?${params.toString()}`;
+}
+
+/**
+ * Exchange an authorization code for an access token and authenticated ORCID iD.
+ * Returns { accessToken, orcidId, name } or throws on error.
+ */
+async function exchangeCode(code, redirectUri) {
+  const clientId = process.env.ORCID_CLIENT_ID;
+  const clientSecret = process.env.ORCID_CLIENT_SECRET;
+
+  if (!clientId || !clientSecret) {
+    throw new Error("ORCID OAuth credentials are not configured");
+  }
+
+  const res = await fetch(`${ORCID_OAUTH_URL()}/oauth/token`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "application/json",
+    },
+    body: new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      grant_type: "authorization_code",
+      code,
+      redirect_uri: redirectUri,
+    }).toString(),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    strapi.log.error(`ORCID token exchange failed (${res.status}): ${text}`);
+    throw new Error("Failed to exchange ORCID authorization code");
+  }
+
+  const data = await res.json();
+
+  return {
+    accessToken: data.access_token,
+    orcidId: data.orcid,
+    name: data.name,
+  };
 }
 
 /**
@@ -123,5 +199,7 @@ async function validateAndFetch(orcidId) {
 
 module.exports = {
   isValidOrcidFormat,
+  buildAuthorizeUrl,
+  exchangeCode,
   validateAndFetch,
 };

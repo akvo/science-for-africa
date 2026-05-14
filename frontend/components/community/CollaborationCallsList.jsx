@@ -34,12 +34,15 @@ export default function CollaborationCallsList({
 
   const visibleCalls = useMemo(() => {
     let result = calls;
-    const now = new Date();
 
     if (filter === COLLABORATION_CALL_STATUS.ACTIVE) {
-      result = calls.filter((c) => new Date(c.endsAt) >= now);
+      result = calls.filter(
+        (c) => c.status === COLLABORATION_CALL_STATUS.ACTIVE,
+      );
     } else if (filter === COLLABORATION_CALL_STATUS.COMPLETED) {
-      result = calls.filter((c) => new Date(c.endsAt) < now);
+      result = calls.filter(
+        (c) => c.status === COLLABORATION_CALL_STATUS.COMPLETED,
+      );
     }
 
     return [...result].sort((a, b) => {

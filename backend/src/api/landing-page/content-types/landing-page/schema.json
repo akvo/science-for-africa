@@ -1,0 +1,38 @@
+{
+  "kind": "singleType",
+  "collectionName": "landing_pages",
+  "info": {
+    "singularName": "landing-page",
+    "pluralName": "landing-pages",
+    "displayName": "Landing Page",
+    "description": "The professional home for Africa's research and innovation managers."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "blocks": {
+      "type": "dynamiczone",
+      "components": [
+        "page.hero",
+        "page.secondary-heading",
+        "page.about-section",
+        "page.explore-communities",
+        "page.action-banner",
+        "page.benefits-grid",
+        "page.identity-section",
+        "page.info-accordion"
+      ],
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    }
+  }
+}

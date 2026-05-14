@@ -249,9 +249,7 @@ export default function CollaborationHubPage() {
 
   useEffect(() => {
     if (!hydrated) return;
-    if (!loading) {
-      setTimeout(() => setLoading(true), 0);
-    }
+    setTimeout(() => setLoading(true), 0);
     Promise.all([fetchCollaborationCalls(), fetchCommunities()]).then(
       ([callsRes, commRes]) => {
         setCalls(Array.isArray(callsRes?.data) ? callsRes.data : []);
@@ -259,7 +257,6 @@ export default function CollaborationHubPage() {
         setLoading(false);
       },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated]);
 
   // Collect unique topics for filter chips
@@ -308,7 +305,7 @@ export default function CollaborationHubPage() {
                     type="button"
                     onClick={() => setFilter(f.key)}
                     className={cn(
-                      "inline-flex h-[34px] items-center rounded-full px-3.5 text-sm font-medium transition-colors border",
+                      "inline-flex h-8.5 items-center rounded-full px-3.5 text-sm font-medium transition-colors border",
                       isActive
                         ? "border-[#D0D5DD] bg-primary-50 text-brand-gray-900"
                         : "border-brand-gray-200 bg-white text-brand-gray-700 hover:bg-brand-gray-50",

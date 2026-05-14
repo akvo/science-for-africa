@@ -480,6 +480,7 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 | **ResourceComment** | User comments on resources |
 | **SavedPost** | User bookmarks |
 | **Follow** | User-to-user following |
+| **LandingPage** | Single Type for the homepage with localized dynamic zone blocks. |
 
 ### 2.2 Key Design Decisions
 
@@ -522,6 +523,12 @@ This pattern prevents stale membership listings in the user profile even if the 
     - If `userType` is **institution**: Individual-specific fields (`roleType`, `highestEducationInstitution`, `educationLevel`, `educationTopic`) are removed from the payload.
     - If `userType` is **individual**: Institution-specific fields are cleaned up.
 - **Empty Field Protection**: The controller explicitly removes any empty string identifiers (`""`) or null values from relational fields before they reach the database, preventing validation failures.
+
+**Landing Page Block Architecture.** To support a highly dynamic and visually rich landing page, the system utilizes Strapi v5's Dynamic Zones.
+- **Component-Driven Rendering**: Each UI section is a dedicated component in the `page` category (e.g., `Hero`, `AboutSection`, `BenefitsGrid`).
+- **Idempotent Seeder**: The `syncLandingPage` utility in the production seeder ensures that the landing page and all its localized translations (`EN`, `FR`, `AR`, `SW`, `PT`) are synchronized across environments without duplicating the primary `documentId`.
+- **Block Renderer**: The frontend implements a `BlockRenderer` pattern that maps backend component names to premium React components, ensuring 100% visual parity with the design system.
+- **Full-Width Immersion**: The Hero section implements a "Layered Layout" standard where typography sits on a full-width white bar overlaying immersive, edge-to-edge imagery.
 
 
 ## 3. Deployment & Infrastructure
@@ -937,11 +944,41 @@ The page is divided into three main logical sections, each with its own typograp
 2.  **Terms of Use**: Covers registration, acceptable use, and governing law.
 3.  **Community Guidelines**: Covers professional conduct and reporting.
 
-## 14. Seeding & Data Management
+## 14. Landing Page Architecture
+
+The platform's entry point is a high-fidelity, block-based landing page designed for maximum flexibility and performance.
+
+### 14.1 Content Modeling
+The Landing Page is implemented as a **Single Type** in Strapi, utilizing a **Dynamic Zone** called `blocks`. This allows content editors to reorder sections, add new ones, or remove existing ones without developer intervention.
+
+**Supported Blocks:**
+- **Hero**: Visual entry point with title, description, link, and background image.
+- **Secondary Heading**: Text-based section with tagline and main heading.
+- **About Section**: Professional home introduction with checklist and image.
+- **Explore Communities**: Dynamic call-to-action for the community ecosystem.
+- **Action Banner**: Full-width visual surface (image only).
+- **Benefits Grid**: 4-column grid of platform value propositions (Collaborate, etc.).
+- **Identity Section**: Full-width image with centered identity overlay text.
+- **Info Accordion**: Expandable FAQ-style section for capabilities and intent.
+- **Newsletter Section**: Lead generation form with localized placeholders.
+
+### 14.2 Rendering Strategy
+The frontend utilizes a **BlockRenderer** pattern (`@/components/shared/BlockRenderer.js`).
+1.  **Fetching**: Data is retrieved via the `fetchLandingPage` service in `getStaticProps`, ensuring the page is pre-rendered for SEO and performance.
+2.  **Mapping**: The `BlockRenderer` maps the Strapi `__component` identifier to a corresponding React component in `frontend/components/landing/`.
+3.  **Population**: Deep population is used to retrieve nested components like `checklist` (in About Section) and `benefits` (in Benefits Grid).
+
+### 14.3 Seeding and Localization
+To ensure environment parity, the platform includes a `syncLandingPage` utility in `backend/src/utils/prod-seeder.js`.
+- **Default State**: Automatically creates the default section structure from Figma for all 5 platform locales (EN, FR, AR, SW, PT).
+- **Idempotency**: Uses `findFirst` and `create` to ensure the page is only initialized once, protecting manual edits in the Strapi admin panel.
+- **Permissions**: Automatically grants `find` permissions to the `public` role for the Landing Page API.
+
+## 15. Seeding & Data Management
 
 The platform implements a robust seeding strategy to maintain taxonomy consistency across environments while protecting production data.
 
-### 14.1 Seeding Strategy
+### 15.1 Seeding Strategy
 
 The seeding logic is split into two layers:
 1.  **Production Metadata (`seedProd`)**: Critical system metadata including Countries, Institution Types, and Individual Roles.
@@ -951,7 +988,7 @@ The seeding logic is split into two layers:
 - **Development (`NODE_ENV !== "production"`)**: Both seeders run **automatically** on server bootstrap.
 - **Production (`NODE_ENV === "production"`)**: Automatic seeding is disabled. Seeding must be triggered manually.
 
-### 14.2 Manual Seeding CLI
+### 15.2 Manual Seeding CLI
 
 A dedicated NPM script is available for manually synchronizing production metadata:
 - `npm run seed:prod` — Synchronizes critical production metadata (Countries, Institution Types, etc.).
@@ -959,13 +996,13 @@ A dedicated NPM script is available for manually synchronizing production metada
 > [!NOTE]
 > There is no manual `seed:dev` command. Development sample data is synchronized **automatically** on every server bootstrap in non-production environments to ensure the workspace is always ready for testing.
 
-### 14.3 Idempotent Upsert Pattern
+### 15.3 Idempotent Upsert Pattern
 
 To prevent data duplication and allow for safe re-runs, the seeders use an **Idempotent Upsert** pattern. Instead of checking for an empty table, the system checks for the existence of individual records (usually by `name` or `slug`).
 - If the record exists: It is updated with the latest configuration from the seeder.
 - If the record is missing: It is created.
 
-### 14.4 Centralized Constants
+### 15.4 Centralized Constants
 
 Taxonomy masters and system constants are centralized in `src/utils/constants.js`. This ensures that the same data sets are used by both the seeders and any other system utilities (like migrations or permission hardening).
 

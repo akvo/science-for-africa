@@ -9,9 +9,11 @@ export const getBackendApiUrl = () => {
   const bakedInUrl =
     process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api";
 
-  // If on server-side (SSR), use the baked-in URL or internal container discovery
+  // If on server-side (SSR/SSG), try to use internal container discovery
   if (typeof window === "undefined") {
-    return bakedInUrl;
+    // If we have a dedicated server-only variable, use it.
+    // Otherwise, if we are in a container, localhost should be backend.
+    return process.env.BACKEND_URL || bakedInUrl.replace("localhost", "backend");
   }
 
   const { origin, hostname } = window.location;

@@ -101,15 +101,12 @@ export default function CommunitiesPage() {
 
   useEffect(() => {
     if (!hydrated) return;
-    if (!loading) {
-      setTimeout(() => setLoading(true), 0);
-    }
+    setTimeout(() => setLoading(true), 0);
     fetchCommunities().then((res) => {
       const items = res?.data || [];
       setCommunities(items);
       setLoading(false);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated]);
 
   const handleJoin = async (community) => {

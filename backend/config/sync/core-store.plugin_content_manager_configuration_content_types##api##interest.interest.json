@@ -133,8 +133,8 @@
       "list": [
         "id",
         "name",
-        "createdAt",
-        "interestCategory"
+        "interestCategory",
+        "isActive"
       ],
       "edit": [
         [

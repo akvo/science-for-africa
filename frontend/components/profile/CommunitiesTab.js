@@ -31,7 +31,7 @@ const CommunityCard = ({ membership, onLeave, index, isPublic }) => {
     setIsLeaving(true);
     try {
       const result = await leaveCommunity(community.documentId || community.id);
-      if (result.success) {
+      if (result?.data) {
         toast.success(
           t("communities.leave_success", {
             name: community.name,

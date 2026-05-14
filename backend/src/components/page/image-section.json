@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_page_image_sections",
+  "info": {
+    "displayName": "Image Section",
+    "icon": "picture",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["images"]
+    },
+    "hasNoise": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

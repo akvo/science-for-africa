@@ -5,135 +5,87 @@ const {
   COUNTRIES,
   INDIVIDUAL_ROLES,
 } = require("./constants");
-const { INTEREST_TAXONOMY } = require("./taxonomy");
+const { DEFAULT_LANDING_PAGE } = require("./landing-page-data");
 const { grantPermission, revokePermission } = require("./permission-helpers");
 
 /**
- * Helper for upsert
+ * Upsert Utility for Strapi v5 Document Service
  */
 const upsertEntry = async (strapi, uid, data, lookupField = "name") => {
-  const locale = data.locale || "en";
-
-  // 1. Use low-level db.query to find ALL records matching the lookup value across all locales/statuses
-  // This is the most reliable way to detect duplicates in v5
-  const matches = await strapi.db.query(uid).findMany({
-    where: { [lookupField]: data[lookupField], locale: locale },
+  const existing = await strapi.db.query(uid).findOne({
+    where: { [lookupField]: data[lookupField] },
   });
 
-  if (matches.length > 0) {
-    // Take the first match as the "source of truth"
-    const existing = matches[0];
-
-    // 2. Brute-force cleanup of ANY other duplicates in the same locale
-    if (matches.length > 1) {
-      strapi.log.warn(
-        `Found ${matches.length} duplicates for ${uid} ('${data[lookupField]}'). Purging...`,
-      );
-      for (let i = 1; i < matches.length; i++) {
-        await strapi.db.query(uid).delete({
-          where: { id: matches[i].id },
-        });
-      }
-    }
-
-    const { id, documentId, locale: entryLocale, ...newData } = data;
-
-    // 3. Only update fields that have actually changed
-    const updateData = {};
-    Object.keys(newData).forEach((key) => {
-      if (newData[key] !== existing[key]) {
-        updateData[key] = newData[key];
-      }
-    });
-
-    if (Object.keys(updateData).length === 0) {
-      return existing;
-    }
-
-    // 4. Use Document Service for the final high-level update (ensures status/published/etc)
+  if (existing) {
     return await strapi.documents(uid).update({
       documentId: existing.documentId,
-      data: updateData,
+      data,
       status: "published",
     });
   } else {
-    // 5. Create new if not found
     return await strapi.documents(uid).create({
       data,
       status: "published",
+      locale: "en",
     });
   }
 };
 
 /**
- * Synchronize Interest Taxonomy (Categories and Interests)
- * Uses Soft Migration: Marks missing records as isActive: false
+ * Synchronize Interest Taxonomy (Categories + Interests)
  */
 const syncInterestTaxonomy = async (strapi) => {
-  strapi.log.info(
-    "Starting Interest Taxonomy synchronization (Soft Migration)...",
-  );
+  strapi.log.info("Synchronizing Interest Taxonomy (Soft Migration)...");
 
-  const newCategoryNames = Object.keys(INTEREST_TAXONOMY);
-  const allNewInterestNames = Object.values(INTEREST_TAXONOMY).flat();
+  const { INTEREST_TAXONOMY } = require("./taxonomy");
 
-  // 1. Deactivate legacy categories
-  const existingCategories = await strapi
-    .documents("api::interest-category.interest-category")
+  // 1. Deactivate categories no longer in the constants
+  const activeCategories = Object.keys(INTEREST_TAXONOMY);
+  const existingCategories = await strapi.db
+    .query("api::interest-category.interest-category")
     .findMany({
-      status: "published",
-      locale: "en",
+      where: { isActive: true },
     });
 
-  for (const cat of existingCategories) {
-    if (!newCategoryNames.includes(cat.name) && cat.isActive !== false) {
-      strapi.log.info(`Deactivating legacy category: ${cat.name}`);
-      await strapi
-        .documents("api::interest-category.interest-category")
-        .update({
-          documentId: cat.documentId,
-          data: { isActive: false },
-          status: "published",
-        });
+  for (const category of existingCategories) {
+    if (!activeCategories.includes(category.name)) {
+      strapi.log.info(`Deactivating legacy category: ${category.name}`);
+      await strapi.db.query("api::interest-category.interest-category").update({
+        where: { id: category.id },
+        data: { isActive: false },
+      });
     }
   }
 
-  // 2. Deactivate legacy interests
-  const existingInterests = await strapi
-    .documents("api::interest.interest")
+  // 2. Deactivate interests no longer in the constants
+  const allActiveInterests = Object.values(INTEREST_TAXONOMY).flat();
+  const existingInterests = await strapi.db
+    .query("api::interest.interest")
     .findMany({
-      status: "published",
-      locale: "en",
+      where: { isActive: true },
     });
 
   for (const interest of existingInterests) {
-    if (
-      !allNewInterestNames.includes(interest.name) &&
-      interest.isActive !== false
-    ) {
+    if (!allActiveInterests.includes(interest.name)) {
       strapi.log.info(`Deactivating legacy interest: ${interest.name}`);
-      await strapi.documents("api::interest.interest").update({
-        documentId: interest.documentId,
+      await strapi.db.query("api::interest.interest").update({
+        where: { id: interest.id },
         data: { isActive: false },
-        status: "published",
       });
     }
   }
 
-  // 3. Upsert New Taxonomy
+  // 3. Upsert current categories and interests
   let categoriesCreated = 0;
   let interestsCreated = 0;
 
-  for (const [categoryName, items] of Object.entries(INTEREST_TAXONOMY)) {
-    // Find or Create/Update Category
-    const categoryMatches = await strapi
-      .documents("api::interest-category.interest-category")
-      .findMany({
-        filters: { name: categoryName },
-        locale: "en",
+  for (const [categoryName, interests] of Object.entries(INTEREST_TAXONOMY)) {
+    // Find or create category
+    let category = await strapi.db
+      .query("api::interest-category.interest-category")
+      .findOne({
+        where: { name: { $eqi: categoryName } },
       });
-
-    let category = categoryMatches[0];
 
     if (!category) {
       strapi.log.info(`Creating category: ${categoryName}`);
@@ -146,18 +98,18 @@ const syncInterestTaxonomy = async (strapi) => {
         });
       categoriesCreated++;
     } else if (category.isActive === false) {
-      strapi.log.info(`Re-activating category: ${categoryName}`);
-      category = await strapi
+      await strapi
         .documents("api::interest-category.interest-category")
         .update({
           documentId: category.documentId,
           data: { isActive: true },
           status: "published",
         });
+      categoriesCreated++;
     }
 
-    // Process Interests
-    for (const name of items) {
+    // Upsert interests for this category
+    for (const name of interests) {
       const interestMatches = await strapi
         .documents("api::interest.interest")
         .findMany({
@@ -236,6 +188,7 @@ const syncPermissions = async (strapi) => {
     "api::auth.profile.publicProfile",
     "plugin::users-permissions.user.follow",
     "plugin::users-permissions.user.unfollow",
+    "api::landing-page.landing-page.find",
   ];
 
   for (const role of roles) {
@@ -288,6 +241,89 @@ const syncMetadata = async (strapi, uid, names, label) => {
 };
 
 /**
+ * Synchronize Landing Page Content (EN/FR/AR/SW/PT)
+ */
+async function syncLandingPage(strapi) {
+  strapi.log.info("Synchronizing Landing Page content...");
+
+  const uid = "api::landing-page.landing-page";
+
+  // 1. Get the existing English record (or any first record) to get the shared documentId
+  const existingEn = await strapi.documents(uid).findMany({
+    locale: "en",
+    status: "published",
+    limit: 1,
+  });
+
+  let sharedDocumentId;
+
+  if (existingEn.length > 0) {
+    sharedDocumentId = existingEn[0].documentId;
+    strapi.log.info(
+      `Landing Page exists (doc: ${sharedDocumentId}). Updating English content...`,
+    );
+
+    // Update existing English record to ensure it has latest fields/blocks
+    await strapi.documents(uid).update({
+      documentId: sharedDocumentId,
+      data: DEFAULT_LANDING_PAGE,
+      locale: "en",
+      status: "published",
+    });
+  } else {
+    strapi.log.info("Creating English Landing Page...");
+    const enLanding = await strapi.documents(uid).create({
+      data: DEFAULT_LANDING_PAGE,
+      locale: "en",
+      status: "published",
+    });
+    sharedDocumentId = enLanding.documentId;
+  }
+
+  // 2. Check for missing translations
+  const otherLocales = ["fr", "ar", "sw", "pt"];
+  const allLocales = await strapi.documents(uid).findMany({
+    fields: ["locale"],
+    status: "published",
+  });
+  const existingLocales = allLocales.map((d) => d.locale);
+
+  for (const locale of otherLocales) {
+    if (!existingLocales.includes(locale)) {
+      strapi.log.info(
+        `Adding missing translation: ${locale.toUpperCase()} (doc: ${sharedDocumentId})...`,
+      );
+      try {
+        await strapi.documents(uid).create({
+          documentId: sharedDocumentId,
+          data: DEFAULT_LANDING_PAGE,
+          locale,
+          status: "published",
+        });
+      } catch (error) {
+        strapi.log.error(
+          `Failed to add translation ${locale}: ${error.message}`,
+        );
+        if (error.details) {
+          strapi.log.error(JSON.stringify(error.details, null, 2));
+        }
+      }
+    } else {
+      // Optionally update existing translations too
+      strapi.log.info(
+        `Updating existing translation: ${locale.toUpperCase()}...`,
+      );
+      await strapi.documents(uid).update({
+        documentId: sharedDocumentId,
+        data: DEFAULT_LANDING_PAGE,
+        locale,
+        status: "published",
+      });
+    }
+  }
+}
+
+/**
  * Main Production Seeder
  */
 const seedProd = async (strapi) => {
@@ -295,6 +331,9 @@ const seedProd = async (strapi) => {
 
   // 1. Sync Taxonomy
   await syncInterestTaxonomy(strapi);
+
+  // 1b. Sync Landing Page
+  await syncLandingPage(strapi);
 
   // 2. Sync Permissions
   await syncPermissions(strapi);
@@ -347,4 +386,5 @@ module.exports = {
   syncInterestTaxonomy,
   syncPermissions,
   syncMetadata,
+  syncLandingPage,
 };

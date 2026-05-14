@@ -717,6 +717,16 @@
         ],
         [
           {
+            "name": "highestEducationInstitution",
+            "size": 6
+          },
+          {
+            "name": "institutionMemberships",
+            "size": 6
+          }
+        ],
+        [
+          {
             "name": "orcidId",
             "size": 6
           },
@@ -764,16 +774,6 @@
         [
           {
             "name": "otpResendWindowStart",
-            "size": 6
-          },
-          {
-            "name": "highestEducationInstitution",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "institutionMemberships",
             "size": 6
           },
           {

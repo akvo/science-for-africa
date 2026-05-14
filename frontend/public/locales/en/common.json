@@ -121,6 +121,8 @@
     "joined": "Joined",
     "create_post": "Create post",
     "sort_by": "Sort by",
+    "sort_newest": "Newest",
+    "sort_oldest": "Oldest",
     "loading": "Loading community...",
     "not_found": "Community not found.",
     "created": "Created",
@@ -179,7 +181,8 @@
   },
   "seo": {
     "description": "Advancing Science for Africa's Future. Join the community of scientists, researchers, and innovators.",
-    "home_title": "Design System | Style Guide",
+    "home_title": "Home | Science for Africa",
+    "home_description": "The professional home for Africa's research and innovation managers.",
     "onboarding_title": "Complete Your Profile",
     "community_title": "Community",
     "profile_title": "Professional Profile | Science for Africa",

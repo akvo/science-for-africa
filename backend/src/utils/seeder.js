@@ -819,6 +819,9 @@ const seed = async (strapi) => {
     "api::community.community.leave",
     "api::resource-comment.resource-comment.find",
     "api::resource-comment.resource-comment.create",
+    "api::orcid-auth.orcid-auth.authorize",
+    "api::orcid-auth.orcid-auth.callback",
+    "api::orcid-auth.orcid-auth.validate",
   ];
 
   for (const action of devCollaborationActions) {

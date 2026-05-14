@@ -17,6 +17,20 @@ To allow researchers to verify their professional identity by linking their ORCI
 4. **Sync**: Successful verification automatically populates the user's profile fields (FirstName, LastName, Biography, Interests).
 5. **Completion**: User confirms and proceeds to Step 5.
 
+ ---
+
+## 🔑 Environment Configuration
+
+The following variables must be configured in the backend environment for both public validation and OAuth flows:
+
+| Variable | Purpose |
+|---|---|
+| `ORCID_CLIENT_ID` | OAuth Client ID from ORCID developer dashboard |
+| `ORCID_CLIENT_SECRET` | OAuth Client Secret from ORCID developer dashboard |
+| `ORCID_OAUTH_URL` | Base URL (e.g., `https://sandbox.orcid.org` or `https://orcid.org`) |
+| `ORCID_API_URL` | Base URL for Public API (e.g., `https://pub.orcid.org`) |
+| `ORCID_REDIRECT_URI` | Explicit redirect URI override (optional) |
+
 ---
 
 ## 🎯 Design Principles

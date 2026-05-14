@@ -167,14 +167,22 @@ describe("Auth Me Update API", () => {
         status: "published",
       });
 
+    // Ensure we have the documentId for relations in v5
+    if (!user.documentId) {
+      const u = await strapi.db.query("plugin::users-permissions.user").findOne({
+        where: { id: user.id },
+      });
+      user.documentId = u?.documentId;
+    }
+
     await strapi
       .documents("api::collaboration-invite.collaboration-invite")
       .create({
         data: {
           email: user.email,
           inviteStatus: "Accepted",
-          invitedUser: user.id,
-          collaborationCall: call.id,
+          invitedUser: user.documentId || user.id,
+          collaborationCall: call.documentId || call.id,
         },
         status: "published",
       });

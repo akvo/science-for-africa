@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_page_explore_communities",
+  "info": {
+    "displayName": "Explore Communities",
+    "icon": "apps",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "linkText": {
+      "type": "string",
+      "default": "See all"
+    },
+    "linkUrl": {
+      "type": "string",
+      "default": "/communities"
+    }
+  }
+}

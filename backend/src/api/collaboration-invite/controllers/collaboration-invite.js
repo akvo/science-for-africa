@@ -125,6 +125,66 @@ module.exports = createCoreController(
       return { success: true, data: updated };
     },
 
+    /**
+     * POST /api/collaboration-invites/request-join
+     * Body: { collaborationCallId: "<documentId>" }
+     *
+     * Creates a new invite with status "Pending" for the authenticated user.
+     * Prevents duplicates — if the user already has an invite for this call,
+     * returns it as-is.
+     */
+    async requestJoin(ctx) {
+      const user = ctx.state.user;
+      if (!user) return ctx.unauthorized();
+
+      const { collaborationCallId } = ctx.request.body;
+      if (!collaborationCallId) {
+        return ctx.badRequest("collaborationCallId is required");
+      }
+
+      // Verify the collaboration call exists
+      const call = await strapi.db
+        .query("api::collaboration-call.collaboration-call")
+        .findOne({
+          where: { documentId: collaborationCallId },
+          populate: ["createdByUser"],
+        });
+
+      if (!call) {
+        return ctx.notFound("Collaboration call not found");
+      }
+
+      // Check for existing invite
+      const existing = await strapi.db
+        .query("api::collaboration-invite.collaboration-invite")
+        .findOne({
+          where: {
+            invitedUser: { id: user.id },
+            collaborationCall: { documentId: collaborationCallId },
+          },
+        });
+
+      if (existing) {
+        return { data: existing };
+      }
+
+      // Create a new pending invite
+      const invite = await strapi
+        .documents("api::collaboration-invite.collaboration-invite")
+        .create({
+          data: {
+            email: user.email,
+            inviteStatus: "Pending",
+            role: "Collaborator",
+            invitedUser: user.id,
+            collaborationCall: call.documentId,
+            invitedAt: new Date(),
+          },
+        });
+
+      return { data: invite };
+    },
+
     async decline(ctx) {
       const { id } = ctx.params;
 

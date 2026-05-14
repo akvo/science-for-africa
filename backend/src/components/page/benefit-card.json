@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_page_benefit_cards",
+  "info": {
+    "displayName": "Benefit Card",
+    "icon": "hand-heart",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "linkText": {
+      "type": "string",
+      "default": "Explore"
+    },
+    "linkUrl": {
+      "type": "string"
+    }
+  }
+}

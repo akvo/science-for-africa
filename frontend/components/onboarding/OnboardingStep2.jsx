@@ -37,13 +37,25 @@ const OnboardingStep2 = () => {
     const loadInterests = async () => {
       setLoading(true);
       try {
-        const response = await fetchLocalized("/interests", locale);
+        const response = await fetchLocalized(
+          "/interests?populate[interestCategory]=true&filters[isActive][$eq]=true&filters[interestCategory][isActive][$eq]=true",
+          locale,
+        );
         if (response?.data) {
           // Group by category
           const grouped = response.data.reduce((acc, item) => {
-            const { category, name } = item;
-            if (!acc[category]) acc[category] = [];
-            acc[category].push(name);
+            const category = item.interestCategory;
+
+            // Skip if interest itself is inactive
+            if (item.isActive === false) return acc;
+
+            // Skip if category exists and is inactive
+            if (category && category.isActive === false) return acc;
+
+            const categoryName = category?.name || "Uncategorized";
+            const { name } = item;
+            if (!acc[categoryName]) acc[categoryName] = [];
+            acc[categoryName].push(name);
             return acc;
           }, {});
           setCategories(grouped);
@@ -147,7 +159,7 @@ const OnboardingStep2 = () => {
                         variant={selected ? "default" : "outline"}
                         onClick={() => toggleInterest(item)}
                         className={cn(
-                          "px-3.5 py-4 text-sm font-normal rounded-full transition-all duration-300 cursor-pointer shadow-none",
+                          "px-4 py-2.5 text-[14px] leading-snug font-medium rounded-2xl transition-all duration-300 cursor-pointer shadow-none text-left flex items-center justify-start h-auto min-h-11",
                           selected
                             ? "bg-brand-teal-600 text-white border-brand-teal-600 hover:bg-brand-teal-700 active:scale-95 transition-transform"
                             : "bg-white text-brand-gray-700 border-brand-gray-200 hover:bg-brand-teal-50 hover:border-brand-teal-200 active:scale-95",

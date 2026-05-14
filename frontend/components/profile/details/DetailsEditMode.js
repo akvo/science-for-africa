@@ -1,6 +1,12 @@
 import React from "react";
 import Image from "next/image";
-import { Mail, UploadCloud, User as UserIcon, Loader2, CheckCircle2 } from "lucide-react";
+import {
+  Mail,
+  UploadCloud,
+  User as UserIcon,
+  Loader2,
+  CheckCircle2,
+} from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -20,7 +26,12 @@ import {
   ROLE_OPTIONS,
   EDUCATION_LEVEL_OPTIONS,
 } from "@/lib/onboarding-constants";
-import { fetchFromStrapi, getStrapiMedia, getOrcidAuthorizeUrl } from "@/lib/strapi";
+import {
+  fetchFromStrapi,
+  getStrapiMedia,
+  fetchIndividualRoles,
+  getOrcidAuthorizeUrl,
+} from "@/lib/strapi";
 import { useTranslation } from "next-i18next";
 
 const profileSchema = z.object({
@@ -52,7 +63,14 @@ const profileSchema = z.object({
   profilePhoto: z.any().optional(),
 });
 
-const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving, onUserUpdate }) => {
+const DetailsEditMode = ({
+  user,
+  t,
+  onCancel,
+  onSave,
+  isSaving,
+  onUserUpdate,
+}) => {
   const { t: tCommon } = useTranslation("common");
   const fileInputRef = React.useRef(null);
   const [orcidValidating, setOrcidValidating] = React.useState(false);
@@ -64,6 +82,8 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving, onUserUpdate }) 
     React.useState(false);
   const [showRequestEducationInstitution, setShowRequestEducationInstitution] =
     React.useState(false);
+  const [roles, setRoles] = React.useState([]);
+  const [loadingRoles, setLoadingRoles] = React.useState(false);
 
   React.useEffect(() => {
     if (user?.institutionName) {
@@ -88,7 +108,11 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving, onUserUpdate }) 
       fullName: user?.fullName || "",
       email: user?.email || "",
       biography: user?.biography || "",
-      roleType: user?.roleType || "",
+      roleType:
+        user?.roleType?.documentId ||
+        user?.roleType?.id?.toString() ||
+        user?.roleType?.toString() ||
+        "",
       orcidId: user?.orcidId || "",
       educationLevel: user?.educationLevel || "",
       language: user?.languagePreferences || "en",
@@ -122,7 +146,11 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving, onUserUpdate }) 
         fullName: user?.fullName || "",
         email: user?.email || "",
         biography: user?.biography || "",
-        roleType: user?.roleType || "",
+        roleType:
+          user?.roleType?.documentId ||
+          user?.roleType?.id?.toString() ||
+          user?.roleType?.toString() ||
+          "",
         orcidId: user?.orcidId || "",
         educationLevel: user?.educationLevel || "",
         language: user?.languagePreferences || "en",
@@ -212,6 +240,25 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving, onUserUpdate }) 
     }
     getInstitutions();
   }, []);
+
+  React.useEffect(() => {
+    async function getRoles() {
+      setLoadingRoles(true);
+      try {
+        const response = await fetchIndividualRoles(
+          user?.languagePreferences || "en",
+        );
+        if (response?.data) {
+          setRoles(response.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch roles:", err);
+      } finally {
+        setLoadingRoles(false);
+      }
+    }
+    getRoles();
+  }, [user?.languagePreferences]);
 
   const handlePhotoClick = () => {
     fileInputRef.current?.click();
@@ -368,20 +415,35 @@ const DetailsEditMode = ({ user, t, onCancel, onSave, isSaving, onUserUpdate }) 
                   onValueChange={field.onChange}
                 >
                   <SelectTrigger className="w-full h-11 border-brand-gray-200 rounded-xl px-4 text-sm font-medium text-brand-gray-700">
-                    <SelectValue>
-                      {field.value
-                        ? t(`roles.${field.value}`, {
-                            defaultValue: field.value,
-                          })
-                        : t("details.role_placeholder")}
+                    <SelectValue placeholder={t("details.role_placeholder")}>
+                      {roles.find(
+                        (r) =>
+                          r.documentId === field.value ||
+                          r.id?.toString() === field.value?.toString(),
+                      )?.name ||
+                        (field.value
+                          ? t(`roles.${field.value}`, {
+                              defaultValue: field.value,
+                            })
+                          : null)}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    {ROLE_OPTIONS.map((role) => (
-                      <SelectItem key={role} value={role}>
-                        {t(`roles.${role}`, { defaultValue: role })}
-                      </SelectItem>
-                    ))}
+                    {loadingRoles ? (
+                      <div className="p-2 text-sm text-brand-gray-400 flex items-center gap-2">
+                        <Loader2 size={14} className="animate-spin" />
+                        Loading...
+                      </div>
+                    ) : (
+                      roles.map((role) => (
+                        <SelectItem
+                          key={role.documentId}
+                          value={role.documentId}
+                        >
+                          {role.name}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
               )}

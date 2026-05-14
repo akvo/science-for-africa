@@ -30,7 +30,23 @@
     "orcid_label": "ORCID",
     "request_button": "Ombi",
     "save_success": "Wasifu wako umesasishwa kwa mafanikio",
-    "save_error": "Imeshindwa kusasisha wasifu"
+    "save_error": "Imeshindwa kusasisha wasifu",
+    "not_provided": "Haijatolewa",
+    "no_bio": "Hakuna wasifu uliotolewa."
+  },
+  "education_levels": {
+    "Postgraduate Student (Masters)": "Mwanafunzi wa Uzamili (Masters)",
+    "Doctoral Candidate (PhD Student)": "Mwanafunzi wa Uzamili (PhD Student)",
+    "Early-Career Researcher / Research management professional (0 – 5 years post-qualification)": "Mtafiti wa Mwanzoni / Mtaalamu wa usimamizi wa utafiti (miaka 0 – 5 baada ya kuhitimu)",
+    "Mid-Career Researcher / Research management professional (6 – 15 years)": "Mtafiti wa Kati / Mtaalamu wa usimamizi wa utafiti (miaka 6 – 15)",
+    "Senior Researcher / Research management professional (16+ years)": "Mtafiti Mkuu / Mtaalamu wa usimamizi wa utafiti (miaka 16+)",
+    "Emeritus / Retired": "Emeritus / Retired",
+    "High School": "Shule ya Upili",
+    "Bachelor's Degree": "Shahada ya Udhamini",
+    "Master's Degree": "Shahada ya Uzamili",
+    "Doctorate (PhD)": "Daktari (PhD)",
+    "Post-Doctorate": "Baada ya Daktari",
+    "Professional Certificate": "Cheti cha Kitaalamu"
   },
   "languages": {
     "en": "Kiingereza",

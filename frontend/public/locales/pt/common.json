@@ -16,6 +16,22 @@
     "logout": "Sair",
     "publish": "Publicar",
     "back": "Voltar",
+    "community_dropdown": {
+      "subtitle": "Comece e saiba mais sobre comunidades e colaboração.",
+      "community_label": "Comunidade",
+      "collaboration_label": "Colaboração",
+      "trending": "Tendência agora",
+      "trending_desc": "Encontre a melhor solução para você.",
+      "communities": "Comunidades",
+      "communities_desc": "Encontre a melhor solução para você.",
+      "discussions": "Discussões ativas",
+      "discussions_desc": "Encontre a melhor solução para você.",
+      "collaboration_hub": "Hub de colaboração",
+      "collaboration_hub_desc": "Encontre a melhor solução para você.",
+      "events": "Eventos",
+      "events_desc": "Encontre a melhor solução para você.",
+      "learn_more": "Saiba mais"
+    },
     "profile_dropdown": {
       "details": "Detalhes",
       "communities": "Comunidades",
@@ -104,6 +120,8 @@
     "joined": "Participando",
     "create_post": "Criar postagem",
     "sort_by": "Ordenar por",
+    "sort_newest": "Mais recente",
+    "sort_oldest": "Mais antigo",
     "loading": "Carregando comunidade...",
     "not_found": "Comunidade não encontrada.",
     "created": "Criado",
@@ -151,11 +169,12 @@
   },
   "seo": {
     "description": "Avançando o futuro da ciência para a África. Junte‑se à comunidade de cientistas, pesquisadores e inovadores.",
-    "home_title": "Sistema de Design | Guia de Estilo",
+    "home_title": "Início | Science for Africa",
     "onboarding_title": "Complete seu perfil",
     "community_title": "Comunidade",
     "profile_title": "Perfil profissional | Science for Africa",
-    "profile_description": "Gerencie sua identidade profissional, comunidades e colaborações."
+    "profile_description": "Gerencie sua identidade profissional, comunidades e colaborações.",
+    "home_description": "O lar profissional para gestores de pesquisa e inovação na África."
   },
   "verification": {
     "pending": "Pendente",

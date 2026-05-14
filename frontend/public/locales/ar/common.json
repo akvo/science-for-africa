@@ -16,6 +16,22 @@
     "logout": "تسجيل الخروج",
     "publish": "نشر",
     "back": "عودة",
+    "community_dropdown": {
+      "subtitle": "ابدأ واعرف المزيد عن المجتمعات والتعاون.",
+      "community_label": "مجتمع",
+      "collaboration_label": "تعاون",
+      "trending": "الموضوعات الرائجة",
+      "trending_desc": "اعثر على أفضل حل لك.",
+      "communities": "مجتمعات",
+      "communities_desc": "اعثر على أفضل حل لك.",
+      "discussions": "نقاشات نشطة",
+      "discussions_desc": "اعثر على أفضل حل لك.",
+      "collaboration_hub": "مركز التعاون",
+      "collaboration_hub_desc": "اعثر على أفضل حل لك.",
+      "events": "أحداث",
+      "events_desc": "اعثر على أفضل حل لك.",
+      "learn_more": "اعرف المزيد"
+    },
     "profile_dropdown": {
       "details": "تفاصيل",
       "communities": "مجتمعات",
@@ -103,7 +119,9 @@
     "join": "انضم",
     "joined": "انضممت",
     "create_post": "إنشاء منشور",
-    "sort_by": "فرز حسب",
+    "sort_by": "ترتيب حسب",
+    "sort_newest": "الأحدث",
+    "sort_oldest": "الأقدم",
     "loading": "جاري تحميل المجتمع...",
     "not_found": "المجتمع غير موجود.",
     "created": "تم الإنشاء",
@@ -151,11 +169,12 @@
   },
   "seo": {
     "description": "تعزيز مستقبل العلوم لأفريقيا. انضم إلى مجتمع العلماء والباحثين والمبتكرين.",
-    "home_title": "نظام التصميم | دليل النمط",
+    "home_title": "الرئيسية | Science for Africa",
     "onboarding_title": "أكمل ملفك الشخصي",
     "community_title": "مجتمع",
     "profile_title": "الملف المهني | العلوم لأفريقيا",
-    "profile_description": "إدارة هويتك المهنية، المجتمعات، والتعاونات."
+    "profile_description": "إدارة هويتك المهنية، المجتمعات، والتعاونات.",
+    "home_description": "المنزل المهني لمديري البحث والابتكار في إفريقيا."
   },
   "verification": {
     "pending": "قيد الانتظار",

@@ -16,6 +16,22 @@
     "publish": "Publier",
     "back": "Retour",
     "researcher_placeholder": "Chercheur institutionnel",
+    "community_dropdown": {
+      "subtitle": "Commencez et apprenez-en plus sur les communautés et la collaboration.",
+      "community_label": "Communauté",
+      "collaboration_label": "Collaboration",
+      "trending": "Tendances",
+      "trending_desc": "Trouvez la meilleure solution pour vous.",
+      "communities": "Communautés",
+      "communities_desc": "Trouvez la meilleure solution pour vous.",
+      "discussions": "Discussions actives",
+      "discussions_desc": "Trouvez la meilleure solution pour vous.",
+      "collaboration_hub": "Hub de collaboration",
+      "collaboration_hub_desc": "Trouvez la meilleure solution pour vous.",
+      "events": "Événements",
+      "events_desc": "Trouvez la meilleure solution pour vous.",
+      "learn_more": "En savoir plus"
+    },
     "profile_dropdown": {
       "details": "Détails",
       "communities": "Communautés",
@@ -96,7 +112,7 @@
     "no_comments": "Aucun commentaire pour le moment. Soyez le premier à partager comment vous utilisez cette ressource.",
     "save": "Enregistrer",
     "share": "Partager",
-    "save_share": "Enregistrer \u00b7 Partager",
+    "save_share": "Enregistrer · Partager",
     "close": "Fermer",
     "save_to_library": "Enregistrer dans votre bibliothèque",
     "just_now": "à l'instant"
@@ -113,6 +129,8 @@
     "joined": "Membre",
     "create_post": "Créer un post",
     "sort_by": "Trier par",
+    "sort_newest": "Le plus récent",
+    "sort_oldest": "Le plus ancien",
     "loading": "Chargement de la communauté...",
     "not_found": "Communauté introuvable.",
     "created": "Créée le",
@@ -142,9 +160,10 @@
   },
   "seo": {
     "description": "Faire progresser l'avenir de la science en Afrique. Rejoignez la communauté de scientifiques, de chercheurs et d'innovateurs.",
-    "home_title": "Système de Conception | Guide de Style",
+    "home_title": "Accueil | Science for Africa",
     "onboarding_title": "Complétez Votre Profil",
-    "community_title": "Communauté"
+    "community_title": "Communauté",
+    "home_description": "Le foyer professionnel des gestionnaires de la recherche et de l'innovation en Afrique."
   },
   "footer": {
     "newsletter": {

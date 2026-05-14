@@ -9,7 +9,10 @@ import { COLLABORATION_CALL_STATUS } from "@/lib/community-mock-data";
 const FILTERS = [
   { key: "all", i18nKey: "collaboration.all" },
   { key: COLLABORATION_CALL_STATUS.ACTIVE, i18nKey: "collaboration.active" },
-  { key: COLLABORATION_CALL_STATUS.COMPLETED, i18nKey: "collaboration.completed" },
+  {
+    key: COLLABORATION_CALL_STATUS.COMPLETED,
+    i18nKey: "collaboration.completed",
+  },
 ];
 
 /**
@@ -21,6 +24,7 @@ const FILTERS = [
  */
 export default function CollaborationCallsList({
   calls = [],
+  sortOrder = "newest",
   onView,
   onCreate,
   className,
@@ -29,9 +33,24 @@ export default function CollaborationCallsList({
   const [filter, setFilter] = useState("all");
 
   const visibleCalls = useMemo(() => {
-    if (filter === "all") return calls;
-    return calls.filter((c) => c.status === filter);
-  }, [calls, filter]);
+    let result = calls;
+
+    if (filter === COLLABORATION_CALL_STATUS.ACTIVE) {
+      result = calls.filter(
+        (c) => c.status === COLLABORATION_CALL_STATUS.ACTIVE,
+      );
+    } else if (filter === COLLABORATION_CALL_STATUS.COMPLETED) {
+      result = calls.filter(
+        (c) => c.status === COLLABORATION_CALL_STATUS.COMPLETED,
+      );
+    }
+
+    return [...result].sort((a, b) => {
+      const dateA = new Date(a.createdAt || 0);
+      const dateB = new Date(b.createdAt || 0);
+      return sortOrder === "oldest" ? dateA - dateB : dateB - dateA;
+    });
+  }, [calls, filter, sortOrder]);
 
   return (
     <section className={cn("flex flex-col", className)}>
@@ -75,11 +94,7 @@ export default function CollaborationCallsList({
       ) : (
         <div className="flex flex-col divide-y divide-brand-gray-100 border-b border-brand-gray-100">
           {visibleCalls.map((call) => (
-            <CollaborationCallCard
-              key={call.id}
-              call={call}
-              onView={onView}
-            />
+            <CollaborationCallCard key={call.id} call={call} onView={onView} />
           ))}
         </div>
       )}

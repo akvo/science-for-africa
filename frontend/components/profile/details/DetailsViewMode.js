@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { User as UserIcon, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ViewRow } from "./SharedComponents";
@@ -81,7 +82,12 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
 
         <ViewRow
           label={t("details.role")}
-          value={user?.roleType ? t(`roles.${user.roleType}`) : null}
+          value={
+            user?.roleType?.name ||
+            (typeof user?.roleType === "string"
+              ? t(`roles.${user.roleType}`)
+              : null)
+          }
           t={t}
         />
 

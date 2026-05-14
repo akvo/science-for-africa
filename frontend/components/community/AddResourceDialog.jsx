@@ -69,6 +69,7 @@ export default function AddResourceDialog({
   const [step, setStep] = useState(1);
   const [resourceType, setResourceType] = useState("report");
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [submitting, setSubmitting] = useState(false);
@@ -81,6 +82,7 @@ export default function AddResourceDialog({
     setStep(1);
     setResourceType("report");
     setName("");
+    setDescription("");
     setFile(null);
     setSelectedTopics([]);
     setSubmitting(false);
@@ -120,6 +122,7 @@ export default function AddResourceDialog({
     try {
       await createResource({
         name: name.trim(),
+        description: description.trim(),
         resourceType,
         communityId: communityDocumentId,
         file,
@@ -286,6 +289,20 @@ export default function AddResourceDialog({
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="h-11"
+            />
+          </div>
+
+          {/* Description */}
+          <div className="space-y-1.5">
+            <label className="text-sm font-medium text-brand-gray-700">
+              {t("resources.description")}
+            </label>
+            <textarea
+              placeholder={t("resources.description_placeholder")}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+              className="w-full rounded-md border border-brand-gray-200 bg-white px-3 py-2 text-sm text-brand-gray-900 placeholder:text-brand-gray-400 outline-none focus:border-primary-500 transition-colors resize-none"
             />
           </div>
 

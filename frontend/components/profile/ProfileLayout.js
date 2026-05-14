@@ -26,18 +26,10 @@ const TABS = [
     href: "/profile/communities",
   },
   { id: "resources", label: "tabs.resources", href: "/profile/resources" },
-  { id: "content", label: "tabs.content", href: "/profile/content" },
-  { id: "saved", label: "tabs.saved", href: "/profile/saved" },
-  { id: "events", label: "tabs.events", href: "/profile/events" },
   {
     id: "collaboration",
     label: "tabs.collaboration",
     href: "/profile/collaboration",
-  },
-  {
-    id: "courses",
-    label: "tabs.courses",
-    href: "/profile/courses",
   },
   { id: "mentorship", label: "tabs.mentorship", href: "/profile/mentorship" },
 ];
@@ -105,9 +97,10 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                         {user?.fullName || user?.username}
                       </h2>
                       <p className="text-xs text-brand-gray-500 mt-0.5">
-                        {user?.roleType
-                          ? t(`profile:roles.${user.roleType}`)
-                          : t("profile:details.not_provided")}
+                        {user?.roleType?.name ||
+                          (typeof user?.roleType === "string"
+                            ? t(`profile:roles.${user.roleType}`)
+                            : t("profile:details.not_provided"))}
                       </p>
                       <div className="mt-2">
                         <VerificationBadge verified={user?.verified} />
@@ -164,7 +157,9 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                   <p className="text-[15px] font-bold text-brand-gray-900 leading-snug">
                     {user?.educationLevel
                       ? t(`profile:education_levels.${user.educationLevel}`)
-                      : t("profile:education_levels.Master's Degree")}
+                      : t(
+                          "profile:education_levels.Postgraduate Student (Masters)",
+                        )}
                   </p>
                   <p className="text-sm text-brand-gray-500">
                     {user?.highestEducationInstitution?.name ||
@@ -185,7 +180,7 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                         <Badge
                           key={tag}
                           variant="outline"
-                          className="rounded-full px-3.5 py-1.5 text-[12px] font-medium text-brand-gray-600 border-brand-gray-300 bg-white"
+                          className="rounded-xl px-3 py-1.5 text-[12px] font-medium text-brand-gray-600 border-brand-gray-300 bg-white text-left flex items-center justify-start h-auto min-h-7 leading-relaxed whitespace-normal max-w-full"
                         >
                           #{tag.replace("#", "")}
                         </Badge>
@@ -245,13 +240,10 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
             </h1>
 
             {/* Tabs List */}
-            <div className="flex items-center gap-6 border-b border-brand-gray-200 overflow-x-auto scrollbar-hide py-1">
+            <div className="flex items-center gap-6 border-b border-brand-gray-200">
               {TABS.filter((tab) => {
                 if (tab.id === "mentorship") {
-                  return user?.collaborationInvites?.some(
-                    (inv) =>
-                      inv.role === "Mentor" && inv.inviteStatus === "Accepted",
-                  );
+                  return user?.userType === "individual";
                 }
                 return true;
               }).map((tab) => (
@@ -261,7 +253,7 @@ const ProfileLayout = ({ children, activeTab = "details" }) => {
                   className={cn(
                     "relative pb-3 text-sm font-bold transition-all whitespace-nowrap",
                     activeTab === tab.id
-                      ? "text-brand-teal-600 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-brand-teal-600"
+                      ? "text-brand-teal-600 after:absolute after:-bottom-px after:left-0 after:h-0.5 after:w-full after:bg-brand-teal-600"
                       : "text-brand-gray-500 hover:text-brand-gray-700",
                   )}
                 >

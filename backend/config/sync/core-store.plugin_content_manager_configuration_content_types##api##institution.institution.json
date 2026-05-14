@@ -33,16 +33,17 @@
           "sortable": true
         }
       },
-      "type": {
+      "institutionType": {
         "edit": {
-          "label": "type",
+          "label": "institutionType",
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true
+          "editable": true,
+          "mainField": "name"
         },
         "list": {
-          "label": "type",
+          "label": "institutionType",
           "searchable": true,
           "sortable": true
         }
@@ -53,7 +54,8 @@
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true
+          "editable": true,
+          "mainField": "name"
         },
         "list": {
           "label": "country",
@@ -176,7 +178,7 @@
       "list": [
         "id",
         "name",
-        "type",
+        "institutionType",
         "country"
       ],
       "edit": [
@@ -186,7 +188,7 @@
             "size": 6
           },
           {
-            "name": "type",
+            "name": "institutionType",
             "size": 6
           }
         ],

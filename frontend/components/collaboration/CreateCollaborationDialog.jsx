@@ -1,4 +1,5 @@
 import { useCollaborationStore } from "@/lib/collaboration-store";
+import { useTranslation } from "next-i18next";
 import {
   Dialog,
   DialogContent,
@@ -10,19 +11,22 @@ import StepSelectTopics from "./StepSelectTopics";
 import StepCreateSpace from "./StepCreateSpace";
 import StepSelectDueDate from "./StepSelectDueDate";
 import StepAssignMentor from "./StepAssignMentor";
+import StepVisibility from "./StepVisibility";
 import StepInviteUsers from "./StepInviteUsers";
 import StepSuccess from "./StepSuccess";
 
 const STEPS = {
-  1: { component: StepSelectTopics, title: "What topic will your collaboration be dedicated to?", subtitle: "Choose a topic to help find your community." },
-  2: { component: StepCreateSpace, title: "Create Collaboration Space", subtitle: "Choose a topic to help find your collaboration space." },
-  3: { component: StepSelectDueDate, title: "Select a due date", subtitle: "The following date will terminate the collaboration space." },
-  4: { component: StepAssignMentor, title: "Assign a mentor", subtitle: "The following users have access to this project:" },
-  5: { component: StepInviteUsers, title: "Invite users and collaborators", subtitle: "Your new collaboration has been created. Invite colleagues to collaborate on this project." },
-  6: { component: StepSuccess, title: null },
+  1: { component: StepSelectTopics, titleKey: "collaboration_dialog.step1_title", subtitleKey: "collaboration_dialog.step1_subtitle" },
+  2: { component: StepCreateSpace, titleKey: "collaboration_dialog.step2_title", subtitleKey: "collaboration_dialog.step2_subtitle" },
+  3: { component: StepSelectDueDate, titleKey: "collaboration_dialog.step3_title", subtitleKey: "collaboration_dialog.step3_subtitle" },
+  4: { component: StepAssignMentor, titleKey: "collaboration_dialog.step4_title", subtitleKey: "collaboration_dialog.step4_subtitle" },
+  5: { component: StepVisibility, titleKey: "collaboration_dialog.step5_title", subtitleKey: null },
+  6: { component: StepInviteUsers, titleKey: "collaboration_dialog.step6_title", subtitleKey: "collaboration_dialog.step6_subtitle" },
+  7: { component: StepSuccess, titleKey: null },
 };
 
 export default function CreateCollaborationDialog() {
+  const { t } = useTranslation("community");
   const { isOpen, step, close } = useCollaborationStore();
 
   const currentStep = STEPS[step];
@@ -40,15 +44,15 @@ export default function CreateCollaborationDialog() {
         showCloseButton={false}
         className="max-h-[90vh] overflow-y-auto"
       >
-        {currentStep?.title && (
+        {currentStep?.titleKey && (
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1">
               <h2 className="text-lg font-bold text-brand-gray-900 leading-tight">
-                {currentStep.title}
+                {t(currentStep.titleKey)}
               </h2>
-              {currentStep.subtitle && (
+              {currentStep.subtitleKey && (
                 <p className="text-sm text-brand-gray-500">
-                  {currentStep.subtitle}
+                  {t(currentStep.subtitleKey)}
                 </p>
               )}
             </div>
@@ -62,7 +66,7 @@ export default function CreateCollaborationDialog() {
               }
             >
               <XIcon />
-              <span className="sr-only">Close</span>
+              <span className="sr-only">{t("collaboration_dialog.close")}</span>
             </DialogClose>
           </div>
         )}

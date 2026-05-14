@@ -3,17 +3,6 @@
  * These should match the Strapi enum values exactly.
  */
 
-export const ROLE_OPTIONS = [
-  "Researcher",
-  "Principal Investigator / Lab Lead",
-  "Post-doctoral Fellow",
-  "PhD Candidate",
-  "Graduate / Undergraduate Student",
-  "Administrator / Support Staff",
-  "Program Manager / Funder representative",
-  "External Reviewer",
-];
-
 export const EDUCATION_LEVEL_OPTIONS = [
   "Postgraduate Student (Masters)",
   "Doctoral Candidate (PhD Student)",

@@ -17,7 +17,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-junit",
-    "config-sync": "config-sync"
+    "config-sync": "config-sync",
+    "seed:prod": "node scripts/seed-prod.js"
   },
   "dependencies": {
     "@strapi-community/strapi-provider-upload-google-cloud-storage": "^5.0.5",
@@ -35,6 +36,7 @@
     "styled-components": "^6.0.0"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "jest": "^30.2.0",
     "supertest": "^7.1.4"
   },

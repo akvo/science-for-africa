@@ -33,6 +33,20 @@
           "sortable": true
         }
       },
+      "description": {
+        "edit": {
+          "label": "description",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "description",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "resourceType": {
         "edit": {
           "label": "resourceType",
@@ -190,8 +204,8 @@
       "list": [
         "id",
         "name",
-        "resourceType",
-        "file"
+        "description",
+        "resourceType"
       ],
       "edit": [
         [
@@ -200,25 +214,31 @@
             "size": 6
           },
           {
-            "name": "resourceType",
+            "name": "description",
             "size": 6
           }
         ],
         [
+          {
+            "name": "resourceType",
+            "size": 6
+          },
           {
             "name": "file",
             "size": 6
-          },
-          {
-            "name": "community",
-            "size": 6
           }
         ],
         [
           {
-            "name": "uploadedBy",
+            "name": "community",
             "size": 6
           },
+          {
+            "name": "uploadedBy",
+            "size": 6
+          }
+        ],
+        [
           {
             "name": "status",
             "size": 6

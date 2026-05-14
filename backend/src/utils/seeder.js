@@ -1,154 +1,73 @@
-"use strict";
-
-const INTEREST_CATEGORIES = {
-  Popular: [
-    "Bioinformatics",
-    "Genetics",
-    "Virology",
-    "Immunology",
-    "Ecology",
-    "Epidemiology",
-    "Public Health",
-    "Climate Change",
-  ],
-  Education: [
-    "Curriculum Design",
-    "STEM Outreach",
-    "University Management",
-    "Teacher Training",
-  ],
-  "Clinical & Medical": [
-    "Clinical Trials",
-    "Diagnostics",
-    "Pharmacology",
-    "Neuroscience",
-    "Infectious Diseases",
-  ],
-  "Environmental & Earth": [
-    "Sustainability",
-    "Geophysics",
-    "Hydrology",
-    "Renewable Energy",
-  ],
-  "Socio-Economic": [
-    "Health Economics",
-    "Policy Analysis",
-    "Social Informatics",
-    "Gender Studies",
-  ],
-};
+const { grantPermission } = require("./permission-helpers");
+const prodSeeder = require("./prod-seeder");
+const {
+  INSTITUTION_TYPES,
+  COUNTRIES,
+  INDIVIDUAL_ROLES,
+} = require("./constants");
 
 const INSTITUTIONS = [
   {
     name: "University of Nairobi",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Kenya",
     verified: true,
   },
   {
     name: "Makerere University",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Uganda",
     verified: true,
   },
   {
     name: "University of Cape Town",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "South Africa",
     verified: true,
   },
   {
     name: "Kwame Nkrumah University of Science and Technology",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Ghana",
     verified: true,
   },
   {
     name: "Addis Ababa University",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Ethiopia",
     verified: true,
   },
   {
     name: "Cairo University",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Egypt",
     verified: true,
   },
   {
     name: "University of Ibadan",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "Nigeria",
     verified: true,
   },
   {
     name: "Stellenbosch University",
-    type: "Academic",
+    institutionTypeName: "University / Higher Education Institution",
     country: "South Africa",
     verified: true,
   },
-  { name: "Science Foundation", type: "NGO", country: "Kenya", verified: true },
+  {
+    name: "Science Foundation",
+    institutionTypeName: "Civil Society / NGO",
+    country: "Kenya",
+    verified: true,
+  },
   {
     name: "African Academy of Sciences",
-    type: "NGO",
+    institutionTypeName: "Civil Society / NGO",
     country: "Kenya",
     verified: true,
   },
 ];
-
-/**
- * Helper to grant permissions to a role
- */
-const grantPermission = async (strapi, roleType, action) => {
-  const role = await strapi.db
-    .query("plugin::users-permissions.role")
-    .findOne({ where: { type: roleType } });
-
-  if (role) {
-    const existing = await strapi.db
-      .query("plugin::users-permissions.permission")
-      .findOne({
-        where: {
-          role: role.id,
-          action: action,
-        },
-      });
-
-    if (!existing) {
-      strapi.log.info(`Granting ${action} to ${roleType}...`);
-      await strapi.db.query("plugin::users-permissions.permission").create({
-        data: {
-          action: action,
-          role: role.id,
-        },
-      });
-    }
-  }
-};
-
-/**
- * Helper to revoke a permission from a role (inverse of grantPermission).
- * Used to clean up permissions that were granted in earlier seeder runs but
- * shouldn't be present anymore.
- */
-const revokePermission = async (strapi, roleType, action) => {
-  const role = await strapi.db
-    .query("plugin::users-permissions.role")
-    .findOne({ where: { type: roleType } });
-
-  if (!role) return;
-
-  const existing = await strapi.db
-    .query("plugin::users-permissions.permission")
-    .findOne({ where: { role: role.id, action } });
-
-  if (existing) {
-    strapi.log.info(`Revoking ${action} from ${roleType}...`);
-    await strapi.db
-      .query("plugin::users-permissions.permission")
-      .delete({ where: { id: existing.id } });
-  }
-};
 
 const COMMUNITIES = [
   {
@@ -451,17 +370,15 @@ const seed = async (strapi) => {
       .query("api::institution.institution")
       .findMany();
 
+    const individualRoles = await strapi.db
+      .query("api::individual-role.individual-role")
+      .findMany();
+
     const sampleDegrees = [
       "Doctorate (PhD)",
       "Master's Degree",
       "Bachelor's Degree",
       "PhD Candidate",
-    ];
-    const sampleRoles = [
-      "Principal Investigator",
-      "Post-doctoral Fellow",
-      "Researcher",
-      "Student",
     ];
 
     for (let i = 0; i < users.length; i++) {
@@ -470,7 +387,8 @@ const seed = async (strapi) => {
       if (!user.educationLevel || !user.highestEducationInstitution) {
         const institution = allInstitutions[i % allInstitutions.length];
         const degree = sampleDegrees[i % sampleDegrees.length];
-        const role = sampleRoles[i % sampleRoles.length];
+        const roleRelation =
+          individualRoles[i % individualRoles.length] || individualRoles[0];
 
         await strapi.db.query("plugin::users-permissions.user").update({
           where: { id: user.id },
@@ -478,7 +396,7 @@ const seed = async (strapi) => {
             educationLevel: user.educationLevel || degree,
             highestEducationInstitution:
               user.highestEducationInstitution || institution?.id,
-            roleType: user.roleType || role,
+            roleType: user.roleType || roleRelation?.id,
             onboardingComplete: true,
           },
         });
@@ -486,34 +404,117 @@ const seed = async (strapi) => {
     }
   }
 
-  // 1. Seed Interests
-  const interestCount = await strapi.db.query("api::interest.interest").count();
-  if (interestCount === 0) {
-    strapi.log.info("Seeding Interests...");
-    for (const [category, items] of Object.entries(INTEREST_CATEGORIES)) {
-      for (const name of items) {
-        await strapi.db.query("api::interest.interest").create({
-          data: { name, category },
-        });
+  // Helper for upsert
+  const upsertEntry = async (uid, data, lookupField = "name") => {
+    const locale = data.locale || "en";
+
+    // 1. Use low-level db.query to find ALL records matching the lookup value across all locales/statuses
+    // This is the most reliable way to detect duplicates in v5
+    const matches = await strapi.db.query(uid).findMany({
+      where: { [lookupField]: data[lookupField], locale: locale },
+    });
+
+    if (matches.length > 0) {
+      // Take the first match as the "source of truth"
+      const existing = matches[0];
+
+      // 2. Brute-force cleanup of ANY other duplicates in the same locale
+      if (matches.length > 1) {
+        strapi.log.warn(
+          `Found ${matches.length} duplicates for ${uid} ('${data[lookupField]}'). Purging...`,
+        );
+        for (let i = 1; i < matches.length; i++) {
+          await strapi.db.query(uid).delete({
+            where: { id: matches[i].id },
+          });
+        }
       }
+
+      const { id, documentId, locale: entryLocale, ...newData } = data;
+
+      // 3. Only update fields that have actually changed
+      const updateData = {};
+      Object.keys(newData).forEach((key) => {
+        if (newData[key] !== existing[key]) {
+          updateData[key] = newData[key];
+        }
+      });
+
+      if (Object.keys(updateData).length === 0) {
+        return existing;
+      }
+
+      // 4. Use Document Service for the final high-level update (ensures status/published/etc)
+      return await strapi.documents(uid).update({
+        documentId: existing.documentId,
+        data: updateData,
+        status: "published",
+      });
+    } else {
+      // 5. Create new if not found
+      return await strapi.documents(uid).create({
+        data,
+        status: "published",
+      });
     }
-    strapi.log.info(
-      `Seeded ${Object.values(INTEREST_CATEGORIES).flat().length} Interests.`,
+  };
+
+  // 1. Seed Metadata (Institution Types, Countries, Individual Roles)
+  await prodSeeder.syncMetadata(
+    strapi,
+    "api::institution-type.institution-type",
+    INSTITUTION_TYPES,
+    "Institution Types",
+  );
+  await prodSeeder.syncMetadata(
+    strapi,
+    "api::country.country",
+    COUNTRIES,
+    "Countries",
+  );
+  await prodSeeder.syncMetadata(
+    strapi,
+    "api::individual-role.individual-role",
+    INDIVIDUAL_ROLES,
+    "Individual Roles",
+  );
+
+  // 2. Seed Interests (Taxonomy Sync with Soft Migration)
+  await prodSeeder.syncInterestTaxonomy(strapi);
+
+  // 2b. Seed Landing Page
+  if (typeof prodSeeder.syncLandingPage === "function") {
+    await prodSeeder.syncLandingPage(strapi);
+  } else {
+    strapi.log.warn(
+      "syncLandingPage is not a function in prodSeeder. Skipping...",
     );
   }
 
   // 2. Seed Institutions
-  const institutionCount = await strapi.db
-    .query("api::institution.institution")
-    .count();
-  if (institutionCount === 0) {
-    strapi.log.info("Seeding Institutions...");
-    for (const data of INSTITUTIONS) {
-      await strapi.db.query("api::institution.institution").create({
-        data,
-      });
-    }
-    strapi.log.info(`Seeded ${INSTITUTIONS.length} Institutions.`);
+  strapi.log.info("Synchronizing Institutions...");
+  const types = await strapi.db
+    .query("api::institution-type.institution-type")
+    .findMany();
+
+  const countries = await strapi.db.query("api::country.country").findMany();
+
+  for (const data of INSTITUTIONS) {
+    const typeRelation = types.find(
+      (t) => t.name.toLowerCase() === data.institutionTypeName.toLowerCase(),
+    );
+
+    const countryRelation = countries.find(
+      (c) => c.name.toLowerCase() === data.country.toLowerCase(),
+    );
+
+    const { institutionTypeName, country, ...instData } = data;
+
+    await upsertEntry("api::institution.institution", {
+      ...instData,
+      institutionType: typeRelation ? typeRelation.id : null,
+      country: countryRelation ? countryRelation.id : null,
+    });
   }
 
   // 3. Seed Communities (upsert by slug — skip existing ones)
@@ -780,37 +781,17 @@ const seed = async (strapi) => {
   // 3b. Synchronize French Translations for critical collections
   strapi.log.info("Synchronizing French translations...");
   await synchronizeTranslations(strapi, "api::interest.interest");
+  await synchronizeTranslations(
+    strapi,
+    "api::institution-type.institution-type",
+  );
   await synchronizeTranslations(strapi, "api::institution.institution");
 
-  // Permissions must be synchronized in ALL environments
-  strapi.log.info("Synchronizing permissions...");
-  // 4. Set Permissions (Ensure Public and Authenticated can search)
-  const roles = ["public", "authenticated"];
-  const actions = [
-    "api::interest.interest.find",
-    "api::institution.institution.find",
-    "api::community.community.find",
-    "api::community.community.findOne",
-    "api::collaboration-invite.collaboration-invite.accept",
-  ];
-  for (const role of roles) {
-    for (const action of actions) {
-      await grantPermission(strapi, role, action);
-    }
-  }
+  // Permissions synchronization
+  await prodSeeder.syncPermissions(strapi);
 
-  // Grant Public access to OTP verification (New custom API routes)
-  const publicAuthActions = [
-    "api::auth.auth.verifyOtp",
-    "api::auth.auth.resendOtp",
-    "api::auth.auth.registrationStatus",
-  ];
-  for (const action of publicAuthActions) {
-    await grantPermission(strapi, "public", action);
-  }
-
-  // 5. Collaboration Call and Profile permissions (Authenticated only)
-  const collaborationActions = [
+  // 5. Collaboration Call and Profile permissions (Authenticated only - Dev specific extensions)
+  const devCollaborationActions = [
     "api::auth.profile.getMe",
     "api::auth.profile.update",
     "api::auth.profile.me",
@@ -825,6 +806,7 @@ const seed = async (strapi) => {
     "api::collaboration-call.collaboration-call.findOne",
     "api::collaboration-invite.collaboration-invite.create",
     "api::collaboration-invite.collaboration-invite.find",
+    "api::collaboration-invite.collaboration-invite.requestJoin",
     "api::collaboration-invite.collaboration-invite.decline",
     "api::chat-message.chat-message.find",
     "api::chat-message.chat-message.create",
@@ -842,17 +824,8 @@ const seed = async (strapi) => {
     "api::orcid-auth.orcid-auth.validate",
   ];
 
-  for (const action of collaborationActions) {
+  for (const action of devCollaborationActions) {
     await grantPermission(strapi, "authenticated", action);
-  }
-
-  // 6. Revoke permissions that were previously granted in error.
-  const publicRevokes = [
-    "api::collaboration-call.collaboration-call.find",
-    "api::collaboration-call.collaboration-call.findOne",
-  ];
-  for (const action of publicRevokes) {
-    await revokePermission(strapi, "public", action);
   }
 };
 

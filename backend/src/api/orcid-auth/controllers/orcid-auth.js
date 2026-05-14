@@ -126,8 +126,11 @@ module.exports = {
   },
 
   /**
-   * POST /api/orcid-auth/validate (legacy — public API only, no OAuth)
+   * POST /api/orcid-auth/validate
    * Body: { orcidId: "0000-0002-1825-0097" }
+   *
+   * Validates the ORCID iD against the public API, fetches profile data,
+   * updates the user record, and returns the profile payload.
    */
   async validate(ctx) {
     const user = ctx.state.user;
@@ -146,6 +149,7 @@ module.exports = {
         return ctx.notFound("ORCID iD not found. Please check and try again.");
       }
 
+      // Update user record
       const updateData = {
         orcidId,
         verified: true,
@@ -157,10 +161,11 @@ module.exports = {
       if (profile.biography) updateData.biography = profile.biography;
       if (profile.position) updateData.position = profile.position;
 
+      // Map interests (max 5)
       if (profile.interests && Array.isArray(profile.interests)) {
-        updateData.interests = profile.interests
-          .slice(0, 5)
-          .map((name) => ({ name }));
+        updateData.interests = profile.interests.slice(0, 5).map((name) => ({
+          name,
+        }));
       }
 
       await strapi.documents("plugin::users-permissions.user").update({

@@ -245,6 +245,8 @@ export function transformProfileUpdatePayload(userData) {
       "firstName",
       "lastName",
       "roleType",
+      "institutionName",
+      "institutionType",
     ];
     if (data[key] === "" && !identityFields.includes(key)) {
       delete data[key];
@@ -327,6 +329,38 @@ export async function fetchCommunities() {
 }
 
 /**
+ * Fetch a limited set of communities for the landing page.
+ */
+export async function fetchLandingCommunities(limit = 6, locale = "en") {
+  return fetchLocalized(
+    `/communities?pagination[limit]=${limit}&populate[subCommunities]=true&populate[parent]=true&sort=name:asc`,
+    locale,
+  );
+}
+
+/**
+ * Fetch all active individual roles for onboarding, sorted by sortOrder.
+ * Uses localized names based on the current locale.
+ */
+export async function fetchIndividualRoles(locale = "en") {
+  return fetchLocalized(
+    "/individual-roles?filters[isActive][$eq]=true&sort=sortOrder:asc",
+    locale,
+  );
+}
+
+/**
+ * Fetch all active institution types for onboarding.
+ * Uses localized names based on the current locale.
+ */
+export async function fetchInstitutionTypes(locale = "en") {
+  return fetchLocalized(
+    "/institution-types?filters[isActive][$eq]=true&sort=name:asc",
+    locale,
+  );
+}
+
+/**
  * Fetch a single community by slug (with relations populated)
  */
 export async function fetchCommunity(slug) {
@@ -385,6 +419,23 @@ export async function fetchCollaborationCalls(communityName) {
 }
 
 /**
+ * Request to join a collaboration call. Creates a Pending invite for the
+ * current user. The call creator can approve it from the backend.
+ */
+export async function requestJoinCollaborationCall(collaborationCallId) {
+  try {
+    const response = await apiClient.post(
+      "/collaboration-invites/request-join",
+      { collaborationCallId },
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error requesting to join collaboration call:", error);
+    return error;
+  }
+}
+
+/**
  * Accept a collaboration invite by its numeric id.
  */
 export async function acceptCollaborationInvite(id) {
@@ -427,11 +478,11 @@ export async function fetchChatMessages(callDocumentId) {
  * Post a chat message to a collaboration call. Author is derived from the
  * authenticated user server-side — never trusted from the request body.
  */
-export async function postChatMessage(callDocumentId, text) {
+export async function postChatMessage(callDocumentId, text, attachmentId) {
   try {
-    const response = await apiClient.post("/chat-messages", {
-      data: { text, collaborationCall: callDocumentId },
-    });
+    const data = { text, collaborationCall: callDocumentId };
+    if (attachmentId) data.attachment = attachmentId;
+    const response = await apiClient.post("/chat-messages", { data });
     return response.data;
   } catch (error) {
     console.error("Error posting chat message:", error);
@@ -473,6 +524,7 @@ export async function fetchResources(communityId, resourceType) {
  */
 export async function createResource({
   name,
+  description,
   resourceType,
   communityId,
   file,
@@ -513,6 +565,7 @@ export async function createResource({
     body: JSON.stringify({
       data: {
         name,
+        description: description || undefined,
         resourceType,
         file: fileId,
         community: { connect: [communityId] },
@@ -536,7 +589,7 @@ export async function createResource({
  */
 export async function fetchResource(documentId) {
   return fetchFromStrapi(
-    `/resources/${documentId}?populate[file]=true&populate[uploadedBy]=true&populate[community]=true`,
+    `/resources/${documentId}?populate[file]=true&populate[uploadedBy][populate][roleType]=true&populate[community]=true`,
   );
 }
 
@@ -545,18 +598,26 @@ export async function fetchResource(documentId) {
  */
 export async function fetchResourceComments(resourceDocumentId) {
   return fetchFromStrapi(
-    `/resource-comments?filters[resource][documentId][$eq]=${encodeURIComponent(resourceDocumentId)}&populate[author]=true&sort=createdAt:asc`,
+    `/resource-comments?filters[resource][documentId][$eq]=${encodeURIComponent(resourceDocumentId)}&filters[parentComment][id][$null]=true&populate[author][populate][roleType]=true&populate[replies][populate][author][populate][roleType]=true&populate[replies][populate][replies][populate][author][populate][roleType]=true&sort=createdAt:asc`,
   );
 }
 
 /**
- * Post a comment on a resource.
+ * Post a comment on a resource. Pass parentCommentId for threaded replies.
  */
-export async function postResourceComment(resourceDocumentId, text) {
-  return postToStrapi("/resource-comments", {
+export async function postResourceComment(
+  resourceDocumentId,
+  text,
+  parentCommentId,
+) {
+  const data = {
     text,
     resource: { connect: [resourceDocumentId] },
-  });
+  };
+  if (parentCommentId) {
+    data.parentComment = { connect: [parentCommentId] };
+  }
+  return postToStrapi("/resource-comments", data);
 }
 
 /**
@@ -660,4 +721,14 @@ export async function fetchMentees() {
     console.error("Error fetching mentees:", error);
     return null;
   }
+}
+
+/**
+ * Fetch Landing Page data with blocks populated and localization fallback.
+ */
+export async function fetchLandingPage(locale = "en") {
+  return fetchLocalized(
+    "/landing-page?populate[blocks][populate]=*",
+    locale,
+  );
 }

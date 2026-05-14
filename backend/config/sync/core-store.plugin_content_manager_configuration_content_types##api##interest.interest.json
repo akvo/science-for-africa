@@ -33,16 +33,31 @@
           "sortable": true
         }
       },
-      "category": {
+      "interestCategory": {
         "edit": {
-          "label": "category",
+          "label": "interestCategory",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "name"
+        },
+        "list": {
+          "label": "interestCategory",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "isActive": {
+        "edit": {
+          "label": "isActive",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "category",
+          "label": "isActive",
           "searchable": true,
           "sortable": true
         }
@@ -118,8 +133,8 @@
       "list": [
         "id",
         "name",
-        "category",
-        "createdAt"
+        "interestCategory",
+        "isActive"
       ],
       "edit": [
         [
@@ -128,8 +143,14 @@
             "size": 6
           },
           {
-            "name": "category",
+            "name": "interestCategory",
             "size": 6
+          }
+        ],
+        [
+          {
+            "name": "isActive",
+            "size": 4
           }
         ]
       ]

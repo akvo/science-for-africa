@@ -23,7 +23,8 @@ module.exports = {
       path: "/orcid-auth/validate",
       handler: "orcid-auth.validate",
       config: {
-        description: "Validate an ORCID iD via public API (legacy)",
+        description:
+          "Validate an ORCID iD and fetch public profile data",
       },
     },
   ],

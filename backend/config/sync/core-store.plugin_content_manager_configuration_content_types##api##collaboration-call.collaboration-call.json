@@ -147,6 +147,20 @@
           "sortable": true
         }
       },
+      "visibility": {
+        "edit": {
+          "label": "visibility",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "visibility",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "invites": {
         "edit": {
           "label": "invites",
@@ -275,17 +289,23 @@
             "size": 6
           },
           {
+            "name": "community",
+            "size": 6
+          }
+        ],
+        [
+          {
             "name": "createdByUser",
+            "size": 6
+          },
+          {
+            "name": "visibility",
             "size": 6
           }
         ],
         [
           {
             "name": "invites",
-            "size": 6
-          },
-          {
-            "name": "community",
             "size": 6
           }
         ]

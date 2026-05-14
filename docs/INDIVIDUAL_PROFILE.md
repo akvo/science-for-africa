@@ -56,11 +56,13 @@ graph TD
     - `profilePhoto` (Media Relation)
     - `pageCover` (Media Relation)
     - `languagePreferences` (Enum: en, fr)
+    - `userType` (Enum: individual, institution)
     - `biography` (Text, 275 char limit)
-    - `roleType` (Enum: professional roles)
+    - `roleType` (Enum: professional roles / Relation to `IndividualRole`)
     - `careerStage` (Enum: career stages)
     - `educationLevel` (string)
     - `highestEducationInstitution` (Relation to `Institution`)
+    - `institutionType` (Relation to `InstitutionType` - used for institutional accounts)
     - `institutionMemberships` (Relation to `InstitutionMembership`)
     - `orcidId` (string)
     - `interests` (Component: user.interest, repeatable)
@@ -128,6 +130,8 @@ The following features were identified in the initial discovery but are not part
 
 ### Technical Acceptance Criteria (Tech AC)
 - [x] **API Security**: Endpoints restricted to authenticated owner of the profile via custom Document Service controllers.
+- [x] **Strapi v5 Transition**: Profile updates utilize `strapi.documents().update` to support Document ID relational architecture.
+- [x] **Payload Sanitization**: Automatic purging of cross-type fields (e.g., removing individual roles when user type is 'institution') to prevent validation errors.
 - [x] **Optimistic UI**: Joined/Leave/Saved status updates immediately on frontend with professional toast feedback.
 - [ ] **Image Optimization**: Profile photos and covers are optimized/resized on upload.
 - [x] **I18n**: Support for multi-language display (English/French) via dedicated `profile` namespace.

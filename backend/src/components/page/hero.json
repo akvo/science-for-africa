@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_page_heroes",
+  "info": {
+    "displayName": "Hero",
+    "icon": "picture",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "linkText": {
+      "type": "string"
+    },
+    "linkUrl": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

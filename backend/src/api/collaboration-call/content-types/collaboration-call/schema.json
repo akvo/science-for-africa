@@ -52,6 +52,12 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user"
     },
+    "visibility": {
+      "type": "enumeration",
+      "enum": ["public", "restricted", "private"],
+      "default": "public",
+      "required": true
+    },
     "invites": {
       "type": "relation",
       "relation": "oneToMany",

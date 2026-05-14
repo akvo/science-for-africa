@@ -25,6 +25,18 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user"
+    },
+    "parentComment": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::resource-comment.resource-comment",
+      "inversedBy": "replies"
+    },
+    "replies": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::resource-comment.resource-comment",
+      "mappedBy": "parentComment"
     }
   }
 }

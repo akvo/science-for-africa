@@ -75,6 +75,7 @@ function ResourceCard({ resource, t, onView }) {
 
 export default function ResourcesList({
   communityDocumentId,
+  sortOrder = "newest",
   onAdd,
   className,
 }) {
@@ -111,9 +112,16 @@ export default function ResourcesList({
   }, [communityDocumentId]);
 
   const filtered = useMemo(() => {
-    if (filter === "all") return resources;
-    return resources.filter((r) => r.resourceType === filter);
-  }, [resources, filter]);
+    let result = resources;
+    if (filter !== "all") {
+      result = resources.filter((r) => r.resourceType === filter);
+    }
+    return [...result].sort((a, b) => {
+      const dateA = new Date(a.createdAt || 0);
+      const dateB = new Date(b.createdAt || 0);
+      return sortOrder === "oldest" ? dateA - dateB : dateB - dateA;
+    });
+  }, [resources, filter, sortOrder]);
 
   return (
     <section className={cn("flex flex-col", className)}>

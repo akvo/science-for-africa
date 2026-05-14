@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_page_secondary_headings",
+  "info": {
+    "displayName": "Secondary Heading",
+    "icon": "heading",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "tagline": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    }
+  }
+}

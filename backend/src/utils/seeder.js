@@ -1,9 +1,5 @@
 const { grantPermission } = require("./permission-helpers");
-const {
-  syncInterestTaxonomy,
-  syncPermissions,
-  syncMetadata,
-} = require("./prod-seeder");
+const prodSeeder = require("./prod-seeder");
 const {
   INSTITUTION_TYPES,
   COUNTRIES,
@@ -464,14 +460,19 @@ const seed = async (strapi) => {
   };
 
   // 1. Seed Metadata (Institution Types, Countries, Individual Roles)
-  await syncMetadata(
+  await prodSeeder.syncMetadata(
     strapi,
     "api::institution-type.institution-type",
     INSTITUTION_TYPES,
     "Institution Types",
   );
-  await syncMetadata(strapi, "api::country.country", COUNTRIES, "Countries");
-  await syncMetadata(
+  await prodSeeder.syncMetadata(
+    strapi,
+    "api::country.country",
+    COUNTRIES,
+    "Countries",
+  );
+  await prodSeeder.syncMetadata(
     strapi,
     "api::individual-role.individual-role",
     INDIVIDUAL_ROLES,
@@ -479,7 +480,16 @@ const seed = async (strapi) => {
   );
 
   // 2. Seed Interests (Taxonomy Sync with Soft Migration)
-  await syncInterestTaxonomy(strapi);
+  await prodSeeder.syncInterestTaxonomy(strapi);
+
+  // 2b. Seed Landing Page
+  if (typeof prodSeeder.syncLandingPage === "function") {
+    await prodSeeder.syncLandingPage(strapi);
+  } else {
+    strapi.log.warn(
+      "syncLandingPage is not a function in prodSeeder. Skipping...",
+    );
+  }
 
   // 2. Seed Institutions
   strapi.log.info("Synchronizing Institutions...");
@@ -778,7 +788,7 @@ const seed = async (strapi) => {
   await synchronizeTranslations(strapi, "api::institution.institution");
 
   // Permissions synchronization
-  await syncPermissions(strapi);
+  await prodSeeder.syncPermissions(strapi);
 
   // 5. Collaboration Call and Profile permissions (Authenticated only - Dev specific extensions)
   const devCollaborationActions = [

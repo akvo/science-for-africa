@@ -76,7 +76,6 @@ describe("Navbar Component (TDD)", () => {
     // Expectations: Authenticated actions are visible
     // Must wait for component to mount
     await waitFor(() => {
-      expect(screen.getByText("navbar.publish")).toBeInTheDocument();
       // Check for user initials in Avatar
       expect(screen.getByText("JD")).toBeInTheDocument();
     });

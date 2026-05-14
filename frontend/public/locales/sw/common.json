@@ -169,11 +169,12 @@
   },
   "seo": {
     "description": "Kuimarisha mustakabali wa Sayansi kwa Afrika. Jiunge na jamii ya wanasayansi, watafiti, na wavumbuzi.",
-    "home_title": "Mfumo wa Muundo | Mwongozo wa Mtindo",
+    "home_title": "Mwanzo | Science for Africa",
     "onboarding_title": "Kamilisha wasifu wako",
     "community_title": "Jumuiya",
     "profile_title": "Profaili ya kitaaluma | Science for Africa",
-    "profile_description": "Simamia kitambulisho chako cha kitaaluma, jamii, na ushirikiano."
+    "profile_description": "Simamia kitambulisho chako cha kitaaluma, jamii, na ushirikiano.",
+    "home_description": "Nyumba ya kitaalam kwa mameneja wa utafiti na uvumbuzi barani Afrika."
   },
   "verification": {
     "pending": "Inasubiri",

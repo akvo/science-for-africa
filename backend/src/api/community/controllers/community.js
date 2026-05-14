@@ -21,7 +21,11 @@ async function augmentWithCounts(strapi, item, userId) {
     .query("api::community-membership.community-membership")
     .count({ where: { community: { documentId: item.documentId } } });
 
-  const augmented = { ...item, posts: postsCount, subscribers: subscribersCount };
+  const augmented = {
+    ...item,
+    posts: postsCount,
+    subscribers: subscribersCount,
+  };
 
   if (userId) {
     const membership = await strapi.db
@@ -93,22 +97,26 @@ module.exports = createCoreController(
 
       if (existing) {
         return {
+          success: true,
           data: { isMember: true, subscribers: subscribersCount },
         };
       }
 
       // Create membership record
-      await strapi.documents("api::community-membership.community-membership").create({
-        data: {
-          user: user.id,
-          community: community.documentId,
-          role: "Member",
-          joinedAt: new Date(),
-        },
-        status: "published",
-      });
+      await strapi
+        .documents("api::community-membership.community-membership")
+        .create({
+          data: {
+            user: user.id,
+            community: community.documentId,
+            role: "Member",
+            joinedAt: new Date(),
+          },
+          status: "published",
+        });
 
       return {
+        success: true,
         data: { isMember: true, subscribers: subscribersCount + 1 },
       };
     },
@@ -137,18 +145,22 @@ module.exports = createCoreController(
         .count({ where: { community: { documentId: id } } });
 
       if (!membership) {
-        return {
-          data: { isMember: false, subscribers: subscribersCount },
-        };
+        return ctx.notFound("Membership not found");
       }
 
       // Delete membership record
-      await strapi.documents("api::community-membership.community-membership").delete({
-        documentId: membership.documentId,
-      });
+      await strapi
+        .documents("api::community-membership.community-membership")
+        .delete({
+          documentId: membership.documentId,
+        });
 
       return {
-        data: { isMember: false, subscribers: Math.max(0, subscribersCount - 1) },
+        success: true,
+        data: {
+          isMember: false,
+          subscribers: Math.max(0, subscribersCount - 1),
+        },
       };
     },
   }),

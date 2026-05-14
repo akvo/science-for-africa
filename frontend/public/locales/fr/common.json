@@ -112,7 +112,7 @@
     "no_comments": "Aucun commentaire pour le moment. Soyez le premier à partager comment vous utilisez cette ressource.",
     "save": "Enregistrer",
     "share": "Partager",
-    "save_share": "Enregistrer \u00b7 Partager",
+    "save_share": "Enregistrer · Partager",
     "close": "Fermer",
     "save_to_library": "Enregistrer dans votre bibliothèque",
     "just_now": "à l'instant"
@@ -160,9 +160,10 @@
   },
   "seo": {
     "description": "Faire progresser l'avenir de la science en Afrique. Rejoignez la communauté de scientifiques, de chercheurs et d'innovateurs.",
-    "home_title": "Système de Conception | Guide de Style",
+    "home_title": "Accueil | Science for Africa",
     "onboarding_title": "Complétez Votre Profil",
-    "community_title": "Communauté"
+    "community_title": "Communauté",
+    "home_description": "Le foyer professionnel des gestionnaires de la recherche et de l'innovation en Afrique."
   },
   "footer": {
     "newsletter": {

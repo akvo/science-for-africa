@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_page_identity_sections",
+  "info": {
+    "displayName": "Identity Section",
+    "icon": "landscape",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "overlayText": {
+      "type": "text"
+    }
+  }
+}

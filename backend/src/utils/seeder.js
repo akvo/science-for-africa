@@ -822,6 +822,9 @@ const seed = async (strapi) => {
     "plugin::users-permissions.user.follow",
     "plugin::users-permissions.user.unfollow",
     "api::auth.profile.publicProfile",
+    "api::orcid-auth.orcid-auth.authorize",
+    "api::orcid-auth.orcid-auth.callback",
+    "api::orcid-auth.orcid-auth.validate",
   ];
 
   for (const action of devCollaborationActions) {

@@ -18,6 +18,7 @@ export const useOnboardingStore = create(
         educationInstitution: { id: null, name: "" },
         // Step 4
         orcidId: "",
+        orcidVerified: false,
         // Step 5
         affiliationInstitution: { id: null, name: "" },
       },
@@ -102,6 +103,7 @@ export const useOnboardingStore = create(
             educationLevel: "",
             educationInstitution: { id: null, name: "" },
             orcidId: "",
+            orcidVerified: false,
             affiliationInstitution: { id: null, name: "" },
           },
         }),

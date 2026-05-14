@@ -30,7 +30,7 @@ import {
   fetchFromStrapi,
   getStrapiMedia,
   fetchIndividualRoles,
-  validateOrcid,
+  getOrcidAuthorizeUrl,
 } from "@/lib/strapi";
 import { useTranslation } from "next-i18next";
 
@@ -785,21 +785,14 @@ const DetailsEditMode = ({
                   <Button
                     variant="outline"
                     type="button"
-                    disabled={orcidValidating || !watch("orcidId")?.trim()}
+                    disabled={orcidValidating}
                     onClick={async () => {
-                      const orcidId = watch("orcidId")?.trim();
-                      if (!orcidId) return;
                       setOrcidValidating(true);
-                      setOrcidError(null);
-                      const res = await validateOrcid(orcidId);
-                      setOrcidValidating(false);
-                      if (res?.data?.verified) {
-                        onUserUpdate?.();
+                      const result = await getOrcidAuthorizeUrl("profile");
+                      if (result?.data?.authorizeUrl) {
+                        window.location.href = result.data.authorizeUrl;
                       } else {
-                        setOrcidError(
-                          res?.error ||
-                            tCommon("verification.orcid_verify_failed"),
-                        );
+                        setOrcidValidating(false);
                       }
                     }}
                     className="px-8 rounded-full text-sm h-10 border-brand-teal-900 text-brand-teal-900 hover:bg-brand-teal-50 hover:text-brand-teal-700 transition-all font-outfit"

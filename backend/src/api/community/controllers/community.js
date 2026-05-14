@@ -93,6 +93,7 @@ module.exports = createCoreController(
 
       if (existing) {
         return {
+          success: true,
           data: { isMember: true, subscribers: subscribersCount },
         };
       }
@@ -109,6 +110,7 @@ module.exports = createCoreController(
       });
 
       return {
+        success: true,
         data: { isMember: true, subscribers: subscribersCount + 1 },
       };
     },
@@ -138,6 +140,7 @@ module.exports = createCoreController(
 
       if (!membership) {
         return {
+          success: true,
           data: { isMember: false, subscribers: subscribersCount },
         };
       }
@@ -148,6 +151,7 @@ module.exports = createCoreController(
       });
 
       return {
+        success: true,
         data: { isMember: false, subscribers: Math.max(0, subscribersCount - 1) },
       };
     },

@@ -41,7 +41,7 @@ export default function SortDropdown({
           {triggerLabel}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="min-w-[160px]">
         {options.map((opt) => (
           <DropdownMenuItem key={opt.value} onClick={() => onChange(opt.value)}>
             {t(opt.labelKey, { defaultValue: opt.defaultLabel })}

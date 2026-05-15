@@ -4,19 +4,27 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { useAuthStore } from "@/lib/auth-store";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { cn, formatNumber } from "@/lib/utils";
-import {
-  MoreHorizontal,
-  Briefcase,
-  GraduationCap,
-  MapPin,
-  MoreVertical,
-} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ArrowLeft, ChevronDown } from "lucide-react";
 import { getMe } from "@/lib/strapi";
-import VerificationBadge from "@/components/shared/VerificationBadge";
+import { toast } from "sonner";
+import ProfileCard from "./ProfileCard";
+import CommunityLeftNav from "@/components/community/CommunityLeftNav";
+
+const useHasHydrated = () => {
+  const [hydrated, setHydrated] = React.useState(false);
+  useEffect(() => {
+    const unsub = useAuthStore.persist.onFinishHydration(() =>
+      setHydrated(true),
+    );
+    if (useAuthStore.persist.hasHydrated()) {
+      setTimeout(() => setHydrated(true), 0);
+    }
+    return unsub;
+  }, []);
+  return hydrated;
+};
 
 const TABS = [
   { id: "details", label: "tabs.details", href: "/profile" },
@@ -34,238 +42,184 @@ const TABS = [
   { id: "mentorship", label: "tabs.mentorship", href: "/profile/mentorship" },
 ];
 
-const SidebarCommunity = ({ name, subscribers, t }) => (
-  <div className="py-3 last:pb-0">
-    <h5 className="text-sm font-bold text-brand-gray-900">{name}</h5>
-    <p className="text-xs text-brand-gray-500">
-      {subscribers} {t("profile:sidebar.subscribers")}
-    </p>
-  </div>
-);
-
-const ProfileLayout = ({ children, activeTab = "details" }) => {
+const ProfileLayout = ({
+  children,
+  activeTab = "details",
+  profileUser,
+  onFollowToggle,
+  isFollowing,
+  isLoadingFollow,
+  variant = "private", // "private" or "public"
+}) => {
   const { t } = useTranslation(["profile", "common"]);
-  const { user, updateUser, isAuthenticated } = useAuthStore();
+  const { user: authUser, updateUser, isAuthenticated } = useAuthStore();
   const router = useRouter();
+  const hydrated = useHasHydrated();
 
-  // Sync user data on mount to ensure we have the latest (especially after onboarding)
+  const user = profileUser || authUser;
+  const isOwnProfile =
+    !profileUser || (authUser && authUser.id == profileUser.id);
+
+  // Sync user data on mount ONLY for own profile
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && isOwnProfile) {
       getMe().then((freshUser) => {
         if (freshUser) {
           updateUser(freshUser);
         }
       });
     }
-  }, [isAuthenticated, updateUser]);
+  }, [isAuthenticated, updateUser, isOwnProfile]);
 
-  const initials = user?.fullName
-    ? user.fullName
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-    : "OR";
+  // Auth Guard: Redirect to login if not authenticated after hydration
+  useEffect(() => {
+    if (hydrated && !isAuthenticated && variant === "private") {
+      router.push("/login");
+    }
+  }, [hydrated, isAuthenticated, router, variant]);
+
+  // Show loading state while hydrating
+  if (!hydrated && variant === "private") {
+    return <div className="min-h-screen bg-brand-gray-25" />;
+  }
+
+  const handleShare = () => {
+    const url =
+      window.location.origin + `/profile/${user?.documentId || user?.id || ""}`;
+    if (navigator.share) {
+      navigator
+        .share({
+          title: user?.fullName || "Profile",
+          url: url,
+        })
+        .catch(() => {});
+    } else {
+      navigator.clipboard.writeText(url);
+      toast.success(
+        t("profile:share.copied_to_clipboard", {
+          defaultValue: "Profile link copied to clipboard!",
+        }),
+      );
+    }
+  };
+
+  const isPublic = variant === "public";
 
   return (
     <div className="min-h-screen bg-brand-gray-25 pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Sidebar Area */}
-          <aside className="lg:col-span-3">
-            <div className="bg-brand-gray-50 rounded-2xl border border-brand-gray-100 overflow-hidden">
-              {/* Identity Header */}
-              <div className="py-6 px-4 border-b border-brand-gray-200">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-3">
-                    <Avatar className="size-12 border border-brand-gray-100 relative overflow-hidden bg-brand-teal-50">
-                      {user?.profilePhoto?.url ? (
-                        <Image
-                          src={user.profilePhoto.url}
-                          alt="Avatar"
-                          fill
-                          className="object-cover"
-                        />
-                      ) : (
-                        <AvatarFallback className="text-brand-teal-700 font-bold">
-                          {initials}
-                        </AvatarFallback>
+      <div
+        className={cn(
+          isPublic
+            ? "flex flex-col lg:flex-row"
+            : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6",
+        )}
+      >
+        {!isPublic ? (
+          /* Private Layout (Original) */
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+            {/* Left Column */}
+            <aside className="lg:col-span-3">
+              <ProfileCard
+                user={user}
+                isOwnProfile={isOwnProfile}
+                isAuthenticated={isAuthenticated}
+                onFollowToggle={onFollowToggle}
+                isFollowing={isFollowing}
+                isLoadingFollow={isLoadingFollow}
+                handleShare={handleShare}
+              />
+            </aside>
+
+            {/* Main Content Area */}
+            <main className="lg:col-span-9">
+              <div className="space-y-6">
+                <h1 className="text-display-md text-brand-gray-900 font-bold">
+                  {t("profile:tabs.profile")}
+                </h1>
+
+                <div className="flex items-center gap-6 border-b border-brand-gray-200">
+                  {TABS.filter((tab) => {
+                    if (tab.id === "mentorship") {
+                      return user?.userType === "individual";
+                    }
+                    return true;
+                  }).map((tab) => (
+                    <Link
+                      key={tab.id}
+                      href={tab.href}
+                      className={cn(
+                        "relative pb-3 text-sm font-bold transition-all whitespace-nowrap",
+                        activeTab === tab.id
+                          ? "text-brand-teal-600 after:absolute after:-bottom-px after:left-0 after:h-0.5 after:w-full after:bg-brand-teal-600"
+                          : "text-brand-gray-500 hover:text-brand-gray-700",
                       )}
-                    </Avatar>
-                    <div>
-                      <h2 className="text-[15px] font-bold text-brand-gray-900 leading-tight flex items-center gap-2">
-                        {user?.fullName || user?.username}
-                      </h2>
-                      <p className="text-xs text-brand-gray-500 mt-0.5">
-                        {user?.roleType?.name ||
-                          (typeof user?.roleType === "string"
-                            ? t(`profile:roles.${user.roleType}`)
-                            : t("profile:details.not_provided"))}
-                      </p>
-                      <div className="mt-2">
-                        <VerificationBadge verified={user?.verified} />
-                      </div>
-                    </div>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="size-10 rounded-full bg-brand-gray-100/50 text-brand-gray-400 hover:bg-brand-gray-200/50"
-                  >
-                    <MoreHorizontal size={20} />
-                  </Button>
+                    >
+                      {t(`profile:${tab.label}`)}
+                    </Link>
+                  ))}
                 </div>
-              </div>
 
-              {/* Biography Section */}
-              <div className="p-6 border-b border-brand-gray-200">
-                <p className="text-sm text-brand-gray-600 leading-relaxed wrap-break-word whitespace-pre-wrap">
-                  {user?.biography ||
-                    t("details.no_bio", {
-                      defaultValue:
-                        "Lorem ipsum dolor sit amet consectetur. Nunc et posuere cras bibendum cras. Diam felis sagittis suspendisse scelerisque quam eu.",
-                    })}
-                </p>
+                <div className="pt-4">{children}</div>
               </div>
+            </main>
+          </div>
+        ) : (
+          /* Public Layout (Community-style) */
+          <>
+            <aside className="w-full lg:w-65 lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4 lg:pt-4 lg:sticky lg:top-28.5 lg:self-start lg:h-[calc(100vh-114px)] lg:overflow-y-auto">
+              <CommunityLeftNav activeKey="" />
+            </aside>
 
-              {/* Stats Grid - Integrated style */}
-              <div className="grid grid-cols-2 border-b border-brand-gray-200">
-                <div className="p-6 border-r border-brand-gray-200">
-                  <p className="text-[11px] text-brand-gray-400 font-bold uppercase tracking-wider mb-2">
-                    {t("profile:sidebar.subscribers")}
-                  </p>
-                  <p className="text-base font-bold text-brand-gray-900 uppercase">
-                    {user?.subscribersCount || "63716"}
-                  </p>
-                </div>
-                <div className="p-6">
-                  <p className="text-[11px] text-brand-gray-400 font-bold uppercase tracking-wider mb-2">
-                    {t("profile:sidebar.posts")}
-                  </p>
-                  <p className="text-base font-bold text-brand-gray-900">
-                    {user?.postsCount || "323"}
-                  </p>
-                </div>
-              </div>
-
-              {/* Education Section */}
-              <div className="p-6 border-b border-brand-gray-200 space-y-4">
-                <h4 className="text-[11px] text-brand-gray-400 font-bold uppercase tracking-wider">
-                  {t("profile:sidebar.education")}
-                </h4>
-                <div className="space-y-1">
-                  <p className="text-[15px] font-bold text-brand-gray-900 leading-snug">
-                    {user?.educationLevel
-                      ? t(`profile:education_levels.${user.educationLevel}`)
-                      : t(
-                          "profile:education_levels.Postgraduate Student (Masters)",
-                        )}
-                  </p>
-                  <p className="text-sm text-brand-gray-500">
-                    {user?.highestEducationInstitution?.name ||
-                      user?.educationInstitutionName ||
-                      user?.institution?.name ||
-                      t("profile:details.not_provided")}
-                  </p>
-                </div>
-              </div>
-
-              {/* Expertise Tags Section */}
-              <div className="p-6 border-b border-brand-gray-200">
-                <div className="flex flex-wrap gap-2">
-                  {user?.interests?.length > 0 ? (
-                    user.interests.map((item) => {
-                      const tag = typeof item === "string" ? item : item.name;
-                      return (
-                        <Badge
-                          key={tag}
-                          variant="outline"
-                          className="rounded-xl px-3 py-1.5 text-[12px] font-medium text-brand-gray-600 border-brand-gray-300 bg-white text-left flex items-center justify-start h-auto min-h-7 leading-relaxed whitespace-normal max-w-full"
+            <div className="flex flex-1 flex-col min-w-0 pb-4">
+              <div className="flex flex-col gap-6 min-w-0">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
+                  {/* Center Column */}
+                  <div className="flex flex-col gap-5 min-w-0">
+                    <div className="flex items-center justify-between gap-4 py-1 lg:px-6 border-b border-brand-gray-100 pb-4 pt-4 border-r">
+                      <div className="flex items-center gap-4">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => router.back()}
+                          className="size-10 rounded-full bg-brand-gray-50 text-brand-gray-500 hover:bg-brand-gray-100"
                         >
-                          #{tag.replace("#", "")}
-                        </Badge>
-                      );
-                    })
-                  ) : (
-                    <p className="text-[13px] text-brand-gray-400 font-medium italic">
-                      {t("profile:details.not_provided")}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Communities Section */}
-              <div className="p-6 space-y-5">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-[11px] text-brand-gray-400 font-bold uppercase tracking-wider">
-                    {t("profile:sidebar.communities")}
-                  </h4>
-                  <Link
-                    href="/profile/communities"
-                    className="text-[11px] font-bold text-brand-gray-500 hover:text-brand-teal-600"
-                  >
-                    {t("profile:sidebar.see_all")}
-                  </Link>
-                </div>
-                <div className="divide-y divide-brand-gray-100">
-                  {user?.memberships?.length > 0 ? (
-                    user.memberships.map((membership) => (
-                      <SidebarCommunity
-                        key={membership.id}
-                        name={membership.community?.name || "Unknown"}
-                        subscribers={formatNumber(
-                          membership.community?.subscribers || 0,
-                        )}
-                        t={t}
-                      />
-                    ))
-                  ) : (
-                    <div className="py-4 px-1">
-                      <p className="text-[13px] text-brand-gray-400 font-medium italic">
-                        {t("profile:sidebar.no_communities", {
-                          defaultValue: "No communities joined yet.",
+                          <ArrowLeft size={20} />
+                        </Button>
+                        <h1 className="text-lg font-bold text-brand-gray-900">
+                          {user?.fullName || user?.username}
+                        </h1>
+                      </div>
+                      <Button
+                        variant="outline"
+                        className="rounded-full border-brand-gray-200 text-brand-gray-700 h-10 px-6 font-bold"
+                      >
+                        {t("common:community.sort_by", {
+                          defaultValue: "Sort by",
                         })}
-                      </p>
+                        <ChevronDown size={16} className="ml-2" />
+                      </Button>
                     </div>
-                  )}
+
+                    <div className="lg:pl-6">{children}</div>
+                  </div>
+
+                  {/* Right Column */}
+                  <aside className="w-full pr-4 pt-4 lg:sticky lg:top-28.5 lg:self-start">
+                    <ProfileCard
+                      user={user}
+                      isOwnProfile={isOwnProfile}
+                      isAuthenticated={isAuthenticated}
+                      onFollowToggle={onFollowToggle}
+                      isFollowing={isFollowing}
+                      isLoadingFollow={isLoadingFollow}
+                      handleShare={handleShare}
+                    />
+                  </aside>
                 </div>
               </div>
             </div>
-          </aside>
-
-          {/* Main Area */}
-          <main className="lg:col-span-9 space-y-6">
-            <h1 className="text-display-md text-brand-gray-900 font-bold">
-              {t("profile:tabs.profile")}
-            </h1>
-
-            {/* Tabs List */}
-            <div className="flex items-center gap-6 border-b border-brand-gray-200">
-              {TABS.filter((tab) => {
-                if (tab.id === "mentorship") {
-                  return user?.userType === "individual";
-                }
-                return true;
-              }).map((tab) => (
-                <Link
-                  key={tab.id}
-                  href={tab.href}
-                  className={cn(
-                    "relative pb-3 text-sm font-bold transition-all whitespace-nowrap",
-                    activeTab === tab.id
-                      ? "text-brand-teal-600 after:absolute after:-bottom-px after:left-0 after:h-0.5 after:w-full after:bg-brand-teal-600"
-                      : "text-brand-gray-500 hover:text-brand-gray-700",
-                  )}
-                >
-                  {t(`profile:${tab.label}`)}
-                </Link>
-              ))}
-            </div>
-
-            {/* Render Tab Content */}
-            <div className="pt-4">{children}</div>
-          </main>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

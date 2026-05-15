@@ -56,6 +56,7 @@ function Button({
   size = "md",
   shape = "pill",
   asChild = false,
+  nativeButton,
   ...props
 }) {
   if (asChild) {
@@ -64,6 +65,7 @@ function Button({
         data-slot="button"
         className={cn(buttonVariants({ variant, size, shape, className }))}
         render={props.children}
+        nativeButton={nativeButton}
         {...(({ children, ...rest }) => rest)(props)}
       />
     );

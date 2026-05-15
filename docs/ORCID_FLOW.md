@@ -9,13 +9,14 @@ To allow researchers to verify their professional identity by linking their ORCI
 **Data-Driven Credibility**: Verified ORCID links provide a foundation of trust for researchers on the Science for Africa platform.
 
 ### User Experience
-1. **Input**: User enters their 16-digit ORCID iD in Onboarding Step 4.
-2. **Verification**: User clicks "Verify". The system calls the backend to fetch public data from the ORCID registry.
+1. **Discovery**: User enters their 16-digit ORCID iD in Onboarding Step 4 for public data preview.
+2. **Preview**: User clicks "Verify". The system calls the backend to fetch public data from the ORCID registry.
 3. **Feedback**:
     - **Success**: A "Profile Found" card appears showing the researcher's name, biography, and latest position.
     - **Failure**: An error message appears if the ID is invalid or not found.
-4. **Sync**: Successful verification automatically populates the user's profile fields (FirstName, LastName, Biography, Interests).
-5. **Completion**: User confirms and proceeds to Step 5.
+4. **OAuth Verification**: User clicks "Sign in with ORCID" to verify ownership.
+5. **Sync**: Successful OAuth handshake automatically populates and locks the user's profile fields (FirstName, LastName, Biography, Interests) with a `verified` status.
+6. **Completion**: User proceeds to Step 5.
 
  ---
 
@@ -46,16 +47,17 @@ The following variables must be configured in the backend environment for both p
 ```mermaid
 graph TD
     A[Onboarding Step 4] --> B[Enter ORCID iD]
-    B --> C[Click Verify]
+    B --> C[Click Preview]
     C --> D[POST /api/orcid-auth/validate]
     D --> E{ORCID Public API}
     E -->|Found| F[Return Profile Data]
-    E -->|Not Found| G[Return 404/Error]
-    F --> H[Display Profile Card]
-    G --> I[Display Error Message]
-    H --> J[Confirm & Sync]
-    J --> K[Update User & verified=true]
-    K --> L[Next Step]
+    F --> G[Display Profile Card]
+    G --> H[Click Verify with ORCID]
+    H --> I[GET /api/orcid-auth/authorize]
+    I --> J{ORCID OAuth}
+    J -->|Authorized| K[POST /api/orcid-auth/callback]
+    K --> L[Update User & verified=true]
+    L --> M[Next Step]
 ```
 
 ### Database Schema / Data Structure
@@ -151,5 +153,5 @@ graph TD
 ---
 
 ## 🔮 Future Enhancements
-- Authenticated ORCID OAuth (requires Client ID/Secret) for private data access.
 - Continuous sync (nightly) to keep profiles updated.
+- Import of publication list/works into the user's Resources tab.

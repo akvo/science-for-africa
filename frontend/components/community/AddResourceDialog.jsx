@@ -23,6 +23,23 @@ import { Upload, Loader2, CheckCircle, XIcon } from "lucide-react";
 import { createResource } from "@/lib/strapi";
 import { cn } from "@/lib/utils";
 
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const ALLOWED_EXTENSIONS = [
+  ".pdf",
+  ".doc",
+  ".docx",
+  ".xls",
+  ".xlsx",
+  ".ppt",
+  ".pptx",
+];
+const ALLOWED_MIME_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+];
+
 const RESOURCE_TYPES = [
   { value: "report", i18nKey: "resources.report" },
   { value: "publication", i18nKey: "resources.publication" },
@@ -95,19 +112,45 @@ export default function AddResourceDialog({
     onOpenChange(nextOpen);
   };
 
-  const handleFile = (f) => {
-    if (f) {
-      setFile(f);
-      setError("");
-    }
-  };
+  const handleFile = useCallback(
+    (f) => {
+      if (f) {
+        // Validate size
+        if (f.size > MAX_FILE_SIZE) {
+          setError(t("resources.file_too_large"));
+          setFile(null);
+          return;
+        }
 
-  const handleDrop = useCallback((e) => {
-    e.preventDefault();
-    setDragActive(false);
-    const f = e.dataTransfer?.files?.[0];
-    if (f) handleFile(f);
-  }, []);
+        // Validate type
+        const extension = f.name
+          .toLowerCase()
+          .substring(f.name.lastIndexOf("."));
+        const isValidExtension = ALLOWED_EXTENSIONS.includes(extension);
+        const isValidMimeType = ALLOWED_MIME_TYPES.includes(f.type);
+
+        if (!isValidExtension && !isValidMimeType) {
+          setError(t("resources.invalid_file_type"));
+          setFile(null);
+          return;
+        }
+
+        setFile(f);
+        setError("");
+      }
+    },
+    [t],
+  );
+
+  const handleDrop = useCallback(
+    (e) => {
+      e.preventDefault();
+      setDragActive(false);
+      const f = e.dataTransfer?.files?.[0];
+      if (f) handleFile(f);
+    },
+    [handleFile],
+  );
 
   const toggleTopic = (topic) => {
     setSelectedTopics((prev) =>
@@ -164,7 +207,10 @@ export default function AddResourceDialog({
           </div>
           <div className="flex items-center justify-between">
             <label className="flex items-center gap-2 text-sm text-brand-gray-600 cursor-pointer">
-              <input type="checkbox" className="rounded border-brand-gray-300" />
+              <input
+                type="checkbox"
+                className="rounded border-brand-gray-300"
+              />
               {t("resources.dont_show_again")}
             </label>
             <Button
@@ -187,9 +233,7 @@ export default function AddResourceDialog({
         <DialogContent size="lg" showCloseButton={true}>
           <DialogHeader>
             <DialogTitle>{t("resources.upload_title")}</DialogTitle>
-            <DialogDescription>
-              {t("resources.choose_topic")}
-            </DialogDescription>
+            <DialogDescription>{t("resources.choose_topic")}</DialogDescription>
           </DialogHeader>
 
           <div className="max-h-[400px] overflow-y-auto pr-2 -mr-2 scrollbar-thin scrollbar-thumb-brand-gray-200 scrollbar-track-transparent border-t border-brand-gray-100 pt-5">
@@ -216,9 +260,7 @@ export default function AddResourceDialog({
             </div>
           </div>
 
-          {error && (
-            <p className="text-sm text-red-600">{error}</p>
-          )}
+          {error && <p className="text-sm text-red-600">{error}</p>}
 
           <div className="flex justify-end gap-3 pt-4">
             <Button
@@ -266,7 +308,10 @@ export default function AddResourceDialog({
             <Select value={resourceType} onValueChange={setResourceType}>
               <SelectTrigger className="w-full">
                 <SelectValue>
-                  {t(RESOURCE_TYPES.find((rt) => rt.value === resourceType)?.i18nKey)}
+                  {t(
+                    RESOURCE_TYPES.find((rt) => rt.value === resourceType)
+                      ?.i18nKey,
+                  )}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent alignItemWithTrigger={false}>
@@ -282,7 +327,8 @@ export default function AddResourceDialog({
           {/* Resource Name */}
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-brand-gray-700">
-              {t("resources.resource_name")}<span className="text-red-500">*</span>
+              {t("resources.resource_name")}
+              <span className="text-red-500">*</span>
             </label>
             <Input
               placeholder={t("resources.name_placeholder")}
@@ -317,7 +363,10 @@ export default function AddResourceDialog({
                   ? "border-primary-400 bg-primary-50"
                   : "border-brand-gray-200 bg-white hover:border-brand-gray-300"
               }`}
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => {
+                setError("");
+                fileInputRef.current?.click();
+              }}
               onDragOver={(e) => {
                 e.preventDefault();
                 setDragActive(true);
@@ -353,6 +402,11 @@ export default function AddResourceDialog({
                 </>
               )}
             </div>
+            {error && !file && (
+              <p className="text-xs text-red-500 mt-1 animate-in fade-in slide-in-from-top-1">
+                {error}
+              </p>
+            )}
           </div>
         </div>
 

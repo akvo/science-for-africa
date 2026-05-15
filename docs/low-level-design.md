@@ -936,11 +936,11 @@ To ensure environment parity, the platform includes a `syncLandingPage` utility 
 - **Default State**: Automatically creates the default section structure from Figma for all 5 platform locales (EN, FR, AR, SW, PT).
 - **Idempotency**: Uses `findFirst` and `create` to ensure the page is only initialized once, protecting manual edits in the Strapi admin panel.
 - **Permissions**: Automatically grants `find` permissions to the `public` role for the Landing Page API.
-## 11. Seeding & Data Management
+## 13. Seeding & Data Management
 
 The platform implements a robust seeding strategy to maintain taxonomy consistency across environments while protecting production data.
 
-### 11.1 Seeding Strategy
+### 13.1 Seeding Strategy
 
 The seeding logic is split into two layers:
 1.  **Production Metadata (`seedProd`)**: Critical system metadata including Countries, Institution Types, and Individual Roles.
@@ -950,7 +950,7 @@ The seeding logic is split into two layers:
 - **Development (`NODE_ENV !== "production"`)**: Both seeders run **automatically** on server bootstrap.
 - **Production (`NODE_ENV === "production"`)**: Automatic seeding is disabled. Seeding must be triggered manually.
 
-### 11.2 Manual Seeding CLI
+### 13.2 Manual Seeding CLI
 
 A dedicated NPM script is available for manually synchronizing production metadata:
 - `npm run seed:prod` — Synchronizes critical production metadata (Countries, Institution Types, etc.).
@@ -958,13 +958,13 @@ A dedicated NPM script is available for manually synchronizing production metada
 > [!NOTE]
 > There is no manual `seed:dev` command. Development sample data is synchronized **automatically** on every server bootstrap in non-production environments to ensure the workspace is always ready for testing.
 
-### 11.3 Idempotent Upsert Pattern
+### 13.3 Idempotent Upsert Pattern
 
 To prevent data duplication and allow for safe re-runs, the seeders use an **Idempotent Upsert** pattern. Instead of checking for an empty table, the system checks for the existence of individual records (usually by `name` or `slug`).
 - If the record exists: It is updated with the latest configuration from the seeder.
 - If the record is missing: It is created.
 
-### 11.4 Centralized Constants
+### 13.4 Centralized Constants
 
 Taxonomy masters and system constants are centralized in `src/utils/constants.js`. This ensures that the same data sets are used by both the seeders and any other system utilities (like migrations or permission hardening).
 
@@ -975,3 +975,24 @@ Taxonomy masters and system constants are centralized in `src/utils/constants.js
 | `INDIVIDUAL_ROLES` | `api::individual-role.individual-role` |
 
 This centralization simplifies maintenance when updating official lists (e.g., adding a new country or modifying an institution category).
+
+## 14. ORCID Authentication
+
+The platform supports ORCID iD verification and OAuth-based profile synchronization.
+
+### 14.1 Environment Configuration
+
+The ORCID integration requires the following environment variables, which must be configured in `compose.yml` and the server environment:
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `ORCID_CLIENT_ID` | - | Client ID from ORCID Developer Tools |
+| `ORCID_CLIENT_SECRET` | - | Client Secret from ORCID Developer Tools |
+| `ORCID_REDIRECT_URI` | - | Explicit redirect URI override (optional) |
+| `ORCID_OAUTH_URL` | `https://orcid.org` | Base URL for OAuth flow (use `https://sandbox.orcid.org` for dev) |
+| `ORCID_API_URL` | `https://pub.orcid.org` | Base URL for the ORCID Public API |
+
+### 14.2 Integration Modes
+
+1.  **Public API Validation**: Validates a 16-digit ORCID iD format and fetches public profile data (Name, Bio, Interests) via `pub.orcid.org`. This is used during onboarding to pre-populate profiles without requiring the user to sign in to ORCID.
+2.  **OAuth Authentication**: A full "Sign in with ORCID" flow that exchanges an authorization code for an access token. This verifies ownership of the ORCID iD and sets the `verified: true` flag on the user record.

@@ -75,6 +75,7 @@ export default function AddResourceDialog({
   const [submitting, setSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [validationErrors, setValidationErrors] = useState({});
   const fileInputRef = useRef(null);
   const [dragActive, setDragActive] = useState(false);
 
@@ -88,6 +89,7 @@ export default function AddResourceDialog({
     setSubmitting(false);
     setShowSuccess(false);
     setError("");
+    setValidationErrors({});
   };
 
   const handleClose = (nextOpen) => {
@@ -99,7 +101,26 @@ export default function AddResourceDialog({
     if (f) {
       setFile(f);
       setError("");
+      setValidationErrors((prev) => ({ ...prev, file: null }));
     }
+  };
+
+  const handleNext = () => {
+    const errors = {};
+    if (!name.trim()) {
+      errors.name = t("resources.name_required");
+    }
+    if (!file) {
+      errors.file = t("resources.file_required");
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
+
+    setValidationErrors({});
+    setStep(2);
   };
 
   const handleDrop = useCallback((e) => {
@@ -164,7 +185,10 @@ export default function AddResourceDialog({
           </div>
           <div className="flex items-center justify-between">
             <label className="flex items-center gap-2 text-sm text-brand-gray-600 cursor-pointer">
-              <input type="checkbox" className="rounded border-brand-gray-300" />
+              <input
+                type="checkbox"
+                className="rounded border-brand-gray-300"
+              />
               {t("resources.dont_show_again")}
             </label>
             <Button
@@ -187,9 +211,7 @@ export default function AddResourceDialog({
         <DialogContent size="lg" showCloseButton={true}>
           <DialogHeader>
             <DialogTitle>{t("resources.upload_title")}</DialogTitle>
-            <DialogDescription>
-              {t("resources.choose_topic")}
-            </DialogDescription>
+            <DialogDescription>{t("resources.choose_topic")}</DialogDescription>
           </DialogHeader>
 
           <div className="max-h-[400px] overflow-y-auto pr-2 -mr-2 scrollbar-thin scrollbar-thumb-brand-gray-200 scrollbar-track-transparent border-t border-brand-gray-100 pt-5">
@@ -216,9 +238,7 @@ export default function AddResourceDialog({
             </div>
           </div>
 
-          {error && (
-            <p className="text-sm text-red-600">{error}</p>
-          )}
+          {error && <p className="text-sm text-red-600">{error}</p>}
 
           <div className="flex justify-end gap-3 pt-4">
             <Button
@@ -266,7 +286,10 @@ export default function AddResourceDialog({
             <Select value={resourceType} onValueChange={setResourceType}>
               <SelectTrigger className="w-full">
                 <SelectValue>
-                  {t(RESOURCE_TYPES.find((rt) => rt.value === resourceType)?.i18nKey)}
+                  {t(
+                    RESOURCE_TYPES.find((rt) => rt.value === resourceType)
+                      ?.i18nKey,
+                  )}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent alignItemWithTrigger={false}>
@@ -282,14 +305,33 @@ export default function AddResourceDialog({
           {/* Resource Name */}
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-brand-gray-700">
-              {t("resources.resource_name")}<span className="text-red-500">*</span>
+              {t("resources.resource_name")}
+              <span className="text-red-500">*</span>
             </label>
             <Input
               placeholder={t("resources.name_placeholder")}
               value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="h-11"
+              onChange={(e) => {
+                setName(e.target.value);
+                if (e.target.value.trim()) {
+                  setValidationErrors((prev) => {
+                    const next = { ...prev };
+                    delete next.name;
+                    return next;
+                  });
+                }
+              }}
+              className={cn(
+                "h-11",
+                validationErrors.name &&
+                  "border-destructive ring-destructive focus-visible:ring-destructive",
+              )}
             />
+            {validationErrors.name && (
+              <p className="text-xs font-medium text-destructive">
+                {validationErrors.name}
+              </p>
+            )}
           </div>
 
           {/* Description */}
@@ -310,13 +352,16 @@ export default function AddResourceDialog({
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-brand-gray-700">
               {t("resources.upload_file")}
+              <span className="text-red-500">*</span>
             </label>
             <div
-              className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-8 text-center transition-colors cursor-pointer ${
+              className={cn(
+                "flex flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-8 text-center transition-colors cursor-pointer",
                 dragActive
                   ? "border-primary-400 bg-primary-50"
-                  : "border-brand-gray-200 bg-white hover:border-brand-gray-300"
-              }`}
+                  : "border-brand-gray-200 bg-white hover:border-brand-gray-300",
+                validationErrors.file && "border-destructive bg-destructive/5",
+              )}
               onClick={() => fileInputRef.current?.click()}
               onDragOver={(e) => {
                 e.preventDefault();
@@ -353,6 +398,11 @@ export default function AddResourceDialog({
                 </>
               )}
             </div>
+            {validationErrors.file && (
+              <p className="text-xs font-medium text-destructive">
+                {validationErrors.file}
+              </p>
+            )}
           </div>
         </div>
 
@@ -364,12 +414,7 @@ export default function AddResourceDialog({
               </Button>
             }
           />
-          <Button
-            size="md"
-            className="rounded-full"
-            disabled={!name.trim() || !file}
-            onClick={() => setStep(2)}
-          >
+          <Button size="md" className="rounded-full" onClick={handleNext}>
             {t("resources.next")}
           </Button>
         </DialogFooter>

@@ -1,0 +1,164 @@
+{
+  "documentId": "iyr3jhhrkcba5mdv43kqxfua",
+  "name": "Platform Moderator",
+  "code": "platform-moderator-mpcdglij",
+  "description": "Created May 19th, 2026",
+  "locale": null,
+  "permissions": [
+    {
+      "documentId": "edj0nouxuso8a0g2oo2cz2nu",
+      "action": "plugin::content-manager.explorer.read",
+      "actionParameters": {},
+      "subject": "api::institution-membership.institution-membership",
+      "properties": {
+        "fields": [
+          "user",
+          "institution",
+          "type",
+          "verificationStatus"
+        ],
+        "locales": [
+          "en"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "ckyi7tahpiytqkfqs9f3uifl",
+      "action": "plugin::content-manager.explorer.update",
+      "actionParameters": {},
+      "subject": "api::institution-membership.institution-membership",
+      "properties": {
+        "fields": [
+          "verificationStatus"
+        ],
+        "locales": []
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "rxbnt4w8eexe6dhdz6rd1typ",
+      "action": "plugin::content-manager.explorer.read",
+      "actionParameters": {},
+      "subject": "api::institution.institution",
+      "properties": {
+        "fields": [
+          "name",
+          "institutionType",
+          "country",
+          "verified",
+          "memberships",
+          "alumni"
+        ],
+        "locales": [
+          "en"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "sxe5i0kgvqtgru1p8as2k5dm",
+      "action": "plugin::content-manager.explorer.update",
+      "actionParameters": {},
+      "subject": "api::institution.institution",
+      "properties": {
+        "fields": [
+          "verified"
+        ],
+        "locales": []
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "pm2c1xqdoc947fdrsxmraiku",
+      "action": "plugin::content-manager.explorer.read",
+      "actionParameters": {},
+      "subject": "api::resource.resource",
+      "properties": {
+        "fields": [
+          "name",
+          "description",
+          "resourceType",
+          "file",
+          "community",
+          "uploadedBy",
+          "status",
+          "topics"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "nnmjlg9n0ofzx2nrnoquxv3m",
+      "action": "plugin::content-manager.explorer.update",
+      "actionParameters": {},
+      "subject": "api::resource.resource",
+      "properties": {
+        "fields": [
+          "status"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "s16h540g2ganq2pwa5db5u13",
+      "action": "plugin::content-manager.explorer.read",
+      "actionParameters": {},
+      "subject": "plugin::users-permissions.user",
+      "properties": {
+        "fields": [
+          "username",
+          "email",
+          "provider",
+          "confirmed",
+          "blocked",
+          "role",
+          "firstName",
+          "lastName",
+          "fullName",
+          "position",
+          "biography",
+          "interests.name",
+          "educationTopic",
+          "educationLevel",
+          "highestEducationInstitution",
+          "institutionMemberships",
+          "orcidId",
+          "onboardingComplete",
+          "socialLinks",
+          "userType",
+          "roleType",
+          "memberships",
+          "collaborationInvites",
+          "displayName",
+          "profilePhoto",
+          "pageCover",
+          "languagePreferences",
+          "verified"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "eagksqnouhydibfguguhtbzl",
+      "action": "plugin::content-manager.explorer.update",
+      "actionParameters": {},
+      "subject": "plugin::users-permissions.user",
+      "properties": {
+        "fields": [
+          "blocked",
+          "verified"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    }
+  ]
+}

@@ -14,12 +14,13 @@ function DropdownMenuPortal({ ...props }) {
   return <MenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />;
 }
 
-function DropdownMenuTrigger({ asChild = false, ...props }) {
+function DropdownMenuTrigger({ asChild = false, nativeButton, ...props }) {
   if (asChild) {
     return (
       <MenuPrimitive.Trigger
         data-slot="dropdown-menu-trigger"
         render={props.children}
+        nativeButton={nativeButton}
         {...(({ children, ...rest }) => rest)(props)}
       />
     );
@@ -76,7 +77,31 @@ function DropdownMenuLabel({ className, inset, ...props }) {
   );
 }
 
-function DropdownMenuItem({ className, inset, variant = "default", ...props }) {
+function DropdownMenuItem({
+  className,
+  inset,
+  variant = "default",
+  asChild = false,
+  nativeButton,
+  ...props
+}) {
+  if (asChild) {
+    return (
+      <MenuPrimitive.Item
+        data-slot="dropdown-menu-item"
+        data-inset={inset}
+        data-variant={variant}
+        className={cn(
+          "group/dropdown-menu-item relative flex cursor-default h-10.5 items-center gap-2 rounded-md px-2 text-xs font-heading font-bold transition-colors outline-none select-none focus:bg-brand-teal-50 focus:text-brand-teal-900 data-disabled:pointer-events-none data-disabled:opacity-50",
+          className,
+        )}
+        render={props.children}
+        nativeButton={nativeButton}
+        {...(({ children, ...rest }) => rest)(props)}
+      />
+    );
+  }
+
   return (
     <MenuPrimitive.Item
       data-slot="dropdown-menu-item"

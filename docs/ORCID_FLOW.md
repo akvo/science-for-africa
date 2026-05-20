@@ -9,11 +9,28 @@ To allow researchers to verify their professional identity by linking their ORCI
 **Data-Driven Credibility**: Verified ORCID links provide a foundation of trust for researchers on the Science for Africa platform.
 
 ### User Experience
-1. **Trigger**: User clicks "Verify ORCID" in Onboarding Step 4 or their Profile.
-2. **Authentication**: User is redirected to ORCID.org to sign in and authorize the Science for Africa application.
-3. **Verification**: After authorization, ORCID redirects back to the platform with an authorization code.
-4. **Sync**: The backend exchanges the code for an access token and the user's ORCID iD. It then fetches public data from the ORCID registry.
-5. **Completion**: Successful verification automatically populates the user's profile fields and sets `verified=true`.
+1. **Discovery**: User enters their 16-digit ORCID iD in Onboarding Step 4 for public data preview.
+2. **Preview**: User clicks "Verify". The system calls the backend to fetch public data from the ORCID registry.
+3. **Feedback**:
+    - **Success**: A "Profile Found" card appears showing the researcher's name, biography, and latest position.
+    - **Failure**: An error message appears if the ID is invalid or not found.
+4. **OAuth Verification**: User clicks "Sign in with ORCID" to verify ownership.
+5. **Sync**: Successful OAuth handshake automatically populates and locks the user's profile fields (FirstName, LastName, Biography, Interests) with a `verified` status.
+6. **Completion**: User proceeds to Step 5.
+
+ ---
+
+## 🔑 Environment Configuration
+
+The following variables must be configured in the backend environment for both public validation and OAuth flows:
+
+| Variable | Purpose |
+|---|---|
+| `ORCID_CLIENT_ID` | OAuth Client ID from ORCID developer dashboard |
+| `ORCID_CLIENT_SECRET` | OAuth Client Secret from ORCID developer dashboard |
+| `ORCID_OAUTH_URL` | Base URL (e.g., `https://sandbox.orcid.org` or `https://orcid.org`) |
+| `ORCID_API_URL` | Base URL for Public API (e.g., `https://pub.orcid.org`) |
+| `ORCID_REDIRECT_URI` | Explicit redirect URI override (optional) |
 
 ---
 
@@ -29,15 +46,18 @@ To allow researchers to verify their professional identity by linking their ORCI
 ### Data Flow / Logic Flow
 ```mermaid
 graph TD
-    A[Profile / Onboarding] --> B[Click Verify ORCID]
-    B --> C[GET /api/orcid-auth/authorize]
-    C --> D{ORCID.org OAuth}
-    D -->|Authorized| E[Callback: /auth/orcid/callback]
-    E --> F[POST /api/orcid-auth/callback]
-    F --> G[Exchange Code for Token/iD]
-    G --> H[Fetch Public Data]
-    H --> I[Update User & verified=true]
-    I --> J[Success Redirect]
+    A[Onboarding Step 4] --> B[Enter ORCID iD]
+    B --> C[Click Preview]
+    C --> D[POST /api/orcid-auth/validate]
+    D --> E{ORCID Public API}
+    E -->|Found| F[Return Profile Data]
+    F --> G[Display Profile Card]
+    G --> H[Click Verify with ORCID]
+    H --> I[GET /api/orcid-auth/authorize]
+    I --> J{ORCID OAuth}
+    J -->|Authorized| K[POST /api/orcid-auth/callback]
+    K --> L[Update User & verified=true]
+    L --> M[Next Step]
 ```
 
 ### Database Schema / Data Structure
@@ -117,3 +137,8 @@ graph TD
 4. Profile is updated and `verified` badge appears.
 
 ---
+
+
+## 🔮 Future Enhancements
+- Continuous sync (nightly) to keep profiles updated.
+- Import of publication list/works into the user's Resources tab.

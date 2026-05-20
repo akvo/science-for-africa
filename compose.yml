@@ -57,6 +57,10 @@ services:
       NEXT_PUBLIC_FRONTEND_URL: ${NEXT_PUBLIC_FRONTEND_URL:-http://localhost:3000}
       NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:1337/api}
       ORCID_API_URL: ${ORCID_API_URL:-https://pub.orcid.org}
+      ORCID_OAUTH_URL: ${ORCID_OAUTH_URL:-https://orcid.org}
+      ORCID_CLIENT_ID: ${ORCID_CLIENT_ID:-}
+      ORCID_CLIENT_SECRET: ${ORCID_CLIENT_SECRET:-}
+      ORCID_REDIRECT_URI: ${ORCID_REDIRECT_URI:-}
 
   db:
     image: postgres:16-alpine

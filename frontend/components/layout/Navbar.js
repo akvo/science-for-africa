@@ -257,7 +257,7 @@ const Navbar = () => {
               <div className="flex items-center gap-4">
                 {/* User Dropdown */}
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
+                  <DropdownMenuTrigger asChild nativeButton={false}>
                     <Avatar
                       size="md"
                       className="cursor-pointer border-2 border-white shadow-sm hover:ring-2 hover:ring-brand-teal-100 transition-all"
@@ -311,6 +311,7 @@ const Navbar = () => {
                         <DropdownMenuItem
                           key={item.key}
                           asChild
+                          nativeButton={false}
                           className="px-5 py-3 focus:bg-brand-gray-50 cursor-pointer overflow-hidden group"
                         >
                           <Link
@@ -331,6 +332,7 @@ const Navbar = () => {
                     <div className="py-2">
                       <DropdownMenuItem
                         asChild
+                        nativeButton={false}
                         className="px-5 py-3 focus:bg-brand-gray-50 cursor-pointer group"
                       >
                         <Link
@@ -363,12 +365,22 @@ const Navbar = () => {
               </div>
             ) : mounted ? (
               <div className="flex items-center gap-3">
-                <Button variant="outline" size="xl" asChild>
+                <Button
+                  variant="outline"
+                  size="xl"
+                  asChild
+                  nativeButton={false}
+                >
                   <Link href="/login" className="font-medium">
                     {t("navbar.login")}
                   </Link>
                 </Button>
-                <Button variant="primary" size="xl" asChild>
+                <Button
+                  variant="primary"
+                  size="xl"
+                  asChild
+                  nativeButton={false}
+                >
                   <Link href="/signup" className="font-medium">
                     {t("navbar.signup")}
                   </Link>
@@ -458,6 +470,7 @@ const Navbar = () => {
                         size="md"
                         className="w-full justify-start h-10 px-3"
                         asChild
+                        nativeButton={false}
                         onClick={() => setIsOpen(false)}
                       >
                         <Link href={item.href}>
@@ -485,6 +498,7 @@ const Navbar = () => {
                     size="xl"
                     className="w-full"
                     asChild
+                    nativeButton={false}
                     onClick={() => setIsOpen(false)}
                   >
                     <Link href="/login" className="font-medium">
@@ -496,6 +510,7 @@ const Navbar = () => {
                     size="xl"
                     className="w-full"
                     asChild
+                    nativeButton={false}
                     onClick={() => setIsOpen(false)}
                   >
                     <Link href="/signup" className="font-medium">

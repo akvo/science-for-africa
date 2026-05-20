@@ -64,7 +64,7 @@
     "upload_file": "رفع ملف",
     "click_to_upload": "انقر للرفع",
     "or_drag_drop": "أو سحب وإفلات",
-    "file_hint": "SVG, PNG, JPG أو GIF (حد أقصى 800x400 بكسل)",
+    "file_hint": "PDF أو DOCX أو XLSX أو PPTX أو صور (بحد أقصى 2 ميجابايت)",
     "cancel": "إلغاء",
     "publish": "نشر",
     "published_title": "تم نشر المورد",
@@ -72,6 +72,8 @@
     "dont_show_again": "عدم العرض مرة أخرى",
     "access": "وصول",
     "upload_failed": "فشل رفع المورد",
+    "file_too_large": "الملف كبير جدًا. الحد الأقصى للحجم هو 2 ميجابايت",
+    "invalid_file_type": "نوع الملف غير صالح. يرجى تحميل ملفات PDF أو Word أو Excel أو PPT أو ملفات الصور",
     "table": {
       "file_name": "اسم الملف",
       "file_size": "حجم الملف",

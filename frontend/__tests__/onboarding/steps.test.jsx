@@ -271,23 +271,50 @@ describe("Onboarding Flow - Steps 1, 2, 3, 4 & 5", () => {
     expect(getByRoleAfter("button", { name: /steps\.confirm/i })).toBeEnabled();
   });
 
-  test("renders Step 4 (ORCID) and handles input", async () => {
+  test("renders Step 4 (ORCID) and handles OAuth flow simulation", async () => {
     act(() => {
       useOnboardingStore.getState().setStep(4);
+      useOnboardingStore.getState().updateFormData({ orcidVerified: false });
     });
-    const { getByPlaceholderText, getByRole } = render(<OnboardingStep4 />);
+    const { getByRole, queryByPlaceholderText } = render(<OnboardingStep4 />);
 
     expect(getByRole("heading", { name: /step4\.title/i })).toBeInTheDocument();
 
-    const input = getByPlaceholderText(/step4\.orcid_placeholder/i);
-    fireEvent.change(input, { target: { value: "0000-0002-1825-0097" } });
+    // Verify input is GONE
+    expect(
+      queryByPlaceholderText(/step4\.orcid_placeholder/i),
+    ).not.toBeInTheDocument();
 
-    expect(useOnboardingStore.getState().formData.orcidId).toBe(
-      "0000-0002-1825-0097",
-    );
+    // Verify "Verify ORCID" button is present
+    expect(
+      getByRole("button", { name: /verification\.verify_orcid/i }),
+    ).toBeInTheDocument();
 
     const confirmBtn = getByRole("button", { name: /steps\.confirm/i });
-    fireEvent.click(confirmBtn);
+    expect(confirmBtn).toBeDisabled();
+
+    // Simulate verification
+    act(() => {
+      useOnboardingStore.getState().updateFormData({
+        orcidVerified: true,
+        orcidId: "0000-0002-1825-0097",
+      });
+    });
+
+    // Re-render to see updated state
+    cleanup();
+    const { getByText, getByRole: getByRoleAfter } = render(
+      <OnboardingStep4 />,
+    );
+
+    expect(getByText("ORCID Validated")).toBeInTheDocument();
+    expect(getByText("0000-0002-1825-0097")).toBeInTheDocument();
+
+    const confirmBtnAfter = getByRoleAfter("button", {
+      name: /steps\.confirm/i,
+    });
+    expect(confirmBtnAfter).toBeEnabled();
+    fireEvent.click(confirmBtnAfter);
 
     expect(useOnboardingStore.getState().step).toBe(5);
   });

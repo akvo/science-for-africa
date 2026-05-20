@@ -974,6 +974,7 @@ To ensure environment parity, the platform includes a `syncLandingPage` utility 
 - **Idempotency**: Uses `findFirst` and `create` to ensure the page is only initialized once, protecting manual edits in the Strapi admin panel.
 - **Permissions**: Automatically grants `find` permissions to the `public` role for the Landing Page API.
 
+
 ## 15. Seeding & Data Management
 
 The platform implements a robust seeding strategy to maintain taxonomy consistency across environments while protecting production data.
@@ -1012,12 +1013,30 @@ Taxonomy masters and system constants are centralized in `src/utils/constants.js
 | `INSTITUTION_TYPES` | `api::institution-type.institution-type` |
 | `INDIVIDUAL_ROLES` | `api::individual-role.individual-role` |
 
+This centralization simplifies maintenance when updating official lists (e.g., adding a new country or modifying an institution category).
 
-## 16. ORCID OAuth Authentication
+## 16. ORCID Authentication
 
-The platform supports researcher identity verification via ORCID OAuth 2.0, allowing users to link their professional profile and automatically import verified data.
+The platform supports ORCID iD verification and OAuth-based profile synchronization.
 
-### 16.1 Authentication Flow
+### 16.1 Environment Configuration
+
+The ORCID integration requires the following environment variables, which must be configured in `compose.yml` and the server environment:
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `ORCID_CLIENT_ID` | - | Client ID from ORCID Developer Tools |
+| `ORCID_CLIENT_SECRET` | - | Client Secret from ORCID Developer Tools |
+| `ORCID_REDIRECT_URI` | - | Explicit redirect URI override (optional) |
+| `ORCID_OAUTH_URL` | `https://orcid.org` | Base URL for OAuth flow (use `https://sandbox.orcid.org` for dev) |
+| `ORCID_API_URL` | `https://pub.orcid.org` | Base URL for the ORCID Public API |
+
+### 16.2 Integration Modes
+
+1.  **Public API Validation**: Validates a 16-digit ORCID iD format and fetches public profile data (Name, Bio, Interests) via `pub.orcid.org`. This is used during onboarding to pre-populate profiles without requiring the user to sign in to ORCID.
+2.  **OAuth Authentication**: A full "Sign in with ORCID" flow that exchanges an authorization code for an access token. This verifies ownership of the ORCID iD and sets the `verified: true` flag on the user record.
+
+### 16.3 Authentication Flow
 
 ```mermaid
 sequenceDiagram
@@ -1040,12 +1059,12 @@ sequenceDiagram
     Frontend->>User: Display Verified Badge
 ```
 
-### 16.2 Key Features
+### 16.4 Key Features
 - **Secure Handshake**: Uses the official ORCID Public API for secure identity verification.
 - **Data Mapping**: Automatically maps ORCID keywords to `user.interest` components and populates the biography field.
 - **Verification Status**: Sets the `verified` flag on the user profile, enabling verification badges across the platform.
 - **Multi-context support**: The flow is integrated into both the onboarding process (Step 4) and the user profile management page.
 
-### 16.3 Security & Permissions
+### 16.5 Security & Permissions
 - **Grant Permissions**: The `authorize` and `callback` actions are granted to the `authenticated` role via the production seeder.
 - **Environment Variables**: Client credentials and redirect URIs are managed via `ORCID_CLIENT_ID`, `ORCID_CLIENT_SECRET`, and `ORCID_REDIRECT_URI`.

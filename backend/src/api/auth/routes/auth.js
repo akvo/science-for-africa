@@ -65,5 +65,13 @@ module.exports = {
         description: "List mentees for the current mentor",
       },
     },
+    {
+      method: "GET",
+      path: "/auth/profile/:id",
+      handler: "profile.publicProfile",
+      config: {
+        description: "Get public profile by ID",
+      },
+    },
   ],
 };

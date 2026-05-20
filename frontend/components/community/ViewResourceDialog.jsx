@@ -12,6 +12,7 @@ import {
   fetchResourceComments,
   postResourceComment,
 } from "@/lib/strapi";
+import ProfileLink from "@/components/shared/ProfileLink";
 
 const TYPE_LABEL_KEYS = {
   report: "resources.report",
@@ -75,13 +76,17 @@ function Comment({ comment, onReply, t, depth = 0 }) {
   const replies = comment.replies || [];
 
   return (
-    <div className={depth > 0 ? "ml-8 border-l border-brand-gray-100 pl-4" : ""}>
+    <div
+      className={depth > 0 ? "ml-8 border-l border-brand-gray-100 pl-4" : ""}
+    >
       <div className="flex gap-3 py-4">
-        <Avatar size="sm" className="shrink-0 mt-0.5">
-          <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-semibold">
-            {getInitials(name)}
-          </AvatarFallback>
-        </Avatar>
+        <ProfileLink userId={author?.documentId || author?.id}>
+          <Avatar size="sm" className="shrink-0 mt-0.5">
+            <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-semibold">
+              {getInitials(name)}
+            </AvatarFallback>
+          </Avatar>
+        </ProfileLink>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-sm font-semibold text-brand-gray-900">
@@ -198,7 +203,10 @@ export default function ViewResourceDialog({
       const res = await fetchResourceComments(resourceId);
       setComments(Array.isArray(res?.data) ? res.data : []);
       setTimeout(() => {
-        scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+        scrollRef.current?.scrollTo({
+          top: scrollRef.current.scrollHeight,
+          behavior: "smooth",
+        });
       }, 100);
     } catch (err) {
       console.error("Failed to post comment:", err);
@@ -233,8 +241,10 @@ export default function ViewResourceDialog({
               </span>
               {fileSize && (
                 <>
-                  <span className="size-1 rounded-full bg-brand-gray-300" />
-                  <span>{fileSize}</span>
+                  <Button className="h-auto! py-1.5! text-sm! rounded-full!">
+                    <span className="size-1 rounded-full bg-brand-gray-300" />
+                    <span>{fileSize}</span>
+                  </Button>
                 </>
               )}
               <span className="size-1 rounded-full bg-brand-gray-300" />
@@ -278,16 +288,20 @@ export default function ViewResourceDialog({
         {uploaderName && (
           <div className="shrink-0 flex items-center justify-between gap-3 border-t border-brand-gray-100 px-6 py-3">
             <div className="flex items-center gap-3">
-              <Avatar size="sm">
-                <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-semibold">
-                  {getInitials(uploaderName)}
-                </AvatarFallback>
-              </Avatar>
+              <ProfileLink userId={uploader?.documentId || uploader?.id}>
+                <Avatar size="sm">
+                  <AvatarFallback className="bg-primary-100 text-primary-700 text-xs font-semibold">
+                    {getInitials(uploaderName)}
+                  </AvatarFallback>
+                </Avatar>
+              </ProfileLink>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-brand-gray-900">
-                    {uploaderName}
-                  </span>
+                  <ProfileLink userId={uploader?.documentId || uploader?.id}>
+                    <span className="text-sm font-semibold text-brand-gray-900 hover:text-brand-teal-600 cursor-pointer">
+                      {uploaderName}
+                    </span>
+                  </ProfileLink>
                   {uploader?.roleType && (
                     <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-primary-50 text-primary-700">
                       {uploader.roleType.name || uploader.roleType}
@@ -301,19 +315,19 @@ export default function ViewResourceDialog({
                 )}
               </div>
             </div>
-            <button
-              type="button"
+            <ProfileLink
+              userId={uploader?.documentId || uploader?.id}
               className="text-sm font-medium text-primary-600 hover:text-primary-700 hover:underline"
             >
               {tCommunity("resource_dialog.view_profile")}
-            </button>
+            </ProfileLink>
           </div>
         )}
 
         {/* Description */}
         {resource.description && (
           <div className="shrink-0 border-t border-brand-gray-100 px-6 py-4">
-            <h3 className="text-sm font-semibold text-brand-gray-900 mb-2">
+            <h3 className="mb-2 text-sm font-semibold text-brand-gray-900">
               {tCommunity("resource_dialog.description")}
             </h3>
             <p className="text-sm leading-relaxed text-brand-gray-700 whitespace-pre-line">
@@ -323,15 +337,20 @@ export default function ViewResourceDialog({
         )}
 
         {/* Scrollable comments area */}
-        <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto border-t border-brand-gray-100">
+        <div
+          ref={scrollRef}
+          className="flex-1 min-h-0 overflow-y-auto border-t border-brand-gray-100"
+        >
           <div className="px-6 py-4">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="mb-4 flex items-center gap-2">
               <h3 className="text-sm font-semibold text-brand-gray-900">
                 {t("resources.discussion")}
               </h3>
               <span className="text-sm text-brand-gray-500">
                 {comments.length}{" "}
-                {comments.length !== 1 ? tCommunity("resource_dialog.comments") : tCommunity("resource_dialog.comment")}
+                {comments.length !== 1
+                  ? tCommunity("resource_dialog.comments")
+                  : tCommunity("resource_dialog.comment")}
               </span>
             </div>
 
@@ -364,7 +383,12 @@ export default function ViewResourceDialog({
             {replyingTo && (
               <div className="mb-2 flex items-center gap-2 text-xs text-brand-gray-500">
                 <Reply className="size-3" />
-                <span>{tCommunity("resource_dialog.replying_to")} <strong className="text-brand-gray-700">{getAuthorName(replyingTo.author)}</strong></span>
+                <span>
+                  {tCommunity("resource_dialog.replying_to")}{" "}
+                  <strong className="text-brand-gray-700">
+                    {getAuthorName(replyingTo.author)}
+                  </strong>
+                </span>
                 <button
                   type="button"
                   onClick={() => setReplyingTo(null)}
@@ -379,11 +403,16 @@ export default function ViewResourceDialog({
                 ref={inputRef}
                 type="text"
                 className="flex-1 h-10 rounded-full border border-brand-gray-200 bg-white px-4 text-sm text-brand-gray-900 placeholder:text-brand-gray-400 outline-none focus:border-primary-500 transition-colors"
-                placeholder={replyingTo ? tCommunity("resource_dialog.write_reply") : tCommunity("resource_dialog.leave_comment")}
+                placeholder={
+                  replyingTo
+                    ? tCommunity("resource_dialog.write_reply")
+                    : tCommunity("resource_dialog.leave_comment")
+                }
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && commentText.trim()) handlePostComment();
+                  if (e.key === "Enter" && commentText.trim())
+                    handlePostComment();
                 }}
               />
               {commentText.trim() && (
@@ -393,9 +422,7 @@ export default function ViewResourceDialog({
                   disabled={posting}
                   onClick={handlePostComment}
                 >
-                  {posting && (
-                    <Loader2 className="size-3 animate-spin mr-1" />
-                  )}
+                  {posting && <Loader2 className="size-3 animate-spin mr-1" />}
                   {tCommunity("resource_dialog.post")}
                 </Button>
               )}

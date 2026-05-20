@@ -16,8 +16,9 @@ const useHasHydrated = () => {
       setHydrated(true),
     );
     // Already hydrated (e.g. sync storage)
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (useAuthStore.persist.hasHydrated()) setHydrated(true);
+    if (useAuthStore.persist.hasHydrated()) {
+      setTimeout(() => setHydrated(true), 0);
+    }
     return unsub;
   }, []);
   return hydrated;
@@ -100,8 +101,7 @@ export default function CommunitiesPage() {
 
   useEffect(() => {
     if (!hydrated) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(true);
+    setTimeout(() => setLoading(true), 0);
     fetchCommunities().then((res) => {
       const items = res?.data || [];
       setCommunities(items);

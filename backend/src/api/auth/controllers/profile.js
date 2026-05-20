@@ -211,7 +211,11 @@ module.exports = ({ strapi }) => ({
               inst = await strapi.db
                 .query("api::institution.institution")
                 .create({
-                  data: { name, verified: false, locale: "en" },
+                  data: {
+                    name,
+                    verified: false,
+                    locale: ctx.query.locale || "en",
+                  },
                 });
             }
             data.highestEducationInstitution = inst.documentId;
@@ -247,7 +251,11 @@ module.exports = ({ strapi }) => ({
               });
 
             if (!inst) {
-              const institutionData = { name, verified: false, locale: "en" };
+              const institutionData = {
+                name,
+                verified: false,
+                locale: ctx.query.locale || "en",
+              };
 
               // If institutionType is provided, resolve it to numeric ID
               if (data.institutionType) {
@@ -330,7 +338,7 @@ module.exports = ({ strapi }) => ({
                   institution: inst.id,
                   isPrimary: false,
                   verified: false,
-                  locale: "en",
+                  locale: ctx.query.locale || "en",
                 },
               });
           }
@@ -571,6 +579,77 @@ module.exports = ({ strapi }) => ({
       return results;
     } catch (error) {
       strapi.log.error("Mentees Error: " + error.message);
+      return ctx.internalServerError(error.message);
+    }
+  },
+
+  /**
+   * Returns a public profile by ID, sanitizing sensitive information
+   */
+  async publicProfile(ctx) {
+    const { id } = ctx.params;
+    const currentUser = ctx.state.user;
+
+    try {
+      // Determine if ID is numeric or a documentId
+      const isNumericId = !isNaN(parseInt(id)) && /^\d+$/.test(id);
+
+      const profile = await strapi.db
+        .query("plugin::users-permissions.user")
+        .findOne({
+          where: {
+            $or: [{ id: isNumericId ? parseInt(id) : -1 }, { documentId: id }],
+          },
+          populate: {
+            roleType: true,
+            highestEducationInstitution: true,
+            institutionMemberships: {
+              populate: { institution: true },
+            },
+            interests: true,
+            profilePhoto: true,
+            pageCover: true,
+            followers: true,
+          },
+        });
+
+      if (!profile) {
+        strapi.log.warn(`Public Profile not found for ID: ${id}`);
+        return ctx.notFound("Profile not found");
+      }
+
+      // Check if current user is following this profile
+      const following = currentUser
+        ? profile.followers?.some((f) => f.id == currentUser.id)
+        : false;
+
+      // Sanitize profile (exclude private fields like email, password, etc.)
+      const publicProfile = {
+        id: profile.id,
+        documentId: profile.documentId,
+        username: profile.username,
+        fullName: profile.fullName,
+        displayName: profile.displayName,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        position: profile.position,
+        biography: profile.biography,
+        interests: profile.interests,
+        educationTopic: profile.educationTopic,
+        educationLevel: profile.educationLevel,
+        highestEducationInstitution: profile.highestEducationInstitution,
+        institutionMemberships: profile.institutionMemberships,
+        profilePhoto: profile.profilePhoto,
+        pageCover: profile.pageCover,
+        subscriberCount: profile.subscriberCount || 0,
+        verified: profile.verified,
+        roleType: profile.roleType,
+        following,
+      };
+
+      return publicProfile;
+    } catch (error) {
+      strapi.log.error("Public Profile Fetch Error: " + error.message);
       return ctx.internalServerError(error.message);
     }
   },

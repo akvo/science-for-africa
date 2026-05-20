@@ -176,6 +176,22 @@
     "verified": {
       "type": "boolean",
       "default": false
+    },
+    "followers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "following"
+    },
+    "following": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "followers"
+    },
+    "subscriberCount": {
+      "type": "integer",
+      "default": 0
     }
   }
 }

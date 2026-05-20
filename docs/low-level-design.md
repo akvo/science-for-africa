@@ -78,8 +78,8 @@ Beyond Strapi's auto-generated CRUD, we will create custom endpoints with hand-w
 | `/api/collaboration-invites/:id/accept` | `POST` | **Custom Extension**: Idempotent acceptance of a collaboration invite. Attaches current user as `invitedUser` if not already set. |
 | `/api/collaboration-invites/:id/decline` | `POST` | **Custom Extension**: Marks a collaboration invitation as `Declined`. Prevents future acceptance and removes it from active dashboard views. |
 | `/api/posts/:id/moderate` | `PUT` | Moderation action (approve/decline) — wraps status update + notification trigger to post author |
-| `/api/communities/:id/join` | `POST` | Join community — side effects: increment memberCount, create CommunityMembership with `member` role, notify community admins |
-| `/api/communities/:id/leave` | `POST` | Leave community — decrement memberCount, remove CommunityMembership |
+| `/api/communities/:id/join` | `POST` | Join community — returns `{ success: true, data: { isMember: true, subscribers } }`. Side effects: increment memberCount, create CommunityMembership. |
+| `/api/communities/:id/leave` | `POST` | Leave community — returns `{ success: true, data: { isMember: false, subscribers } }`. Side effects: decrement memberCount, remove CommunityMembership. |
 | `/api/search` | `GET` | Cross-entity search aggregation (users, communities, threads, resources) before Elasticsearch is introduced |
 | `/api/notifications/dispatch` | `POST` | Internal endpoint for lifecycle hooks to trigger email notifications via Strapi email plugin |
 
@@ -512,6 +512,10 @@ All entities use Strapi's `documentId` as primary key and include automatic `cre
 - **Leave**: Deletes the `CommunityMembership` record (using a robust ID/Object manual filter to handle Strapi v5 variations) AND removes the user from the community's `members` relation.
 This pattern prevents stale membership listings in the user profile even if the direct relation is somehow decoupled.
 
+**Secure Profile Routing via documentId.** To prevent ID enumeration and enhance security, all public profile routes transition from numeric IDs to secure Strapi v5 `documentId`. The `ProfileLink` component standardizes this routing across the platform, while the backend implements a dual-lookup strategy (`$or: [{id}, {documentId}]`) to ensure backward compatibility and seamless navigation from various platform contexts (chat, resources, communities).
+
+**Unified Profile & Community Layout.** To ensure visual consistency across the platform, the `ProfileLayout` adopts a 3-column architecture (Left Nav, Main Feed, Right Profile Card) mirroring the `Community` pages. This unified layout facilitates seamless navigation between personal identity and community-driven collaboration features.
+
 **Institutional Account Support & Payload Sanitization.** To support both Individual and Institutional accounts, the platform implements a strict payload sanitization strategy in the `api/auth/me` PUT controller.
 - **Strapi v5 Document Service**: All profile updates use `strapi.documents("plugin::users-permissions.user").update` to ensure compatibility with v5's relational model (Document IDs).
 - **Identifier Standardization**: Relational fields (e.g., `roleType`, `highestEducationInstitution`) are resolved to their `documentId` before saving, ensuring Strapi can correctly link the entities.
@@ -797,12 +801,12 @@ The frontend uses a Server-Side Rendering (SSR) handshake via `getServerSideProp
 
 ## 6. Globalization & Localization
 
-The platform supports multi-language content (English as default, French for launch) using a full-stack localization strategy.
+The platform supports multi-language content across 5 target locales (English, French, Portuguese, Arabic, and Swahili) using a full-stack localization strategy.
 
 ### 6.1 Architecture
 
 - **Backend (Strapi)**: Uses the `@strapi/plugin-i18n` to enable localized fields and entries. Localized content is fetched via the `locale` query parameter.
-- **Frontend (Next.js)**: Uses `next-i18next` for subpath routing (`/` for English, `/fr` for French) and translation management.
+- **Frontend (Next.js)**: Uses `next-i18next` for subpath routing (`/en`, `/fr`, `/pt`, `/ar`, `/sw`) and translation management.
 
 ### 6.2 Data Model Changes
 
@@ -811,13 +815,46 @@ Specific content types have localization enabled:
 
 ### 6.3 Locale Awareness
 
-- **API Client**: The `api-client.js` includes a request interceptor that automatically extracts the current locale from the URL subpath and appends it as a `locale` query parameter to all Strapi requests. It includes logic to prevent duplicate locale injection if the parameter is already present in the URL or manual params, and excludes public authentication endpoints for Strapi v5 compatibility.
-- **UI Switcher**: A premium `LocaleSwitcher` component in the `Navbar` allows users to toggle languages. This triggers a client-side route change via `next/router` with the new locale.
-- **Fallback Logic**: The frontend implements a "Fallback-to-Default" pattern via `fetchLocalized`. If a localized dataset (e.g., Institutions) is empty in a secondary locale (like French), the system automatically defaults to the English version to prevent empty UI states.
+- **API Client**: The `api-client.js` includes a request interceptor that automatically extracts the current locale from the URL subpath and appends it as a `locale` query parameter to all Strapi requests. It includes logic to prevent duplicate locale injection if the parameter is already present in the URL or manual params, and **excludes public authentication endpoints** to ensure compatibility with Strapi's built-in controllers.
+- **Dictionary Parity**: All translation files (`common.json`, `profile.json`, etc.) maintain 100% key parity across all 5 locales. This prevents hydration errors and ensures that fallbacks are unnecessary for UI labels.
+- **Namespace Resolution**: Critical global keys such as `style_guide` and `copyright` are positioned at the top level of the `common` namespace to facilitate direct lookup from any component without deep nesting resolution issues.
+- **UI Switcher**: A premium `LocaleSwitcher` component in the `Navbar` allows users to toggle between all 5 supported languages. This triggers a client-side route change via `next/router` with the new locale.
+- **Dynamic Backend Creation**: Custom controllers (e.g., `auth/me`, `profile.js`) extract the active locale from the request context to ensure on-the-fly entities like institutions are tagged with the correct language metadata.
+- **Fallback Logic**: The frontend implements a "Fallback-to-Default" pattern via `fetchLocalized`. If a localized dataset (e.g., Institutions) is empty in a secondary locale (like Swahili), the system automatically defaults to the English version to prevent empty UI states.
 - **Automated Synchronization**: The system's `seeder.js` automatically clones core English data (Interests, Institutions) to available secondary locales during development seeding, ensuring translation parity across the platform.
 - **Locale-Aware Uniqueness**: Integrity is enforced at the application layer via `lifecycles.js` to ensure names are unique **within** a specific locale, allowing the same name (e.g., "Oxford University") to exist in multiple language records (different locales) without conflict.
 
-### 6.4 SEO
+## 7. Professional Networking & Public Profiles
+
+The platform supports professional networking through public-facing user profiles, follower relationships, and content sharing.
+
+### 7.1 Architecture
+
+- **Backend (Strapi)**: Extended the `users-permissions.user` model with `followers`, `following` (Many-to-Many self-references), and `subscriberCount` (Integer).
+- **Public Profile API**: A custom `/api/auth/profile/:documentId` endpoint securely exposes sanitized user data (name, bio, role, interests, stats) while strictly excluding sensitive information like email, phone numbers, or tokens.
+- **Networking API**: Custom `/api/users/:documentId/follow` and `/api/users/:documentId/unfollow` endpoints manage the relationships and atomically update the `subscriberCount` using Strapi's `db.query`.
+
+```mermaid
+graph TD
+    A[User Icon/Link] -->|Click| B[Public Profile Page /profile/documentId]
+    B -->|Fetch| C[GET /api/users/documentId?populate=...]
+    B -->|Follow| D[POST /api/users/documentId/follow]
+    B -->|Unfollow| E[POST /api/users/documentId/unfollow]
+    B -->|Share| F[Share Menu / Web Share API]
+```
+
+### 7.2 Key Implementation Details
+
+- **Optimistic UI**: The frontend implements optimistic updates for the Follow/Unfollow interaction. The UI (Follow button state and Subscriber count) updates immediately upon user click, with a rollback mechanism in case of API failure.
+- **Global Profile Linking**: A centralized `ProfileLink` component wraps user avatars and names throughout the platform (Resource Uploaders, Collaboration Mentors, Comment Authors), ensuring consistent navigation to public profiles.
+- **Dynamic Content Empty States**: Public profiles display a contextual empty state for posts ("Public posts will appear here") to distinguish between an empty profile and a private one.
+- **Sharing Infrastructure**: Integrated a "Share Profile" menu in the profile header that generates and copies the public profile URL to the clipboard. This feature is available on both the user's public profile and their own profile management page.
+
+### 7.3 Data Security & Sanitization
+
+To prevent accidental data exposure, the `publicProfile` controller uses a whitelist-based selection strategy:
+1. **User Identity**: ID, username, fullName, profilePhoto, coverImage.
+2. **Professional Context**: title, biography, roleType, careerStage, educationLevel, highestEducation## 8. SEO
 
 The platform follows Google's best practices for localized sites:
 - **Centralized Metadata**: A reusable `Meta` component (`frontend/components/seo/Meta.js`) manages browser titles and SEO meta tags using `next/head`.
@@ -826,28 +863,28 @@ The platform follows Google's best practices for localized sites:
 - **HTML lang attribute**: Automatically updated by `next-i18next`.
 - **SSR support**: Translations are loaded server-side using `getStaticProps` or `getServerSideProps`.
 
-## 7. Community Membership Synchronization Pattern
+## 9. Community Membership Synchronization Pattern
 
 To ensure strict data integrity and a seamless user experience, the platform implements a **"Bulletproof Dual-Layer Removal"** pattern for community membership management.
 
-### 7.1 The Problem
+### 9.1 The Problem
 In Strapi v5, many-to-many relations (like `members` on a Community) and dedicated join tables (like the `CommunityMembership` collection) can become desynchronized if not handled atomically. Simple deletion of one may leave orphaned data in the other, leading to "stale" UI states where a user appears to have left a community but still sees it in their "My Communities" dashboard after a refresh.
 
-### 7.2 Implementation Strategy
+### 9.2 Implementation Strategy
 The `api/community/leave` controller implements a multi-layered synchronization logic:
 
 1.  **Relation Disconnection (Document Service)**: Uses the `strapi.documents` service to disconnect the user from the community's `members` field. This ensures the member count and community-level relations are updated.
 2.  **Atomic Record Purge (Database Query)**: Uses the low-level `strapi.db.query` service to find and delete all records in the `CommunityMembership` collection matching the user and community.
 3.  **Cross-ID Compatibility**: The deletion logic targets both numeric `id` and v5-specific `documentId` formats simultaneously using an `$or` filter. This prevents synchronization failures caused by ID format mismatches between different Strapi service layers.
 
-### 7.3 Data Consistency Rule
+### 9.3 Data Consistency Rule
 Every "Join" action MUST create both the relation and the collection record. Every "Leave" action MUST delete both. This dual-write/dual-delete requirement is enforced at the controller level to maintain a "Single Source of Truth" across the relational model.
 
-## 8. Onboarding Data Persistence
+## 10. Onboarding Data Persistence
 
 To balance user experience with data integrity, the onboarding flow utilizes a hybrid persistence strategy.
 
-### 8.1 Multi-Stage Synchronization
+### 10.1 Multi-Stage Synchronization
 While most onboarding data is held in local client state (`Zustand`) to ensure a fast, lag-free UI, certain milestones trigger backend synchronization before the final completion:
 
 - **Milestone 1: Education (Step 3)**: Clicking "Confirm" triggers an immediate `updateUserProfile` call.
@@ -857,14 +894,14 @@ While most onboarding data is held in local client state (`Zustand`) to ensure a
 - **Milestone 2: Completion (Step 5)**: The final submission sets the `onboardingComplete` flag.
     - **Rationale**: This is the atomic "Gatekeeper" flag. Only after this call returns successfully is the user's profile considered complete, unlocking dashboard access and platform interactions.
 
-### 8.2 Partial Sync Robustness
+### 10.2 Partial Sync Robustness
 The partial sync in Step 3 is designed to be **non-blocking**. If the API call fails (e.g., due to temporary network issues), the frontend logs the error but still allows the user to proceed to Step 4. This prioritizes the user's progress while accepting a minor risk that the institution might not be searchable in Step 5 if the sync failed.
 
-## 9. Interest Management Security
+## 11. Interest Management Security
 
 To ensure data integrity and prevent accidental deletion of system-critical taxonomies, the `Interest` and `InterestCategory` models implement a two-tier protection system.
 
-### 9.1 Protection Layers
+### 11.1 Protection Layers
 1.  **Intentional Deactivation (`isActive`)**:
     - Both models include an `isActive` boolean flag (default: `true`).
     - The onboarding frontend explicitly filters out any interests or categories where `isActive` is `false`.
@@ -874,44 +911,44 @@ To ensure data integrity and prevent accidental deletion of system-critical taxo
     - Any attempt to delete a record via the API returns a **403 Forbidden** error.
     - Administrators must use the `isActive` flag for management.
 
-### 9.2 Data Synchronization
+### 11.2 Data Synchronization
 The system seeder uses the Strapi v5 Document Service to maintain relational integrity between interests and their categories, ensuring consistent `documentId` linking across all environments.
 
-## 10. Collaboration Security
+## 12. Collaboration Security
 
 The platform enforces membership-level security for collaboration spaces to ensure professional and focused project work.
 
-### 10.1 Invitation-Based Membership
+### 12.1 Invitation-Based Membership
 Participation in a collaboration space is gated by an invitation system (`api::collaboration-invite`).
 - **Visitor**: Users who have not yet accepted an invitation. They have read-only access to the collaboration thread.
 - **Member**: Users who have clicked "Accept" on a pending invitation. They gain permission to post messages and contribute content.
 - **Creator**: The user who created the collaboration call. They have inherent membership permissions.
 
-### 10.2 Chat Interaction Gating
+### 12.2 Chat Interaction Gating
 Security is enforced at two levels:
 1.  **Frontend (UI/UX)**: The `ChatComposer` is replaced by a "Join to post" banner for non-members, preventing interaction attempts before membership is confirmed.
 2.  **Backend (API Guard)**: The `chat-message.create` controller explicitly verifies that the requester is either the `createdByUser` of the collaboration call or has an invitation with `inviteStatus: Accepted`. Requests from non-members are rejected with a `403 Forbidden` status.
 
-## 11. Legal and Privacy Policy
+## 13. Legal and Privacy Policy
 
 The platform provides a centralized legal documentation page at `/privacy-policy`.
 
-### 11.1 Architecture
+### 13.1 Architecture
 - **Single Page**: All legal documents (Privacy Policy, Terms of Use, Community Guidelines) are hosted on a single, long-form scrollable page.
 - **Localization**: Content is managed via `frontend/public/locales/{lang}/privacy-policy.json`.
 - **SEO**: Metadata is managed via the `Meta` component with localized titles and descriptions.
 
-### 11.2 Content Structure
+### 13.2 Content Structure
 The page is divided into three main logical sections, each with its own typography and visual identifiers:
 1.  **Privacy Policy**: Covers data collection, lawful basis, principles, and user rights.
 2.  **Terms of Use**: Covers registration, acceptable use, and governing law.
 3.  **Community Guidelines**: Covers professional conduct and reporting.
 
-## 12. Landing Page Architecture
+## 14. Landing Page Architecture
 
 The platform's entry point is a high-fidelity, block-based landing page designed for maximum flexibility and performance.
 
-### 12.1 Content Modeling
+### 14.1 Content Modeling
 The Landing Page is implemented as a **Single Type** in Strapi, utilizing a **Dynamic Zone** called `blocks`. This allows content editors to reorder sections, add new ones, or remove existing ones without developer intervention.
 
 **Supported Blocks:**
@@ -925,22 +962,23 @@ The Landing Page is implemented as a **Single Type** in Strapi, utilizing a **Dy
 - **Info Accordion**: Expandable FAQ-style section for capabilities and intent.
 - **Newsletter Section**: Lead generation form with localized placeholders.
 
-### 12.2 Rendering Strategy
+### 14.2 Rendering Strategy
 The frontend utilizes a **BlockRenderer** pattern (`@/components/shared/BlockRenderer.js`).
 1.  **Fetching**: Data is retrieved via the `fetchLandingPage` service in `getStaticProps`, ensuring the page is pre-rendered for SEO and performance.
 2.  **Mapping**: The `BlockRenderer` maps the Strapi `__component` identifier to a corresponding React component in `frontend/components/landing/`.
-3.  **Population**: Deep population is used to retrieve nested components like `checklist` (in Peer Section) and `benefits` (in Benefits Section).
+3.  **Population**: Deep population is used to retrieve nested components like `checklist` (in About Section) and `benefits` (in Benefits Grid).
 
-### 12.3 Seeding and Localization
+### 14.3 Seeding and Localization
 To ensure environment parity, the platform includes a `syncLandingPage` utility in `backend/src/utils/prod-seeder.js`.
 - **Default State**: Automatically creates the default section structure from Figma for all 5 platform locales (EN, FR, AR, SW, PT).
 - **Idempotency**: Uses `findFirst` and `create` to ensure the page is only initialized once, protecting manual edits in the Strapi admin panel.
 - **Permissions**: Automatically grants `find` permissions to the `public` role for the Landing Page API.
-## 11. Seeding & Data Management
+
+## 15. Seeding & Data Management
 
 The platform implements a robust seeding strategy to maintain taxonomy consistency across environments while protecting production data.
 
-### 11.1 Seeding Strategy
+### 15.1 Seeding Strategy
 
 The seeding logic is split into two layers:
 1.  **Production Metadata (`seedProd`)**: Critical system metadata including Countries, Institution Types, and Individual Roles.
@@ -950,7 +988,7 @@ The seeding logic is split into two layers:
 - **Development (`NODE_ENV !== "production"`)**: Both seeders run **automatically** on server bootstrap.
 - **Production (`NODE_ENV === "production"`)**: Automatic seeding is disabled. Seeding must be triggered manually.
 
-### 11.2 Manual Seeding CLI
+### 15.2 Manual Seeding CLI
 
 A dedicated NPM script is available for manually synchronizing production metadata:
 - `npm run seed:prod` — Synchronizes critical production metadata (Countries, Institution Types, etc.).
@@ -958,13 +996,13 @@ A dedicated NPM script is available for manually synchronizing production metada
 > [!NOTE]
 > There is no manual `seed:dev` command. Development sample data is synchronized **automatically** on every server bootstrap in non-production environments to ensure the workspace is always ready for testing.
 
-### 11.3 Idempotent Upsert Pattern
+### 15.3 Idempotent Upsert Pattern
 
 To prevent data duplication and allow for safe re-runs, the seeders use an **Idempotent Upsert** pattern. Instead of checking for an empty table, the system checks for the existence of individual records (usually by `name` or `slug`).
 - If the record exists: It is updated with the latest configuration from the seeder.
 - If the record is missing: It is created.
 
-### 11.4 Centralized Constants
+### 15.4 Centralized Constants
 
 Taxonomy masters and system constants are centralized in `src/utils/constants.js`. This ensures that the same data sets are used by both the seeders and any other system utilities (like migrations or permission hardening).
 
@@ -974,4 +1012,40 @@ Taxonomy masters and system constants are centralized in `src/utils/constants.js
 | `INSTITUTION_TYPES` | `api::institution-type.institution-type` |
 | `INDIVIDUAL_ROLES` | `api::individual-role.individual-role` |
 
-This centralization simplifies maintenance when updating official lists (e.g., adding a new country or modifying an institution category).
+
+## 16. ORCID OAuth Authentication
+
+The platform supports researcher identity verification via ORCID OAuth 2.0, allowing users to link their professional profile and automatically import verified data.
+
+### 16.1 Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant Strapi
+    participant ORCID
+
+    User->>Frontend: Click "Verify ORCID"
+    Frontend->>Strapi: GET /api/orcid-auth/authorize?returnTo=...
+    Strapi-->>Frontend: { data: { authorizeUrl } }
+    Frontend->>ORCID: Redirect to OAuth Login
+    ORCID-->>User: Show Authorization Screen
+    User->>ORCID: Approve
+    ORCID-->>Frontend: Redirect to /auth/orcid/callback?code=...
+    Frontend->>Strapi: POST /api/orcid-auth/callback { code, state }
+    Strapi->>ORCID: Exchange code for access_token + orcid_id
+    Strapi->>ORCID: Fetch Public Data (Biography, Keywords)
+    Strapi-->>Frontend: { success: true, user }
+    Frontend->>User: Display Verified Badge
+```
+
+### 16.2 Key Features
+- **Secure Handshake**: Uses the official ORCID Public API for secure identity verification.
+- **Data Mapping**: Automatically maps ORCID keywords to `user.interest` components and populates the biography field.
+- **Verification Status**: Sets the `verified` flag on the user profile, enabling verification badges across the platform.
+- **Multi-context support**: The flow is integrated into both the onboarding process (Step 4) and the user profile management page.
+
+### 16.3 Security & Permissions
+- **Grant Permissions**: The `authorize` and `callback` actions are granted to the `authenticated` role via the production seeder.
+- **Environment Variables**: Client credentials and redirect URIs are managed via `ORCID_CLIENT_ID`, `ORCID_CLIENT_SECRET`, and `ORCID_REDIRECT_URI`.

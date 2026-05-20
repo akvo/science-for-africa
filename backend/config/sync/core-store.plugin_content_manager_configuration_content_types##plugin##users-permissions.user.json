@@ -529,6 +529,50 @@
           "sortable": true
         }
       },
+      "followers": {
+        "edit": {
+          "label": "followers",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "username"
+        },
+        "list": {
+          "label": "followers",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "following": {
+        "edit": {
+          "label": "following",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "username"
+        },
+        "list": {
+          "label": "following",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "subscriberCount": {
+        "edit": {
+          "label": "subscriberCount",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "subscriberCount",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -597,12 +641,7 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "username",
-        "email",
-        "confirmed"
-      ],
+      "list": ["id", "username", "email", "confirmed"],
       "edit": [
         [
           {
@@ -769,6 +808,22 @@
           },
           {
             "name": "verified",
+            "size": 4
+          }
+        ],
+        [
+          {
+            "name": "followers",
+            "size": 6
+          },
+          {
+            "name": "following",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "subscriberCount",
             "size": 4
           }
         ]

@@ -32,7 +32,8 @@
     "save_success": "Perfil atualizado com sucesso",
     "save_error": "Falha ao atualizar o perfil",
     "not_provided": "Não fornecido",
-    "no_bio": "Nenhuma biografia fornecida."
+    "no_bio": "Nenhuma biografia fornecida.",
+    "no_bio_public": "Nenhuma biografia fornecida."
   },
   "education_levels": {
     "Postgraduate Student (Masters)": "Estudante de Pós-graduação (Mestrado)",
@@ -54,5 +55,97 @@
     "pt": "Português",
     "ar": "Árabe",
     "sw": "Suaíli"
+  },
+  "tabs": {
+    "profile": "Perfil",
+    "public_profile": "Perfil Público",
+    "posts": "Postagens",
+    "details": "Detalhes",
+    "communities": "Minhas Comunidades",
+    "resources": "Recursos",
+    "content": "Conteúdo",
+    "saved": "Salvos",
+    "events": "Meus eventos",
+    "collaboration": "Colaboração",
+    "courses": "Cursos e certificações",
+    "mentorship": "Mentoria"
+  },
+  "posts": {
+    "empty_title": "Nenhum post ainda",
+    "empty_description_public": "Posts públicos aparecerão aqui",
+    "empty_description_own": "Seus posts aparecerão aqui"
+  },
+  "share": {
+    "share_profile": "Compartilhar Perfil",
+    "copied_to_clipboard": "Link copiado para a área de transferência!"
+  },
+  "actions": {
+    "follow": "Seguir",
+    "unfollow": "Deixar de seguir"
+  },
+  "sidebar": {
+    "subscribers": "Inscritos",
+    "posts": "Postagens",
+    "education": "Educação",
+    "communities": "Comunidades",
+    "see_all": "Ver tudo",
+    "no_communities": "Nenhuma comunidade associada ainda."
+  },
+  "communities": {
+    "description": "Gerencie suas participações na comunidade e explore novas.",
+    "joined": "Ingressou",
+    "leave_title": "Sair da Comunidade",
+    "leave_btn": "Sair",
+    "leave_confirm": "Tem certeza de que deseja sair de {{name}}?",
+    "leave_success": "Você saiu de {{name}} com sucesso.",
+    "leave_error": "Falha ao sair da comunidade. Por favor, tente novamente.",
+    "empty_title": "Você ainda não tem nenhuma comunidade",
+    "empty_description": "Participe de comunidades para se conectar com outros pesquisadores e participar de discussões.",
+    "explore": "Explorar comunidades",
+    "no_description": "Nenhuma descrição disponível."
+  },
+  "collaboration": {
+    "title": "Minhas Colaborações",
+    "description": "Acompanhe seus projetos de colaboração ativos e concluídos.",
+    "status_active": "Ativo",
+    "status_completed": "Concluído",
+    "valid_till": "Válido até:",
+    "ended": "Encerrado:",
+    "view_community": "Ver comunidade",
+    "empty_title": "Você ainda não tem colaborações",
+    "empty_desc": "Comece a participar de comunidades e responder a chamadas para começar a colaborar.",
+    "explore_calls": "Explorar chamadas de colaboração"
+  },
+  "resources": {
+    "title": "Meus Recursos",
+    "description": "Acesse e gerencie seus documentos técnicos e relatórios enviados.",
+    "empty_title": "Você ainda não tem recursos",
+    "empty_description": "Explore a comunidade para encontrar e salvar recursos ou envie os seus próprios em uma comunidade.",
+    "explore": "Explorar comunidade",
+    "delete_confirm_title": "Excluir Recurso",
+    "delete_confirm_description": "Tem certeza de que deseja excluir este recurso? Esta ação não pode ser desfeita."
+  },
+  "mentorship": {
+    "title": "Mentoria",
+    "description": "Visualize e gerencie suas relações de mentoria.",
+    "header_space": "Espaço de colaboração",
+    "header_mentees": "Usuários mentorados",
+    "header_education": "Educação",
+    "header_actions": "Ações",
+    "collaborator": "Colaborador",
+    "researcher": "Pesquisador",
+    "empty_title": "Você ainda não tem mentorados",
+    "empty_desc": "Quando você for designado como mentor em uma colaboração, seus mentorados aparecerão aqui.",
+    "explore_calls": "Explorar chamadas de colaboração"
+  },
+  "roles": {
+    "Researcher": "Pesquisador",
+    "Principal Investigator / Lab Lead": "Investigador Principal / Líder de Laboratório",
+    "Post-doctoral Fellow": "Bolsista de Pós-doutorado",
+    "PhD Candidate": "Candidato a Doutorado",
+    "Graduate / Undergraduate Student": "Estudante de Graduação / Pós-graduação",
+    "Administrator / Support Staff": "Administrador / Equipe de Apoio",
+    "Program Manager / Funder representative": "Gerente de Programa / Representante do Financiador",
+    "External Reviewer": "Revisor Externo"
   }
 }

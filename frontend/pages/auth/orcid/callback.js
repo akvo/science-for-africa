@@ -19,6 +19,7 @@ export default function OrcidCallbackPage() {
     const { code, state, error } = router.query;
 
     if (error) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStatus("error");
       setErrorMsg("ORCID authentication was denied or cancelled.");
       return;

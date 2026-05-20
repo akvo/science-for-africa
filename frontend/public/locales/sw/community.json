@@ -1,0 +1,81 @@
+{
+  "collaboration_dialog": {
+    "step1_title": "Je! Ushirikiano wako utajitolea kwa mada gani?",
+    "step1_subtitle": "Chagua mada kusaidia kupata jumuiya yako.",
+    "step2_title": "Unda Nafasi ya Ushirikiano",
+    "step2_subtitle": "Chagua mada kusaidia kupata nafasi yako ya ushirikiano.",
+    "step3_title": "Chagua tarehe ya mwisho",
+    "step3_subtitle": "Tarehe ifuatayo itasitisha nafasi ya ushirikiano.",
+    "step4_title": "Assign mshauri",
+    "step4_subtitle": "Watumiaji wafuatao wanapata mradi huu:",
+    "step5_title": "Huu ni aina gani ya ushirikiano?",
+    "step6_title": "Alika watumiaji na washirika",
+    "step6_subtitle": "Ushirikiano wako mpya umeundwa. Alika wenzako kushirikiana kwenye mradi huu.",
+    "close": "Funga"
+  },
+  "visibility": {
+    "description": "Amua nani anayeweza kutazama na kuongeza machapisho katika jumuiya yako. Jumuiya za umma pekee ndizo zinaonyeshwa katika matokeo ya utafutaji. Muhimu: Baada ya kuanzisha jumuiya yako, utahitaji kuwasilisha ombi la kubadilisha aina ya jumuiya.",
+    "public": "Umma",
+    "public_description": "Kila mtu anaweza kutazama na kuongeza machapisho na maoni katika jumuiya hii.",
+    "restricted": "Ufikiaji mdogo",
+    "restricted_description": "Kila mtu anaweza kutazama machapisho na maoni, lakini watumiaji waliothibitishwa pekee ndio wanaweza kuwaongeza.",
+    "private": "Binafsi",
+    "private_description": "Watumiaji walioidhinishwa pekee ndio wanaweza kuona na kuchapisha maudhui",
+    "back": "Nyuma",
+    "next": "Ifuatayo"
+  },
+  "call_card": {
+    "active": "Hai",
+    "completed": "Imekamilika",
+    "valid_till": "Inafaa hadi",
+    "ended": "Imeisha",
+    "private": "Binafsi",
+    "limited_access": "Ufikiaji mdogo",
+    "view": "Tazama",
+    "view_community": "Tazama jumuiya"
+  },
+  "hub": {
+    "title": "Kituo cha ushirikiano",
+    "all": "Zote",
+    "active": "Hai",
+    "completed": "Imekamilika",
+    "loading": "Inapakia ushirikiano...",
+    "no_calls": "Hakuna simu za ushirikiano zilizopatikana.",
+    "new_to_platform": "Mpya kwenye jukwaa?",
+    "new_to_platform_description": "Unda akaunti yako na uunganishe na ulimwengu wa jumuiya.",
+    "continue_with_email": "Endelea na anwani ya barua pepe",
+    "terms_agreement": "Kwa kuendelea, unakubali Makubaliano yetu ya Mtumiaji na unakiri kwamba unaelewa Sera ya Faragha.",
+    "popular_communities": "Jumuiya maarufu",
+    "subscribers": "Wasajili",
+    "explore_all": "Gundua zote"
+  },
+  "resource_dialog": {
+    "view_profile": "Tazama wasifu",
+    "description": "Maelezo",
+    "comments": "maoni",
+    "comment": "maoni",
+    "no_comments": "Bado hakuna maoni. Kuwa wa kwanza kushiriki mawazo yako.",
+    "leave_comment": "Acha maoni",
+    "write_reply": "Andika jibu...",
+    "replying_to": "Kujibu kwa",
+    "post": "Chapisha",
+    "reply": "Jibu"
+  },
+  "call_detail": {
+    "loading": "Inapakia wito wa ushirikiano...",
+    "not_found": "Wito wa ushirikiano haujapatikana.",
+    "request_to_join": "Omba kujiunga",
+    "requested": "Imeombwa",
+    "joined": "Imejiunga",
+    "back": "Nyuma"
+  },
+  "chat": {
+    "no_messages": "Bado hakuna ujumbe.",
+    "no_messages_can_post": "Bado hakuna ujumbe — anza mazungumzo hapa chini.",
+    "you": "Wewe",
+    "write_placeholder": "Andika ujumbe...",
+    "attach_file": "Ambatisha faili",
+    "send": "Tuma",
+    "cancel": "Ghairi"
+  }
+}

@@ -3,7 +3,7 @@
 ## 📊 Overview
 
 ### Purpose
-To allow researchers to verify their professional identity by linking their ORCID iD. This enhances profile credibility and automatically imports biographical and professional data, reducing onboarding friction.
+To allow researchers to verify their professional identity by linking their ORCID account via OAuth. This enhances profile credibility and automatically imports biographical and professional data, reducing onboarding friction.
 
 ### Key Principle
 **Data-Driven Credibility**: Verified ORCID links provide a foundation of trust for researchers on the Science for Africa platform.
@@ -35,8 +35,8 @@ The following variables must be configured in the backend environment for both p
 ---
 
 ## 🎯 Design Principles
-- **Instant Validation**: Real-time feedback when the user clicks verify.
-- **Transparency**: Show the user exactly what data is being imported from ORCID.
+- **OAuth Security**: Use official ORCID OAuth 2.0 flow for secure verification.
+- **Seamless Integration**: Automated redirect and callback handling.
 - **Optionality**: Users can skip ORCID integration if they prefer.
 
 ---
@@ -64,7 +64,7 @@ graph TD
 - **User (Extended)**:
     - `orcidId`: String (e.g., "0000-0002-1825-0097")
     - `verified`: Boolean (true after successful ORCID sync)
-    - `firstName`, `lastName`, `fullName`, `biography`, `position`: Updated from ORCID.
+    - `firstName`, `lastName`, `fullName`, `biography`: Updated from ORCID.
     - `interests`: Array of `user.interest` components (Sync from ORCID keywords).
 
 ---
@@ -72,85 +72,72 @@ graph TD
 ## ✅ Acceptance Criteria
 
 ### User Acceptance Criteria (User AC)
-- [ ] User can input a 16-digit ORCID iD with automatic formatting (dashes).
-- [ ] User sees a loading spinner while verification is in progress.
-- [ ] User sees a summary of the found profile (Name, Bio, Institution) before proceeding.
-- [ ] User can skip the ORCID step without verification.
-- [ ] Error messages are clear if the ORCID iD is not found.
+- [x] User can trigger verification via a "Verify ORCID" button.
+- [x] User is redirected to ORCID.org securely.
+- [x] User is returned to the platform after authorization.
+- [x] User sees a success notification once verified.
+- [x] User can skip the ORCID step without verification.
 
 ### Technical Acceptance Criteria (Tech AC)
-- [ ] Backend validates ORCID iD format via regex.
-- [ ] Backend fetches data from `pub.orcid.org/v3.0` (Public API).
-- [ ] Backend updates the `verified` flag on the user record.
-- [ ] Backend correctly maps ORCID keywords to Strapi `user.interest` components (max 5).
-- [ ] Endpoint is secured to authenticated users only.
+- [x] Backend implements OAuth 2.0 flow (Authorize, Callback).
+- [x] Backend fetches data from `pub.orcid.org/v3.0` (Public API).
+- [x] Backend updates the `verified` flag on the user record.
+- [x] Backend correctly maps ORCID keywords to Strapi `user.interest` components.
+- [x] Secure environment variables for Client ID and Secret.
 
 ---
 
 ## 🔧 Implementation Details
 
-### Phase 1: Backend Polish
-- [ ] Add `interests` mapping to `orcid-auth` controller.
-- [ ] Ensure `verified` field is correctly toggled.
-- [ ] Configure `config/sync` permissions for `/api/orcid-auth/validate`.
+### Phase 1: Backend Infrastructure
+- [x] Implement `api/orcid-auth` endpoints for OAuth.
+- [x] Configure permissions for `authorize` and `callback`.
+- [x] Add environment variables to `compose.yml`.
 
-### Phase 2: Frontend API & Store
-- [ ] Create `lib/api/orcid.js` for API calls.
-- [ ] Add `orcidProfile` to `useOnboardingStore` for preview state.
-
-### Phase 3: UI Enhancement
-- [ ] Implement `ProfilePreviewCard` component.
-- [ ] Add validation logic to `OnboardingStep4.jsx`.
-- [ ] Add localized strings for verification states.
+### Phase 2: Frontend Integration
+- [x] Implement `getOrcidAuthorizeUrl` helper.
+- [x] Create `/auth/orcid/callback` page for handling the redirect.
+- [x] Update `DetailsViewMode.js` and `OnboardingStep4.jsx` to use the OAuth button.
 
 ---
 
 ## 📡 API Reference
 
-### Validate ORCID
+### Authorize
+- **Method**: `GET`
+- **Path**: `/api/orcid-auth/authorize`
+- **Query Params**: `returnTo` (e.g., "profile", "onboarding")
+
+### Callback (Code exchange handler)
 - **Method**: `POST`
-- **Path**: `/api/orcid-auth/validate`
+- **Path**: `/api/orcid-auth/callback`
 - **Request Body**:
 ```json
 {
-  "orcidId": "0000-0002-1825-0097"
-}
-```
-- **Response (200 OK)**:
-```json
-{
-  "data": {
-    "orcidId": "0000-0002-1825-0097",
-    "firstName": "Jane",
-    "lastName": "Doe",
-    "fullName": "Jane Doe",
-    "biography": "Researcher at University of X...",
-    "interests": ["Machine Learning", "Climate Science"],
-    "verified": true
-  }
+  "code": "AUTHORIZATION_CODE",
+  "state": "BASE64URL_ENCODED_STATE"
 }
 ```
 
 ---
 
 ## ✅ Implementation Checklist
-- [ ] Backend unit tests for `isValidOrcidFormat`.
-- [ ] Integration tests for the validation endpoint.
-- [ ] Frontend unit tests for Step 4 validation.
-- [ ] Documentation updated in LLD.
+- [x] Backend integration tests for OAuth exchange.
+- [x] Frontend handling of callback redirects.
+- [x] Environment variables configured for all environments.
 
 ---
 
 ## 📊 Example Scenarios
 
 ### Scenario 1: Successful Verification
-1. User enters `0000-0002-1825-0097`.
-2. Backend finds "Jane Doe".
-3. Frontend shows "Profile Found: Jane Doe".
-4. User clicks "Confirm".
-5. Profile fields are updated, and user moves to Step 5.
+1. User clicks "Verify ORCID".
+2. Authenticates on ORCID.org.
+3. Returns to Science for Africa.
+4. Profile is updated and `verified` badge appears.
 
 ---
+
 
 ## 🔮 Future Enhancements
 - Continuous sync (nightly) to keep profiles updated.

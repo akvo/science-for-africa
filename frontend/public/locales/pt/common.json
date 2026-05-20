@@ -59,6 +59,8 @@
     "select_type": "Selecionar tipo de recurso",
     "resource_name": "Nome do recurso",
     "name_placeholder": "Digite algo",
+    "description": "Descrição",
+    "description_placeholder": "Adicione uma breve descrição deste recurso",
     "upload_file": "Enviar arquivo",
     "click_to_upload": "Clique para enviar",
     "or_drag_drop": "ou arraste e solte",
@@ -94,7 +96,6 @@
     "next": "Próximo",
     "public": "Público",
     "uploaded": "Enviado",
-    "description": "Descrição",
     "no_description": "Sem descrição",
     "discussion": "Discussão",
     "comment": "Comentário",
@@ -153,20 +154,31 @@
   },
   "common": {
     "loading": "Carregando...",
+    "loading_dots": "Carregando...",
     "back": "Voltar",
     "edit": "Editar",
     "save": "Salvar",
+    "save_changes": "Salvar alterações",
     "cancel": "Cancelar",
+    "cancel_request": "Cancelar pedido",
+    "type_primary_institution": "Digite sua instituição principal",
     "not_provided": "Não fornecido",
+    "button": "Botão",
+    "new": "Novo",
     "coming_soon": {
-      "title": "Em breve",
-      "description": "Estamos trabalhando duro para trazer esse recurso. Fique ligado!",
-      "back_home": "Voltar para a página inicial"
+      "title": "Em Breve",
+      "description": "Estamos a trabalhar arduamente para lhe trazer esta funcionalidade. Fique atento!",
+      "back_home": "Voltar à página inicial",
+      "feature_optimization_title": "Integração da plataforma",
+      "feature_optimization_desc": "Estamos atualmente a otimizar esta funcionalidade para o seu fluxo de trabalho de investigação.",
+      "secure_environment_title": "Ambiente Seguro",
+      "secure_environment_desc": "Garantir os mais elevados padrões de segurança de dados e acessibilidade."
     },
     "error_404": {
-      "title": "Página não encontrada",
-      "description": "Desculpe, a página que você procura não existe ou foi movida.",
-      "back_home": "Voltar para a página inicial"
+      "title": "Página Não Encontrada",
+      "subtitle": "Erro 404",
+      "description": "Desculpe, a página que procura não existe ou foi movida.",
+      "back_home": "Voltar à página inicial"
     }
   },
   "seo": {
@@ -181,7 +193,11 @@
   "verification": {
     "pending": "Pendente",
     "tooltip_user": "detalhes da conta do usuário em confirmação",
-    "tooltip_institution": "detalhes da conta institucional em confirmação"
+    "tooltip_institution": "detalhes da conta institucional em confirmação",
+    "verified": "Verificado",
+    "verify_orcid": "Verificar ORCID",
+    "verifying": "Verificando...",
+    "orcid_verify_failed": "Não foi possível verificar este ORCID iD"
   },
   "footer": {
     "newsletter": {
@@ -215,7 +231,53 @@
         "settings": "Configurações",
         "contact": "Contato"
       }
-    },
-    "copyright": "© Science for Africa 2026"
+    }
+  },
+  "copyright": "© Science for Africa 2026",
+  "style_guide": {
+    "components": "Componentes",
+    "design_system": "Sistema de Design",
+    "official_button_system": "Sistema de Botões Oficial",
+    "standard_sizes": "Tamanhos Padrão (Escala Figma)",
+    "standard_sizes_desc": "De SM a 2XL com alturas e preenchimentos precisos.",
+    "social_auth": "Autenticação Social",
+    "social_auth_desc": "Variante dedicada para login via Google e Apple.",
+    "login_to_sfa": "Login no SFA",
+    "or_individual": "Ou Individual",
+    "continue_with_google": "Continuar com Google",
+    "form_elements": "Elementos de Formulário e Tipografia",
+    "inputs_selection": "Entradas e Seleção",
+    "inputs_selection_desc": "Tipografia consistente e altura premium de 48px.",
+    "email_address": "Endereço de E-mail",
+    "country_selector": "Seletor de País (Fonte de títulos aplicada)",
+    "select_country": "Selecione um país",
+    "selection_controls": "Controles de Seleção",
+    "selection_controls_desc": "Estados ativos em Azul Petróleo da marca com raios de 8px/totais.",
+    "push_notifications": "Notificações Push",
+    "agree_to_terms": "Concordar com os Termos",
+    "premium_ui": "Elementos de Interface Premium",
+    "avatar_scale": "Escala de Avatar",
+    "avatar_scale_desc": "Tamanhos da marca de XS (24px) a 2XL (64px).",
+    "dialogs_modals": "Diálogos e Modais",
+    "dialogs_modals_desc": "Refinado para o SFA com raio de 16px.",
+    "open_modal": "Abrir Exemplo de Modal",
+    "profile_info": "Informações do Perfil",
+    "profile_info_desc": "Atualize seu perfil de pesquisador e detalhes de afiliação aqui.",
+    "full_name": "Nome Completo",
+    "community_card": "Cartão da Comunidade",
+    "members_count": "{{count}} Membros",
+    "community_desc": "Explorando novas fronteiras na colaboração científica e tecnológica em África.",
+    "join_community": "Aderir à Comunidade",
+    "event_card": "Cartão do Evento",
+    "upcoming": "Próximo",
+    "event_title": "Cimeira da Ciência 2026",
+    "event_desc": "Junte-se a cientistas líderes em Nairobi para a cimeira anual do SFA.",
+    "register_now": "Registar Agora",
+    "metadata": "Metadados",
+    "badges": "Distintivos",
+    "primary": "Primário",
+    "secondary": "Secundário",
+    "success": "Sucesso",
+    "error_lg": "Erro LG"
   }
 }

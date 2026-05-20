@@ -41,6 +41,11 @@
       "locale": null
     },
     {
+      "documentId": "szjv861vsuywrpx7ztz4tl6p",
+      "action": "api::auth.profile.publicProfile",
+      "locale": null
+    },
+    {
       "documentId": "enqv34k3v01mmus1d8lt4p6m",
       "action": "api::auth.profile.update",
       "locale": null
@@ -216,8 +221,18 @@
       "locale": null
     },
     {
+      "documentId": "ppq9qvswv8sytqmd2kktyhu5",
+      "action": "plugin::users-permissions.user.follow",
+      "locale": null
+    },
+    {
       "documentId": "eyzqmubinrax414z1jylwtw3",
       "action": "plugin::users-permissions.user.me",
+      "locale": null
+    },
+    {
+      "documentId": "rp13f4vs0ut9e89pcr5aw972",
+      "action": "plugin::users-permissions.user.unfollow",
       "locale": null
     }
   ]

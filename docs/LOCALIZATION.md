@@ -3,13 +3,13 @@
 ## 📊 Overview
 
 ### Purpose
-To enable the Science for Africa platform to serve content and user interface in multiple languages, starting with English and French. This ensures accessibility for a diverse linguistic audience across Africa and international stakeholders.
+To enable the Science for Africa platform to serve content and user interface in multiple languages, including English, Arabic, French, Portuguese, and Swahili. This ensures accessibility for a diverse linguistic audience across Africa and international stakeholders.
 
 ### Key Principle
 **SEO-Standard Subpath Routing**: Use URL subpaths (e.g., `/fr/communities`) for better indexing by search engines and a consistent user experience.
 
 ### User Experience
-Users will land on the site in English by default. A language switcher in the navbar allows them to switch to French. Upon switching, the URL updates to include the `/fr` prefix, and both the UI strings (buttons, labels) and the content refresh to show the French version. To ensure a seamless experience, missing French content automatically falls back to English.
+Users will land on the site in English by default. A language switcher in the navbar allows them to switch between five official languages: English, Arabic, French, Portuguese, and Swahili. Upon switching, the URL updates to include the language prefix (e.g., `/ar`, `/fr`, `/pt`, `/sw`), and both the UI strings (buttons, labels) and the content refresh to show the localized version. To ensure a seamless experience, missing content automatically falls back to English.
 
 ---
 
@@ -136,24 +136,17 @@ All content fetches should append the `locale` parameter.
 
 ---
 
-## ✅ Implementation Checklist
-- [x] Subpath routing works for all pages (e.g., `/fr/reset-password`)
-- [x] UI strings correctly load from `common.json`
-- [x] Strapi content filters correctly by locale
-- [x] SEO tags (`hreflang`) are automatically injected by Next.js
+### Implementation Checklist
+- [x] Subpath routing works for all pages (e.g., `/ar/profile`, `/fr/reset-password`)
+- [x] UI strings correctly load from 5-locale dictionary structure
+- [x] 100% key and structural parity across all namespaces (`auth`, `common`, `community`, `onboarding`, `privacy-policy`, `profile`)
+- [x] Strapi content filters correctly by all 5 locales
+- [x] SEO tags (`hreflang`) are automatically injected by Next.js for all languages
 - [x] Verification email links preserve the user's selected locale
-
----
-
-## 📊 Example Scenarios
-
-### Scenario 1: User switches from English to French on a Community page
-- **Input**: User clicks "Français" in the `LocaleSwitcher`.
-- **Processing**: Next.js redirects to `/fr/communities/[slug]`. `useTranslation` hook reloads with French dictionary. API call to Strapi includes `locale=fr`.
-- **Expected Output**: Page reloads with "Communautés" header and French community description.
+- [x] **Namespace Resolution**: Global keys (`style_guide`, `copyright`) are moved to the top level of the `common` namespace for direct component access.
 
 ---
 
 ## 🔮 Future Enhancements
 - **Auto-Translation Integration**: Use AI to provide initial drafts of translations for user threads.
-- **More Locales**: Add Swahili and Arabic support.
+- **Dynamic Content Scaling**: Implement automated localization workflows for new community categories.

@@ -60,5 +60,22 @@
     "replying_to": "Replying to",
     "post": "Post",
     "reply": "Reply"
+  },
+  "call_detail": {
+    "loading": "Loading collaboration call...",
+    "not_found": "Collaboration call not found.",
+    "request_to_join": "Request to join",
+    "requested": "Requested",
+    "joined": "Joined",
+    "back": "Back"
+  },
+  "chat": {
+    "no_messages": "No messages yet.",
+    "no_messages_can_post": "No messages yet — start the conversation below.",
+    "you": "You",
+    "write_placeholder": "Write a message...",
+    "attach_file": "Attach file",
+    "send": "Send",
+    "cancel": "Cancel"
   }
 }

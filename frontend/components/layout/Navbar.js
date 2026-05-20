@@ -26,11 +26,13 @@ const PROFILE_MENU_ITEMS = [
 ];
 
 const COMMUNITY_MENU = {
-  community: [
-    { key: "communities", href: "/community", icon: Globe },
-  ],
+  community: [{ key: "communities", href: "/community", icon: Globe }],
   collaboration: [
-    { key: "collaboration_hub", href: "/community/collaboration-hub", icon: CollaborationIcon },
+    {
+      key: "collaboration_hub",
+      href: "/community/collaboration-hub",
+      icon: CollaborationIcon,
+    },
   ],
 };
 
@@ -141,7 +143,7 @@ const Navbar = () => {
 
                     {communityOpen && (
                       <div className="absolute left-1/2 -translate-x-1/2 top-full pt-2 z-50">
-                        <div className="w-[560px] rounded-2xl border border-brand-gray-100 bg-white p-6 shadow-xl">
+                        <div className="w-140 rounded-2xl border border-brand-gray-100 bg-white p-6 shadow-xl">
                           <h3 className="text-base font-bold text-brand-gray-900 mb-1">
                             {t("navbar.community")}
                           </h3>
@@ -168,14 +170,20 @@ const Navbar = () => {
                                       <div className="flex items-center gap-2.5">
                                         <Icon className="size-5 text-brand-gray-500 group-hover:text-primary-500 transition-colors" />
                                         <span className="text-sm font-semibold text-brand-gray-900">
-                                          {t(`navbar.community_dropdown.${item.key}`)}
+                                          {t(
+                                            `navbar.community_dropdown.${item.key}`,
+                                          )}
                                         </span>
                                       </div>
-                                      <p className="text-xs text-brand-gray-500 ml-[30px]">
-                                        {t(`navbar.community_dropdown.${item.key}_desc`)}
+                                      <p className="text-xs text-brand-gray-500 ml-7.5">
+                                        {t(
+                                          `navbar.community_dropdown.${item.key}_desc`,
+                                        )}
                                       </p>
-                                      <span className="ml-[30px] mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary-500">
-                                        {t("navbar.community_dropdown.learn_more")}
+                                      <span className="ml-7.5 mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary-500">
+                                        {t(
+                                          "navbar.community_dropdown.learn_more",
+                                        )}
                                         <ArrowRight className="size-3" />
                                       </span>
                                     </Link>
@@ -187,7 +195,9 @@ const Navbar = () => {
                             {/* Collaboration column */}
                             <div>
                               <h4 className="text-xs font-semibold text-primary-500 uppercase tracking-wider mb-3">
-                                {t("navbar.community_dropdown.collaboration_label")}
+                                {t(
+                                  "navbar.community_dropdown.collaboration_label",
+                                )}
                               </h4>
                               <div className="flex flex-col gap-1">
                                 {COMMUNITY_MENU.collaboration.map((item) => {
@@ -202,14 +212,20 @@ const Navbar = () => {
                                       <div className="flex items-center gap-2.5">
                                         <Icon className="size-5 text-brand-gray-500 group-hover:text-primary-500 transition-colors" />
                                         <span className="text-sm font-semibold text-brand-gray-900">
-                                          {t(`navbar.community_dropdown.${item.key}`)}
+                                          {t(
+                                            `navbar.community_dropdown.${item.key}`,
+                                          )}
                                         </span>
                                       </div>
                                       <p className="text-xs text-brand-gray-500 ml-[30px]">
-                                        {t(`navbar.community_dropdown.${item.key}_desc`)}
+                                        {t(
+                                          `navbar.community_dropdown.${item.key}_desc`,
+                                        )}
                                       </p>
                                       <span className="ml-[30px] mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary-500">
-                                        {t("navbar.community_dropdown.learn_more")}
+                                        {t(
+                                          "navbar.community_dropdown.learn_more",
+                                        )}
                                         <ArrowRight className="size-3" />
                                       </span>
                                     </Link>
@@ -241,7 +257,7 @@ const Navbar = () => {
               <div className="flex items-center gap-4">
                 {/* User Dropdown */}
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
+                  <DropdownMenuTrigger asChild nativeButton={false}>
                     <Avatar
                       size="md"
                       className="cursor-pointer border-2 border-white shadow-sm hover:ring-2 hover:ring-brand-teal-100 transition-all"
@@ -260,7 +276,10 @@ const Navbar = () => {
                     className="w-72 p-0 rounded-2xl shadow-xl border-brand-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200"
                   >
                     {/* Identity Header */}
-                    <div className="flex items-center gap-4 px-5 py-4 bg-white">
+                    <Link
+                      href={`/profile/${user?.documentId || user?.id}`}
+                      className="flex items-center gap-4 px-5 py-4 bg-white hover:bg-brand-gray-50 transition-colors"
+                    >
                       <Avatar size="lg" className="shrink-0">
                         <AvatarImage
                           src={getStrapiMedia(user?.profilePhoto?.url)}
@@ -282,7 +301,7 @@ const Navbar = () => {
                           {user?.userType || t("navbar.researcher_placeholder")}
                         </p>
                       </div>
-                    </div>
+                    </Link>
 
                     <DropdownMenuSeparator className="m-0 bg-brand-gray-100" />
 
@@ -292,6 +311,7 @@ const Navbar = () => {
                         <DropdownMenuItem
                           key={item.key}
                           asChild
+                          nativeButton={false}
                           className="px-5 py-3 focus:bg-brand-gray-50 cursor-pointer overflow-hidden group"
                         >
                           <Link
@@ -312,6 +332,7 @@ const Navbar = () => {
                     <div className="py-2">
                       <DropdownMenuItem
                         asChild
+                        nativeButton={false}
                         className="px-5 py-3 focus:bg-brand-gray-50 cursor-pointer group"
                       >
                         <Link
@@ -344,12 +365,22 @@ const Navbar = () => {
               </div>
             ) : mounted ? (
               <div className="flex items-center gap-3">
-                <Button variant="outline" size="xl" asChild>
+                <Button
+                  variant="outline"
+                  size="xl"
+                  asChild
+                  nativeButton={false}
+                >
                   <Link href="/login" className="font-medium">
                     {t("navbar.login")}
                   </Link>
                 </Button>
-                <Button variant="primary" size="xl" asChild>
+                <Button
+                  variant="primary"
+                  size="xl"
+                  asChild
+                  nativeButton={false}
+                >
                   <Link href="/signup" className="font-medium">
                     {t("navbar.signup")}
                   </Link>
@@ -439,6 +470,7 @@ const Navbar = () => {
                         size="md"
                         className="w-full justify-start h-10 px-3"
                         asChild
+                        nativeButton={false}
                         onClick={() => setIsOpen(false)}
                       >
                         <Link href={item.href}>
@@ -466,6 +498,7 @@ const Navbar = () => {
                     size="xl"
                     className="w-full"
                     asChild
+                    nativeButton={false}
                     onClick={() => setIsOpen(false)}
                   >
                     <Link href="/login" className="font-medium">
@@ -477,6 +510,7 @@ const Navbar = () => {
                     size="xl"
                     className="w-full"
                     asChild
+                    nativeButton={false}
                     onClick={() => setIsOpen(false)}
                   >
                     <Link href="/signup" className="font-medium">

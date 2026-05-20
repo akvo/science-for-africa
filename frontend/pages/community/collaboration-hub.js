@@ -18,8 +18,9 @@ const useHasHydrated = () => {
     const unsub = useAuthStore.persist.onFinishHydration(() =>
       setHydrated(true),
     );
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (useAuthStore.persist.hasHydrated()) setHydrated(true);
+    if (useAuthStore.persist.hasHydrated()) {
+      setTimeout(() => setHydrated(true), 0);
+    }
     return unsub;
   }, []);
   return hydrated;
@@ -180,7 +181,7 @@ function RightSidebar({ communities, isAuthenticated }) {
             </Button>
             <SocialButton
               provider="google"
-              className="h-auto! py-1.5! text-sm! rounded-full! w-fit"
+              className="w-full !h-auto !py-1.5 !text-sm !rounded-full"
             />
           </div>
           <p className="mt-3 text-[10px] text-brand-gray-400 leading-tight">
@@ -248,8 +249,7 @@ export default function CollaborationHubPage() {
 
   useEffect(() => {
     if (!hydrated) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(true);
+    setTimeout(() => setLoading(true), 0);
     Promise.all([fetchCollaborationCalls(), fetchCommunities()]).then(
       ([callsRes, commRes]) => {
         setCalls(Array.isArray(callsRes?.data) ? callsRes.data : []);

@@ -6,6 +6,7 @@
 const { createStrapi } = require("@strapi/strapi");
 const fs = require("fs");
 const path = require("path");
+const schedule = require("node-schedule");
 
 let instance;
 let dbPath;
@@ -15,6 +16,9 @@ let dbPath;
  * Uses SQLite in-memory for fast test execution
  */
 async function setupStrapi() {
+  // Disable telemetry in test environment to prevent background telemetry cron jobs
+  process.env.STRAPI_TELEMETRY_DISABLED = "true";
+
   if (!instance) {
     instance = createStrapi({
       appDir: path.resolve(__dirname, "../.."),
@@ -94,6 +98,23 @@ async function setupStrapi() {
  */
 async function teardownStrapi() {
   if (instance) {
+    // 1. Destroy the cron service to cancel all Strapi-registered background jobs (like telemetry ping events)
+    if (instance.cron) {
+      try {
+        instance.cron.destroy();
+      } catch (err) {
+        console.error("Error destroying strapi cron:", err);
+      }
+    }
+
+    // 2. Gracefully shut down node-schedule jobs registered in this test context
+    try {
+      await schedule.gracefulShutdown();
+    } catch (err) {
+      console.error("Error shutting down node-schedule jobs:", err);
+    }
+
+    // 3. Destroy Strapi instance
     await instance.destroy();
 
     // Clean up test database

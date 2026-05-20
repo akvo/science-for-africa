@@ -16,12 +16,15 @@ export default function OrcidCallbackPage() {
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
+    if (!router.isReady) return;
+
     const { code, state, error } = router.query;
 
     if (error) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setStatus("error");
-      setErrorMsg("ORCID authentication was denied or cancelled.");
+      setTimeout(() => {
+        setStatus("error");
+        setErrorMsg("ORCID authentication was denied or cancelled.");
+      }, 0);
       return;
     }
 
@@ -60,7 +63,7 @@ export default function OrcidCallbackPage() {
         setErrorMsg("Could not verify ORCID. Please try again.");
       }
     })();
-  }, [router.query, updateUser, updateFormData, router]);
+  }, [router.isReady, router.query, updateUser, updateFormData, router]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-brand-gray-25">

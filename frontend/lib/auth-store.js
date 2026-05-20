@@ -64,3 +64,20 @@ export const useAuthStore = create(
     },
   ),
 );
+
+// Listen for storage events to sync logout across tabs
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (event) => {
+    if (event.key === "sfa-auth-storage") {
+      // If the storage was cleared or changed in another tab,
+      // we can trigger a re-hydration or just reload if it was a logout
+      useAuthStore.persist.rehydrate();
+
+      // Optional: If we detect a logout (jwt becomes null), we could force a redirect
+      const state = useAuthStore.getState();
+      if (!state.jwt && window.location.pathname.startsWith("/profile")) {
+        window.location.href = "/login";
+      }
+    }
+  });
+}

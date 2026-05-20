@@ -68,20 +68,19 @@ const ComingSoon = () => {
           <div>
             <div className="h-1 w-12 bg-brand-teal-500 rounded-full mb-4" />
             <h3 className="font-bold text-brand-gray-900 mb-2">
-              Platform Integration
+              {t("common.coming_soon.feature_optimization_title")}
             </h3>
             <p className="text-brand-gray-500 max-w-sm">
-              We are currently optimizing this feature for your research
-              workflow.
+              {t("common.coming_soon.feature_optimization_desc")}
             </p>
           </div>
           <div>
             <div className="h-1 w-12 bg-brand-orange-500 rounded-full mb-4" />
             <h3 className="font-bold text-brand-gray-900 mb-2">
-              Secure Environment
+              {t("common.coming_soon.secure_environment_title")}
             </h3>
             <p className="text-brand-gray-500 max-w-sm">
-              Ensuring the highest standards of data security and accessibility.
+              {t("common.coming_soon.secure_environment_desc")}
             </p>
           </div>
         </div>

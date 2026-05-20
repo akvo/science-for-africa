@@ -1,0 +1,81 @@
+{
+  "collaboration_dialog": {
+    "step1_title": "A qual tópico sua colaboração será dedicada?",
+    "step1_subtitle": "Escolha um tópico para ajudar a encontrar sua comunidade.",
+    "step2_title": "Criar espaço de colaboração",
+    "step2_subtitle": "Escolha um tópico para ajudar a encontrar seu espaço de colaboração.",
+    "step3_title": "Selecione uma data de vencimento",
+    "step3_subtitle": "A data a seguir encerrará o espaço de colaboração.",
+    "step4_title": "Atribuir um mentor",
+    "step4_subtitle": "Os seguintes usuários têm acesso a este projeto:",
+    "step5_title": "Que tipo de colaboração é esta?",
+    "step6_title": "Convidar usuários e colaboradores",
+    "step6_subtitle": "Sua nova colaboração foi criada. Convide colegas para colaborar neste projeto.",
+    "close": "Fechar"
+  },
+  "visibility": {
+    "description": "Decida quem pode ver e adicionar postagens em sua comunidade. Somente comunidades públicas são exibidas nos resultados de busca. Importante: Após configurar sua comunidade, você precisará enviar uma solicitação para alterar o tipo de comunidade.",
+    "public": "Público",
+    "public_description": "Todos podem ver e adicionar postagens e comentários nesta comunidade.",
+    "restricted": "Com acesso limitado",
+    "restricted_description": "Todos podem ver postagens e comentários, mas apenas usuários verificados podem adicioná-los.",
+    "private": "Privado",
+    "private_description": "Apenas usuários aprovados podem ver e publicar conteúdo",
+    "back": "Voltar",
+    "next": "Próximo"
+  },
+  "call_card": {
+    "active": "Ativo",
+    "completed": "Concluído",
+    "valid_till": "Válido até",
+    "ended": "Encerrado",
+    "private": "Privado",
+    "limited_access": "Acesso limitado",
+    "view": "Ver",
+    "view_community": "Ver comunidade"
+  },
+  "hub": {
+    "title": "Hub de colaboração",
+    "all": "Todos",
+    "active": "Ativo",
+    "completed": "Concluído",
+    "loading": "Carregando colaborações...",
+    "no_calls": "Nenhuma chamada de colaboração encontrada.",
+    "new_to_platform": "Novo na plataforma?",
+    "new_to_platform_description": "Crie sua conta e conecte-se com um mundo de comunidades.",
+    "continue_with_email": "Continuar com endereço de e-mail",
+    "terms_agreement": "Ao continuar, você concorda com nosso Contrato de Usuário e reconhece que compreende a Política de Privacidade.",
+    "popular_communities": "Comunidades populares",
+    "subscribers": "Inscritos",
+    "explore_all": "Explorar tudo"
+  },
+  "resource_dialog": {
+    "view_profile": "Ver perfil",
+    "description": "Descrição",
+    "comments": "comentários",
+    "comment": "comentário",
+    "no_comments": "Ainda não há comentários. Seja o primeiro a compartilhar seus pensamentos.",
+    "leave_comment": "Deixar um comentário",
+    "write_reply": "Escrever uma resposta...",
+    "replying_to": "Respondendo a",
+    "post": "Postar",
+    "reply": "Responder"
+  },
+  "call_detail": {
+    "loading": "Carregando chamada de colaboração...",
+    "not_found": "Chamada de colaboração não encontrada.",
+    "request_to_join": "Pedir para participar",
+    "requested": "Solicitado",
+    "joined": "Ingressou",
+    "back": "Voltar"
+  },
+  "chat": {
+    "no_messages": "Ainda não há mensagens.",
+    "no_messages_can_post": "Ainda não há mensagens — comece a conversa abaixo.",
+    "you": "Você",
+    "write_placeholder": "Escreva uma mensagem...",
+    "attach_file": "Anexar arquivo",
+    "send": "Enviar",
+    "cancel": "Cancelar"
+  }
+}

@@ -21,6 +21,11 @@
       "locale": null
     },
     {
+      "documentId": "x8jh20bdcyuh3g16y7y78zdb",
+      "action": "api::auth.profile.publicProfile",
+      "locale": null
+    },
+    {
       "documentId": "e4ox8rdivouyap3t33lkyhnu",
       "action": "api::collaboration-invite.collaboration-invite.accept",
       "locale": null
@@ -108,6 +113,16 @@
     {
       "documentId": "g5ygfl72a0nfti4lrrfkctp4",
       "action": "plugin::users-permissions.auth.sendEmailConfirmation",
+      "locale": null
+    },
+    {
+      "documentId": "j3tq5wuavubetmws46q3t705",
+      "action": "plugin::users-permissions.user.follow",
+      "locale": null
+    },
+    {
+      "documentId": "zbu966q7tpzt6zbqdm7irm4e",
+      "action": "plugin::users-permissions.user.unfollow",
       "locale": null
     }
   ]

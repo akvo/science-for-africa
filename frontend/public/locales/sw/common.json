@@ -54,22 +54,26 @@
     "no_resources": "Hakuna rasilimali za kuonyesha.",
     "view": "Tazama",
     "download": "Pakua",
+    "upload_failed": "Imeshindwa kupakia rasilimali",
+    "file_too_large": "Faili ni kubwa mno. Kiwango cha juu ni 2MB",
+    "invalid_file_type": "Aina ya faili si sahihi. Tafadhali pakia faili za PDF, Word, Excel, PPT au Picha",
     "upload_title": "Pakia rasilimali",
     "upload_description": "Lorem ipsum dolor sit amet consectetur.",
     "select_type": "Chagua aina ya rasilimali",
     "resource_name": "Jina la rasilimali",
     "name_placeholder": "Andika lolote",
+    "description": "Maelezo",
+    "description_placeholder": "Ongeza maelezo mafupi ya rasilimali hii",
     "upload_file": "Pakia faili",
     "click_to_upload": "Bofya kupakia",
     "or_drag_drop": "au buruta na uache",
-    "file_hint": "SVG, PNG, JPG au GIF (max. 800x400px)",
+    "file_hint": "PDF, DOCX, XLSX, PPTX au Picha (isizidi 2MB)",
     "cancel": "Ghairi",
     "publish": "Chapisha",
     "published_title": "Rasilimali imetolewa",
     "published_description": "Lorem ipsum dolor sit amet consectetur.",
     "dont_show_again": "Usionyeshe tena",
     "access": "Ufikiaji",
-    "upload_failed": "Ufungaji haukufaulu",
     "table": {
       "file_name": "Jina la faili",
       "file_size": "Ukubwa wa faili",
@@ -92,7 +96,6 @@
     "next": "Ifuatayo",
     "public": "Umma",
     "uploaded": "Imepakiwa",
-    "description": "Maelezo",
     "no_description": "Hakuna maelezo",
     "discussion": "Majadiliano",
     "comment": "Maoni",
@@ -151,20 +154,31 @@
   },
   "common": {
     "loading": "Inapakia...",
+    "loading_dots": "Inapakia...",
     "back": "Nyuma",
     "edit": "Hariri",
     "save": "Hifadhi",
+    "save_changes": "Hifadhi mabadiliko",
     "cancel": "Ghairi",
+    "cancel_request": "Ghairi ombi",
+    "type_primary_institution": "Andika taasisi yako kuu",
     "not_provided": "Haipo",
+    "button": "Kitufe",
+    "new": "Mpya",
     "coming_soon": {
-      "title": "Karibuni",
-      "description": "Tunafanya kazi kwa bidii kuleta kipengele hiki kwako. Subiri!",
-      "back_home": "Rudi nyumbani"
+      "title": "Inakuja Hivi Karibuni",
+      "description": "Tunafanya kazi kwa bidii ili kukuletea kipengele hiki. Endelea kufuatilia!",
+      "back_home": "Rudi Nyumbani",
+      "feature_optimization_title": "Ushirikiano wa Jukwaa",
+      "feature_optimization_desc": "Kwa sasa tunaboresha kipengele hiki kwa ajili ya mchakato wako wa utafiti.",
+      "secure_environment_title": "Mazingira Salama",
+      "secure_environment_desc": "Kuhakikisha viwango vya juu zaidi vya usalama wa data na upatikanaji."
     },
     "error_404": {
-      "title": "Ukurasa haupatikani",
-      "description": "Samahani, ukurasa unaoutafuta haupo au umehamishwa.",
-      "back_home": "Rudi nyumbani"
+      "title": "Ukurasa Haupatikani",
+      "subtitle": "Hitilafu 404",
+      "description": "Samahani, ukurasa unaotafuta haupo au umehamishwa.",
+      "back_home": "Rudi Nyumbani"
     }
   },
   "seo": {
@@ -179,7 +193,11 @@
   "verification": {
     "pending": "Inasubiri",
     "tooltip_user": "Maelezo ya akaunti ya mtumiaji yanasasishwa",
-    "tooltip_institution": "Maelezo ya akaunti ya taasisi yasasishwa"
+    "tooltip_institution": "Maelezo ya akaunti ya taasisi yasasishwa",
+    "verified": "Imethibitishwa",
+    "verify_orcid": "Thibitisha ORCID",
+    "verifying": "Tunathibitisha...",
+    "orcid_verify_failed": "Haikuweza kuthibitisha hii ID ya ORCID"
   },
   "footer": {
     "newsletter": {
@@ -213,7 +231,53 @@
         "settings": "Mipangilio",
         "contact": "Mawasiliano"
       }
-    },
-    "copyright": "© Sayansi kwa Afrika 2026"
+    }
+  },
+  "copyright": "© Sayansi kwa Afrika 2026",
+  "style_guide": {
+    "components": "Vipengele",
+    "design_system": "Mfumo wa Usanifu",
+    "official_button_system": "Mfumo Rasmi wa Vifungo",
+    "standard_sizes": "Ukubwa wa Kawaida (Kipimo cha Figma)",
+    "standard_sizes_desc": "Kuanzia SM hadi 2XL kwa urefu na nafasi sahihi.",
+    "social_auth": "Uthibitishaji wa Mitandao ya Kijamii",
+    "social_auth_desc": "Toleo maalum kwa kuingia kwa Google na Apple.",
+    "login_to_sfa": "Ingia SFA",
+    "or_individual": "Au Binafsi",
+    "continue_with_google": "Endelea na Google",
+    "form_elements": "Vipengele vya Fomu na Maandishi",
+    "inputs_selection": "Ingizo na Uchaguzi",
+    "inputs_selection_desc": "Maandishi thabiti na urefu wa premium wa 48px.",
+    "email_address": "Barua Pepe",
+    "country_selector": "Kichagua Nchi (Fonti ya vichwa imetumika)",
+    "select_country": "Chagua nchi",
+    "selection_controls": "Udhibiti wa Uchaguzi",
+    "selection_controls_desc": "Hali amilifu za Brand Teal na raba za 8px/kamili.",
+    "push_notifications": "Arifa za Kusukuma",
+    "agree_to_terms": "Kubali Masharti",
+    "premium_ui": "Vipengele vya Kiolesura cha Premium",
+    "avatar_scale": "Kipimo cha Picha ya Wasifu",
+    "avatar_scale_desc": "Ukubwa wa chapa kuanzia XS (24px) hadi 2XL (64px).",
+    "dialogs_modals": "Mazungumzo na Madirisha Yanayojitokeza",
+    "dialogs_modals_desc": "Imeboreshwa kwa SFA ikiwa na raba ya 16px.",
+    "open_modal": "Fungua Mfano wa Dirisha",
+    "profile_info": "Habari za Wasifu",
+    "profile_info_desc": "Sasisha wasifu wako wa mtafiti na maelezo ya ushirika hapa.",
+    "full_name": "Jina Kamili",
+    "community_card": "Kadi ya Jumuiya",
+    "members_count": "Wanachama {{count}}",
+    "community_desc": "Kuchunguza mipaka mipya katika ushirikiano wa sayansi na teknolojia barani Afrika.",
+    "join_community": "Jiunge na Jumuiya",
+    "event_card": "Kadi ya Tukio",
+    "upcoming": "Inakuja",
+    "event_title": "Mkutano wa Sayansi 2026",
+    "event_desc": "Ungana na wanasayansi wakuu mjini Nairobi kwa mkutano wa kila mwaka wa SFA.",
+    "register_now": "Jisajili Sasa",
+    "metadata": "Metadata",
+    "badges": "Beji",
+    "primary": "Msingi",
+    "secondary": "Sekondari",
+    "success": "Mafanikio",
+    "error_lg": "Hitilafu LG"
   }
 }

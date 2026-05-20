@@ -37,9 +37,7 @@ apiClient.interceptors.request.use(
 
     const isPublicAuthEndpoint = publicAuthEndpoints.some((endpoint) => {
       const normalizedEndpoint = endpoint.replace(/^\//, "").replace(/\/$/, "");
-      return (
-        normalizedUrl === normalizedEndpoint || config.url?.includes(endpoint)
-      );
+      return normalizedUrl === normalizedEndpoint;
     });
 
     if (jwt && !isPublicAuthEndpoint) {
@@ -112,7 +110,6 @@ apiClient.interceptors.response.use(
         (Array.isArray(response.data.data) && response.data.data.length === 0);
 
       if (hasNoContent) {
-        console.log(`[API] Content missing for FR, falling back to EN...`);
         return apiClient({
           ...config,
           params: { ...config.params, locale: "en" },

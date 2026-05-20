@@ -65,7 +65,7 @@ module.exports = ({ env }) => {
     upload: {
       config: {
         ...uploadConfig,
-        sizeLimit: 250 * 1024 * 1024,
+        sizeLimit: 2 * 1024 * 1024,
       },
     },
     documentation: {

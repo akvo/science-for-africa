@@ -724,11 +724,47 @@ export async function fetchMentees() {
 }
 
 /**
+ * Fetch a public user profile by ID
+ */
+export async function fetchPublicProfile(id) {
+  try {
+    const response = await apiClient.get(`/auth/profile/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching public profile:", error);
+    return null;
+  }
+}
+
+/**
+ * Follow a user
+ */
+export async function followUser(id) {
+  try {
+    const response = await apiClient.post(`/users/${id}/follow`);
+    return response.data;
+  } catch (error) {
+    console.error("Error following user:", error);
+    return error;
+  }
+}
+
+/**
+ * Unfollow a user
+ */
+export async function unfollowUser(id) {
+  try {
+    const response = await apiClient.post(`/users/${id}/unfollow`);
+    return response.data;
+  } catch (error) {
+    console.error("Error unfollowing user:", error);
+    return error;
+  }
+}
+
+/**
  * Fetch Landing Page data with blocks populated and localization fallback.
  */
 export async function fetchLandingPage(locale = "en") {
-  return fetchLocalized(
-    "/landing-page?populate[blocks][populate]=*",
-    locale,
-  );
+  return fetchLocalized("/landing-page?populate[blocks][populate]=*", locale);
 }

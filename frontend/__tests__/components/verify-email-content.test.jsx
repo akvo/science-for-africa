@@ -188,4 +188,34 @@ describe("VerifyEmailContent", () => {
       screen.getByRole("button", { name: /verify_email\.return_login/i }),
     ).toBeInTheDocument();
   });
+
+  it("only calls verifyEmailToken once under concurrent/multiple renders with the same token", async () => {
+    const { verifyEmailToken } = require("@/lib/strapi");
+    verifyEmailToken.mockResolvedValueOnce({
+      jwt: "fake-jwt",
+      user: { id: 1 },
+    });
+
+    const { rerender } = render(
+      <VerifyEmailContent email={email} confirmation="duplicate-test-token" />,
+    );
+
+    // Rerender with the same token multiple times
+    rerender(
+      <VerifyEmailContent email={email} confirmation="duplicate-test-token" />,
+    );
+    rerender(
+      <VerifyEmailContent email={email} confirmation="duplicate-test-token" />,
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/verify_email\.success_title/i),
+      ).toBeInTheDocument();
+    });
+
+    // It should have only been called once
+    expect(verifyEmailToken).toHaveBeenCalledTimes(1);
+    expect(verifyEmailToken).toHaveBeenCalledWith("duplicate-test-token");
+  });
 });

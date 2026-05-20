@@ -3,6 +3,9 @@
 const REDIRECT_PATH = "/auth/orcid/callback";
 
 function getRedirectUri() {
+  if (process.env.ORCID_REDIRECT_URI) {
+    return process.env.ORCID_REDIRECT_URI;
+  }
   const frontendUrl = (
     process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000"
   ).replace(/\/$/, "");
@@ -29,7 +32,11 @@ module.exports = {
 
       // Encode user id and returnTo in state so callback knows context
       const state = Buffer.from(
-        JSON.stringify({ userId: user.id, documentId: user.documentId, returnTo }),
+        JSON.stringify({
+          userId: user.id,
+          documentId: user.documentId,
+          returnTo,
+        }),
       ).toString("base64url");
 
       const authorizeUrl = orcidService.buildAuthorizeUrl(redirectUri, state);
@@ -66,9 +73,7 @@ module.exports = {
       let returnTo = "profile";
       if (state) {
         try {
-          const parsed = JSON.parse(
-            Buffer.from(state, "base64url").toString(),
-          );
+          const parsed = JSON.parse(Buffer.from(state, "base64url").toString());
           returnTo = parsed.returnTo || "profile";
         } catch {
           // ignore parse errors, use default
@@ -80,7 +85,9 @@ module.exports = {
       const { orcidId } = tokenData;
 
       if (!orcidId) {
-        return ctx.badRequest("ORCID authentication failed — no ORCID iD returned.");
+        return ctx.badRequest(
+          "ORCID authentication failed — no ORCID iD returned.",
+        );
       }
 
       // Fetch full profile from public API

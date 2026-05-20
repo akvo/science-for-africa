@@ -27,12 +27,13 @@
     "characters_left": "caractères restants",
     "language_label": "Préférences linguistiques",
     "language_placeholder": "Sélectionnez la langue",
-    "orcid_label": "ORCHID",
+    "orcid_label": "ORCID",
     "request_button": "Demander",
     "save_success": "Profil mis à jour avec succès",
     "save_error": "Échec de la mise à jour du profil",
     "not_provided": "Non fourni",
-    "no_bio": "Aucune biographie fournie pour le moment."
+    "no_bio": "Aucune biographie fournie pour le moment.",
+    "no_bio_public": "Aucune biographie fournie."
   },
   "education_levels": {
     "Postgraduate Student (Masters)": "Étudiant de troisième cycle (Master)",
@@ -57,6 +58,8 @@
   },
   "tabs": {
     "profile": "Profil",
+    "public_profile": "Profil public",
+    "posts": "Publications",
     "details": "Détails",
     "communities": "Mes communautés",
     "resources": "Ressources",
@@ -67,12 +70,26 @@
     "courses": "Cours et certifications",
     "mentorship": "Mentorat"
   },
+  "posts": {
+    "empty_title": "Aucun article pour le moment",
+    "empty_description_public": "Les articles publics apparaîtront ici",
+    "empty_description_own": "Vos articles apparaîtront ici"
+  },
+  "share": {
+    "share_profile": "Partager le profil",
+    "copied_to_clipboard": "Lien copié dans le presse-papiers !"
+  },
+  "actions": {
+    "follow": "Suivre",
+    "unfollow": "Ne plus suivre"
+  },
   "sidebar": {
     "subscribers": "Abonnés",
     "posts": "Publications",
     "education": "Éducation",
     "communities": "Communautés",
-    "see_all": "Voir tout"
+    "see_all": "Voir tout",
+    "no_communities": "Aucune communauté rejointe pour le moment."
   },
   "communities": {
     "description": "Gérez vos adhésions à la communauté et explorez-en de nouvelles.",
@@ -86,6 +103,18 @@
     "empty_description": "Rejoignez des communautés pour entrer en contact avec d'autres chercheurs et participer à des discussions.",
     "explore": "Explorer les communautés",
     "no_description": "Aucune description disponible."
+  },
+  "collaboration": {
+    "title": "Mes collaborations",
+    "description": "Suivez vos projets de collaboration actifs et terminés.",
+    "status_active": "Actif",
+    "status_completed": "Terminé",
+    "valid_till": "Valide jusqu'au :",
+    "ended": "Terminé le :",
+    "view_community": "Voir la communauté",
+    "empty_title": "Vous n'avez pas encore de collaborations",
+    "empty_desc": "Commencez à rejoindre des communautés et à répondre aux appels pour commencer à collaborer.",
+    "explore_calls": "Explorer les appels à collaboration"
   },
   "resources": {
     "title": "Mes ressources",
@@ -108,5 +137,15 @@
     "empty_title": "Vous n'avez pas encore de mentorés",
     "empty_desc": "Lorsque vous serez assigné comme mentor à une collaboration, vos mentorés apparaîtront ici.",
     "explore_calls": "Explorer les appels à collaboration"
+  },
+  "roles": {
+    "Researcher": "Chercheur",
+    "Principal Investigator / Lab Lead": "Chercheur principal / Responsable de laboratoire",
+    "Post-doctoral Fellow": "Chercheur post-doctoral",
+    "PhD Candidate": "Doctorant",
+    "Graduate / Undergraduate Student": "Étudiant diplômé / non diplômé",
+    "Administrator / Support Staff": "Administrateur / Personnel de soutien",
+    "Program Manager / Funder representative": "Gestionnaire de programme / Représentant du bailleur de fonds",
+    "External Reviewer": "Réviseur externe"
   }
 }

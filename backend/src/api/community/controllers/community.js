@@ -145,7 +145,10 @@ module.exports = createCoreController(
         .count({ where: { community: { documentId: id } } });
 
       if (!membership) {
-        return ctx.notFound("Membership not found");
+        return {
+          success: true,
+          data: { isMember: false, subscribers: subscribersCount },
+        };
       }
 
       // Delete membership record

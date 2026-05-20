@@ -23,6 +23,23 @@ import { Upload, Loader2, CheckCircle, XIcon } from "lucide-react";
 import { createResource } from "@/lib/strapi";
 import { cn } from "@/lib/utils";
 
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const ALLOWED_EXTENSIONS = [
+  ".pdf",
+  ".doc",
+  ".docx",
+  ".xls",
+  ".xlsx",
+  ".ppt",
+  ".pptx",
+];
+const ALLOWED_MIME_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+];
+
 const RESOURCE_TYPES = [
   { value: "report", i18nKey: "resources.report" },
   { value: "publication", i18nKey: "resources.publication" },
@@ -97,13 +114,36 @@ export default function AddResourceDialog({
     onOpenChange(nextOpen);
   };
 
-  const handleFile = (f) => {
-    if (f) {
-      setFile(f);
-      setError("");
-      setValidationErrors((prev) => ({ ...prev, file: null }));
-    }
-  };
+  const handleFile = useCallback(
+    (f) => {
+      if (f) {
+        // Validate size
+        if (f.size > MAX_FILE_SIZE) {
+          setError(t("resources.file_too_large"));
+          setFile(null);
+          return;
+        }
+
+        // Validate type
+        const extension = f.name
+          .toLowerCase()
+          .substring(f.name.lastIndexOf("."));
+        const isValidExtension = ALLOWED_EXTENSIONS.includes(extension);
+        const isValidMimeType = ALLOWED_MIME_TYPES.includes(f.type);
+
+        if (!isValidExtension && !isValidMimeType) {
+          setError(t("resources.invalid_file_type"));
+          setFile(null);
+          return;
+        }
+
+        setFile(f);
+        setError("");
+        setValidationErrors((prev) => ({ ...prev, file: null }));
+      }
+    },
+    [t],
+  );
 
   const handleNext = () => {
     const errors = {};
@@ -123,12 +163,15 @@ export default function AddResourceDialog({
     setStep(2);
   };
 
-  const handleDrop = useCallback((e) => {
-    e.preventDefault();
-    setDragActive(false);
-    const f = e.dataTransfer?.files?.[0];
-    if (f) handleFile(f);
-  }, []);
+  const handleDrop = useCallback(
+    (e) => {
+      e.preventDefault();
+      setDragActive(false);
+      const f = e.dataTransfer?.files?.[0];
+      if (f) handleFile(f);
+    },
+    [handleFile],
+  );
 
   const toggleTopic = (topic) => {
     setSelectedTopics((prev) =>
@@ -362,7 +405,10 @@ export default function AddResourceDialog({
                   : "border-brand-gray-200 bg-white hover:border-brand-gray-300",
                 validationErrors.file && "border-destructive bg-destructive/5",
               )}
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => {
+                setError("");
+                fileInputRef.current?.click();
+              }}
               onDragOver={(e) => {
                 e.preventDefault();
                 setDragActive(true);
@@ -399,8 +445,13 @@ export default function AddResourceDialog({
               )}
             </div>
             {validationErrors.file && (
-              <p className="text-xs font-medium text-destructive">
+              <p className="text-xs font-medium text-destructive mt-1">
                 {validationErrors.file}
+              </p>
+            )}
+            {error && !file && (
+              <p className="text-xs font-medium text-destructive mt-1 animate-in fade-in slide-in-from-top-1">
+                {error}
               </p>
             )}
           </div>

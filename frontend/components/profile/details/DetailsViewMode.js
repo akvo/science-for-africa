@@ -1,16 +1,15 @@
 import React from "react";
 import Image from "next/image";
-import { User as UserIcon, CheckCircle2, Loader2 } from "lucide-react";
+import { User as UserIcon, CheckCircle2, Loader2, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ViewRow } from "./SharedComponents";
 import VerificationBadge from "@/components/shared/VerificationBadge";
 import { getStrapiMedia, getOrcidAuthorizeUrl } from "@/lib/strapi";
 import { useTranslation } from "next-i18next";
+import { toast } from "sonner";
 
-const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
+const DetailsViewMode = ({ user, t, onEdit, onUserUpdate, isPublic }) => {
   const { t: tCommon } = useTranslation("common");
   const [validating, setValidating] = React.useState(false);
 
@@ -34,14 +33,42 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
             {t("details.description")}
           </p>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onEdit}
-          className="px-6 font-bold shadow-sm"
-        >
-          {t("details.edit_button")}
-        </Button>
+        {!isPublic && (
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const url =
+                  window.location.origin +
+                  `/profile/${user?.documentId || user?.id || ""}`;
+                if (navigator.share) {
+                  navigator
+                    .share({
+                      title: user?.fullName || "Profile",
+                      url: url,
+                    })
+                    .catch(() => {});
+                } else {
+                  navigator.clipboard.writeText(url);
+                  toast.success(t("profile:share.copied_to_clipboard"));
+                }
+              }}
+              className="px-6 font-bold shadow-sm gap-2"
+            >
+              <Share2 size={16} />
+              {t("profile:share.share_profile")}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onEdit}
+              className="px-6 font-bold shadow-sm"
+            >
+              {t("details.edit_button")}
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="max-w-4xl">
@@ -85,7 +112,9 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
           value={
             user?.roleType?.name ||
             (typeof user?.roleType === "string"
-              ? t(`roles.${user.roleType}`)
+              ? t(`roles.${user.roleType}`, {
+                  defaultValue: t("details.not_provided"),
+                })
               : null)
           }
           t={t}
@@ -100,7 +129,9 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
           <div className="md:col-span-8 space-y-4">
             <p className="text-[15px] text-brand-gray-500 font-medium">
               {user?.educationLevel
-                ? t(`education_levels.${user.educationLevel}`)
+                ? t(`education_levels.${user.educationLevel}`, {
+                    defaultValue: t("details.not_provided"),
+                  })
                 : t("details.not_provided")}
             </p>
             <p className="text-[15px] text-brand-gray-500 font-medium">
@@ -174,22 +205,31 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate }) => {
                 </span>
               </div>
             ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={validating}
-                onClick={handleValidateOrcid}
-                className="rounded-full text-xs h-10 px-6 border-brand-teal-800 text-brand-teal-800 hover:bg-brand-teal-50 shrink-0"
-              >
-                {validating ? (
-                  <>
-                    <Loader2 className="size-3 animate-spin mr-1" />
-                    {tCommon("verification.verifying")}
-                  </>
-                ) : (
-                  tCommon("verification.verify_orcid")
+              <>
+                {!isPublic && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={validating}
+                    onClick={handleValidateOrcid}
+                    className="rounded-full text-xs h-10 px-6 border-brand-teal-800 text-brand-teal-800 hover:bg-brand-teal-50 shrink-0"
+                  >
+                    {validating ? (
+                      <>
+                        <Loader2 className="size-3 animate-spin mr-1" />
+                        {tCommon("verification.verifying")}
+                      </>
+                    ) : (
+                      tCommon("verification.verify_orcid")
+                    )}
+                  </Button>
                 )}
-              </Button>
+                {isPublic && !user?.orcidId && (
+                  <p className="text-[15px] text-brand-gray-500 font-medium">
+                    {t("details.not_provided")}
+                  </p>
+                )}
+              </>
             )}
           </div>
         </div>

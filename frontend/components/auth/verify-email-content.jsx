@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Mail,
   ArrowLeft,
@@ -24,10 +24,14 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
   const [isVerified, setIsVerified] = useState(false);
   const [redirectCountdown, setRedirectCountdown] = useState(0);
   const router = useRouter();
+  const verifiedTokenRef = useRef(null);
 
   // Handle Token Verification
   useEffect(() => {
     if (confirmation && !isVerified && !isVerifying && !isError) {
+      if (verifiedTokenRef.current === confirmation) return;
+      verifiedTokenRef.current = confirmation;
+
       const performVerification = async () => {
         setIsVerifying(true);
         setIsError(false);
@@ -237,11 +241,10 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
       <div className="space-y-6 pt-4">
         {message && (
           <div
-            className={`p-4 text-sm font-medium rounded-lg text-center ${
-              isError
-                ? "text-destructive bg-destructive/10 border border-destructive/20"
-                : "text-brand-teal-700 bg-brand-teal-50 border border-brand-teal-100"
-            }`}
+            className={`p-4 text-sm font-medium rounded-lg text-center ${isError
+              ? "text-destructive bg-destructive/10 border border-destructive/20"
+              : "text-brand-teal-700 bg-brand-teal-50 border border-brand-teal-100"
+              }`}
           >
             {message}
           </div>

@@ -59,6 +59,8 @@
     "select_type": "اختر نوع المورد",
     "resource_name": "اسم المورد",
     "name_placeholder": "اكتب أي شيء",
+    "name_required": "اسم المورد مطلوب",
+    "file_required": "ملف المورد مطلوب",
     "description": "وصف",
     "description_placeholder": "أضف وصفًا موجزًا لهذا المورد",
     "upload_file": "رفع ملف",

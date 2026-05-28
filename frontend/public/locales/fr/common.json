@@ -97,6 +97,8 @@
     "select_type": "Sélectionner le type de ressource",
     "resource_name": "Nom de la ressource",
     "name_placeholder": "Tapez quelque chose",
+    "name_required": "Le nom de la ressource est requis",
+    "file_required": "Le fichier de la ressource est requis",
     "description": "Description",
     "description_placeholder": "Ajoutez une brève description de cette ressource",
     "upload_file": "Téléverser un fichier",

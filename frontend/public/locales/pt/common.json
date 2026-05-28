@@ -59,6 +59,8 @@
     "select_type": "Selecionar tipo de recurso",
     "resource_name": "Nome do recurso",
     "name_placeholder": "Digite algo",
+    "name_required": "O nome do recurso é obrigatório",
+    "file_required": "O arquivo do recurso é obrigatório",
     "description": "Descrição",
     "description_placeholder": "Adicione uma breve descrição deste recurso",
     "upload_file": "Enviar arquivo",

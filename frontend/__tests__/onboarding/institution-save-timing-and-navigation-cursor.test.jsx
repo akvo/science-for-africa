@@ -31,6 +31,11 @@ jest.mock("@/lib/strapi", () => ({
   updateUserProfile: jest.fn().mockResolvedValue({ success: true }),
   fetchLocalized: jest.fn().mockResolvedValue({ data: [] }),
   fetchIndividualRoles: jest.fn().mockResolvedValue({ data: [] }),
+  fetchInstitutionTypes: jest.fn().mockResolvedValue({ data: [] }),
+  fetchFromStrapi: jest.fn().mockResolvedValue({ data: [] }),
+  getOrcidAuthorizeUrl: jest
+    .fn()
+    .mockResolvedValue({ data: { authorizeUrl: "mock-url" } }),
 }));
 
 jest.mock("@/lib/auth-store", () => ({

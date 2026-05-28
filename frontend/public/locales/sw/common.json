@@ -62,6 +62,8 @@
     "select_type": "Chagua aina ya rasilimali",
     "resource_name": "Jina la rasilimali",
     "name_placeholder": "Andika lolote",
+    "name_required": "Jina la rasilimali linahitajika",
+    "file_required": "Faili ya rasilimali inahitajika",
     "description": "Maelezo",
     "description_placeholder": "Ongeza maelezo mafupi ya rasilimali hii",
     "upload_file": "Pakia faili",

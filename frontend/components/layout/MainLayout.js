@@ -4,6 +4,7 @@ import AppLayout from "./AppLayout";
 import AuthLayout from "./AuthLayout";
 import Meta from "../seo/Meta";
 import { useAuthStore } from "@/lib/auth-store";
+import { toast } from "sonner";
 
 /**
  * MainLayout Component
@@ -48,6 +49,54 @@ const MainLayout = ({
       router.push("/login");
     }
   }, [isAuthenticated, user, router.pathname, router]);
+
+  // 4. Session Timeout Idle Detection
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    // Reset last active on mount/boot
+    useAuthStore.getState().updateLastActive();
+
+    let lastUpdate = 0;
+    const handleActivity = () => {
+      const now = Date.now();
+      // Throttle Zustand updates to once every 10 seconds to reduce rendering overhead
+      if (now - lastUpdate > 10 * 1000) {
+        lastUpdate = now;
+        useAuthStore.getState().updateLastActive();
+      }
+    };
+
+    const events = ["mousedown", "mousemove", "keydown", "scroll", "touchstart"];
+    events.forEach((event) => {
+      window.addEventListener(event, handleActivity, { passive: true });
+    });
+
+    const idleTimeoutMinutes = parseInt(
+      process.env.NEXT_PUBLIC_SESSION_IDLE_TIMEOUT_MINUTES || "30",
+      10
+    );
+    const idleTimeoutMs = idleTimeoutMinutes * 60 * 1000;
+
+    const interval = setInterval(() => {
+      const state = useAuthStore.getState();
+      if (!state.isAuthenticated) return;
+
+      const now = Date.now();
+      if (state.lastActive && now - state.lastActive > idleTimeoutMs) {
+        state.logout();
+        toast.error("Your session has expired due to inactivity. Please log in again.");
+        router.push("/login?reason=expired");
+      }
+    }, 10 * 1000); // Check every 10 seconds
+
+    return () => {
+      events.forEach((event) => {
+        window.removeEventListener(event, handleActivity);
+      });
+      clearInterval(interval);
+    };
+  }, [isAuthenticated, router]);
 
   // Define routes that use the specialized AuthLayout
   // login, signup, forget password, 2fa, etc.

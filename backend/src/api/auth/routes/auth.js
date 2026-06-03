@@ -24,6 +24,14 @@ module.exports = {
     },
     {
       method: "POST",
+      path: "/auth/logout",
+      handler: "auth.logout",
+      config: {
+        description: "Logout and destroy active session",
+      },
+    },
+    {
+      method: "POST",
       path: "/auth/verify-otp",
       handler: "auth.verifyOtp",
       config: {

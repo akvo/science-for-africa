@@ -1068,3 +1068,24 @@ sequenceDiagram
 ### 16.5 Security & Permissions
 - **Grant Permissions**: The `authorize` and `callback` actions are granted to the `authenticated` role via the production seeder.
 - **Environment Variables**: Client credentials and redirect URIs are managed via `ORCID_CLIENT_ID`, `ORCID_CLIENT_SECRET`, and `ORCID_REDIRECT_URI`.
+
+## 17. Session Timeout Management
+
+The platform enforces secure session lifetimes through server-side state checks and client-side idle tracking.
+
+### 17.1 Server-Side Architecture
+- **Session Tracking**: A database table `user_sessions` (backed by content-type `api::user-session.user-session`) stores active session records.
+- **Token Hashing**: To prevent token exposure in the event of database leakage, JWT tokens are stored hashed using SHA-256 (`tokenHash`).
+- **Middleware Check**: The global `session-timeout` middleware intercepts all authenticated requests.
+  - If a valid Bearer token is provided, the middleware checks the database for an active session.
+  - If missing, a new session is registered.
+  - If present, it checks the session age against `SESSION_IDLE_TIMEOUT_MINUTES` and `SESSION_ABSOLUTE_TIMEOUT_MINUTES`.
+  - Expiry triggers session deletion and returns a `401 Unauthorized` response with a specific error message.
+  - Active sessions refresh their `lastActivity` timestamp to the current time.
+- **Logout Endpoint**: `POST /api/auth/logout` deletes the active session from the database.
+
+### 17.2 Client-Side Idle Tracking
+- **Activity Listeners**: The frontend monitors user interaction events (`mousedown`, `mousemove`, `keydown`, `scroll`, `touchstart`) on the `window` to throttle and update a `lastActive` timestamp in the Zustand store.
+- **Background Checks**: A background timer runs every 10 seconds to compare the `lastActive` timestamp against the configurable idle timeout.
+- **Graceful Logout**: Upon detection of expiration (via background check or receiving a `401` session expiration from the API), the client clears the store and redirects the user to `/login?reason=expired`.
+

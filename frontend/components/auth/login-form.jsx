@@ -25,8 +25,10 @@ export const LoginForm = () => {
   React.useEffect(() => {
     if (router.query.error) {
       setError(router.query.error);
+    } else if (router.query.reason === "expired") {
+      setError("Your session has expired due to inactivity. Please log in again.");
     }
-  }, [router.query.error]);
+  }, [router.query.error, router.query.reason]);
 
   const loginSchema = z.object({
     email: z.string().email(t("validation.email_invalid")),

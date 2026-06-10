@@ -241,7 +241,7 @@ export default function CommunityDetailPage() {
 export async function getServerSideProps({ locale }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["common", "community"])),
+      ...(await serverSideTranslations(locale, ["common", "community", "profile"])),
     },
   };
 }

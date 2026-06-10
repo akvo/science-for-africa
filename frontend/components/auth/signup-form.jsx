@@ -6,7 +6,8 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { registerUser } from "@/lib/strapi";
+import { registerUser, updateUserProfile } from "@/lib/strapi";
+import { useAuthStore } from "@/lib/auth-store";
 import { useRouter } from "next/router";
 import { getPasswordSchema } from "@/lib/validation";
 import { useTranslation } from "next-i18next";
@@ -49,13 +50,12 @@ export const SignUpForm = () => {
     setError("");
 
     try {
-      // Strapi register expects username, email, password.
+      // Strapi register only accepts whitelisted fields
       const payload = {
         username: values.email,
         email: values.email,
         password: values.password,
         fullName: values.fullName,
-        agreedToTerms: true,
       };
 
       const result = await registerUser(payload);
@@ -66,6 +66,16 @@ export const SignUpForm = () => {
       }
 
       if (result && (result.jwt || result.user)) {
+        // Save agreedToTerms to user profile
+        if (result.jwt) {
+          try {
+            useAuthStore.getState().setAuth(result.user, result.jwt);
+            await updateUserProfile({ agreedToTerms: true });
+          } catch (_) {
+            // Non-blocking — consent was given client-side
+          }
+        }
+
         // Success! Initialize cooldown timer for resend
         const cooldownSeconds = 60;
         const endTime = Date.now() + cooldownSeconds * 1000;

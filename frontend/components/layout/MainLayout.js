@@ -21,14 +21,31 @@ const MainLayout = ({
   const router = useRouter();
   const { isAuthenticated, user } = useAuthStore();
 
+  // Sync display language with user's language preference on load
   useEffect(() => {
-    // 1. Guard for Authenticated Users accessing Onboarding
     if (
       isAuthenticated &&
-      user?.onboardingComplete &&
-      router.pathname === "/onboarding"
+      user?.languagePreferences &&
+      user.languagePreferences !== router.locale
     ) {
-      router.push("/");
+      const { pathname, query, asPath } = router;
+      router.replace({ pathname, query }, asPath, {
+        locale: user.languagePreferences,
+      });
+    }
+  }, [isAuthenticated, user?.languagePreferences]);
+
+  useEffect(() => {
+    // 1. Guard for Authenticated Users accessing Auth pages (login/signup/onboarding)
+    if (isAuthenticated && user?.onboardingComplete) {
+      if (
+        router.pathname === "/login" ||
+        router.pathname === "/signup" ||
+        router.pathname === "/onboarding"
+      ) {
+        router.push("/");
+        return;
+      }
     }
 
     // 2. Guard for Authenticated Users who haven't completed onboarding
@@ -54,6 +71,18 @@ const MainLayout = ({
   const isAuthRoute =
     router.pathname.startsWith("/auth") ||
     ["/login", "/signup", "/onboarding"].includes(router.pathname);
+
+  // Don't render auth pages for authenticated users — show nothing while redirecting
+  if (
+    isAuthRoute &&
+    isAuthenticated &&
+    user?.onboardingComplete &&
+    (router.pathname === "/login" ||
+      router.pathname === "/signup" ||
+      router.pathname === "/onboarding")
+  ) {
+    return null;
+  }
 
   if (isAuthRoute) {
     // Map paths to auth steps

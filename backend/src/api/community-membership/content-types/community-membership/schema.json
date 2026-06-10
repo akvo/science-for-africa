@@ -11,6 +11,9 @@
     "draftAndPublish": false
   },
   "attributes": {
+    "label": {
+      "type": "string"
+    },
     "user": {
       "type": "relation",
       "relation": "manyToOne",

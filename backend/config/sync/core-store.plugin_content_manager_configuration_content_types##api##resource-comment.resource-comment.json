@@ -6,7 +6,7 @@
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "documentId",
+      "mainField": "text",
       "defaultSortBy": "documentId",
       "defaultSortOrder": "ASC"
     },
@@ -70,7 +70,7 @@
           "placeholder": "",
           "visible": true,
           "editable": true,
-          "mainField": "documentId"
+          "mainField": "text"
         },
         "list": {
           "label": "parentComment",
@@ -85,7 +85,7 @@
           "placeholder": "",
           "visible": true,
           "editable": true,
-          "mainField": "documentId"
+          "mainField": "text"
         },
         "list": {
           "label": "replies",

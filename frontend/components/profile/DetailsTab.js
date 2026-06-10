@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { useAuthStore } from "@/lib/auth-store";
 import { updateUserProfile, uploadFile, fetchUserProfile } from "@/lib/strapi";
@@ -8,6 +9,7 @@ import DetailsEditMode from "./details/DetailsEditMode";
 
 const DetailsTab = ({ profileUser }) => {
   const { t } = useTranslation("profile");
+  const router = useRouter();
   const { user: authUser, updateUser } = useAuthStore();
   const user = profileUser || authUser;
 
@@ -18,6 +20,8 @@ const DetailsTab = ({ profileUser }) => {
 
   const handleSave = async (data, setPhotoPreview) => {
     setIsSaving(true);
+    // Capture language before updateUserProfile mutates the data object
+    const selectedLocale = data.language || data.languagePreferences;
     try {
       // 1. Handle Photo Upload if needed
       if (data.profilePhoto instanceof File) {
@@ -37,6 +41,12 @@ const DetailsTab = ({ profileUser }) => {
         toast.success(t("details.save_success"));
         setIsEditing(false);
         setPhotoPreview?.(null);
+
+        // Switch display language if language preference changed
+        if (selectedLocale && selectedLocale !== router.locale) {
+          const { pathname, query, asPath } = router;
+          router.push({ pathname, query }, asPath, { locale: selectedLocale });
+        }
       } else {
         toast.error(t("details.save_error"));
       }

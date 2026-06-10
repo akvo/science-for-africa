@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Globe } from "lucide-react";
+import { useAuthStore } from "@/lib/auth-store";
+import { updateUserProfile } from "@/lib/strapi";
 
 const locales = [
   { code: "en", name: "English", label: "ENG" },
@@ -20,9 +22,22 @@ const locales = [
 const LocaleSwitcher = () => {
   const router = useRouter();
   const { locale: activeLocale, pathname, query, asPath } = router;
+  const { isAuthenticated, updateUser } = useAuthStore();
 
-  const handleLocaleChange = (newLocale) => {
+  const handleLocaleChange = async (newLocale) => {
     router.push({ pathname, query }, asPath, { locale: newLocale });
+
+    // Persist language preference to user profile if logged in
+    if (isAuthenticated) {
+      try {
+        const response = await updateUserProfile({
+          languagePreferences: newLocale,
+        });
+        if (response) updateUser(response);
+      } catch (err) {
+        // Silently fail — locale switch still works locally
+      }
+    }
   };
 
   const currentLocale =

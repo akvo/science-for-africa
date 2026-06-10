@@ -240,7 +240,7 @@
           "placeholder": "",
           "visible": true,
           "editable": true,
-          "mainField": "documentId"
+          "mainField": "label"
         },
         "list": {
           "label": "memberships",

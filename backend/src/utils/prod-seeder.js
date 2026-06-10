@@ -377,7 +377,64 @@ const seedProd = async (strapi) => {
     }
   }
 
+  // 7. Backfill membership labels for admin display
+  await backfillMembershipLabels(strapi);
+
   strapi.log.info("Production Seeding complete.");
+};
+
+/**
+ * Backfill label field on community-membership and institution-membership
+ * records that are missing it (for admin panel readability).
+ */
+const backfillMembershipLabels = async (strapi) => {
+  // Community memberships
+  const communityMemberships = await strapi.db
+    .query("api::community-membership.community-membership")
+    .findMany({
+      where: { $or: [{ label: { $null: true } }, { label: "" }] },
+      populate: ["user", "community"],
+    });
+
+  if (communityMemberships.length > 0) {
+    strapi.log.info(
+      `Backfilling labels for ${communityMemberships.length} community memberships...`,
+    );
+    for (const m of communityMemberships) {
+      const userName = m.user?.username || m.user?.email || "?";
+      const communityName = m.community?.name || "?";
+      await strapi.db
+        .query("api::community-membership.community-membership")
+        .update({
+          where: { id: m.id },
+          data: { label: `${userName} — ${communityName}` },
+        });
+    }
+  }
+
+  // Institution memberships
+  const institutionMemberships = await strapi.db
+    .query("api::institution-membership.institution-membership")
+    .findMany({
+      where: { $or: [{ label: { $null: true } }, { label: "" }] },
+      populate: ["user", "institution"],
+    });
+
+  if (institutionMemberships.length > 0) {
+    strapi.log.info(
+      `Backfilling labels for ${institutionMemberships.length} institution memberships...`,
+    );
+    for (const m of institutionMemberships) {
+      const userName = m.user?.username || m.user?.email || "?";
+      const institutionName = m.institution?.name || "?";
+      await strapi.db
+        .query("api::institution-membership.institution-membership")
+        .update({
+          where: { id: m.id },
+          data: { label: `${userName} — ${institutionName}` },
+        });
+    }
+  }
 };
 
 module.exports = {

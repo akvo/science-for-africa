@@ -280,7 +280,7 @@
           "placeholder": "",
           "visible": true,
           "editable": true,
-          "mainField": "documentId"
+          "mainField": "label"
         },
         "list": {
           "label": "institutionMemberships",
@@ -436,7 +436,7 @@
           "placeholder": "",
           "visible": true,
           "editable": true,
-          "mainField": "documentId"
+          "mainField": "label"
         },
         "list": {
           "label": "memberships",
@@ -451,7 +451,7 @@
           "placeholder": "",
           "visible": true,
           "editable": true,
-          "mainField": "documentId"
+          "mainField": "email"
         },
         "list": {
           "label": "collaborationInvites",

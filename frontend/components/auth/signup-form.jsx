@@ -25,6 +25,11 @@ export const SignUpForm = () => {
       email: z.string().email(t("validation.email_invalid")),
       password: getPasswordSchema(t),
       confirmPassword: z.string(),
+      agreedToTerms: z
+        .boolean()
+        .refine((val) => val === true, {
+          message: t("validation.agree_to_terms"),
+        }),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: t("validation.passwords_mismatch"),
@@ -50,6 +55,7 @@ export const SignUpForm = () => {
         email: values.email,
         password: values.password,
         fullName: values.fullName,
+        agreedToTerms: true,
       };
 
       const result = await registerUser(payload);
@@ -191,6 +197,41 @@ export const SignUpForm = () => {
         {errors.confirmPassword && (
           <p className="text-xs font-medium text-destructive">
             {errors.confirmPassword.message}
+          </p>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            {...register("agreedToTerms")}
+            className="mt-0.5 h-4 w-4 rounded border-brand-gray-300 text-brand-teal-600 focus:ring-brand-teal-500"
+          />
+          <span className="text-sm text-brand-gray-600">
+            {t("signup.agree_to")}{" "}
+            <a
+              href="/privacy-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-teal-700 font-semibold hover:underline"
+            >
+              {t("signup.privacy_policy")}
+            </a>{" "}
+            {t("signup.and")}{" "}
+            <a
+              href="/privacy-policy#terms"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-teal-700 font-semibold hover:underline"
+            >
+              {t("signup.terms_conditions")}
+            </a>
+          </span>
+        </label>
+        {errors.agreedToTerms && (
+          <p className="text-xs font-medium text-destructive">
+            {errors.agreedToTerms.message}
           </p>
         )}
       </div>

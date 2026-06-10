@@ -40,13 +40,16 @@ export const VerifyEmailContent = ({ email, confirmation }) => {
         const result = await verifyEmailToken(confirmation);
 
         if (result && result.error) {
-          setIsError(true);
-          // Special case: if token is invalid, it may have already been used (success)
+          // If token is invalid, the account was likely already verified via OTP
           if (result.error.toLowerCase().includes("invalid token")) {
-            setMessage(t("verify_email.failed_link_invalid"));
-          } else {
-            setMessage(result.error);
+            setIsVerified(true);
+            setIsVerifying(false);
+            setMessage(t("verify_email.already_verified"));
+            setRedirectCountdown(3);
+            return;
           }
+          setIsError(true);
+          setMessage(result.error);
           setIsVerifying(false);
         } else {
           setIsVerified(true);

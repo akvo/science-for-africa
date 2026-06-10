@@ -168,7 +168,7 @@
           "placeholder": "",
           "visible": true,
           "editable": true,
-          "mainField": "documentId"
+          "mainField": "email"
         },
         "list": {
           "label": "invites",

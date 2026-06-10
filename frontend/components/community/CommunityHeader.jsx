@@ -1,16 +1,49 @@
+import { useState } from "react";
 import { useTranslation } from "next-i18next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import ConfirmationModal from "@/components/shared/ConfirmationModal";
 
 export default function CommunityHeader({
   community,
   onJoin,
   isJoined = false,
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation(["common", "profile"]);
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
+
+  const handleClick = () => {
+    if (isJoined) {
+      setShowLeaveModal(true);
+    } else {
+      onJoin();
+    }
+  };
+
+  const handleConfirmLeave = () => {
+    setShowLeaveModal(false);
+    onJoin();
+  };
 
   return (
     <div className="w-full">
+      <ConfirmationModal
+        open={showLeaveModal}
+        onOpenChange={setShowLeaveModal}
+        title={t("profile:communities.leave_title", {
+          defaultValue: "Leave Community",
+        })}
+        description={t("profile:communities.leave_confirm", {
+          name: community.name,
+          defaultValue: `Are you sure you want to leave ${community.name}?`,
+        })}
+        onConfirm={handleConfirmLeave}
+        confirmLabel={t("profile:communities.leave_btn", {
+          defaultValue: "Leave",
+        })}
+        variant="danger"
+      />
+
       <div
         className="h-72 w-full overflow-hidden rounded-b-2xl bg-brand-gray-100 bg-cover bg-center"
         style={
@@ -52,9 +85,9 @@ export default function CommunityHeader({
           <Button
             variant={isJoined ? "destructive" : "primary"}
             size="md"
-            onClick={onJoin}
+            onClick={handleClick}
           >
-            {isJoined ? t("community.leave") : t("community.join")}
+            {isJoined ? t("common:community.leave") : t("common:community.join")}
           </Button>
         </div>
       </div>

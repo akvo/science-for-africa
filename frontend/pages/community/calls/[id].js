@@ -258,7 +258,8 @@ export default function CollaborationCallDetailPage() {
     );
   }
 
-  const isActive = (call.status || "").toLowerCase() === "active";
+  const isPastEndDate = call.endDate && new Date(call.endDate) < new Date();
+  const isActive = isPastEndDate ? false : (call.status || "").toLowerCase() === "active";
   const visibility = call.visibility || "public";
 
   // Determine posting permission based on visibility
@@ -366,7 +367,7 @@ function CommunityDetailsSidebar({
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0">
-            <h2 className="truncate font-heading text-base font-bold text-brand-gray-900">
+            <h2 className="font-heading text-base leading-tight font-bold text-brand-gray-900 break-words pb-1">
               {community.name}
             </h2>
             {community.handle ? (
@@ -460,31 +461,29 @@ function CommunityDetailsSidebar({
           >
             <ul className="flex flex-col gap-3">
               {mentors.map((m) => (
-                <li key={m.id} className="flex items-center gap-3">
+                <li key={m.id} className="flex items-start gap-3">
                   <ProfileLink userId={m.id}>
-                    <Avatar size="sm">
+                    <Avatar size="md" className="shrink-0">
                       {m.avatarUrl ? (
                         <AvatarImage src={m.avatarUrl} alt={m.name} />
                       ) : null}
                       <AvatarFallback>{initialsOf(m.name)}</AvatarFallback>
                     </Avatar>
                   </ProfileLink>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <ProfileLink userId={m.id}>
-                        <span className="truncate text-sm font-medium text-brand-gray-900 hover:text-brand-teal-600">
-                          {m.name}
-                        </span>
-                      </ProfileLink>
-                      <span className="inline-flex items-center rounded-full bg-brand-orange-50 px-2 py-0.5 text-[10px] font-medium text-brand-orange-500">
-                        {t("profile:tabs.mentorship", {
-                          defaultValue: "Mentor",
-                        })}
+                  <div className="min-w-0 flex-1">
+                    <ProfileLink userId={m.id}>
+                      <span className="text-sm font-semibold text-brand-gray-900 hover:text-brand-teal-600">
+                        {m.name}
                       </span>
-                    </div>
-                    <div className="truncate text-xs text-brand-gray-500">
+                    </ProfileLink>
+                    <div className="truncate text-xs text-brand-gray-500 mt-0.5">
                       {m.role}
                     </div>
+                    <span className="mt-1.5 inline-flex items-center rounded-full bg-brand-orange-50 px-2.5 py-0.5 text-[10px] font-semibold text-brand-orange-500">
+                      {t("profile:tabs.mentorship", {
+                        defaultValue: "Mentor",
+                      })}
+                    </span>
                   </div>
                 </li>
               ))}
@@ -591,6 +590,7 @@ function Section({ title, action, onAction, children }) {
 /* ------------------------------ Users Modal ------------------------------ */
 
 function UsersListModal({ open, onClose, users = [] }) {
+  const { t } = useTranslation("community");
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-2xl p-0">
@@ -761,6 +761,7 @@ function ChatHeader({
 }
 
 function ChatThread({ messages = [], canPost = false }) {
+  const { t } = useTranslation("community");
   return (
     <div className="flex flex-1 items-center justify-center px-6 py-10 text-sm text-brand-gray-500">
       {canPost
@@ -875,6 +876,7 @@ function ChatAttachment({ attachment }) {
 }
 
 function ChatComposer({ onSend, disabled = false }) {
+  const { t } = useTranslation("community");
   const [value, setValue] = useState("");
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);

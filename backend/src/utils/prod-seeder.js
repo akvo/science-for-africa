@@ -17,10 +17,9 @@ const upsertEntry = async (strapi, uid, data, lookupField = "name") => {
   });
 
   if (existing) {
-    return await strapi.documents(uid).update({
-      documentId: existing.documentId,
+    return await strapi.db.query(uid).update({
+      where: { id: existing.id },
       data,
-      status: "published",
     });
   } else {
     return await strapi.documents(uid).create({

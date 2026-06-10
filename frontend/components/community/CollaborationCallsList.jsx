@@ -33,15 +33,21 @@ export default function CollaborationCallsList({
   const [filter, setFilter] = useState("all");
 
   const visibleCalls = useMemo(() => {
+    // Derive effective status from end date
+    const getEffectiveStatus = (c) => {
+      const isPast = c.endsAt && new Date(c.endsAt) < new Date();
+      return isPast ? COLLABORATION_CALL_STATUS.COMPLETED : (c.status || COLLABORATION_CALL_STATUS.ACTIVE);
+    };
+
     let result = calls;
 
     if (filter === COLLABORATION_CALL_STATUS.ACTIVE) {
       result = calls.filter(
-        (c) => c.status === COLLABORATION_CALL_STATUS.ACTIVE,
+        (c) => getEffectiveStatus(c) === COLLABORATION_CALL_STATUS.ACTIVE,
       );
     } else if (filter === COLLABORATION_CALL_STATUS.COMPLETED) {
       result = calls.filter(
-        (c) => c.status === COLLABORATION_CALL_STATUS.COMPLETED,
+        (c) => getEffectiveStatus(c) === COLLABORATION_CALL_STATUS.COMPLETED,
       );
     }
 

@@ -36,9 +36,16 @@ function formatDate(value) {
  */
 export default function CollaborationCallCard({ call, onView }) {
   const { t } = useTranslation("community");
-  const status = STATUS_META[call.status] ?? STATUS_META.active;
+
+  // Derive effective status: if end date is past, treat as completed regardless of DB status
+  const isPastEndDate = call.endsAt && new Date(call.endsAt) < new Date();
+  const effectiveStatus = isPastEndDate
+    ? COLLABORATION_CALL_STATUS.COMPLETED
+    : (call.status || COLLABORATION_CALL_STATUS.ACTIVE);
+
+  const status = STATUS_META[effectiveStatus] ?? STATUS_META.active;
   const datePrefix =
-    call.status === COLLABORATION_CALL_STATUS.COMPLETED ? t("call_card.ended") : t("call_card.valid_till");
+    effectiveStatus === COLLABORATION_CALL_STATUS.COMPLETED ? t("call_card.ended") : t("call_card.valid_till");
 
   const handleClick = () => {
     if (onView) onView(call);

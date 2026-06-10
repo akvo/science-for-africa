@@ -56,6 +56,7 @@ export const SignUpForm = () => {
         email: values.email,
         password: values.password,
         fullName: values.fullName,
+        agreedToTerms: true,
       };
 
       const result = await registerUser(payload);

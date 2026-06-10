@@ -159,14 +159,13 @@ export default function CommunityDetailPage() {
   return (
     <div className="flex flex-col lg:flex-row">
       <Meta title={community?.name} />
-      <aside className="w-full lg:w-65 lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4 lg:sticky lg:top-28.5 lg:self-start lg:h-[calc(100vh-114px)] lg:overflow-y-auto">
+      <aside className="w-full lg:w-65 lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4 lg:mt-4 lg:sticky lg:top-28.5 lg:self-start lg:h-[calc(100vh-114px)] lg:overflow-y-auto">
         <CommunityLeftNav activeKey="communities" />
       </aside>
 
       <div className="flex flex-1 flex-col gap-6 min-w-0">
         <CommunityHeader
           community={community}
-          onCreatePost={openCollaboration}
           isJoined={isMember}
           onJoin={handleJoin}
         />

@@ -100,21 +100,7 @@ export default function StepVisibility() {
         })}
       </div>
 
-      {/* Step dots */}
-      <div className="flex items-center justify-between pt-2">
-        <div className="flex gap-1.5">
-          {[1, 2, 3, 4, 5, 6, 7].map((s) => (
-            <div
-              key={s}
-              className={cn(
-                "size-2 rounded-full",
-                s === 5
-                  ? "bg-primary-500"
-                  : "bg-brand-gray-200",
-              )}
-            />
-          ))}
-        </div>
+      <div className="flex items-center justify-end pt-2">
         <div className="flex gap-2">
           <Button variant="outline" onClick={prevStep} className="rounded-full">
             {t("visibility.back")}

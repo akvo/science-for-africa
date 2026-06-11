@@ -44,30 +44,35 @@ module.exports = {
     const originalRegister = usersPermissionsPlugin.controller("auth").register;
 
     usersPermissionsPlugin.controller("auth").register = async (ctx) => {
-      const { fullName, ...body } = ctx.request.body;
+      const { fullName, agreedToTerms, ...body } = ctx.request.body;
       ctx.request.body = body;
 
       await originalRegister(ctx);
 
-      if (ctx.response.status === 200 && fullName) {
+      if (ctx.response.status === 200) {
         const user = ctx.body.user;
-        const nameParts = fullName.trim().split(/\s+/);
-        const firstName = nameParts[0];
-        const lastName =
-          nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+        const updateData = {};
 
-        await strapi.db.query("plugin::users-permissions.user").update({
-          where: { id: user.id },
-          data: {
-            fullName,
-            firstName,
-            lastName,
-          },
-        });
+        if (fullName) {
+          const nameParts = fullName.trim().split(/\s+/);
+          updateData.fullName = fullName;
+          updateData.firstName = nameParts[0];
+          updateData.lastName =
+            nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+        }
 
-        ctx.body.user.fullName = fullName;
-        ctx.body.user.firstName = firstName;
-        ctx.body.user.lastName = lastName;
+        if (agreedToTerms) {
+          updateData.agreedToTerms = true;
+        }
+
+        if (Object.keys(updateData).length > 0) {
+          await strapi.db.query("plugin::users-permissions.user").update({
+            where: { id: user.id },
+            data: updateData,
+          });
+
+          Object.assign(ctx.body.user, updateData);
+        }
       }
     };
 

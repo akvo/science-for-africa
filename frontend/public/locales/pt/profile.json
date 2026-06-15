@@ -32,6 +32,7 @@
     "save_success": "Perfil atualizado com sucesso",
     "save_error": "Falha ao atualizar o perfil",
     "not_provided": "Não fornecido",
+    "no_affiliation": "Sem afiliação institucional",
     "no_bio": "Nenhuma biografia fornecida.",
     "no_bio_public": "Nenhuma biografia fornecida."
   },

@@ -191,6 +191,21 @@ const ProfileCard = ({
         </div>
       </div>
 
+      {/* Institutional Affiliation Section */}
+      <div className="p-6 border-b border-brand-gray-200 space-y-4">
+        <h4 className="text-[11px] text-brand-gray-400 font-bold uppercase tracking-wider">
+          {t("profile:details.affiliation_title")}
+        </h4>
+        <p className="text-[15px] font-bold text-brand-gray-900 leading-snug">
+          {user?.institutionMemberships?.[0]?.institution?.name ||
+            user?.institution?.name ||
+            user?.institutionName ||
+            t("profile:details.no_affiliation", {
+              defaultValue: "No institutional affiliation",
+            })}
+        </p>
+      </div>
+
       {/* Expertise Tags Section */}
       <div className="p-6 border-b border-brand-gray-200">
         <div className="flex flex-wrap gap-2">

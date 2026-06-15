@@ -63,6 +63,7 @@
     "description": "Nous vous suggérerons des partenaires de recherche et des bailleurs de fonds en fonction de votre affiliation institutionnelle actuelle.",
     "search_label": "Rechercher une institution",
     "search_placeholder": "Tapez votre institution principale",
+    "optional_hint": "Ceci est facultatif. Vous pouvez ignorer cette étape si vous n'avez pas d'affiliation institutionnelle.",
     "finishing": "Finalisation...",
     "complete_button": "Terminer la configuration"
   }

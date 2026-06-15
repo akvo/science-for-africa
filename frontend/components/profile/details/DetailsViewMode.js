@@ -148,7 +148,9 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate, isPublic }) => {
             user?.institutionMemberships?.[0]?.institution?.name ||
             user?.institution?.name ||
             user?.institutionName ||
-            t("details.not_provided")
+            t("details.no_affiliation", {
+              defaultValue: "No institutional affiliation",
+            })
           }
           t={t}
           badge={

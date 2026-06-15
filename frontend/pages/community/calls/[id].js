@@ -151,7 +151,7 @@ export default function CollaborationCallDetailPage() {
           i.invitedUser.username ||
           i.invitedUser.email?.split("@")[0] ||
           "Mentor",
-        role: i.invitedUser.position || "Institutional researcher",
+        role: i.invitedUser.position || i.invitedUser.institutionMemberships?.[0]?.institution?.name || t("community:call.no_affiliation", { defaultValue: "No institutional affiliation" }),
         avatarUrl: i.invitedUser.avatarUrl,
       }));
   }, [call]);

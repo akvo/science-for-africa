@@ -65,6 +65,7 @@
     "description": "We'll suggest research partners and funders based on your current institutional affiliation.",
     "search_label": "Search institution",
     "search_placeholder": "Type your primary institution",
+    "optional_hint": "This is optional. You can skip this step if you don't have an institutional affiliation.",
     "finishing": "Finishing...",
     "complete_button": "Complete Setup"
   }

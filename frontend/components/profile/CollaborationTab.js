@@ -75,11 +75,12 @@ const CollaborationRow = ({ invite, onAccept, onDecline, processingId }) => {
                 <span className="text-sm text-brand-gray-500 truncate">
                   {mentor?.biography?.substring(0, 40) || "Researcher"}
                 </span>
-                {mentor?.institutionMemberships?.[0]?.institution?.name && (
-                  <span className="text-xs text-brand-gray-400 truncate mt-0.5">
-                    {mentor.institutionMemberships[0].institution.name}
-                  </span>
-                )}
+                <span className="text-xs text-brand-gray-400 truncate mt-0.5">
+                  {mentor?.institutionMemberships?.[0]?.institution?.name ||
+                    t("profile:details.no_affiliation", {
+                      defaultValue: "No institutional affiliation",
+                    })}
+                </span>
               </>
             )}
           </div>

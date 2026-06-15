@@ -124,6 +124,8 @@
     "join": "Participar",
     "joined": "Participando",
     "leave": "Sair",
+    "leave_title": "Sair da comunidade",
+    "leave_confirm": "Tem certeza de que deseja sair de {{name}}?",
     "create_post": "Criar postagem",
     "sort_by": "Ordenar por",
     "sort_newest": "Mais recente",

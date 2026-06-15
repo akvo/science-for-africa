@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CommunityLeftNav from "@/components/community/CommunityLeftNav";
+import ConfirmationModal from "@/components/shared/ConfirmationModal";
 import { fetchCommunities, joinCommunity, leaveCommunity } from "@/lib/strapi";
 import { useAuthStore } from "@/lib/auth-store";
 
@@ -33,7 +34,7 @@ function formatCount(n) {
   return String(n);
 }
 
-function CommunityCard({ community, onJoin, t }) {
+function CommunityCard({ community, onJoin, onLeave, t }) {
   const router = useRouter();
   const joined = community.isMember;
 
@@ -62,7 +63,7 @@ function CommunityCard({ community, onJoin, t }) {
           </div>
         </div>
         <Button
-          variant={joined ? "primary" : "tertiary"}
+          variant={joined ? "destructive" : "tertiary"}
           size="sm"
           className={
             joined
@@ -71,10 +72,14 @@ function CommunityCard({ community, onJoin, t }) {
           }
           onClick={(e) => {
             e.stopPropagation();
-            onJoin?.(community);
+            if (joined) {
+              onLeave?.(community);
+            } else {
+              onJoin?.(community);
+            }
           }}
         >
-          {joined ? t("community.joined") : t("community.join")}
+          {joined ? t("community.leave") : t("community.join")}
         </Button>
       </div>
 
@@ -98,6 +103,7 @@ export default function CommunitiesPage() {
   const tagsScrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+  const [leaveTarget, setLeaveTarget] = useState(null);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -114,8 +120,7 @@ export default function CommunitiesPage() {
       router.push("/login");
       return;
     }
-    const action = community.isMember ? leaveCommunity : joinCommunity;
-    const res = await action(community.documentId);
+    const res = await joinCommunity(community.documentId);
     if (res?.data) {
       setCommunities((prev) =>
         prev.map((c) =>
@@ -129,6 +134,33 @@ export default function CommunitiesPage() {
         ),
       );
     }
+  };
+
+  const handleLeave = (community) => {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+    setLeaveTarget(community);
+  };
+
+  const confirmLeave = async () => {
+    if (!leaveTarget) return;
+    const res = await leaveCommunity(leaveTarget.documentId);
+    if (res?.data) {
+      setCommunities((prev) =>
+        prev.map((c) =>
+          c.documentId === leaveTarget.documentId
+            ? {
+                ...c,
+                isMember: res.data.isMember,
+                subscribers: res.data.subscribers,
+              }
+            : c,
+        ),
+      );
+    }
+    setLeaveTarget(null);
   };
 
   const updateScrollButtons = () => {
@@ -173,6 +205,18 @@ export default function CommunitiesPage() {
 
   return (
     <div className="flex flex-col lg:flex-row">
+      <ConfirmationModal
+        open={!!leaveTarget}
+        onOpenChange={(open) => !open && setLeaveTarget(null)}
+        title={t("community.leave_title", { defaultValue: "Leave Community" })}
+        description={t("community.leave_confirm", {
+          name: leaveTarget?.name,
+          defaultValue: `Are you sure you want to leave ${leaveTarget?.name}?`,
+        })}
+        onConfirm={confirmLeave}
+        confirmLabel={t("community.leave", { defaultValue: "Leave" })}
+        variant="danger"
+      />
       <aside className="w-full lg:w-65 lg:flex-none lg:border-r lg:border-brand-gray-100 lg:pr-4 lg:pt-4 lg:mt-4 lg:sticky lg:top-28.5 lg:self-start lg:h-[calc(100vh-114px)] lg:overflow-y-auto">
         <CommunityLeftNav activeKey="communities" />
       </aside>
@@ -260,6 +304,7 @@ export default function CommunitiesPage() {
                 key={community.documentId || community.id}
                 community={community}
                 onJoin={handleJoin}
+                onLeave={handleLeave}
                 t={t}
               />
             ))}

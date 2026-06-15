@@ -162,6 +162,8 @@
     "join": "Rejoindre",
     "joined": "Membre",
     "leave": "Quitter",
+    "leave_title": "Quitter la communauté",
+    "leave_confirm": "Êtes-vous sûr de vouloir quitter {{name}} ?",
     "create_post": "Créer un post",
     "sort_by": "Trier par",
     "sort_newest": "Le plus récent",

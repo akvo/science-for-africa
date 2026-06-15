@@ -124,6 +124,8 @@
     "join": "انضم",
     "joined": "انضممت",
     "leave": "مغادرة",
+    "leave_title": "مغادرة المجتمع",
+    "leave_confirm": "هل أنت متأكد أنك تريد مغادرة {{name}}؟",
     "create_post": "إنشاء منشور",
     "sort_by": "ترتيب حسب",
     "sort_newest": "الأحدث",

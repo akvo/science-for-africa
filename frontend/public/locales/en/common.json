@@ -124,6 +124,8 @@
     "join": "Join",
     "joined": "Joined",
     "leave": "Leave",
+    "leave_title": "Leave Community",
+    "leave_confirm": "Are you sure you want to leave {{name}}?",
     "create_post": "Create post",
     "sort_by": "Sort by",
     "sort_newest": "Newest",

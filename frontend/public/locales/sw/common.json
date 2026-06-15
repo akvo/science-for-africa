@@ -124,6 +124,8 @@
     "join": "Jiunge",
     "joined": "Umejiunga",
     "leave": "Ondoka",
+    "leave_title": "Ondoka kwenye jamii",
+    "leave_confirm": "Una uhakika unataka kuondoka {{name}}?",
     "create_post": "Unda chapisho",
     "sort_by": "Panga kwa",
     "sort_newest": "Mpya zaidi",

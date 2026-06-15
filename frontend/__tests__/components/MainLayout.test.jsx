@@ -10,9 +10,18 @@ jest.mock("next/router", () => ({
 }));
 
 // Mock useAuthStore
-jest.mock("@/lib/auth-store", () => ({
-  useAuthStore: jest.fn(),
-}));
+jest.mock("@/lib/auth-store", () => {
+  const mockStore = jest.fn();
+  mockStore.getState = jest.fn(() => ({
+    isAuthenticated: false,
+    user: null,
+    updateLastActive: jest.fn(),
+    logout: jest.fn(),
+  }));
+  return {
+    useAuthStore: mockStore,
+  };
+});
 
 // Mock layout sub-components
 jest.mock("@/components/layout/AppLayout", () => ({
@@ -38,10 +47,35 @@ describe("MainLayout Navigation Guards", () => {
       push: mockPush,
       startsWith: (path) => "/".startsWith(path), // Simplified for tests
     });
+    // Default mock behavior
+    useAuthStore.mockImplementation((selector) => {
+      const state = {
+        isAuthenticated: false,
+        user: null,
+      };
+      return selector ? selector(state) : state;
+    });
+    useAuthStore.getState = jest.fn(() => ({
+      isAuthenticated: false,
+      user: null,
+      updateLastActive: jest.fn(),
+      logout: jest.fn(),
+    }));
   });
 
+  const setupStoreMock = (authState) => {
+    useAuthStore.mockImplementation((selector) => {
+      return selector ? selector(authState) : authState;
+    });
+    useAuthStore.getState = jest.fn(() => ({
+      ...authState,
+      updateLastActive: jest.fn(),
+      logout: jest.fn(),
+    }));
+  };
+
   it("should redirect unauthenticated users from /onboarding to /login", async () => {
-    useAuthStore.mockReturnValue({
+    setupStoreMock({
       isAuthenticated: false,
       user: null,
     });
@@ -63,7 +97,7 @@ describe("MainLayout Navigation Guards", () => {
   });
 
   it("should redirect authenticated users who completed onboarding away from /onboarding to /", async () => {
-    useAuthStore.mockReturnValue({
+    setupStoreMock({
       isAuthenticated: true,
       user: { onboardingComplete: true },
     });
@@ -85,7 +119,7 @@ describe("MainLayout Navigation Guards", () => {
   });
 
   it("should redirect authenticated users who NOT completed onboarding to /onboarding if on a private page", async () => {
-    useAuthStore.mockReturnValue({
+    setupStoreMock({
       isAuthenticated: true,
       user: { onboardingComplete: false },
     });
@@ -107,7 +141,7 @@ describe("MainLayout Navigation Guards", () => {
   });
 
   it("should allow authenticated users who NOT completed onboarding to stay on /onboarding", async () => {
-    useAuthStore.mockReturnValue({
+    setupStoreMock({
       isAuthenticated: true,
       user: { onboardingComplete: false },
     });

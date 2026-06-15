@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_sessions",
+  "info": {
+    "displayName": "User Session",
+    "singularName": "user-session",
+    "pluralName": "user-sessions",
+    "description": "Tracks active authenticated user sessions for idle and absolute timeouts"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "tokenHash": {
+      "type": "text",
+      "required": true,
+      "unique": true
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "lastActivity": {
+      "type": "datetime",
+      "required": true
+    },
+    "ipAddress": {
+      "type": "string"
+    },
+    "userAgent": {
+      "type": "string"
+    }
+  }
+}

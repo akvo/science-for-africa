@@ -127,6 +127,19 @@ apiClient.interceptors.response.use(
       status: error.response?.status,
     };
 
+    if (error.response?.status === 401) {
+      const errMsg = error.response?.data?.error?.message || "";
+      if (
+        errMsg.includes("Session expired due to inactivity") ||
+        errMsg.includes("Session lifetime expired")
+      ) {
+        if (typeof window !== "undefined") {
+          useAuthStore.getState().logout();
+          window.location.href = "/login?reason=expired";
+        }
+      }
+    }
+
     if (error.response?.data?.error?.message) {
       transformedError.error = error.response.data.error.message;
     } else if (error.response?.status) {

@@ -15,5 +15,6 @@ module.exports = [
   },
   "strapi::favicon",
   "strapi::public",
+  "global::session-timeout",
   "global::documentation-redirect",
 ];

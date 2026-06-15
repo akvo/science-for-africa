@@ -184,6 +184,7 @@ const syncPermissions = async (strapi) => {
     "api::auth.auth.verifyOtp",
     "api::auth.auth.resendOtp",
     "api::auth.auth.registrationStatus",
+    "api::auth.auth.logout",
     "api::auth.profile.publicProfile",
     "plugin::users-permissions.user.follow",
     "plugin::users-permissions.user.unfollow",

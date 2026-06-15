@@ -207,4 +207,26 @@ module.exports = ({ strapi }) => ({
       lastOtpSentAt: user.lastOtpSentAt,
     };
   },
+
+  /**
+   * Logs out the user and destroys their active session
+   */
+  async logout(ctx) {
+    const authHeader = ctx.header.authorization;
+
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      const token = authHeader.split(" ")[1];
+      const crypto = require("crypto");
+      const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+
+      await strapi.db.query("api::user-session.user-session").delete({
+        where: { tokenHash },
+      });
+    }
+
+    return {
+      success: true,
+      message: "Logged out successfully.",
+    };
+  },
 });

@@ -36,6 +36,7 @@ export const useAuthStore = create(
       jwt: null,
       isAuthenticated: false,
       isPersistent: false,
+      lastActive: null,
 
       setAuth: (user, jwt, isPersistent = false) =>
         set({
@@ -43,14 +44,35 @@ export const useAuthStore = create(
           jwt,
           isPersistent,
           isAuthenticated: !!jwt,
+          lastActive: jwt ? Date.now() : null,
         }),
 
-      logout: () =>
+      logout: () => {
+        const state = useAuthStore.getState();
+        if (state.jwt) {
+          const backendUrl =
+            process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api";
+          fetch(`${backendUrl}/auth/logout`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${state.jwt}`,
+            },
+          }).catch((err) => {
+            console.warn("Failed to notify backend of logout:", err);
+          });
+        }
         set({
           user: null,
           jwt: null,
           isAuthenticated: false,
           isPersistent: false,
+          lastActive: null,
+        });
+      },
+
+      updateLastActive: () =>
+        set({
+          lastActive: Date.now(),
         }),
 
       updateUser: (userData) =>

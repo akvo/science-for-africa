@@ -63,6 +63,7 @@
     "description": "Sugeriremos parceiros de pesquisa e financiadores com base na sua afiliação institucional atual.",
     "search_label": "Buscar instituição",
     "search_placeholder": "Digite sua instituição principal",
+    "optional_hint": "Isto é opcional. Pode pular esta etapa se não tiver afiliação institucional.",
     "finishing": "Finalizando...",
     "complete_button": "Concluir Configuração"
   }

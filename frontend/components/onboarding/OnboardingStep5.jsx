@@ -96,7 +96,7 @@ const OnboardingStep5 = () => {
     }
   };
 
-  const isFormValid = formData.affiliationInstitution?.name?.trim() !== "";
+  const isFormValid = true; // Affiliation is optional for individual accounts
 
   return (
     <div className="flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-90 mx-auto">
@@ -109,7 +109,13 @@ const OnboardingStep5 = () => {
           <ArrowLeft size={18} />
           <span>{t("steps.back")}</span>
         </button>
-        {/* No skip on the final step, usually */}
+        <button
+          onClick={handleComplete}
+          disabled={isSubmitting}
+          className="text-brand-gray-500 hover:text-brand-teal-700 transition-colors font-medium cursor-pointer"
+        >
+          {t("steps.skip")}
+        </button>
       </div>
 
       {/* Header Section */}
@@ -119,6 +125,11 @@ const OnboardingStep5 = () => {
         </h1>
         <p className="text-md text-brand-gray-800 leading-relaxed">
           {t("step5.description")}
+        </p>
+        <p className="text-sm text-brand-gray-500">
+          {t("step5.optional_hint", {
+            defaultValue: "This is optional. You can skip this step if you don't have an institutional affiliation.",
+          })}
         </p>
       </div>
 

@@ -32,6 +32,7 @@
     "save_success": "Profile updated successfully",
     "save_error": "Failed to update profile",
     "not_provided": "Not provided",
+    "no_affiliation": "No institutional affiliation",
     "no_bio": "No biography provided yet.",
     "no_bio_public": "No biography provided."
   },

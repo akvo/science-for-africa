@@ -63,6 +63,7 @@
     "description": "Tutapendekeza washirika wa utafiti na wafadhili kulingana na uhusiano wako wa taasisi ya sasa.",
     "search_label": "Tafuta taasisi",
     "search_placeholder": "Andika taasisi yako kuu",
+    "optional_hint": "Hii si lazima. Unaweza kuruka hatua hii ikiwa huna uhusiano wa kitaasisi.",
     "finishing": "Inakamilika...",
     "complete_button": "Maliza Usanidi"
   }

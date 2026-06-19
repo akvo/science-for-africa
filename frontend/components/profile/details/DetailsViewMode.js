@@ -205,6 +205,23 @@ const DetailsViewMode = ({ user, t, onEdit, onUserUpdate, isPublic }) => {
                 <span className="text-xs text-green-600 font-medium">
                   {tCommon("verification.verified")}
                 </span>
+                {!isPublic && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={validating}
+                    onClick={handleValidateOrcid}
+                    className="text-xs text-brand-gray-500 hover:text-brand-teal-700 px-2 ml-2"
+                  >
+                    {validating ? (
+                      <Loader2 className="size-3 animate-spin" />
+                    ) : (
+                      tCommon("verification.change_orcid", {
+                        defaultValue: "Change",
+                      })
+                    )}
+                  </Button>
+                )}
               </div>
             ) : (
               <>

@@ -201,6 +201,7 @@
     "tooltip_institution": "pending institution details confirmation",
     "verified": "Verified",
     "verify_orcid": "Verify ORCID",
+    "change_orcid": "Verify a different ORCID",
     "verifying": "Verifying...",
     "orcid_verify_failed": "Could not verify this ORCID iD"
   },

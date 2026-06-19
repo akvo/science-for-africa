@@ -201,6 +201,7 @@
     "tooltip_institution": "تفاصيل حساب المؤسسة قيد التأكد",
     "verified": "تم التحقق",
     "verify_orcid": "التحقق من ORCID",
+    "change_orcid": "التحقق من ORCID مختلف",
     "verifying": "جاري التحقق...",
     "orcid_verify_failed": "تعذر التحقق من هذا الـ ORCID iD"
   },

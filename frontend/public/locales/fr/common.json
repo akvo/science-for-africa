@@ -78,6 +78,7 @@
     "tooltip_institution": "en attente de confirmation des détails de l'institution",
     "verified": "Vérifié",
     "verify_orcid": "Vérifier ORCID",
+    "change_orcid": "Vérifier un autre ORCID",
     "verifying": "Vérification...",
     "orcid_verify_failed": "Impossible de vérifier cet ORCID iD"
   },

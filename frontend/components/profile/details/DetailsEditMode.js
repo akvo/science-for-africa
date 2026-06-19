@@ -765,14 +765,42 @@ const DetailsEditMode = ({
         <FormRow label={t("details.orcid_label")} error={errors.orcidId}>
           <div className="space-y-4 w-full">
             {user?.verified && user?.orcidId ? (
-              <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-green-50 border border-green-200">
-                <CheckCircle2 className="size-5 text-green-600 shrink-0" />
-                <span className="text-sm font-medium text-green-800">
-                  {user.orcidId}
-                </span>
-                <span className="text-xs text-green-600 ml-auto">
-                  {tCommon("verification.verified")}
-                </span>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-green-50 border border-green-200">
+                  <CheckCircle2 className="size-5 text-green-600 shrink-0" />
+                  <span className="text-sm font-medium text-green-800">
+                    {user.orcidId}
+                  </span>
+                  <span className="text-xs text-green-600 ml-auto">
+                    {tCommon("verification.verified")}
+                  </span>
+                </div>
+                <Button
+                  variant="outline"
+                  type="button"
+                  disabled={orcidValidating}
+                  onClick={async () => {
+                    setOrcidValidating(true);
+                    const result = await getOrcidAuthorizeUrl("profile");
+                    if (result?.data?.authorizeUrl) {
+                      window.location.href = result.data.authorizeUrl;
+                    } else {
+                      setOrcidValidating(false);
+                    }
+                  }}
+                  className="px-6 rounded-full text-xs h-9 border-brand-gray-300 text-brand-gray-600 hover:bg-brand-gray-50 transition-all"
+                >
+                  {orcidValidating ? (
+                    <>
+                      <Loader2 className="size-3 animate-spin mr-1" />
+                      {tCommon("verification.verifying")}
+                    </>
+                  ) : (
+                    tCommon("verification.change_orcid", {
+                      defaultValue: "Verify a different ORCID",
+                    })
+                  )}
+                </Button>
               </div>
             ) : (
               <>

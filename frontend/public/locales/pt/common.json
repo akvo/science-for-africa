@@ -201,6 +201,7 @@
     "tooltip_institution": "detalhes da conta institucional em confirmação",
     "verified": "Verificado",
     "verify_orcid": "Verificar ORCID",
+    "change_orcid": "Verificar um ORCID diferente",
     "verifying": "Verificando...",
     "orcid_verify_failed": "Não foi possível verificar este ORCID iD"
   },

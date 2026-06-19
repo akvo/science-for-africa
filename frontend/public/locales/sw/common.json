@@ -201,6 +201,7 @@
     "tooltip_institution": "Maelezo ya akaunti ya taasisi yasasishwa",
     "verified": "Imethibitishwa",
     "verify_orcid": "Thibitisha ORCID",
+    "change_orcid": "Thibitisha ORCID tofauti",
     "verifying": "Tunathibitisha...",
     "orcid_verify_failed": "Haikuweza kuthibitisha hii ID ya ORCID"
   },

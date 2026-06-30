@@ -120,6 +120,17 @@ module.exports = ({ strapi }) => ({
         .query("plugin::users-permissions.user")
         .findMany({
           where: filters,
+          select: [
+            "id",
+            "documentId",
+            "username",
+            "email",
+            "firstName",
+            "lastName",
+            "fullName",
+            "position",
+            "verified",
+          ],
           populate: {
             roleType: true,
             profilePhoto: true,
@@ -128,7 +139,7 @@ module.exports = ({ strapi }) => ({
           limit: query.limit ? parseInt(query.limit) : 20,
         });
 
-      return users;
+      ctx.body = users;
     } catch (error) {
       strapi.log.error("FindUsers Error: " + error.message);
       return ctx.internalServerError(error.message);

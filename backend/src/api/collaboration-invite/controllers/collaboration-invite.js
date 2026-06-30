@@ -168,13 +168,16 @@ module.exports = createCoreController(
         return { data: existing };
       }
 
-      // Create a new pending invite
+      // For public calls, auto-accept; otherwise require approval
+      const isPublic = (call.visibility || "public") === "public";
+      const status = isPublic ? "Accepted" : "Pending";
+
       const invite = await strapi
         .documents("api::collaboration-invite.collaboration-invite")
         .create({
           data: {
             email: user.email,
-            inviteStatus: "Pending",
+            inviteStatus: status,
             role: "Collaborator",
             invitedUser: user.id,
             collaborationCall: call.documentId,

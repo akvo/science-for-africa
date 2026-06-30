@@ -99,7 +99,11 @@ const CollaborationRow = ({ invite, onAccept, onDecline, processingId }) => {
                 onClick={() => onDecline(invite.id)}
                 disabled={isProcessing}
               >
-                {t("collaboration.decline", { defaultValue: "Decline" })}
+                {isProcessing ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  t("collaboration.decline", { defaultValue: "Decline" })
+                )}
               </Button>
               <Button
                 variant="outline"
@@ -118,11 +122,15 @@ const CollaborationRow = ({ invite, onAccept, onDecline, processingId }) => {
           ) : (
             <>
               <button
-                className="text-sm font-normal text-brand-teal-900 hover:text-brand-teal-700 transition-colors mr-2 cursor-pointer"
+                className="text-sm font-normal text-brand-teal-900 hover:text-brand-teal-700 transition-colors mr-2 cursor-pointer disabled:opacity-50"
                 onClick={() => onDecline(invite.id)}
                 disabled={isProcessing}
               >
-                {t("common:remove", { defaultValue: "Remove" })}
+                {isProcessing ? (
+                  <Loader2 className="size-4 animate-spin inline" />
+                ) : (
+                  t("common:remove", { defaultValue: "Remove" })
+                )}
               </button>
               <Link href={`/community/calls/${call.documentId || call.id}`}>
                 <Button
@@ -226,16 +234,16 @@ const CollaborationTab = () => {
     try {
       const res = await declineCollaborationInvite(id);
       if (res?.success) {
+        setInvites((prev) => prev.filter((inv) => inv.id !== id));
         toast.success(
           t("collaboration.decline_success", {
-            defaultValue: "Invitation processed",
+            defaultValue: "Invitation declined successfully",
           }),
         );
-        setInvites((prev) => prev.filter((inv) => inv.id !== id));
       } else {
         toast.error(
           t("collaboration.decline_error", {
-            defaultValue: "Failed to process invitation",
+            defaultValue: "Failed to decline invitation",
           }),
         );
       }

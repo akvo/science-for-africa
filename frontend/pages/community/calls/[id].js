@@ -32,6 +32,7 @@ import {
 } from "@/lib/strapi";
 import { useAuthStore } from "@/lib/auth-store";
 import { htmlToPlainText, sanitizeHtml } from "@/lib/sanitize-html";
+import { toast } from "sonner";
 
 /**
  * Map a raw Strapi chat-message row into the shape the ChatThread expects.
@@ -117,13 +118,22 @@ export default function CollaborationCallDetailPage() {
       let attachmentId = null;
       if (file) {
         const uploaded = await uploadFile(file);
-        attachmentId = uploaded?.[0]?.id || null;
+        if (!uploaded?.[0]?.id) {
+          toast.error(t("community:chat.upload_failed", { defaultValue: "Failed to upload file" }));
+          setSending(false);
+          return;
+        }
+        attachmentId = uploaded[0].id;
       }
       const res = await postChatMessage(id, trimmed, attachmentId);
       const row = res?.data;
-      if (row) {
+      if (row && row.id) {
         setMessages((prev) => [...prev, mapChatMessage(row, user?.id)]);
+      } else {
+        toast.error(t("community:chat.send_failed", { defaultValue: "Failed to send message" }));
       }
+    } catch (err) {
+      toast.error(t("community:chat.send_failed", { defaultValue: "Failed to send message" }));
     } finally {
       setSending(false);
     }
@@ -262,16 +272,19 @@ export default function CollaborationCallDetailPage() {
   const isActive = isPastEndDate ? false : (call.status || "").toLowerCase() === "active";
   const visibility = call.visibility || "public";
 
-  // Determine posting permission based on visibility
-  // Public: any signed-in user can post
-  // Restricted: only accepted members / creator can post
-  // Private: only invited members / creator can post (and only they can see the page)
-  const canPost = visibility === "public" ? !!user : hasJoined || isCreator;
+  // Determine posting permission — only accepted members or the creator can post
+  const canPost = hasJoined || isCreator;
 
-  // Determine if "Request to join" should be shown
-  // Public: no need (anyone can post)
-  // Restricted: yes, for non-members
+  // Determine if join/request button should be shown
+  // Public: "Join" button (auto-accepted)
+  // Restricted: "Request to join" button (needs approval)
   // Private: hidden (invite-only)
+  const showJoinButton =
+    visibility === "public" &&
+    isActive &&
+    !hasJoined &&
+    !isCreator;
+
   const showRequestJoin =
     visibility === "restricted" &&
     isActive &&
@@ -296,7 +309,9 @@ export default function CollaborationCallDetailPage() {
           visibility={visibility}
           hasJoined={hasJoined || isCreator}
           hasPendingRequest={hasPendingRequest}
+          showJoinButton={showJoinButton}
           showRequestJoin={showRequestJoin}
+          onJoin={handleRequestJoin}
           onRequestJoin={handleRequestJoin}
           onBack={() => router.back()}
           t={t}
@@ -688,9 +703,11 @@ function ChatHeader({
   isActive,
   visibility,
   onBack,
+  onJoin,
   onRequestJoin,
   hasJoined,
   hasPendingRequest,
+  showJoinButton,
   showRequestJoin,
   t,
 }) {
@@ -731,6 +748,15 @@ function ChatHeader({
             </span>
           )}
         </div>
+        {showJoinButton ? (
+          <Button
+            size="sm"
+            className="rounded-full"
+            onClick={onJoin}
+          >
+            {t("common:community.join", { defaultValue: "Join" })}
+          </Button>
+        ) : null}
         {showRequestJoin ? (
           <Button
             size="sm"
@@ -762,17 +788,20 @@ function ChatHeader({
 
 function ChatThread({ messages = [], canPost = false }) {
   const { t } = useTranslation("community");
-  return (
-    <div className="flex flex-1 items-center justify-center px-6 py-10 text-sm text-brand-gray-500">
-      {canPost
-        ? t("community:chat.no_messages_can_post", {
-            defaultValue: "No messages yet — start the conversation below.",
-          })
-        : t("community:chat.no_messages", {
-            defaultValue: "No messages yet.",
-          })}
-    </div>
-  );
+
+  if (messages.length === 0) {
+    return (
+      <div className="flex flex-1 items-center justify-center px-6 py-10 text-sm text-brand-gray-500">
+        {canPost
+          ? t("community:chat.no_messages_can_post", {
+              defaultValue: "No messages yet — start the conversation below.",
+            })
+          : t("community:chat.no_messages", {
+              defaultValue: "No messages yet.",
+            })}
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 overflow-y-auto px-6 py-5">

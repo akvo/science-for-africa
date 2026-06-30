@@ -197,13 +197,15 @@ const syncPermissions = async (strapi) => {
     }
   }
 
-  // Revoke dangerous public permissions
-  const publicRevokes = [
+  // Grant public read access to collaboration calls and chat messages
+  // (the controller filters out private calls for unauthenticated users)
+  const publicGrants = [
     "api::collaboration-call.collaboration-call.find",
     "api::collaboration-call.collaboration-call.findOne",
+    "api::chat-message.chat-message.find",
   ];
-  for (const action of publicRevokes) {
-    await revokePermission(strapi, "public", action);
+  for (const action of publicGrants) {
+    await grantPermission(strapi, "public", action);
   }
 };
 

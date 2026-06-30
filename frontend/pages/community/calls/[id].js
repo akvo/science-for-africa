@@ -732,6 +732,9 @@ function ChatHeader({
       <div className="flex items-center gap-3">
         <div className="inline-flex h-[34px] w-fit items-center divide-x divide-brand-gray-200 rounded-full bg-[#E8ECEF] text-sm font-medium text-brand-gray-700">
           <span className="inline-flex h-full items-center gap-2 px-4">
+            {isActive && (
+              <span className="size-2 rounded-full bg-green-500" />
+            )}
             {isActive
               ? t("community:call_card.active", { defaultValue: "Active" })
               : t("community:call_card.completed", {

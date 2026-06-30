@@ -40,7 +40,7 @@ const BlockRenderer = ({ blocks }) => {
         }
 
         const isNoGap = NO_GAP_COMPONENTS.includes(block.__component);
-        const marginClass = isNoGap || index === 0 ? "" : "mt-24 md:mt-32";
+        const marginClass = isNoGap || index === 0 ? "" : "mt-24 md:mt-0";
 
         return (
           <div key={`${block.__component}-${index}`} className={marginClass}>

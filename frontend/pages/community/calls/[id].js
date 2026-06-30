@@ -272,8 +272,8 @@ export default function CollaborationCallDetailPage() {
   const isActive = isPastEndDate ? false : (call.status || "").toLowerCase() === "active";
   const visibility = call.visibility || "public";
 
-  // Determine posting permission — only accepted members or the creator can post
-  const canPost = hasJoined || isCreator;
+  // Determine posting permission — only accepted members or the creator can post, and only on active calls
+  const canPost = isActive && (hasJoined || isCreator);
 
   // Determine if join/request button should be shown
   // Public: "Join" button (auto-accepted)

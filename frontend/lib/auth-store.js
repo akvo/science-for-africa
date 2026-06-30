@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { getBackendApiUrl } from "./url-helpers";
 
 // Custom storage handler to toggle between localStorage and sessionStorage
 const dynamicStorage = {
@@ -50,8 +51,7 @@ export const useAuthStore = create(
       logout: () => {
         const state = useAuthStore.getState();
         if (state.jwt) {
-          const backendUrl =
-            process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337/api";
+          const backendUrl = getBackendApiUrl();
           fetch(`${backendUrl}/auth/logout`, {
             method: "POST",
             headers: {

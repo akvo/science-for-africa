@@ -4,6 +4,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+
 :root {
   --background: oklch(1 0 0);
   --foreground: #373b3e;
@@ -85,8 +86,8 @@
   --color-brand-gray-800: #484e51;
   --color-brand-gray-900: #373b3e;
 
-  --font-heading: ui-sans-serif, system-ui;
-  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-heading: Arial, Helvetica, sans-serif;
+  --font-sans: Arial, Helvetica, sans-serif;
 
   --text-display-2xl: 4.5rem;
   --text-display-xl: 3.75rem;
@@ -147,7 +148,10 @@
   h1,
   h2,
   h3,
-  h4,
+  h4 {
+    font-family: var(--font-heading);
+    @apply font-bold;
+  }
   h5,
   h6 {
     @apply font-bold;
@@ -158,58 +162,61 @@
 }
 
 @layer utilities {
+  /* Display 1 */
   .text-display-2xl {
     font-size: 4.5rem;
-    font-family: var(--font-heading);
     line-height: 5.625rem;
     letter-spacing: -0.02em;
   }
+  /* Display 2 */
   .text-display-xl {
     font-size: 3.75rem;
-    font-family: var(--font-heading);
     line-height: 4.5rem;
     letter-spacing: -0.02em;
   }
+  /* Heading 1 */
   .text-display-lg {
     font-size: 3rem;
-    font-weight: 700;
     line-height: 3.75rem;
     letter-spacing: -0.02em;
   }
+  /* Heading 2 */
   .text-display-md {
     font-size: 2.25rem;
-    font-weight: 700;
     line-height: 2.75rem;
     letter-spacing: -0.02em;
   }
+  /* Heading 3 */
   .text-display-sm {
     font-size: 1.875rem;
-    font-weight: 700;
     line-height: 2.375rem;
   }
+  /* Heading 4 */
   .text-display-xs {
     font-size: 1.5rem;
-    font-weight: 700;
     line-height: 2rem;
   }
+  /* Heading 5 — Arial */
   .text-xl {
     font-size: 1.25rem;
-    font-weight: 700;
     line-height: 1.875rem;
   }
+  /* Heading 6 — Arial */
   .text-lg {
     font-size: 1.125rem;
-    font-weight: 700;
     line-height: 1.75rem;
   }
+  /* Body 1 — Arial */
   .text-md {
     font-size: 1rem;
     line-height: 1.5rem;
   }
+  /* Body 2 — Arial */
   .text-sm {
     font-size: 0.875rem;
     line-height: 1.25rem;
   }
+  /* Link 1 & 2 — Arial */
   .text-xs {
     font-size: 0.75rem;
     line-height: 1.125rem;

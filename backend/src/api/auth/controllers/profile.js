@@ -101,13 +101,79 @@ module.exports = ({ strapi }) => ({
   },
 
   /**
-   * Search for users with populated roles for mentor assignment
+   * Search for users with populated roles for mentor assignment.
+   * Optionally filter to members of a specific community via ?community=<name>.
    */
   async findUsers(ctx) {
     try {
       const { query } = ctx;
-      const filters = {};
+      const limit = query.limit ? parseInt(query.limit) : 50;
 
+      // If a community filter is provided, only return members of that community
+      if (query.community) {
+        const community = await strapi.db
+          .query("api::community.community")
+          .findOne({ where: { name: query.community } });
+
+        if (!community) {
+          ctx.body = [];
+          return;
+        }
+
+        const memberships = await strapi.db
+          .query("api::community-membership.community-membership")
+          .findMany({
+            where: { community: community.id },
+            populate: {
+              user: {
+                select: [
+                  "id",
+                  "documentId",
+                  "username",
+                  "email",
+                  "firstName",
+                  "lastName",
+                  "fullName",
+                  "position",
+                  "verified",
+                ],
+                populate: {
+                  roleType: true,
+                  profilePhoto: true,
+                },
+              },
+            },
+          });
+
+        // Extract unique users, apply search filter if provided
+        const seen = new Set();
+        const users = [];
+        for (const m of memberships) {
+          if (!m.user || seen.has(m.user.id)) continue;
+          seen.add(m.user.id);
+
+          if (query._q) {
+            const q = query._q.toLowerCase();
+            const match =
+              m.user.username?.toLowerCase().includes(q) ||
+              m.user.email?.toLowerCase().includes(q) ||
+              m.user.fullName?.toLowerCase().includes(q);
+            if (!match) continue;
+          }
+
+          users.push(m.user);
+        }
+
+        users.sort((a, b) =>
+          (a.fullName || "").localeCompare(b.fullName || ""),
+        );
+
+        ctx.body = users.slice(0, limit);
+        return;
+      }
+
+      // Default: search all users
+      const filters = {};
       if (query._q) {
         filters.$or = [
           { username: { $containsi: query._q } },
@@ -136,10 +202,18 @@ module.exports = ({ strapi }) => ({
             profilePhoto: true,
           },
           orderBy: { fullName: "asc" },
-          limit: query.limit ? parseInt(query.limit) : 20,
+          limit,
         });
 
-      ctx.body = users;
+      // Deduplicate (joins on relations can produce duplicate rows)
+      const seen = new Set();
+      const unique = users.filter((u) => {
+        if (seen.has(u.id)) return false;
+        seen.add(u.id);
+        return true;
+      });
+
+      ctx.body = unique;
     } catch (error) {
       strapi.log.error("FindUsers Error: " + error.message);
       return ctx.internalServerError(error.message);

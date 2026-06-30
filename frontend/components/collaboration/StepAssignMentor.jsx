@@ -25,7 +25,10 @@ export default function StepAssignMentor() {
   useEffect(() => {
     const loadUsers = async () => {
       try {
-        const response = await fetchFromStrapi("/auth/users");
+        const communityParam = formData.communityName
+          ? `?community=${encodeURIComponent(formData.communityName)}`
+          : "";
+        const response = await fetchFromStrapi(`/auth/users${communityParam}`);
         if (Array.isArray(response)) {
           setUsers(response);
         } else if (response?.data) {
@@ -38,7 +41,7 @@ export default function StepAssignMentor() {
       }
     };
     loadUsers();
-  }, []);
+  }, [formData.communityName]);
 
   const assignedIds = formData.mentors.map((m) => m.id);
   const availableUsers = users.filter((u) => !assignedIds.includes(u.id));

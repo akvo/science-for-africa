@@ -27,7 +27,8 @@ export default function CommunityAboutCard({ community }) {
   const stats = community.stats || {};
   const moderators = community.moderators || [];
   const subCommunities = community.subCommunities || [];
-  const rules = community.rules || [];
+  const tags = Array.isArray(community.tags) ? community.tags : [];
+  const rules = Array.isArray(community.rules) ? community.rules : [];
 
   return (
     <aside className="flex flex-col gap-5 rounded-2xl border border-brand-gray-100 bg-brand-gray-50 p-5">
@@ -103,6 +104,19 @@ export default function CommunityAboutCard({ community }) {
         </div>
       ) : null}
 
+      {tags.length ? (
+        <div className="flex flex-wrap gap-1.5 border-t border-brand-gray-100 pt-4">
+          {tags.map((tag) => (
+            <span
+              key={tag}
+              className="inline-flex items-center rounded-full border border-brand-gray-200 bg-transparent px-3 py-1 text-xs font-medium text-brand-gray-700"
+            >
+              #{tag}
+            </span>
+          ))}
+        </div>
+      ) : null}
+
       {rules.length ? (
         <div className="border-t border-brand-gray-100 pt-4">
           <h3 className="mb-3 text-sm font-semibold text-brand-gray-900">
@@ -110,7 +124,7 @@ export default function CommunityAboutCard({ community }) {
           </h3>
           <ol className="flex flex-col">
             {rules.map((r, i) => (
-              <li key={r.id}>
+              <li key={r.id || i}>
                 <details className="group border-b border-brand-gray-100 last:border-b-0">
                   <summary className="flex cursor-pointer list-none items-center gap-3 py-3 text-sm text-brand-gray-700">
                     <span className="w-4 text-brand-gray-400">{i + 1}</span>

@@ -189,6 +189,8 @@ const syncPermissions = async (strapi) => {
     "plugin::users-permissions.user.follow",
     "plugin::users-permissions.user.unfollow",
     "api::landing-page.landing-page.find",
+    "api::resources-page.resources-page.find",
+    "api::resource.resource.find",
   ];
 
   for (const role of roles) {

@@ -77,6 +77,7 @@ export default function ResourcesList({
   communityDocumentId,
   sortOrder = "newest",
   onAdd,
+  showAddButton = true,
   className,
 }) {
   const { t } = useTranslation("common");
@@ -145,15 +146,17 @@ export default function ResourcesList({
             </button>
           );
         })}
-        <Button
-          size="sm"
-          variant="outline"
-          className="ml-auto gap-1.5 rounded-full"
-          onClick={() => setDialogOpen(true)}
-        >
-          <Plus className="size-4" />
-          {t("resources.add_resource")}
-        </Button>
+        {showAddButton && (
+          <Button
+            size="sm"
+            variant="outline"
+            className="ml-auto gap-1.5 rounded-full"
+            onClick={() => setDialogOpen(true)}
+          >
+            <Plus className="size-4" />
+            {t("resources.add_resource")}
+          </Button>
+        )}
       </div>
 
       {loading ? (

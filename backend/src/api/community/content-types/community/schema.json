@@ -49,7 +49,9 @@
       "type": "json"
     },
     "rules": {
-      "type": "json"
+      "type": "component",
+      "repeatable": true,
+      "component": "community.rule"
     },
     "parent": {
       "type": "relation",

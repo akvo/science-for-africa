@@ -58,7 +58,7 @@ function initialsOf(name = "") {
 
 /* ─────────────── Collaboration Call Card (hub variant) ─────────────── */
 
-function CollaborationHubCard({ call, onView, t }) {
+function CollaborationHubCard({ call, onView, onViewCommunity, t }) {
   const isActive = new Date(call.endDate) >= new Date();
   const datePrefix = isActive
     ? t("call_card.valid_till")
@@ -125,9 +125,9 @@ function CollaborationHubCard({ call, onView, t }) {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                // Navigate to community if slug is available
+                onViewCommunity?.(call.communityName);
               }}
-              className="font-medium text-primary-500 hover:underline"
+              className="font-medium text-primary-500 hover:underline cursor-pointer"
             >
               {t("call_card.view_community")}
             </button>
@@ -281,6 +281,13 @@ export default function CollaborationHubPage() {
     router.push(`/community/calls/${call.documentId || call.id}`);
   };
 
+  const handleViewCommunity = (communityName) => {
+    const match = communities.find((c) => c.name === communityName);
+    if (match?.slug) {
+      router.push(`/community/${match.slug}`);
+    }
+  };
+
   return (
     <div className="flex flex-col lg:flex-row">
       {/* Left sidebar */}
@@ -334,6 +341,7 @@ export default function CollaborationHubPage() {
                   key={call.documentId || call.id}
                   call={call}
                   onView={handleView}
+                  onViewCommunity={handleViewCommunity}
                   t={tCommunity}
                 />
               ))}

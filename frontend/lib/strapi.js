@@ -365,7 +365,7 @@ export async function fetchInstitutionTypes(locale = "en") {
  */
 export async function fetchCommunity(slug) {
   return fetchFromStrapi(
-    `/communities?filters[slug][$eq]=${slug}&populate[subCommunities]=true&populate[parent]=true&populate[moderators]=true&populate[createdByUser]=true`,
+    `/communities?filters[slug][$eq]=${slug}&populate[subCommunities]=true&populate[parent]=true&populate[moderators]=true&populate[createdByUser]=true&populate[rules]=true`,
   );
 }
 
@@ -377,7 +377,7 @@ export async function fetchCommunity(slug) {
  */
 export async function fetchCommunityByName(name) {
   return fetchFromStrapi(
-    `/communities?filters[name][$eq]=${encodeURIComponent(name)}&populate[subCommunities]=true&populate[parent]=true&populate[moderators]=true&populate[createdByUser]=true`,
+    `/communities?filters[name][$eq]=${encodeURIComponent(name)}&populate[subCommunities]=true&populate[parent]=true&populate[moderators]=true&populate[createdByUser]=true&populate[rules]=true`,
   );
 }
 
@@ -516,6 +516,28 @@ export async function fetchResources(communityId, resourceType) {
     qs += `&filters[resourceType][$eq]=${encodeURIComponent(resourceType)}`;
   }
   return fetchFromStrapi(`/resources${qs}`);
+}
+
+/**
+ * Fetch all resources (global, not scoped to a community).
+ * Supports optional filters for resourceType, search query, etc.
+ */
+export async function fetchAllResources({ resourceType, search } = {}) {
+  let qs = `?populate[file]=true&populate[uploadedBy]=true&populate[community]=true&sort=createdAt:desc&pagination[pageSize]=100`;
+  if (resourceType && resourceType !== "all") {
+    qs += `&filters[resourceType][$eq]=${encodeURIComponent(resourceType)}`;
+  }
+  if (search) {
+    qs += `&filters[name][$containsi]=${encodeURIComponent(search)}`;
+  }
+  return fetchFromStrapi(`/resources${qs}`);
+}
+
+/**
+ * Fetch the Resources Page hero content (single type).
+ */
+export async function fetchResourcesPage() {
+  return fetchFromStrapi("/resources-page?populate=heroImage");
 }
 
 /**

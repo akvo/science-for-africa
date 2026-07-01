@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Share2, UserPlus, UserMinus } from "lucide-react";
+import { Ban, Flag, MoreHorizontal, Share2, UserPlus, UserMinus } from "lucide-react";
 import VerificationBadge from "@/components/shared/VerificationBadge";
 import { cn, formatNumber } from "@/lib/utils";
 
@@ -102,11 +102,27 @@ const ProfileCard = ({
               <DropdownMenuContent align="end" className="w-auto min-w-60">
                 <DropdownMenuItem
                   onClick={handleShare}
-                  className="gap-2 cursor-pointer whitespace-nowrap"
+                  className="flex items-center justify-between cursor-pointer whitespace-nowrap"
                 >
+                  {t("profile:share.share_profile", { defaultValue: "Share" })}
                   <Share2 size={16} />
-                  {t("profile:share.share_profile")}
                 </DropdownMenuItem>
+                {!isOwnProfile && (
+                  <>
+                    <DropdownMenuItem
+                      className="flex items-center justify-between cursor-pointer whitespace-nowrap"
+                    >
+                      {t("profile:actions.block", { defaultValue: "Block" })}
+                      <Ban size={16} />
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="flex items-center justify-between cursor-pointer whitespace-nowrap"
+                    >
+                      {t("profile:actions.report", { defaultValue: "Report" })}
+                      <Flag size={16} />
+                    </DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenuPortal>
           </DropdownMenu>

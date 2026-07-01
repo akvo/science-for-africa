@@ -25,6 +25,7 @@ const TYPE_LABEL_KEYS = {
 function ResourceCard({ resource, t, onView }) {
   const fileUrl = getFullFileUrl(resource.file?.url);
   return (
+    <div>
     <div className="flex items-center gap-4 px-6 py-5">
       <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand-gray-100">
         <File className="size-6 text-primary-500" />
@@ -69,6 +70,19 @@ function ResourceCard({ resource, t, onView }) {
           </Button>
         )}
       </div>
+    </div>
+    {resource.topics?.length > 0 && (
+      <div className="flex flex-wrap gap-1.5 px-6 pb-4 -mt-2 pl-[4.5rem]">
+        {resource.topics.map((tag) => (
+          <span
+            key={tag}
+            className="inline-flex items-center rounded-full border border-brand-gray-200 px-3 py-1 text-xs font-medium text-brand-gray-600"
+          >
+            #{tag}
+          </span>
+        ))}
+      </div>
+    )}
     </div>
   );
 }

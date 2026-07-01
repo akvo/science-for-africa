@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Image from "next/image";
-import { Search, ChevronUp, FileText, ChevronDown } from "lucide-react";
+import { Search, ChevronUp, File, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Meta from "@/components/seo/Meta";
@@ -13,8 +13,7 @@ const RESOURCE_TYPES = [
   { key: "case-study", label: "Case study" },
   { key: "report", label: "Report" },
   { key: "publication", label: "Publication" },
-  { key: "practice-note", label: "Report" },
-  { key: "case-studie", label: "Case studie" },
+  { key: "practice-note", label: "Practice note" },
 ];
 
 const THEMATIC_AREAS = [
@@ -32,10 +31,9 @@ const REGIONS = ["Africa", "Oceania", "Europe", "Asia", "Americas"];
 
 const TYPE_LABELS = {
   "case-study": "Case study",
-  "case-studie": "Case studie",
   report: "Report",
   publication: "Publication",
-  "practice-note": "Report",
+  "practice-note": "Practice note",
 };
 
 /* ───────────────── Resource Row Card ───────────────── */
@@ -48,8 +46,8 @@ function ResourceRow({ resource }) {
       {/* Top row: icon + type/title + buttons */}
       <div className="flex items-center gap-3">
         {/* File icon */}
-        <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#E6EEEE] text-brand-teal-600">
-          <FileText className="size-5" />
+        <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand-gray-100">
+          <File className="size-6 text-primary-500" />
         </div>
 
         {/* Type + Title */}
@@ -165,7 +163,7 @@ function SortDropdown({ value, onChange }) {
             className="fixed inset-0 z-10"
             onClick={() => setOpen(false)}
           />
-          <div className="absolute right-0 top-full mt-1 z-20 w-32 rounded-lg border border-brand-gray-100 bg-white shadow-lg py-1">
+          <div className="absolute right-0 top-full mt-1 z-20 w-28 rounded-md border border-brand-gray-200 bg-white shadow-md py-1">
             {options.map((o) => (
               <button
                 key={o.key}
@@ -174,7 +172,7 @@ function SortDropdown({ value, onChange }) {
                   onChange(o.key);
                   setOpen(false);
                 }}
-                className={`w-full px-3 py-2 text-left text-sm ${o.key === value ? "text-primary-600 font-medium" : "text-brand-gray-700"} hover:bg-brand-gray-50`}
+                className={`w-full px-3 py-1.5 text-left text-sm ${o.key === value ? "text-primary-600 font-medium" : "text-brand-gray-700"} hover:bg-brand-gray-50`}
               >
                 {o.label}
               </button>

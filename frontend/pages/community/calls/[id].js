@@ -296,6 +296,7 @@ export default function CollaborationCallDetailPage() {
     <div className="grid min-w-0 grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)]">
       <CommunityDetailsSidebar
         community={community}
+        call={call}
         mentors={mentors}
         joinedUsers={joinedUsers}
         attachments={chatAttachments}
@@ -346,6 +347,7 @@ const MAX_AVATAR_COUNT = 8;
 
 function CommunityDetailsSidebar({
   community,
+  call,
   mentors = [],
   joinedUsers = [],
   attachments = [],
@@ -372,36 +374,24 @@ function CommunityDetailsSidebar({
   return (
     <aside className="border-b border-brand-gray-100 p-5 lg:border-b-0 lg:border-r lg:min-h-[calc(100vh-114px)]">
       <div className="flex flex-col gap-5 rounded-xl bg-brand-gray-50 p-4">
-        <div className="flex items-center gap-3">
-          <Avatar size="md">
-            {community.avatarUrl ? (
-              <AvatarImage src={community.avatarUrl} alt={community.name} />
-            ) : null}
-            <AvatarFallback>
-              {community.initials || initialsOf(community.name)}
-            </AvatarFallback>
-          </Avatar>
-          <div className="min-w-0">
-            <h2 className="font-heading text-base leading-tight font-bold text-brand-gray-900 break-words pb-1">
-              {community.name}
-            </h2>
-            {community.handle ? (
-              <p className="truncate text-xs text-brand-gray-500">
-                ID: {community.handle}
-              </p>
-            ) : null}
-          </div>
+        <div className="min-w-0">
+          <h2 className="font-heading text-base leading-tight font-bold text-brand-gray-900 break-words pb-1">
+            {call?.title || community.name}
+          </h2>
         </div>
 
-        {community.description ? (
-          <p className="text-sm text-brand-gray-600">{community.description}</p>
+        {(call?.description || community.description) ? (
+          <p className="text-sm text-brand-gray-600">{call?.description || community.description}</p>
         ) : null}
 
         {createdLabel ? (
-          <p className="text-xs text-brand-gray-500">
-            {t("common:community.created", { defaultValue: "Created" })}:{" "}
-            {createdLabel}
-          </p>
+          <div className="inline-flex items-center gap-2 rounded-2xl bg-[#E8ECEF] px-3 py-2">
+            <Calendar className="size-4 text-brand-gray-700" />
+            <span className="text-xs font-medium text-brand-gray-700">
+              {t("common:community.created", { defaultValue: "Created" })}:{" "}
+              {createdLabel}
+            </span>
+          </div>
         ) : null}
 
         {tags.length ? (
@@ -440,8 +430,8 @@ function CommunityDetailsSidebar({
 
         {joinedUsers.length ? (
           <Section
-            title={t("common:navbar.profile_dropdown.communities", {
-              defaultValue: "Communities",
+            title={t("common:community.users", {
+              defaultValue: "Users",
             })}
             action={
               joinedUsers.length > MAX_AVATAR_COUNT
@@ -472,7 +462,7 @@ function CommunityDetailsSidebar({
 
         {mentors.length ? (
           <Section
-            title={t("profile:tabs.mentorship", { defaultValue: "Mentorship" })}
+            title={t("community:call_detail.mentors", { defaultValue: "Mentors" })}
           >
             <ul className="flex flex-col gap-3">
               {mentors.map((m) => (
@@ -495,7 +485,7 @@ function CommunityDetailsSidebar({
                       {m.role}
                     </div>
                     <span className="mt-1.5 inline-flex items-center rounded-full bg-brand-orange-50 px-2.5 py-0.5 text-[10px] font-semibold text-brand-orange-500">
-                      {t("profile:tabs.mentorship", {
+                      {t("community:call_detail.mentor_badge", {
                         defaultValue: "Mentor",
                       })}
                     </span>

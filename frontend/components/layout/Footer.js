@@ -25,7 +25,7 @@ const Footer = () => {
         },
         {
           name: t("footer.sections.general.resources"),
-          href: "/coming-soon",
+          href: "/resources",
         },
         { name: t("footer.sections.general.account"), href: "/profile" },
       ],

@@ -30,16 +30,12 @@ const Custom404 = () => {
         </div>
 
         <div className="max-w-4xl">
-          <p className="text-display-md font-bold text-brand-teal-600 mb-2">
-            404
-          </p>
-
           <h1 className="text-display-sm font-bold text-brand-teal-900 mb-4 uppercase tracking-tight">
-            {t("common.error_404.title")}
+            {t("common.coming_soon.title", { defaultValue: "Coming Soon" })}
           </h1>
 
           <p className="text-xl text-brand-gray-500 mb-12 leading-relaxed max-w-md font-medium">
-            {t("common.error_404.description")}
+            {t("common.coming_soon.description", { defaultValue: "We are working hard to bring this feature to you. Stay tuned!" })}
           </p>
 
           <Button

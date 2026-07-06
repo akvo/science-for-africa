@@ -14,15 +14,28 @@ export async function fetchFromStrapi(endpoint) {
 }
 
 /**
+ * Map Next.js short locale codes to Strapi locale codes.
+ * Strapi may use region-specific codes (e.g. "fr-FR") while Next.js uses short codes ("fr").
+ */
+const LOCALE_MAP = {
+  fr: "fr-FR",
+  ar: "ar",
+  sw: "sw",
+  pt: "pt",
+  en: "en",
+};
+
+/**
  * Fetch localized content from Strapi with an automatic fallback to English
  * if the requested locale returns empty results.
  */
 export async function fetchLocalized(endpoint, currentLocale) {
   try {
-    // 1. Try fetching with current locale
+    // 1. Try fetching with current locale (mapped to Strapi code)
+    const strapiLocale = LOCALE_MAP[currentLocale] || currentLocale;
     const separator = endpoint.includes("?") ? "&" : "?";
     let response = await fetchFromStrapi(
-      `${endpoint}${separator}locale=${currentLocale}`,
+      `${endpoint}${separator}locale=${strapiLocale}`,
     );
 
     // 2. If empty and not 'en', fallback to 'en'

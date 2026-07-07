@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import Meta from "@/components/seo/Meta";
 import { fetchAllResources, fetchResourcesPage } from "@/lib/strapi";
 import { getFullFileUrl } from "@/lib/utils";
+import { useAuthStore } from "@/lib/auth-store";
 import ViewResourceDialog from "@/components/community/ViewResourceDialog";
 
 const RESOURCE_TYPES = [
@@ -40,7 +41,7 @@ const TYPE_LABELS = {
 
 /* ───────────────── Resource Row Card ───────────────── */
 
-function ResourceRow({ resource, onView }) {
+function ResourceRow({ resource, onView, onDownload }) {
   const fileUrl = getFullFileUrl(resource.file?.url);
 
   return (
@@ -72,13 +73,13 @@ function ResourceRow({ resource, onView }) {
             View
           </button>
           {fileUrl && (
-            <a
-              href={fileUrl}
-              download
+            <button
+              type="button"
+              onClick={() => onDownload?.(resource, fileUrl)}
               className="inline-flex h-9 items-center rounded-full border border-brand-gray-200 bg-white px-4 text-sm font-medium text-brand-gray-700 hover:bg-brand-gray-50 transition-colors"
             >
               Download
-            </a>
+            </button>
           )}
         </div>
       </div>
@@ -188,6 +189,7 @@ function SortDropdown({ value, onChange }) {
 export default function ResourcesPage() {
   const { t } = useTranslation("common");
   const router = useRouter();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [resources, setResources] = useState([]);
   const [pageData, setPageData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -197,6 +199,25 @@ export default function ResourcesPage() {
   const [selectedRegions, setSelectedRegions] = useState([]);
   const [sortBy, setSortBy] = useState("newest");
   const [viewResource, setViewResource] = useState(null);
+
+  const handleView = (resource) => {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+    setViewResource(resource);
+  };
+
+  const handleDownload = (resource, fileUrl) => {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+    const a = document.createElement("a");
+    a.href = fileUrl;
+    a.download = resource.file?.name || resource.name;
+    a.click();
+  };
 
   useEffect(() => {
     const locale = router.locale || "en";
@@ -385,7 +406,8 @@ export default function ResourcesPage() {
                   <ResourceRow
                     key={resource.documentId || resource.id}
                     resource={resource}
-                    onView={setViewResource}
+                    onView={handleView}
+                    onDownload={handleDownload}
                   />
                 ))}
               </div>

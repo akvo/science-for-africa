@@ -76,6 +76,36 @@
       "locale": null
     },
     {
+      "documentId": "sync-resources-page-find",
+      "action": "api::resources-page.resources-page.find",
+      "locale": null
+    },
+    {
+      "documentId": "sync-community-page-find",
+      "action": "api::community-page.community-page.find",
+      "locale": null
+    },
+    {
+      "documentId": "sync-resource-find",
+      "action": "api::resource.resource.find",
+      "locale": null
+    },
+    {
+      "documentId": "sync-collaboration-call-find",
+      "action": "api::collaboration-call.collaboration-call.find",
+      "locale": null
+    },
+    {
+      "documentId": "sync-collaboration-call-findone",
+      "action": "api::collaboration-call.collaboration-call.findOne",
+      "locale": null
+    },
+    {
+      "documentId": "sync-chat-message-find",
+      "action": "api::chat-message.chat-message.find",
+      "locale": null
+    },
+    {
       "documentId": "h3wy47u2okge2qx0zbup008c",
       "action": "plugin::users-permissions.auth.callback",
       "locale": null

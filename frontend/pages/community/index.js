@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CommunityLeftNav from "@/components/community/CommunityLeftNav";
 import ConfirmationModal from "@/components/shared/ConfirmationModal";
-import { fetchCommunities, joinCommunity, leaveCommunity } from "@/lib/strapi";
+import { fetchCommunities, fetchCommunityPage, joinCommunity, leaveCommunity } from "@/lib/strapi";
 import { useAuthStore } from "@/lib/auth-store";
 
 const useHasHydrated = () => {
@@ -104,16 +104,21 @@ export default function CommunitiesPage() {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [leaveTarget, setLeaveTarget] = useState(null);
+  const [pageData, setPageData] = useState(null);
 
   useEffect(() => {
     if (!hydrated) return;
     setTimeout(() => setLoading(true), 0);
-    fetchCommunities().then((res) => {
-      const items = res?.data || [];
-      setCommunities(items);
-      setLoading(false);
-    });
-  }, [hydrated]);
+    const locale = router.locale || "en";
+    Promise.all([fetchCommunities(), fetchCommunityPage(locale)]).then(
+      ([res, pageRes]) => {
+        const items = res?.data || [];
+        setCommunities(items);
+        setPageData(pageRes?.data || null);
+        setLoading(false);
+      },
+    );
+  }, [hydrated, router.locale]);
 
   const handleJoin = async (community) => {
     if (!isAuthenticated) {
@@ -225,10 +230,10 @@ export default function CommunitiesPage() {
         <div className="flex items-center justify-between gap-4 mb-6 lg:pl-6">
           <div>
             <h1 className="font-heading text-4xl font-bold text-brand-teal-800">
-              {t("community.explore")}
+              {pageData?.title || t("community.explore")}
             </h1>
             <p className="mt-1 text-sm text-brand-gray-500">
-              {t("community.explore_description")}
+              {pageData?.description || t("community.explore_description")}
             </p>
           </div>
           {/* TODO: re-enable when community creation is ready

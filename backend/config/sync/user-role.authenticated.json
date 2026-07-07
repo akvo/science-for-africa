@@ -176,6 +176,16 @@
       "locale": null
     },
     {
+      "documentId": "sync-auth-resources-page-find",
+      "action": "api::resources-page.resources-page.find",
+      "locale": null
+    },
+    {
+      "documentId": "sync-auth-community-page-find",
+      "action": "api::community-page.community-page.find",
+      "locale": null
+    },
+    {
       "documentId": "k2r4raqg8lvfmjz75gbt4iv5",
       "action": "api::resource-comment.resource-comment.create",
       "locale": null

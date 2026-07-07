@@ -10,20 +10,39 @@
   "options": {
     "draftAndPublish": true
   },
-  "pluginOptions": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
   "attributes": {
     "badge": {
       "type": "string",
-      "default": "Explore Resources"
+      "default": "Explore Resources",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "title": {
       "type": "string",
       "required": true,
-      "default": "Discover Our Valuable Resources"
+      "default": "Discover Our Valuable Resources",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "description": {
       "type": "text",
-      "default": "Discover a variety of resources, from insightful case studies to comprehensive reports, that will enhance your understanding and exploration of the subject."
+      "default": "Discover a variety of resources, from insightful case studies to comprehensive reports, that will enhance your understanding and exploration of the subject.",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "heroImage": {
       "type": "media",

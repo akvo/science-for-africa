@@ -549,8 +549,15 @@ export async function fetchAllResources({ resourceType, search } = {}) {
 /**
  * Fetch the Resources Page hero content (single type).
  */
-export async function fetchResourcesPage() {
-  return fetchFromStrapi("/resources-page?populate=heroImage");
+export async function fetchResourcesPage(locale = "en") {
+  return fetchLocalized("/resources-page?populate=heroImage", locale);
+}
+
+/**
+ * Fetch the Community Page hero content (single type).
+ */
+export async function fetchCommunityPage(locale = "en") {
+  return fetchLocalized("/community-page", locale);
 }
 
 /**

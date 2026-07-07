@@ -1,0 +1,39 @@
+{
+  "kind": "singleType",
+  "collectionName": "community_pages",
+  "info": {
+    "singularName": "community-page",
+    "pluralName": "community-pages",
+    "displayName": "Community Page",
+    "description": "Editable hero content for the community listing page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "Explore communities",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "description": {
+      "type": "text",
+      "default": "Lorem ipsum dolor sit amet consectetur. In et pellentesque ut fermentum bibendum mi imperdiet.",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Image from "next/image";
@@ -188,6 +189,7 @@ function SortDropdown({ value, onChange }) {
 
 export default function ResourcesPage() {
   const { t } = useTranslation("common");
+  const router = useRouter();
   const [resources, setResources] = useState([]);
   const [pageData, setPageData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -198,14 +200,15 @@ export default function ResourcesPage() {
   const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
-    Promise.all([fetchAllResources(), fetchResourcesPage()]).then(
+    const locale = router.locale || "en";
+    Promise.all([fetchAllResources(), fetchResourcesPage(locale)]).then(
       ([resRes, pageRes]) => {
         setResources(Array.isArray(resRes?.data) ? resRes.data : []);
         setPageData(pageRes?.data || null);
         setLoading(false);
       },
     );
-  }, []);
+  }, [router.locale]);
 
   const toggleFilter = (setter) => (key) => {
     setter((prev) =>

@@ -258,7 +258,7 @@ const RESOURCES = [
   {
     name: "Urban Planning Framework",
     description: "Legacy urban development models (unsupported).",
-    resourceType: "practice-note",
+    resourceType: "report",
     status: "declined",
     communityName: "Community of Innovators",
     uploadedBy: 1,
@@ -742,34 +742,6 @@ const seed = async (strapi) => {
           community: community?.id,
           uploadedBy: user?.id,
           slug: data.name
-            .toLowerCase()
-            .replace(/ /g, "-")
-            .replace(/[^\w-]/g, ""),
-        },
-      });
-    }
-  }
-
-  // 6b. Ensure EVERY user has at least one resource (Development only)
-  for (const user of users) {
-    const resourceCount = await strapi.db
-      .query("api::resource.resource")
-      .count({ where: { uploadedBy: user.id } });
-
-    if (resourceCount === 0) {
-      strapi.log.info(`Creating default resource for user: ${user.username}`);
-      const community = allCommunities[0]; // Link to first community
-      const title = `Technical Note - ${user.username}`;
-
-      await strapi.db.query("api::resource.resource").create({
-        data: {
-          name: title,
-          description: `Automatically generated research note for ${user.username}.`,
-          resourceType: "practice-note",
-          status: "approved",
-          community: community?.id,
-          uploadedBy: user.id,
-          slug: title
             .toLowerCase()
             .replace(/ /g, "-")
             .replace(/[^\w-]/g, ""),

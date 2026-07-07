@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import Meta from "@/components/seo/Meta";
 import { fetchAllResources, fetchResourcesPage } from "@/lib/strapi";
 import { getFullFileUrl } from "@/lib/utils";
+import ViewResourceDialog from "@/components/community/ViewResourceDialog";
 
 const RESOURCE_TYPES = [
   { key: "case-study", label: "Case study" },
@@ -39,7 +40,7 @@ const TYPE_LABELS = {
 
 /* ───────────────── Resource Row Card ───────────────── */
 
-function ResourceRow({ resource }) {
+function ResourceRow({ resource, onView }) {
   const fileUrl = getFullFileUrl(resource.file?.url);
 
   return (
@@ -63,24 +64,21 @@ function ResourceRow({ resource }) {
 
         {/* Action buttons */}
         <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => onView?.(resource)}
+            className="inline-flex h-9 items-center rounded-full border border-brand-gray-200 bg-white px-4 text-sm font-medium text-brand-gray-700 hover:bg-brand-gray-50 transition-colors"
+          >
+            View
+          </button>
           {fileUrl && (
-            <>
-              <a
-                href={fileUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex h-9 items-center rounded-full border border-brand-gray-200 bg-white px-4 text-sm font-medium text-brand-gray-700 hover:bg-brand-gray-50 transition-colors"
-              >
-                View
-              </a>
-              <a
-                href={fileUrl}
-                download
-                className="inline-flex h-9 items-center rounded-full border border-brand-gray-200 bg-white px-4 text-sm font-medium text-brand-gray-700 hover:bg-brand-gray-50 transition-colors"
-              >
-                Download
-              </a>
-            </>
+            <a
+              href={fileUrl}
+              download
+              className="inline-flex h-9 items-center rounded-full border border-brand-gray-200 bg-white px-4 text-sm font-medium text-brand-gray-700 hover:bg-brand-gray-50 transition-colors"
+            >
+              Download
+            </a>
           )}
         </div>
       </div>
@@ -198,6 +196,7 @@ export default function ResourcesPage() {
   const [selectedAreas, setSelectedAreas] = useState([]);
   const [selectedRegions, setSelectedRegions] = useState([]);
   const [sortBy, setSortBy] = useState("newest");
+  const [viewResource, setViewResource] = useState(null);
 
   useEffect(() => {
     const locale = router.locale || "en";
@@ -386,6 +385,7 @@ export default function ResourcesPage() {
                   <ResourceRow
                     key={resource.documentId || resource.id}
                     resource={resource}
+                    onView={setViewResource}
                   />
                 ))}
               </div>
@@ -393,6 +393,14 @@ export default function ResourcesPage() {
           </div>
         </div>
       </div>
+
+      <ViewResourceDialog
+        open={!!viewResource}
+        onOpenChange={(open) => {
+          if (!open) setViewResource(null);
+        }}
+        resource={viewResource}
+      />
     </>
   );
 }
@@ -403,7 +411,7 @@ ResourcesPage.showFooter = true;
 export async function getServerSideProps({ locale }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, ["common", "community"])),
     },
   };
 }

@@ -561,6 +561,13 @@ export async function fetchCommunityPage(locale = "en") {
 }
 
 /**
+ * Fetch the Contact Page content (single type).
+ */
+export async function fetchContactPage(locale = "en") {
+  return fetchLocalized("/contact-page", locale);
+}
+
+/**
  * Create a resource with file upload (multipart/form-data).
  * Strapi expects: data (JSON string) + files.file (the uploaded file).
  */

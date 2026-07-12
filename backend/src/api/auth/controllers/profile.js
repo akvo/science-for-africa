@@ -487,8 +487,10 @@ module.exports = ({ strapi }) => ({
 
       try {
         // Update the user using Document Service (Strapi v5 way)
+        // Explicitly set locale to null — users are not localized
         await strapi.documents("plugin::users-permissions.user").update({
           documentId: user.documentId,
+          locale: null,
           data,
         });
       } catch (error) {

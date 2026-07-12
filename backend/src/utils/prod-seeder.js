@@ -191,6 +191,7 @@ const syncPermissions = async (strapi) => {
     "api::landing-page.landing-page.find",
     "api::resources-page.resources-page.find",
     "api::community-page.community-page.find",
+    "api::contact-page.contact-page.find",
     "api::resource.resource.find",
   ];
 

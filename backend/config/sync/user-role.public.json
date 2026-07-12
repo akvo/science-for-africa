@@ -86,6 +86,11 @@
       "locale": null
     },
     {
+      "documentId": "sync-contact-page-find",
+      "action": "api::contact-page.contact-page.find",
+      "locale": null
+    },
+    {
       "documentId": "sync-resource-find",
       "action": "api::resource.resource.find",
       "locale": null

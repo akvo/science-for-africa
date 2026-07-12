@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 
 const Footer = () => {
   const { t } = useTranslation("common");
@@ -15,17 +14,13 @@ const Footer = () => {
       links: [
         { name: t("footer.sections.general.about"), href: "/coming-soon" },
         {
-          name: t("footer.sections.general.opportunities"),
-          href: "/coming-soon",
-        },
-        {
-          name: t("footer.sections.general.learning"),
-          href: "/coming-soon",
-          isNew: true,
-        },
-        {
           name: t("footer.sections.general.resources"),
           href: "/resources",
+        },
+        {
+          name: "News and Insights",
+          href: "https://scienceforafrica.foundation/media-centre",
+          external: true,
         },
         { name: t("footer.sections.general.account"), href: "/profile" },
       ],
@@ -33,7 +28,6 @@ const Footer = () => {
     {
       title: t("footer.sections.community.title"),
       links: [
-        { name: t("footer.sections.community.trending"), href: "/community" },
         {
           name: t("footer.sections.community.communities"),
           href: "/community",
@@ -44,9 +38,8 @@ const Footer = () => {
         },
         {
           name: t("footer.sections.community.collaboration"),
-          href: "/community",
+          href: "/community/collaboration-hub",
         },
-        { name: t("footer.sections.community.events"), href: "/community" },
       ],
     },
     {
@@ -59,7 +52,7 @@ const Footer = () => {
         { name: t("footer.sections.legal.privacy"), href: "/privacy-policy" },
         { name: t("footer.sections.legal.cookies"), href: "/privacy-policy" },
         { name: t("footer.sections.legal.settings"), href: "/profile" },
-        { name: t("footer.sections.legal.contact"), href: "/coming-soon" },
+        { name: t("footer.sections.legal.contact"), href: "/contact" },
       ],
     },
   ];
@@ -101,20 +94,23 @@ const Footer = () => {
               <ul className="space-y-4">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="text-base font-medium text-brand-gray-900 hover:text-brand-teal-600 transition-colors flex items-center gap-2"
-                    >
-                      {link.name}
-                      {link.isNew && (
-                        <Badge
-                          variant="secondary"
-                          className="bg-brand-teal-50 text-brand-teal-600 border-brand-teal-100 px-2 py-0.5 text-[10px] font-bold"
-                        >
-                          {t("common.new")}
-                        </Badge>
-                      )}
-                    </Link>
+                    {link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-base font-medium text-brand-gray-900 hover:text-brand-teal-600 transition-colors"
+                      >
+                        {link.name}
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-base font-medium text-brand-gray-900 hover:text-brand-teal-600 transition-colors"
+                      >
+                        {link.name}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

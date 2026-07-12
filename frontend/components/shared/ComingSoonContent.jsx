@@ -45,7 +45,7 @@ export default function ComingSoonContent() {
             asChild
             className="rounded-full px-12 h-14 border-brand-gray-200 text-brand-gray-600 hover:bg-brand-gray-50 w-full sm:w-auto"
           >
-            <Link href="/">{t("navbar.contact")}</Link>
+            <Link href="/contact">{t("navbar.contact")}</Link>
           </Button>
         </div>
       </div>

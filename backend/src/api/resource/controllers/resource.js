@@ -111,6 +111,36 @@ module.exports = createCoreController(
       const { data } = ctx.request.body;
       if (!data) return ctx.badRequest("Missing data");
 
+      // Verify community membership if resource is linked to a community
+      if (data.community) {
+        const communityId = data.community;
+        // Resolve community to get its numeric ID
+        const community = await strapi.db
+          .query("api::community.community")
+          .findOne({
+            where: { documentId: communityId },
+          });
+
+        if (!community) {
+          return ctx.badRequest("Community not found");
+        }
+
+        const membership = await strapi.db
+          .query("api::community-membership.community-membership")
+          .findOne({
+            where: {
+              user: user.id,
+              community: community.id,
+            },
+          });
+
+        if (!membership) {
+          return ctx.forbidden(
+            "You must be a member of this community to upload resources.",
+          );
+        }
+      }
+
       // Security: Override protected fields
       const sanitizedData = {
         ...data,

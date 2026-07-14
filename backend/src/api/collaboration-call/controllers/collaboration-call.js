@@ -159,6 +159,32 @@ module.exports = createCoreController(
         return ctx.badRequest("End date must be after start date");
       }
 
+      // Verify community membership if linked to a community
+      if (communityName) {
+        const community = await strapi.db
+          .query("api::community.community")
+          .findOne({
+            where: { name: communityName },
+          });
+
+        if (community) {
+          const membership = await strapi.db
+            .query("api::community-membership.community-membership")
+            .findOne({
+              where: {
+                user: user.id,
+                community: community.id,
+              },
+            });
+
+          if (!membership) {
+            return ctx.forbidden(
+              "You must be a member of this community to create a collaboration.",
+            );
+          }
+        }
+      }
+
       try {
         // Create the collaboration call
         const collaborationCall = await strapi.entityService.create(

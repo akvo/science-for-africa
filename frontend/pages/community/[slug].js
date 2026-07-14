@@ -215,14 +215,14 @@ export default function CommunityDetailPage() {
                   calls={calls}
                   sortOrder={sortOrder}
                   onView={(call) => router.push(`/community/calls/${call.id}`)}
-                  onCreate={isAuthenticated ? openCollaboration : undefined}
+                  onCreate={isAuthenticated && isMember ? openCollaboration : undefined}
                 />
               </TabsContent>
               <TabsContent value="resources" className="pt-2">
                 <ResourcesList
                   communityDocumentId={community?.documentId}
                   sortOrder={sortOrder}
-                  showAddButton={isAuthenticated}
+                  showAddButton={isAuthenticated && isMember}
                 />
               </TabsContent>
             </Tabs>

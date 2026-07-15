@@ -18,7 +18,7 @@ export async function fetchFromStrapi(endpoint) {
  * Strapi may use region-specific codes (e.g. "fr-FR") while Next.js uses short codes ("fr").
  */
 const LOCALE_MAP = {
-  fr: "fr-FR",
+  fr: "fr",
   ar: "ar",
   sw: "sw",
   pt: "pt",

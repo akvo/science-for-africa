@@ -12,36 +12,42 @@ import { getFullFileUrl } from "@/lib/utils";
 import { useAuthStore } from "@/lib/auth-store";
 import ViewResourceDialog from "@/components/community/ViewResourceDialog";
 
-const RESOURCE_TYPES = [
-  { key: "case-study", label: "Case study" },
-  { key: "report", label: "Report" },
-  { key: "publication", label: "Publication" },
-  { key: "practice-note", label: "Practice note" },
+const RESOURCE_TYPE_KEYS = [
+  { key: "case-study", i18nKey: "resources.case_study" },
+  { key: "report", i18nKey: "resources.report" },
+  { key: "publication", i18nKey: "resources.publication" },
+  { key: "practice-note", i18nKey: "resources.practice_note" },
 ];
 
-const THEMATIC_AREAS = [
-  "Economy",
-  "Society",
-  "Nature",
-  "Climate",
-  "Food",
-  "Technology",
-  "Health",
-  "Communication",
+const THEMATIC_AREA_KEYS = [
+  { value: "Economy", i18nKey: "resources.area_economy" },
+  { value: "Society", i18nKey: "resources.area_society" },
+  { value: "Nature", i18nKey: "resources.area_nature" },
+  { value: "Climate", i18nKey: "resources.area_climate" },
+  { value: "Food", i18nKey: "resources.area_food" },
+  { value: "Technology", i18nKey: "resources.area_technology" },
+  { value: "Health", i18nKey: "resources.area_health" },
+  { value: "Communication", i18nKey: "resources.area_communication" },
 ];
 
-const REGIONS = ["Africa", "Oceania", "Europe", "Asia", "Americas"];
+const REGION_KEYS = [
+  { value: "Africa", i18nKey: "resources.region_africa" },
+  { value: "Oceania", i18nKey: "resources.region_oceania" },
+  { value: "Europe", i18nKey: "resources.region_europe" },
+  { value: "Asia", i18nKey: "resources.region_asia" },
+  { value: "Americas", i18nKey: "resources.region_americas" },
+];
 
-const TYPE_LABELS = {
-  "case-study": "Case study",
-  report: "Report",
-  publication: "Publication",
-  "practice-note": "Practice note",
+const TYPE_I18N_KEYS = {
+  "case-study": "resources.case_study",
+  report: "resources.report",
+  publication: "resources.publication",
+  "practice-note": "resources.practice_note",
 };
 
 /* ───────────────── Resource Row Card ───────────────── */
 
-function ResourceRow({ resource, onView, onDownload }) {
+function ResourceRow({ resource, onView, onDownload, t }) {
   const fileUrl = getFullFileUrl(resource.file?.url);
 
   return (
@@ -56,7 +62,7 @@ function ResourceRow({ resource, onView, onDownload }) {
         {/* Type + Title */}
         <div className="flex-1 min-w-0">
           <span className="text-xs font-medium text-brand-gray-500">
-            {TYPE_LABELS[resource.resourceType] || resource.resourceType}
+            {t(TYPE_I18N_KEYS[resource.resourceType] || resource.resourceType)}
           </span>
           <h3 className="text-sm font-semibold text-brand-gray-900 truncate">
             {resource.name}
@@ -70,7 +76,7 @@ function ResourceRow({ resource, onView, onDownload }) {
             onClick={() => onView?.(resource)}
             className="inline-flex h-9 items-center rounded-full border border-brand-gray-200 bg-white px-4 text-sm font-medium text-brand-gray-700 hover:bg-brand-gray-50 transition-colors"
           >
-            View
+            {t("resources.view")}
           </button>
           {fileUrl && (
             <button
@@ -78,7 +84,7 @@ function ResourceRow({ resource, onView, onDownload }) {
               onClick={() => onDownload?.(resource, fileUrl)}
               className="inline-flex h-9 items-center rounded-full border border-brand-gray-200 bg-white px-4 text-sm font-medium text-brand-gray-700 hover:bg-brand-gray-50 transition-colors"
             >
-              Download
+              {t("resources.download")}
             </button>
           )}
         </div>
@@ -138,12 +144,12 @@ function CheckboxItem({ label, checked, onChange }) {
 
 /* ───────────────── Sort Dropdown ───────────────── */
 
-function SortDropdown({ value, onChange }) {
+function SortDropdown({ value, onChange, t }) {
   const [open, setOpen] = useState(false);
   const options = [
-    { key: "newest", label: "Newest" },
-    { key: "oldest", label: "Oldest" },
-    { key: "name", label: "Name" },
+    { key: "newest", label: t("resources.sort_newest") },
+    { key: "oldest", label: t("resources.sort_oldest") },
+    { key: "name", label: t("resources.sort_name") },
   ];
   const current = options.find((o) => o.key === value) || options[0];
 
@@ -154,7 +160,7 @@ function SortDropdown({ value, onChange }) {
         onClick={() => setOpen(!open)}
         className="inline-flex h-9 items-center gap-1.5 rounded-full border border-brand-teal-700 bg-white px-4 text-sm font-medium text-brand-teal-700 hover:bg-brand-teal-50"
       >
-        Sort by
+        {t("resources.sort_by")}
         <ChevronDown className="size-3.5 text-brand-teal-700" />
       </button>
       {open && (
@@ -275,11 +281,10 @@ export default function ResourcesPage() {
     return result;
   }, [resources, selectedTypes, search, sortBy]);
 
-  const heroTitle = pageData?.title || "Discover Our Valuable Resources";
+  const heroTitle = pageData?.title || t("resources.hero_title_fallback");
   const heroDescription =
-    pageData?.description ||
-    "Discover a variety of resources, from insightful case studies to comprehensive reports, that will enhance your understanding and exploration of the subject.";
-  const heroBadge = pageData?.badge || "Explore Resources";
+    pageData?.description || t("resources.hero_description_fallback");
+  const heroBadge = pageData?.badge || t("resources.hero_badge_fallback");
   const heroImageUrl =
     pageData?.heroImage?.url || "/assets/images/landing/about.png";
 
@@ -322,7 +327,7 @@ export default function ResourcesPage() {
           <aside className="w-full lg:w-[220px] flex-none">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold text-brand-gray-900">
-                Filters
+                {t("resources.filters")}
               </h2>
               {hasFilters && (
                 <button
@@ -330,40 +335,40 @@ export default function ResourcesPage() {
                   onClick={resetFilters}
                   className="inline-flex h-7 items-center rounded-full border border-brand-gray-200 px-3 text-xs font-medium text-brand-gray-600 hover:bg-brand-gray-50"
                 >
-                  Reset
+                  {t("resources.reset")}
                 </button>
               )}
             </div>
 
-            <FilterSection title="Resouse type">
-              {RESOURCE_TYPES.map((rt) => (
+            <FilterSection title={t("resources.resource_type")}>
+              {RESOURCE_TYPE_KEYS.map((rt) => (
                 <CheckboxItem
                   key={rt.key}
-                  label={rt.label}
+                  label={t(rt.i18nKey)}
                   checked={selectedTypes.includes(rt.key)}
                   onChange={() => toggleFilter(setSelectedTypes)(rt.key)}
                 />
               ))}
             </FilterSection>
 
-            <FilterSection title="Thematic area">
-              {THEMATIC_AREAS.map((area) => (
+            <FilterSection title={t("resources.thematic_area")}>
+              {THEMATIC_AREA_KEYS.map((area) => (
                 <CheckboxItem
-                  key={area}
-                  label={area}
-                  checked={selectedAreas.includes(area)}
-                  onChange={() => toggleFilter(setSelectedAreas)(area)}
+                  key={area.value}
+                  label={t(area.i18nKey)}
+                  checked={selectedAreas.includes(area.value)}
+                  onChange={() => toggleFilter(setSelectedAreas)(area.value)}
                 />
               ))}
             </FilterSection>
 
-            <FilterSection title="Region">
-              {REGIONS.map((region) => (
+            <FilterSection title={t("resources.region")}>
+              {REGION_KEYS.map((region) => (
                 <CheckboxItem
-                  key={region}
-                  label={region}
-                  checked={selectedRegions.includes(region)}
-                  onChange={() => toggleFilter(setSelectedRegions)(region)}
+                  key={region.value}
+                  label={t(region.i18nKey)}
+                  checked={selectedRegions.includes(region.value)}
+                  onChange={() => toggleFilter(setSelectedRegions)(region.value)}
                 />
               ))}
             </FilterSection>
@@ -374,31 +379,31 @@ export default function ResourcesPage() {
             {/* Toolbar */}
             <div className="flex items-center justify-between gap-4 border border-b-0 border-brand-gray-200 p-3">
               <span className="text-sm font-semibold text-brand-gray-900">
-                {filtered.length} resources
+                {t("resources.resources_count", { count: filtered.length })}
               </span>
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-brand-gray-400" />
                   <input
                     type="text"
-                    placeholder="Search"
+                    placeholder={t("resources.search_placeholder")}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="h-9 w-[320px] rounded-full border border-brand-gray-200 bg-white pl-9 pr-3 text-sm text-brand-gray-700 placeholder:text-brand-gray-400 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/20"
                   />
                 </div>
-                <SortDropdown value={sortBy} onChange={setSortBy} />
+                <SortDropdown value={sortBy} onChange={setSortBy} t={t} />
               </div>
             </div>
 
             {/* Resource List */}
             {loading ? (
               <div className="py-20 text-center text-sm text-brand-gray-500">
-                Loading resources...
+                {t("resources.loading")}
               </div>
             ) : filtered.length === 0 ? (
               <div className="py-20 text-center text-sm text-brand-gray-500 rounded-xl border border-dashed border-brand-gray-200">
-                No resources found.
+                {t("resources.no_resources_found")}
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 border-t border-l border-brand-gray-200">
@@ -408,6 +413,7 @@ export default function ResourcesPage() {
                     resource={resource}
                     onView={handleView}
                     onDownload={handleDownload}
+                    t={t}
                   />
                 ))}
               </div>
